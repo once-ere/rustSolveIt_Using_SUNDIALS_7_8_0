@@ -1482,10 +1482,13 @@ Three recordings ship with the repository:
 | [`videos/kepler_ellipse.html`](videos/kepler_ellipse.html) | the speed swinging between perihelion and aphelion | \|d*E*\|/*E* = 9.8 × 10⁻⁸, \|d*L*\|/\|*L*\| = 1.3 × 10⁻⁷ |
 | [`videos/tumbling_racket.html`](videos/tumbling_racket.html) | example 7's flip, seen from outside | \|d\|*L*\|\|/\|*L*\| = **0 exactly**; \|d*E*\|/*E* = 6.4 × 10⁻⁹ |
 | [`videos/box_of_shapes.html`](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid in a rigid `BOX 4`; gold arrows are the analytic contact normals, sized by impulse | 36 collisions, \|d*E*\|/*E* = 3.4 × 10⁻¹⁶ |
+| [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | **two `HINGE` joints** assembled into the classic chaotic linkage — gold rings mark the joints, gold lines their axes | the joints hold to \|*g*\| = 5.6 × 10⁻⁸ through 400 IDA steps |
 
 The player has Play/Pause (or Space), frame stepping (or ← →), a scrub
 bar, speed from 0.25× to 4×, drag to orbit, wheel to zoom, and toggles
-for trails, labels and contact arrows. The corner readout shows the
+for trails, labels, contact arrows and joints. A mechanism gets its
+joints drawn — a ring at each shared point and a line along each hinge
+axis — because that is the thing the video is about. The corner readout shows the
 frame number, *t*, *E*, \|*P*\|, \|*L*\| and the collision count **for the
 frame you are on** — so you can stop on the moment something looks
 wrong and read the conserved quantities off it.

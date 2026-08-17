@@ -127,6 +127,7 @@ frame you stopped on.
 | [videos/kepler_ellipse.html](videos/kepler_ellipse.html) | the speed swinging between perihelion and aphelion on an `e = 0.6` ellipse | \|dE\|/E = 9.8e-8, \|dL\|/\|L\| = 1.3e-7 |
 | [videos/tumbling_racket.html](videos/tumbling_racket.html) | the Dzhanibekov flip: a torque-free cuboid spun about its **intermediate** axis turns over, and over | \|d\|L\|\|/\|L\| = **0 exactly**; \|dE\|/E = 6.4e-9 |
 | [videos/box_of_shapes.html](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid rattling in a rigid `BOX 4`; gold arrows are the analytic contact normals, sized by impulse | 36 collision events, \|dE\|/E = 3.4e-16 |
+| [videos/double_pendulum_hinges.html](videos/double_pendulum_hinges.html) | **two `HINGE` joints** made into the chaotic double pendulum; gold rings are the joints | the joints hold to \|g\| = 5.6e-8 |
 
 Record your own from any posim script:
 

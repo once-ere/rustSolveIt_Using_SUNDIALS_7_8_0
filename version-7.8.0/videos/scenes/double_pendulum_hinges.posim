@@ -1,0 +1,20 @@
+# A double pendulum built out of two HINGES.
+#
+# Each hinge fixes a point and an axis, leaving exactly one freedom — the
+# swing — so two of them give a mechanism with two degrees of freedom.
+# That is the classic chaotic double pendulum, and here it is assembled
+# from joints rather than written out as equations.
+#
+# The pivot has inverse_mass = 0: an anchor, immovable, absorbing
+# whatever the first hinge pulls with.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -9.81, 0]
+collide off
+new sphere as pivot { mass = 1, radius = 0.03, position = [0, 0, 0], inverse_mass = 0 }
+new cuboid as link1 { mass = 1, half_extents = [0.35, 0.06, 0.06], position = [0.4, 0, 0] }
+new cuboid as link2 { mass = 1, half_extents = [0.35, 0.06, 0.06], position = [1.2, 0, 0] }
+# Each hinge pivots at the MIDPOINT of the pair as it stands now, so the
+# mechanism is assembled exactly where the bodies already are.
+hinge pivot link1 [0, 0, 1]
+hinge link1 link2 [0, 0, 1]
+method ida

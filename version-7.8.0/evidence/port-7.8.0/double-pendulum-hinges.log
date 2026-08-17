@@ -1,0 +1,28 @@
+In[1]:= set system.g_constant = 0
+In[2]:= set system.uniform_gravity = [0, -9.81, 0]
+In[3]:= collide off
+Out[3]= collisions OFF (0 collidable pair(s); 0 impulse(s) so far)
+In[4]:= new sphere as pivot { mass = 1, radius = 0.03, position = [0, 0, 0], inverse_mass = 0 }
+Out[4]= obj0 as pivot
+In[5]:= new cuboid as link1 { mass = 1, half_extents = [0.35, 0.06, 0.06], position = [0.4, 0, 0] }
+Out[5]= obj1 as link1
+In[6]:= new cuboid as link2 { mass = 1, half_extents = [0.35, 0.06, 0.06], position = [1.2, 0, 0] }
+Out[6]= obj2 as link2
+In[7]:= hinge pivot link1 [0, 0, 1]
+Out[7]= constraint0: hinge obj0 <-> obj1 about [0, 0, 1], 5 row(s) — one freedom left (METHOD IDA is required to integrate it)
+In[8]:= hinge link1 link2 [0, 0, 1]
+Out[8]= constraint1: hinge obj1 <-> obj2 about [0, 0, 1], 5 row(s) — one freedom left (METHOD IDA is required to integrate it)
+In[9]:= constraints
+Out[9]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+constraint1: hinge obj1 <-> obj2, 5 row(s)
+worst |g| = 0e0, worst |g_dot| = 0e0
+In[10]:= method ida
+Out[10]= method = IDA (constrained DAE, GGL index-2)
+In[11]:= run 2 steps 20
+Out[11]= t = 2 (660 solver steps, 20 snapshots, |dE/E| = 4.740e-5)
+In[12]:= constraints
+Out[12]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+constraint1: hinge obj1 <-> obj2, 5 row(s)
+worst |g| = 1.9153941543947894e-8, worst |g_dot| = 3.1846106840482946e-7
+In[13]:= get link2.position
+Out[13]= [0.6691688203766034, -0.08135936712450223, 0]

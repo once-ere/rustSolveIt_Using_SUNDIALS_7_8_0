@@ -834,6 +834,15 @@ Pinned properties:
   what makes spin visible.
 - Contact arrows carry the exact analytic normal from the frame's
   contact records, scaled by the applied impulse.
+- **Joints are drawn from the machine protocol, not re-derived.** The
+  `{"op":"state"}` dump carries a `joints` array with each joint's kind,
+  bodies, row count and *world-frame* pivot and axis, plus
+  `joint_drift`/`joint_rate_drift`. The body-frame arms a `Joint` stores
+  are no use to a viewer; resolving them once, on the Rust side, keeps
+  every front end honest about what the joint actually is.
+- The camera auto-fit centres on the **content bounding box**, not the
+  origin — a pendulum hangs below its pivot — and `--view front` opens
+  looking down z for a planar linkage.
 
 Recordings live in `videos/`, the scripts that produced them in
 `videos/scenes/`.

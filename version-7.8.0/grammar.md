@@ -3539,6 +3539,10 @@ tools/record_video.py videos/scenes/kepler_ellipse.posim \
 4. It writes one HTML file with those frames embedded and a plain
    canvas player around them.
 
+Pass `--view front` for a planar linkage: it opens looking straight down
+the z axis, which is what a mechanism whose hinges all turn about z wants.
+The default `--view iso` looks down on the scene from a corner.
+
 **Every advance in step 3 is a real SUNDIALS step.** The tool has no
 integrator of its own; it is a camera, not a physics engine. And the
 page it writes fetches nothing: no CDN, no font server, no analytics.
@@ -3556,7 +3560,7 @@ Open it with `file://` on a machine with no network and it works.
 | **wheel**, or **+ / −** | zoom |
 | **↑ ↓** | pan |
 | **↺ Reset view** | back to the framing it opened with |
-| **trails / labels / contacts** | toggle the motion trails, the body names, the gold contact-normal arrows |
+| **trails / labels / contacts / joints** | toggle the motion trails, the body names, the gold contact-normal arrows, the joint rings and axes |
 
 The readout in the corner is live per frame: the frame number, `t`, the
 total energy, `|P|`, `|L|`, the running collision count, and the method
@@ -3578,6 +3582,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/kepler_ellipse.html`](videos/kepler_ellipse.html) | the speed swinging between perihelion and aphelion on an `e = 0.6` ellipse | `\|dE\|/E = 9.8e-8`, `\|dL\|/\|L\| = 1.3e-7` |
 | [`videos/tumbling_racket.html`](videos/tumbling_racket.html) | the Dzhanibekov flip: a torque-free cuboid spun about its **intermediate** axis turns over, and over | `\|d\|L\|\|/\|L\| = 0` **exactly**; `\|dE\|/E = 6.4e-9` |
 | [`videos/box_of_shapes.html`](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid rattling in a rigid `BOX 4`; the gold arrows are the analytic contact normals, sized by impulse | 36 collision events, `\|dE\|/E = 3.4e-16` |
+| [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | two `HINGE` joints assembled into the chaotic linkage; the gold rings are the joints | the joints hold to `\|g\| = 5.6e-8`; energy wanders 3 parts in 10,000 |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines

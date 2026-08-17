@@ -81,6 +81,7 @@ frame you stopped on.
 | [`kepler_ellipse.html`](version-7.8.0/videos/kepler_ellipse.html) — an `e = 0.6` orbit | \|dE\|/E = 9.8e-8 |
 | [`tumbling_racket.html`](version-7.8.0/videos/tumbling_racket.html) — the Dzhanibekov flip | \|d\|L\|\|/\|L\| = **0 exactly** |
 | [`box_of_shapes.html`](version-7.8.0/videos/box_of_shapes.html) — three shapes in a rigid box | 36 collisions, \|dE\|/E = 3.4e-16 |
+| [`double_pendulum_hinges.html`](version-7.8.0/videos/double_pendulum_hinges.html) — **two hinges**, the chaotic linkage | joints hold to \|g\| = 5.6e-8 |
 
 Every advance in a recording is a real SUNDIALS step; the recorder
 (`version-7.8.0/tools/record_video.py`) is a camera, not a physics

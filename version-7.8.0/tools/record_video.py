@@ -156,6 +156,12 @@ def frame_of(state: dict) -> dict:
         "c": [
             [c["point"], c["normal"], c["impulse"]] for c in state["contacts"]
         ],
+        # joints: world pivot, and the axis a hinge/universal turns about
+        "j": [
+            [jt["point"], jt.get("axis")] for jt in state.get("joints", [])
+        ],
+        # worst |g| over the joint set at this instant
+        "gd": state.get("joint_drift", 0.0),
     }
 
 
@@ -181,6 +187,10 @@ def record(script: pathlib.Path, frames: int, dt: float):
             posim.exec_line(f"step {dt!r}")
             out.append(frame_of(posim.state()))
         meta = {
+            "joints": [
+                {"kind": jt["kind"], "rows": int(jt["rows"])}
+                for jt in first.get("joints", [])
+            ],
             "method": first["method"],
             "box": first["box"],
             "gravity": first["uniform_gravity"],
@@ -250,6 +260,7 @@ PAGE = r"""<!doctype html>
     <label><input id="trails" type="checkbox" checked> trails</label>
     <label><input id="labels" type="checkbox" checked> labels</label>
     <label><input id="arrows" type="checkbox" checked> contacts</label>
+    <label><input id="joints" type="checkbox" checked> joints</label>
   </footer>
 </div>
 <script>
@@ -287,26 +298,50 @@ BODIES.forEach((b,i) => b.color = b.wall ? "#3b4450" : HUES[i % HUES.length]);
    Orbit camera: yaw/pitch about a target, perspective divide.  Same
    controls as the live scene window (drag to orbit, wheel to zoom,
    arrows to pan). */
-const HOME = {yaw:0.6, pitch:0.35, dist:0, tx:0, ty:0};
-let cam = Object.assign({}, HOME);
+/* A planar linkage — every hinge axis along z — reads as the mechanism
+   it is only when you look straight down that axis. An isometric view is
+   the better default for a 3-D scene, so the recorder picks. */
+const HOME = "__VIEW__" === "front"
+  ? {yaw:0, pitch:0, dist:0, tx:0, ty:0, target:[0,0,0]}
+  : {yaw:0.6, pitch:0.35, dist:0, tx:0, ty:0, target:[0,0,0]};
+let cam = Object.assign({}, HOME, {target: HOME.target.slice()});
 
 function autoFit() {
-  /* Frame the bodies the reader came to watch. Wall slabs are excluded:
-     they are half-space-sized and would push the camera out to nothing. */
-  let max = 1e-9;
-  for (const f of FRAMES) f.o.forEach((o, i) => {
-    if (BODIES[i] && BODIES[i].wall) return;
-    const p = o[0];
-    max = Math.max(max, Math.abs(p[0]), Math.abs(p[1]), Math.abs(p[2]));
-  });
+  /* Frame the bodies the reader came to watch, CENTRED ON THEM rather
+     than on the origin — a pendulum hangs below its pivot, and centring
+     on (0,0,0) wastes half the picture on empty sky. Wall slabs are
+     excluded: they are half-space-sized and would push the camera out to
+     nothing. */
+  const lo = [ Infinity,  Infinity,  Infinity];
+  const hi = [-Infinity, -Infinity, -Infinity];
+  let pad = 0;
   for (const b of BODIES) {
     if (b.wall) continue;
     const g = b.geom;
-    max = Math.max(max, g.r||0, g.ring||0, g.len||0,
+    pad = Math.max(pad, g.r||0, g.ring||0, (g.len||0)/2,
                    g.he ? Math.max.apply(null, g.he) : 0);
   }
-  if (META.box) max = Math.max(max, META.box / 2);
-  HOME.dist = cam.dist = max * 3.2;
+  for (const f of FRAMES) f.o.forEach((o, i) => {
+    if (BODIES[i] && BODIES[i].wall) return;
+    for (let k = 0; k < 3; k++) {
+      lo[k] = Math.min(lo[k], o[0][k]);
+      hi[k] = Math.max(hi[k], o[0][k]);
+    }
+  });
+  if (!isFinite(lo[0])) { lo.fill(-1); hi.fill(1); }
+  if (META.box) {
+    const h = META.box / 2;
+    for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], -h); hi[k] = Math.max(hi[k], h); }
+  }
+  let half = 1e-9;
+  for (let k = 0; k < 3; k++) {
+    HOME.target[k] = 0.5 * (lo[k] + hi[k]);
+    half = Math.max(half, 0.5 * (hi[k] - lo[k]) + pad);
+  }
+  cam.target = HOME.target.slice();
+  /* 2.4 rather than a timid 3.2: the content should fill the frame,
+     and the wheel is right there if the viewer wants to pull back. */
+  HOME.dist = cam.dist = half * 2.4;
 }
 autoFit();
 
@@ -329,10 +364,12 @@ function project(p) {
      which is what the sphere radii are drawn with. */
   const cy = Math.cos(cam.yaw),   sy = Math.sin(cam.yaw);
   const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
-  const x1 =  p[0] * cy + p[2] * sy;
-  const z1 = -p[0] * sy + p[2] * cy;
-  const y  =  p[1] * cp - z1 * sp;
-  const z  =  p[1] * sp + z1 * cp;
+  /* about the camera TARGET, not the world origin */
+  const px = p[0] - cam.target[0], py = p[1] - cam.target[1], pz = p[2] - cam.target[2];
+  const x1 =  px * cy + pz * sy;
+  const z1 = -px * sy + pz * cy;
+  const y  =  py * cp - z1 * sp;
+  const z  =  py * sp + z1 * cp;
   const d = cam.dist - z;
   if (d <= 1e-6) return null;          // behind the camera
   const s = (H * 0.9) / d;
@@ -484,6 +521,30 @@ function draw() {
     }
   }
 
+  /* Joints: a ring at the shared point, and for a hinge the axis it
+     turns about. Drawn AFTER the bodies so the pivot is never hidden
+     inside the link it belongs to — the joint is the thing this video is
+     about. */
+  if (document.getElementById("joints").checked && f.j) {
+    const len = HOME.dist / 14;
+    for (const [pt, axis] of f.j) {
+      const pj = project(pt);
+      if (pj) {
+        ctx.beginPath();
+        ctx.arc(pj.x, pj.y, 5, 0, Math.PI*2);
+        ctx.strokeStyle = "#e8c46a"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(pj.x, pj.y, 1.6, 0, Math.PI*2);
+        ctx.fillStyle = "#e8c46a"; ctx.fill();
+      }
+      if (axis) {
+        stroke([[pt[0]-axis[0]*len, pt[1]-axis[1]*len, pt[2]-axis[2]*len],
+                [pt[0]+axis[0]*len, pt[1]+axis[1]*len, pt[2]+axis[2]*len]],
+               "#e8c46a", 1.4);
+      }
+    }
+  }
+
   if (document.getElementById("arrows").checked) {
     /* Contact normals of the step that produced THIS frame: the arrow
        runs along the exact analytic normal (i -> j) and its length is
@@ -507,6 +568,10 @@ function draw() {
     `<br>|P| = <b>${fx(Math.hypot(f.P[0],f.P[1],f.P[2]))}</b>` +
     `<br>|L| = <b>${fx(Math.hypot(f.L[0],f.L[1],f.L[2]))}</b>` +
     `<br>collisions <b>${f.n}</b>` +
+    (META.joints && META.joints.length
+      ? `<br>joints <b>${META.joints.map(j => j.kind).join(", ")}</b>` +
+        `<br>worst |g| = <b>${(f.gd || 0).toExponential(2)}</b>`
+      : "") +
     `<br><span style="color:#8b949e">${META.method}, dt = ${META.dt}</span>`;
 }
 
@@ -523,7 +588,10 @@ scrub.max = FRAMES.length - 1;
 scrub.addEventListener("input", () => seek(+scrub.value));
 document.getElementById("back").onclick = () => seek(idx - 1);
 document.getElementById("fwd").onclick  = () => seek(idx + 1);
-document.getElementById("rst").onclick  = () => { cam = Object.assign({}, HOME); draw(); };
+document.getElementById("rst").onclick  = () => {
+  cam = Object.assign({}, HOME, {target: HOME.target.slice()});
+  draw();
+};
 const playBtn = document.getElementById("play");
 playBtn.onclick = () => {
   playing = !playing;
@@ -531,7 +599,7 @@ playBtn.onclick = () => {
   lastTick = performance.now();
   if (playing) requestAnimationFrame(tick);
 };
-for (const id of ["trails","labels","arrows"])
+for (const id of ["trails","labels","arrows","joints"])
   document.getElementById(id).addEventListener("change", draw);
 
 function tick(now) {
@@ -588,6 +656,13 @@ def main():
     ap.add_argument("--dt", type=float, default=0.02)
     ap.add_argument("--title", default=None)
     ap.add_argument("--caption", default="")
+    ap.add_argument(
+        "--view",
+        choices=["iso", "front"],
+        default="iso",
+        help="opening camera: 'iso' looks down on the scene, 'front' looks "
+        "straight along -z, which is what a planar linkage wants",
+    )
     args = ap.parse_args()
 
     bodies, frames, meta = record(args.script, args.frames, args.dt)
@@ -597,7 +672,8 @@ def main():
             .replace("__CAPTION__", args.caption)
             .replace("__BODIES__", json.dumps(bodies))
             .replace("__FRAMES__", json.dumps(frames))
-            .replace("__META__", json.dumps(meta)))
+            .replace("__META__", json.dumps(meta))
+            .replace("__VIEW__", args.view))
     args.out.write_text(html)
     print(f"{args.out}: {len(frames)} frames, {len(bodies)} bodies, "
           f"{len(html)/1024:.0f} kB, dt = {args.dt}")
