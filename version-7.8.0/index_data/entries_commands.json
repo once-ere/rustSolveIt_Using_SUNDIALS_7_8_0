@@ -34,7 +34,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1080,
+    "line": 1096,
     "role": "spec (5.1)"
    }
   ],
@@ -118,7 +118,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1187,
+    "line": 1203,
     "role": "spec (5.2)"
    }
   ],
@@ -198,7 +198,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1187,
+    "line": 1203,
     "role": "spec (5.2)"
    }
   ],
@@ -273,7 +273,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -347,7 +347,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -423,7 +423,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1256,
+    "line": 1272,
     "role": "spec (5.3)"
    }
   ],
@@ -503,7 +503,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1256,
+    "line": 1272,
     "role": "spec (5.3)"
    }
   ],
@@ -641,7 +641,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1275,
+    "line": 1291,
     "role": "spec (5.4)"
    }
   ],
@@ -715,7 +715,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -785,7 +785,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -855,7 +855,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -925,7 +925,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -995,7 +995,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -1067,7 +1067,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1295,
+    "line": 1313,
     "role": "spec (5.5)"
    }
   ],
@@ -1213,7 +1213,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1392,
+    "line": 1410,
     "role": "spec (5.7)"
    }
   ],
@@ -1294,7 +1294,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1392,
+    "line": 1410,
     "role": "spec (5.7)"
    }
   ],
@@ -1372,7 +1372,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1513,
+    "line": 1531,
     "role": "spec (5.9)"
    }
   ],
@@ -1446,7 +1446,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1513,
+    "line": 1531,
     "role": "spec (5.9)"
    }
   ],
@@ -1518,7 +1518,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1513,
+    "line": 1531,
     "role": "spec (5.9)"
    }
   ],
@@ -1594,7 +1594,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1451,
+    "line": 1469,
     "role": "spec (5.8)"
    }
   ],
@@ -1680,7 +1680,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 995,
+    "line": 1011,
     "role": "spec (4.2)"
    }
   ],
@@ -1764,7 +1764,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1513,
+    "line": 1531,
     "role": "spec (5.9)"
    }
   ],
@@ -1839,7 +1839,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1513,
+    "line": 1531,
     "role": "spec (5.9)"
    }
   ],
@@ -3237,7 +3237,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3314,7 +3314,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3391,7 +3391,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3468,7 +3468,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3545,7 +3545,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3622,7 +3622,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3701,7 +3701,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3778,7 +3778,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3855,7 +3855,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -3932,7 +3932,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4009,7 +4009,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4086,7 +4086,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4163,7 +4163,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4240,7 +4240,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4317,7 +4317,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4394,7 +4394,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4471,7 +4471,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4548,7 +4548,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4625,7 +4625,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4702,7 +4702,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4779,7 +4779,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4856,7 +4856,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -4933,7 +4933,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5010,7 +5010,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5087,7 +5087,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5164,7 +5164,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5241,7 +5241,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5318,7 +5318,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5395,7 +5395,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5472,7 +5472,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5549,7 +5549,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5628,7 +5628,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5707,7 +5707,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5784,7 +5784,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5861,7 +5861,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -5940,7 +5940,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6017,7 +6017,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6094,7 +6094,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6171,7 +6171,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6248,7 +6248,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6325,7 +6325,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6402,7 +6402,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6479,7 +6479,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6558,7 +6558,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6635,7 +6635,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6712,7 +6712,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6789,7 +6789,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6866,7 +6866,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -6943,7 +6943,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -7022,7 +7022,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -7101,7 +7101,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -7178,7 +7178,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -7255,7 +7255,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -7332,7 +7332,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -7411,7 +7411,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],
@@ -7488,7 +7488,7 @@
    },
    {
     "file": "grammar.md",
-    "line": 1612,
+    "line": 1763,
     "role": "spec (5.10-5.12)"
    }
   ],

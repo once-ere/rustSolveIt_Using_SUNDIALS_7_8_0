@@ -188,6 +188,9 @@ pub enum MethodSpec {
     Adams,
     Bdf,
     Sprk { table: String, dt: f64 },
+    /// IDA on the GGL index-2 DAE — the only method that can hold a
+    /// `CONSTRAIN` rod. Translational only.
+    Ida,
 }
 
 /// Parsed `SCENE` sub-command. Numeric arguments (translate deltas,
@@ -281,6 +284,20 @@ pub enum Instr {
     Collide(Option<bool>),
     /// `CONTACTS` — list the contacts of the last STEP/RUN.
     Contacts,
+    /// `CONSTRAIN <a> <b> [len]` — add a rigid rod. `None` length means
+    /// "freeze the separation they already have". The optional length
+    /// arrives on the operand stack.
+    Constrain { a: String, b: String, has_len: bool },
+    /// `CONSTRAIN OFF` — drop every rod.
+    ConstrainOff,
+    /// `CONSTRAINTS` — list the rods and how well they are being held.
+    Constraints,
+    /// `EQUILIBRIUM` — KINSOL: move the system to a static rest state.
+    Equilibrium,
+    /// `SENSITIVITY <t> "<param>" ...` — CVODES (or IDAS when
+    /// constrained): integrate, and report d(state)/d(param). The
+    /// duration arrives on the operand stack.
+    Sensitivity(Vec<String>),
     /// `BOX [OFF | <size>]` — the rigid, infinitely massive bounding
     /// box (six static wall slabs with inverse mass 0).
     Box(BoxMode),
@@ -424,7 +441,7 @@ posim command language (case-insensitive keywords):
   LIST                      list all objects
   STEP <dt>                 advance time by dt (sundials solver)
   RUN <t> [STEPS <n>]       advance by t with n output snapshots
-  METHOD ADAMS | BDF | SPRK <table> [dt]
+  METHOD ADAMS | BDF | SPRK <table> [dt] | IDA
                             choose the sundials integrator
   ENERGY | COM | MOMENTUM | ANGMOM | LAPLACE <n>
                             system observables
@@ -644,6 +661,25 @@ special functions (see grammar.md; orders must be WHOLE numbers):
                             also accepted wherever a list is wanted; a
                             3x3 matrix value works as a matrix argument
 rigid-body collisions (event-detected at the exact time of impact):
+  CONSTRAIN <a> <b> [len]   rigid rod between two objects (objN or a
+                            registered name). No length = freeze the
+                            separation they already have, which is always
+                            consistent. A body with inverse_mass = 0 is a
+                            fixed ANCHOR: anchor + bob + rod = pendulum.
+                            Requires METHOD IDA to integrate.
+  CONSTRAIN OFF             drop every rod
+  CONSTRAINTS               list the rods, and how well they are held
+                            (worst |g| and |g_dot|; both stay at roundoff)
+  EQUILIBRIUM               KINSOL: move the system to a static rest
+                            state and stop there. Reports the largest net
+                            force left on any free body. Says nothing
+                            about STABILITY - perturb and run to find out.
+  SENSITIVITY <t> \"<p>\" ... run for <t> and also report d(state)/d(p) for
+                            each parameter, via CVODES (or IDAS when the
+                            system is constrained). Parameter names are
+                            QUOTED: \"g_constant\", \"mass 0\", \"charge 1\",
+                            \"gravity.y\", \"e_field.x\", \"b_field.z\".
+                            e.g.  sensitivity 3 \"gravity.y\" \"mass 0\"
   COLLIDE [ON|OFF]          enable/disable (default ON; bare = status)
   CONTACTS                  list contacts of the last STEP/RUN:
                             pair, time, point, normal (i->j, the
@@ -1232,6 +1268,10 @@ fn exec_one(instr: &Instr, state: &mut SimState, stack: &mut Vec<Value>) -> Resu
                     Method::Sprk { table: table.clone(), dt: *dt },
                     format!("ARKODE SPRK {table}, fixed dt = {dt}"),
                 ),
+                MethodSpec::Ida => (
+                    Method::Ida,
+                    "IDA (constrained DAE, GGL index-2)".to_string(),
+                ),
             };
             state.system.method = method;
             stack.push(Value::Str(format!("method = {desc}")));
@@ -1303,6 +1343,93 @@ fn exec_one(instr: &Instr, state: &mut SimState, stack: &mut Vec<Value>) -> Resu
                 pairs.len(),
                 state.system.collision_count
             )));
+        }
+        Instr::Constrain { a, b, has_len } => {
+            let len = if *has_len {
+                Some(pop_num(stack)?)
+            } else {
+                None
+            };
+            let i = resolve_object_ref(state, a)?;
+            let j = resolve_object_ref(state, b)?;
+            let snapshot = state.system.clone();
+            let k = state.system.constraints.add_distance(&snapshot, i, j, len)?;
+            let c = state.system.constraints.distances[k];
+            stack.push(Value::Str(format!(
+                "constraint{k}: obj{} <-> obj{} held at {} \
+                 (METHOD IDA is required to integrate it)",
+                c.i, c.j, c.length
+            )));
+        }
+        Instr::ConstrainOff => {
+            let n = state.system.constraints.len();
+            state.system.constraints.distances.clear();
+            stack.push(Value::Str(format!("removed {n} constraint(s)")));
+        }
+        Instr::Constraints => {
+            if state.system.constraints.is_empty() {
+                stack.push(Value::Str(
+                    "(no constraints — CONSTRAIN <a> <b> [length] adds a rigid rod)".to_string(),
+                ));
+            } else {
+                let (g, gdot) = state.system.constraints.drift(&state.system);
+                let mut out = String::new();
+                for (k, c) in state.system.constraints.distances.iter().enumerate() {
+                    let here = (state.system.objects[c.j].get_position()
+                        - state.system.objects[c.i].get_position())
+                    .norm();
+                    out.push_str(&format!(
+                        "constraint{k}: obj{} <-> obj{} length {} (currently {})\n",
+                        c.i, c.j, c.length, here
+                    ));
+                }
+                out.push_str(&format!(
+                    "worst |g| = {g:e}, worst |g_dot| = {gdot:e}"
+                ));
+                stack.push(Value::Str(out));
+            }
+        }
+        Instr::Equilibrium => {
+            let report = ::physical_object::equilibrium::solve(&mut state.system)?;
+            state.system.contacts.clear();
+            stack.push(Value::Str(format!(
+                "equilibrium found in {} Newton iteration(s), {} residual evaluation(s); \
+                 largest net force on any free body = {:e}{}",
+                report.iterations,
+                report.func_evals,
+                report.max_net_force,
+                if state.system.constraints.is_empty() {
+                    String::new()
+                } else {
+                    format!(", worst |g| = {:e}", report.constraint_error)
+                }
+            )));
+        }
+        Instr::Sensitivity(names) => {
+            let dt = pop_num(stack)?;
+            let n = state.system.objects.len();
+            let mut params = Vec::with_capacity(names.len());
+            for name in names {
+                params.push(::physical_object::sensitivity::SensParam::parse(name, n)?);
+            }
+            let t_end = state.system.time + dt;
+            let report =
+                ::physical_object::sensitivity::run(&mut state.system, t_end, &params)?;
+            let mut out = format!(
+                "t = {} ({}, {} solver steps)\n",
+                report.t, report.solver, report.nst
+            );
+            for pp in &report.per_param {
+                out.push_str(&format!("d/d({}):\n", pp.param));
+                for (k, d) in pp.d_position.iter().enumerate() {
+                    out.push_str(&format!(
+                        "  obj{k} position [{}, {}, {}]\n",
+                        d.x, d.y, d.z
+                    ));
+                }
+            }
+            out.pop();
+            stack.push(Value::Str(out));
         }
         Instr::Contacts => {
             if state.system.contacts.is_empty() {
@@ -1479,6 +1606,25 @@ fn resolve_name_arg(state: &SimState, arg: &NameArg) -> Result<String, String> {
 
 /// Resolves a named path root to an object index: a parameter / LET
 /// string binding indirects first, then the name registry.
+/// Resolves an object written either positionally (`obj3`) or by a name
+/// registered with `NEW ... AS`. `CONSTRAIN` takes bodies this way so
+/// that `constrain anchor bob 1.5` reads the way it sounds.
+fn resolve_object_ref(state: &SimState, text: &str) -> Result<usize, String> {
+    let lower = text.to_ascii_lowercase();
+    if let Some(rest) = lower.strip_prefix("obj") {
+        if let Ok(k) = rest.parse::<usize>() {
+            if k < state.system.objects.len() {
+                return Ok(k);
+            }
+            return Err(format!(
+                "no object obj{k} ({} object(s) exist)",
+                state.system.objects.len()
+            ));
+        }
+    }
+    resolve_name(state, &lower)
+}
+
 fn resolve_name(state: &SimState, name: &str) -> Result<usize, String> {
     let target = match state
         .env_stack
@@ -3094,6 +3240,107 @@ mod tests {
                 assert!(h.contains("TORUS"), "help lists TORUS");
                 assert!(h.contains("BOX <size>"), "help lists BOX");
                 assert!(h.contains("inverse_mass = 0"), "help explains inverse mass");
+            }
+            v => panic!("expected string, got {v}"),
+        }
+    }
+
+    /// The four solver families reached through the language: a rod
+    /// (IDA), a rest state (KINSOL), a derivative (CVODES), and the
+    /// refusals that keep each honest.
+    #[test]
+    fn constrain_equilibrium_and_sensitivity_round_trip() {
+        let mut st = SimState::default();
+        for line in [
+            "set system.g_constant = 0",
+            "set system.uniform_gravity = [0, -9.81, 0]",
+            "collide off",
+            "new sphere as pivot { mass = 1, radius = 0.05, inverse_mass = 0 }",
+            "new sphere as bob { mass = 1, radius = 0.1, position = [0.6, -0.8, 0] }",
+        ] {
+            execute_line(line, &mut st).unwrap();
+        }
+
+        // Bare CONSTRAIN freezes the separation they already have (3-4-5).
+        match execute_line("constrain pivot bob", &mut st).unwrap() {
+            Value::Str(s) => {
+                assert!(s.contains("obj0 <-> obj1"), "{s}");
+                assert!(s.contains("held at 1"), "{s}");
+                assert!(s.contains("METHOD IDA"), "the reply must say what to do next: {s}");
+            }
+            v => panic!("expected string, got {v}"),
+        }
+        match execute_line("constraints", &mut st).unwrap() {
+            Value::Str(s) => assert!(s.contains("worst |g| = 0e0"), "{s}"),
+            v => panic!("expected string, got {v}"),
+        }
+
+        // A constrained system refuses every method but IDA, by name.
+        let e = execute_line("run 1 steps 5", &mut st).unwrap_err();
+        assert!(e.contains("METHOD IDA"), "{e}");
+
+        match execute_line("method ida", &mut st).unwrap() {
+            Value::Str(s) => assert!(s.contains("IDA"), "{s}"),
+            v => panic!("expected string, got {v}"),
+        }
+        execute_line("run 1 steps 10", &mut st).unwrap();
+        // the rod is still exactly a rod
+        let (g, _) = st.system.constraints.drift(&st.system);
+        assert!(g < 1e-10, "rod stretched by {g:e}");
+
+        // EQUILIBRIUM hangs it straight down and stops there.
+        match execute_line("equilibrium", &mut st).unwrap() {
+            Value::Str(s) => assert!(s.contains("equilibrium found"), "{s}"),
+            v => panic!("expected string, got {v}"),
+        }
+        let bob = st.system.objects[1].get_position();
+        assert!(bob.x.abs() < 1e-9 && (bob.y + 1.0).abs() < 1e-9, "bob at {bob:?}");
+        assert_eq!(st.system.objects[0].get_position(), Vec3::zeros(), "anchor fixed");
+
+        // CONSTRAIN OFF drops it, and then SENSITIVITY runs through CVODES.
+        match execute_line("constrain off", &mut st).unwrap() {
+            Value::Str(s) => assert!(s.contains("removed 1"), "{s}"),
+            v => panic!("expected string, got {v}"),
+        }
+        execute_line("method adams", &mut st).unwrap();
+        match execute_line("sensitivity 3 \"gravity.y\"", &mut st).unwrap() {
+            Value::Str(s) => {
+                assert!(s.contains("CVODES"), "{s}");
+                /* Free fall: d(y)/d(g) = T²/2 = 4.5. Parse the number out
+                 * rather than substring-matching its decimal expansion —
+                 * the last digits are solver noise and a literal match
+                 * would be a brittle golden-output test. */
+                let line = s
+                    .lines()
+                    .find(|l| l.trim_start().starts_with("obj1 position"))
+                    .unwrap_or_else(|| panic!("no obj1 row in:\n{s}"));
+                let inner = line.split('[').nth(1).unwrap().trim_end_matches(']');
+                let dy: f64 = inner.split(',').nth(1).unwrap().trim().parse().unwrap();
+                assert!((dy - 4.5).abs() < 1e-5, "d(y)/d(g) = {dy}, expected 4.5");
+            }
+            v => panic!("expected string, got {v}"),
+        }
+
+        // Bad parameter names name every accepted spelling.
+        let e = execute_line("sensitivity 1 \"wobble\"", &mut st).unwrap_err();
+        assert!(e.contains("expected g_constant"), "{e}");
+        // and a duration with no parameter is refused at parse time
+        assert!(execute_line("sensitivity 1", &mut st).unwrap_err().contains("quoted parameter"));
+    }
+
+    /// Every new command appears in the quick-reference card — the
+    /// lexer/parser/VM/HELP lockstep rule.
+    #[test]
+    fn help_lists_the_dae_family() {
+        let mut st = SimState::default();
+        match execute_line("help", &mut st).unwrap() {
+            Value::Str(h) => {
+                assert!(h.contains("CONSTRAIN <a> <b> [len]"), "help lists CONSTRAIN");
+                assert!(h.contains("CONSTRAINTS"), "help lists CONSTRAINTS");
+                assert!(h.contains("EQUILIBRIUM"), "help lists EQUILIBRIUM");
+                assert!(h.contains("SENSITIVITY"), "help lists SENSITIVITY");
+                assert!(h.contains("| IDA"), "help lists METHOD IDA");
+                assert!(h.contains("ANCHOR"), "help explains what an anchor is");
             }
             v => panic!("expected string, got {v}"),
         }

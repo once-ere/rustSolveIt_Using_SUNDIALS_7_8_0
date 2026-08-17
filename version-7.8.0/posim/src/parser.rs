@@ -15,13 +15,31 @@
 //!           | "LIST"
 //!           | "STEP" expr                       (* advance by dt      *)
 //!           | "RUN" expr [ "STEPS" NUMBER ]     (* advance by t, n outs *)
-//!           | "METHOD" ( "ADAMS" | "BDF" | "SPRK" IDENT [ NUMBER ] )
+//!           | "METHOD" ( "ADAMS" | "BDF" | "SPRK" IDENT [ NUMBER ]
+//!                       | "IDA" )              (* IDA: constrained DAE *)
 //!           | "ENERGY" | "COM" | "MOMENTUM" | "ANGMOM"
 //!           | "LAPLACE" NUMBER
 //!           | "RESET" | "HELP"
 //!           | "SCENE" scenecmd                  (* graphical scene     *)
 //!           | "COLLIDE" [ "ON" | "OFF" ]        (* bare: report status *)
 //!           | "CONTACTS"                        (* list last contacts  *)
+//!           | "CONSTRAIN" ( "OFF" | IDENT IDENT [ expr ] )
+//!                                               (* rigid rod between two
+//!                                                  objects; no length =
+//!                                                  freeze the current
+//!                                                  separation. Needs
+//!                                                  METHOD IDA to run.   *)
+//!           | "CONSTRAINTS"                     (* list rods + drift    *)
+//!           | "EQUILIBRIUM"                     (* KINSOL: rest state   *)
+//!           | "SENSITIVITY" expr STRING { STRING }
+//!                                               (* CVODES, or IDAS when
+//!                                                  constrained: run for
+//!                                                  expr and report
+//!                                                  d(state)/d(param).
+//!                                                  Parameter names are
+//!                                                  STRINGS because
+//!                                                  `mass 0` is two
+//!                                                  tokens.              *)
 //!           | "LET" IDENT "=" expr              (* session variable    *)
 //!           | "FUNCS"                           (* list user functions *)
 //!           | "SHOW" IDENT                      (* print a function    *)
@@ -451,6 +469,7 @@ impl Parser {
                 let spec = match self.next() {
                     Some(Token { kind: TokKind::Keyword(Keyword::Adams), .. }) => MethodSpec::Adams,
                     Some(Token { kind: TokKind::Keyword(Keyword::Bdf), .. }) => MethodSpec::Bdf,
+                    Some(Token { kind: TokKind::Keyword(Keyword::Ida), .. }) => MethodSpec::Ida,
                     Some(Token { kind: TokKind::Keyword(Keyword::Sprk), .. }) => {
                         let raw = self.expect_ident("an SPRK table name")?;
                         let upper = raw.to_ascii_uppercase();
@@ -469,11 +488,14 @@ impl Parser {
                     }
                     Some(t) => {
                         return Err(format!(
-                            "parse error at column {}: expected ADAMS, BDF or SPRK, found {}",
+                            "parse error at column {}: expected ADAMS, BDF, SPRK or IDA, \
+                             found {}",
                             t.col, t.kind
                         ))
                     }
-                    None => return Err("parse error: METHOD needs ADAMS, BDF or SPRK".into()),
+                    None => {
+                        return Err("parse error: METHOD needs ADAMS, BDF, SPRK or IDA".into())
+                    }
                 };
                 prog.push(Instr::SetMethod(spec));
             }
@@ -540,6 +562,54 @@ impl Parser {
             TokKind::Keyword(Keyword::Contacts) => {
                 self.pos += 1;
                 prog.push(Instr::Contacts);
+            }
+            TokKind::Keyword(Keyword::Constrain) => {
+                self.pos += 1;
+                if let Some(Token { kind: TokKind::Keyword(Keyword::Off), .. }) = self.peek() {
+                    self.pos += 1;
+                    prog.push(Instr::ConstrainOff);
+                } else {
+                    let a = self.expect_ident("the first object (objN or a registered name)")?;
+                    let b = self.expect_ident("the second object (objN or a registered name)")?;
+                    /* A bare CONSTRAIN freezes the separation the bodies
+                     * already have, which is always consistent; an
+                     * explicit length is a full expression. */
+                    let has_len = self.peek().is_some();
+                    if has_len {
+                        self.expr(&mut prog)?;
+                    }
+                    prog.push(Instr::Constrain { a, b, has_len });
+                }
+            }
+            TokKind::Keyword(Keyword::Constraints) => {
+                self.pos += 1;
+                prog.push(Instr::Constraints);
+            }
+            TokKind::Keyword(Keyword::Equilibrium) => {
+                self.pos += 1;
+                prog.push(Instr::Equilibrium);
+            }
+            TokKind::Keyword(Keyword::Sensitivity) => {
+                self.pos += 1;
+                /* SENSITIVITY <duration> "<param>" ["<param>" ...]
+                 * Parameter names are STRINGS on purpose: `mass 0` is two
+                 * tokens and would be indistinguishable from a duration
+                 * followed by a number. */
+                self.expr(&mut prog)?;
+                let mut params = Vec::new();
+                while let Some(Token { kind: TokKind::Str(_), .. }) = self.peek() {
+                    if let Some(Token { kind: TokKind::Str(st), .. }) = self.next() {
+                        params.push(st.clone());
+                    }
+                }
+                if params.is_empty() {
+                    return Err(
+                        "SENSITIVITY needs a duration then one or more quoted parameter \
+                         names, e.g. `sensitivity 3 \"gravity.y\" \"mass 0\"`"
+                            .into(),
+                    );
+                }
+                prog.push(Instr::Sensitivity(params));
             }
             TokKind::Keyword(Keyword::Let) => {
                 self.pos += 1;

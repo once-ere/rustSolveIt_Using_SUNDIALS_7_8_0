@@ -125,7 +125,7 @@ Comments start with `#`. Every example in section 7 is a script in
 cargo test --workspace
 ```
 
-568 tests should pass. If they do, your build is the same build this
+592 tests should pass. If they do, your build is the same build this
 documentation was written against.
 
 ---
@@ -291,16 +291,44 @@ ARKODE. 7.8.0 brings the whole suite:
 |---|---|---|
 | `cvode_rs` | ordinary differential equations (Adams / BDF) | yes |
 | `arkode_rs` | Runge–Kutta: explicit, implicit, IMEX, multirate, symplectic | yes |
-| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis | not yet |
-| `ida_rs` | **differential-algebraic** systems, `F(t, y, ẏ) = 0` | not yet |
-| `idas_rs` | IDA plus sensitivity analysis | not yet |
-| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration | not yet |
+| `ida_rs` | **differential-algebraic** systems, `F(t, y, ẏ) = 0` | yes — `CONSTRAIN` + `METHOD IDA` |
+| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration | yes — `EQUILIBRIUM` |
+| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis | yes — `SENSITIVITY` |
+| `idas_rs` | IDA plus sensitivity analysis | yes — `SENSITIVITY` while constrained |
 
-The four unused ones build, carry their own examples, and each of those
-examples is compared byte-for-byte against the output of the original C
-program. They are there for the next person who needs a constrained
-mechanism (that is `ida_rs`) or a parameter derivative (that is
-`cvodes_rs`).
+All six are compared byte-for-byte against the output of the original C
+programs. The last four arrived with the 7.8.0 engine, and §5.4 is what
+they do for you.
+
+### 5.4 The three questions that are not "what happens next"
+
+`STEP` and `RUN` answer one question. The four families above answer
+three more.
+
+**A rigid rod, held exactly** — `CONSTRAIN a b` then `METHOD IDA`. A rod
+is a geometric fact, not a very stiff spring: the bob is *exactly* `L`
+from the pivot, always. Saying so turns the equations of motion from an
+ODE into a differential-algebraic equation, which is what IDA solves. A
+body with `inverse_mass = 0` becomes an **anchor** — it never moves and
+absorbs the reaction — so anchor + bob + rod is a pendulum. `CONSTRAINTS`
+reports how far the rod has strayed from its length; over a 20-second
+swing it stays at roundoff.
+
+**Where it comes to rest** — `EQUILIBRIUM`. Not an integration: KINSOL
+solves for a configuration where every free body has zero net force,
+every anchor is where it started and every rod is the right length, then
+puts the bodies there and stops them. It says nothing about *stability* —
+a pencil on its point is an equilibrium too — so perturb the answer and
+`RUN` if you need to know.
+
+**How much the answer depends on an input** — `SENSITIVITY 3 "gravity.y"`.
+Running twice with slightly different inputs and subtracting throws away
+most of your digits. This integrates the derivative alongside the state
+instead. CVODES does it for an ordinary system; IDAS does it when a
+`CONSTRAIN` is active, because only then are the equations a DAE.
+
+Examples 17 and 18 in §7 work all three, with the closed forms to check
+them against.
 
 **A more faithful API.** The 7.8.0 translation models C's opaque
 pointers directly rather than smoothing them into idiomatic Rust. Vector
@@ -395,7 +423,7 @@ output, which is exactly the property section 5.2 promises you have.
 
 ---
 
-## 7. Sixteen worked examples
+## 7. Eighteen worked examples
 
 Every transcript below is genuine program output. The scripts are in
 [`scripts/solveit/`](scripts/solveit) and you can run any of them:
@@ -1217,6 +1245,109 @@ numbers.
 
 ---
 
+---
+
+### Example 17 — a pendulum as a constraint, not a force
+
+**The physics.** A pendulum bob hangs on a rigid rod. The small-amplitude
+period is `T = 2π√(L/g)`. Released 0.02 rad off vertical with `L = 1` and
+`g = 9.81`, that is `T = 2.0060666807106475` s, and after exactly one
+period the bob must be back where it started.
+
+**Why it is a real test.** The rod is not a force, it is a geometric
+condition — and the *only* way to hold it exactly is to solve the
+differential-algebraic equation. The test has two independent halves: the
+period must come out right (physics) and the rod must not stretch
+(numerics).
+
+```
+In[4]:= new sphere as pivot { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+Out[4]= obj0 as pivot
+In[5]:= new sphere as bob { mass = 1, radius = 0.05, position = [0.019998666693333084, -0.9998000066665778, 0] }
+Out[5]= obj1 as bob
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1 (METHOD IDA is required to integrate it)
+In[7]:= constraints
+Out[7]= constraint0: obj0 <-> obj1 length 1 (currently 1)
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 2.0060666807106475 steps 200
+Out[9]= t = 2.0060666807106475 (339 solver steps, 200 snapshots, |dE/E| = 2.530e-12)
+In[10]:= get bob.position
+Out[10]= [0.019998666320588818, -0.9998000066740419, 0]
+In[11]:= constraints
+Out[11]= constraint0: obj0 <-> obj1 length 1 (currently 1.0000000000000082)
+```
+
+**What to notice.** The bob started at `(0.019998666693333084,
+−0.9998000066665778)` and came back to `(0.019998666320588818,
+−0.9998000066740419)` — a closure of **3.7 × 10⁻¹⁰** after a full
+period. Energy held to 2.5 parts in 10¹².
+
+And the rod: `1.0000000000000082`. Eight parts in 10¹⁵ — one bit — after
+339 solver steps. That is not luck. The formulation carries *both* the
+rod's length and its rate of change as equations; the cheaper scheme that
+constrains only the acceleration lets the length drift quadratically, and
+you find out much later.
+
+**The `inverse_mass = 0` on the pivot is what makes it a pendulum.** It
+marks the pivot as an anchor: immovable, and absorbing whatever the rod
+pulls with. Without it you would have two bodies tumbling around their
+shared centre of mass, joined by a stick — also a perfectly good
+simulation, just not a pendulum.
+
+---
+
+### Example 18 — where it rests, and what the answer depends on
+
+**The physics.** Two questions that integration does not answer. A
+pendulum released anywhere comes to rest hanging straight down, one
+rod-length below the pivot. And free fall, `y(T) = y₀ + v₀T + ½gT²`, has
+the exact derivative `∂y/∂g = T²/2`, which at `T = 3` is 4.5.
+
+**Why it is a real test.** Both answers are exact, and the second one has
+a second exact answer hiding in it.
+
+```
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1 (METHOD IDA is required to integrate it)
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual evaluation(s);
+        largest net force on any free body = 7.459152323898993e-13,
+        worst |g| = 1.9317880628477724e-14
+In[8]:= get bob.position
+Out[8]= [0.0000000000000735262479725006, -0.9999999999999807, 0]
+```
+
+Released 57° off vertical, the bob lands at `x = 7.4 × 10⁻¹⁴`,
+`y = −0.9999999999999807`. Straight down, one rod-length, to 13 digits —
+and the largest net force left anywhere is 7 × 10⁻¹³.
+
+Now the derivative, on a free body:
+
+```
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+In[16]:= get stone.position
+Out[16]= [3.000000000000001, -44.14500000000045, 0]
+```
+
+**What to notice.** `4.500000056696235` against an analytic `4.5` — 1.3
+parts in 10⁸, carried alongside a trajectory that itself landed on
+`−44.14500000000045` where `−½ · 9.81 · 9 = −44.145`.
+
+And the second derivative is **exactly zero**. In uniform gravity every
+mass accelerates equally, so the trajectory does not depend on the mass
+at all. A finite-difference estimate would have returned some small
+number and left you guessing whether it was noise or physics. The
+sensitivity equations return the zero.
+
+---
+
 ## 8. Watching it: the scene window and browser videos
 
 ### 8.1 The live window
@@ -1319,7 +1450,7 @@ cargo run -p physical_object --release --example bouncing_ball_restitution
 
 ### 9.3 The test suite
 
-568 tests: 40 library, 19 collision, 9 conservation, 109 language,
+592 tests: 40 library, 19 collision, 9 conservation, 109 language,
 92 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written.
 
@@ -1379,7 +1510,7 @@ with the complete EBNF grammar and a further eighteen worked examples.
 | `sundials_rs/` | the pure-Rust SUNDIALS 7.8.0 engine (vendored, read-only) |
 | `jupyter/` | the JupyterLab kernel |
 | `dynamic_notebooks/` | 59 runnable sessions, incl. 34 Routh problems |
-| `scripts/solveit/` | the sixteen examples in section 7 |
+| `scripts/solveit/` | the eighteen examples in section 7 |
 | `scripts/collisions/` | twelve documented collision scripts |
 | `videos/` | recorded browser videos; `videos/scenes/` the scripts behind them |
 | `tools/` | the index builder, the verifiers, `record_video.py` |

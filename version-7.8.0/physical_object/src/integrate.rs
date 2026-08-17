@@ -51,6 +51,7 @@
 
 use crate::boundary::{self, Boundary};
 use crate::collide;
+use crate::constrain::ConstraintSet;
 use crate::linalg::{Mat3, Quat, Vec3};
 use crate::physical_object::physical_object;
 use crate::system::{PhysicalObjectSystem, VARS_PER_OBJECT};
@@ -88,6 +89,15 @@ use arkode_rs::arkode_io::{
 use arkode_rs::arkode_root::ARKodeRootInit;
 use arkode_rs::arkode_sprkstep::SPRKStepCreate;
 use arkode_rs::arkode_sprkstep_io::SPRKStepSetMethodName;
+
+use ida_rs::ida::{IDACreate, IDAFree, IDAInit, IDASStolerances, IDASolve};
+use ida_rs::ida_ic::IDACalcIC;
+use ida_rs::ida_impl::{IDA_NORMAL, IDA_SUCCESS, IDA_YA_YDP_INIT};
+use ida_rs::ida_io::{
+    IDAGetNumErrTestFails, IDAGetNumNonlinSolvIters, IDAGetNumResEvals, IDAGetNumSteps,
+    IDASetId, IDASetMaxNumSteps, IDASetSuppressAlg, IDASetUserData,
+};
+use ida_rs::ida_ls::IDASetLinearSolver;
 
 /// The 7.8.0 user-data slot: exactly the callback parameter type of
 /// `CVRhsFn`/`CVRootFn`/`ARKRhsFn`/`ARKRootFn`.
@@ -131,6 +141,12 @@ pub enum Method {
     /// `table` is an ARKODE SPRK table name such as
     /// `"ARKODE_SPRK_MCLACHLAN_4_4"` or `"ARKODE_SPRK_LEAPFROG_2_2"`.
     Sprk { table: String, dt: f64 },
+    /// IDA on the GGL-stabilized index-2 DAE — the only method that can
+    /// honour a [`crate::constrain::ConstraintSet`]. Translational only
+    /// (`ConstraintSet::gate`). With no constraints it is an ordinary
+    /// BDF integration of the same translational dynamics, which is
+    /// exactly how the unconstrained cross-check in the tests works.
+    Ida,
 }
 
 /// Conserved-quantity snapshot recorded at each output time.
@@ -162,6 +178,12 @@ pub struct RunReport {
     pub nge: i64,
     /// Collision impulses resolved during this run.
     pub ncollisions: u64,
+    /// Worst `(|g|, |ġ|)` over the constraint set at the final state —
+    /// how far the rods actually stretched. Zero-length when the system
+    /// is unconstrained. The GGL formulation drives BOTH to roundoff;
+    /// a growing first component means the constraint is drifting and
+    /// the answer is quietly wrong (see `constrain.rs`).
+    pub constraint_drift: (f64, f64),
 }
 
 /// Parameters snapshot handed to the CVODE right-hand side.
@@ -462,10 +484,22 @@ pub fn run(
     nout: usize,
 ) -> Result<RunReport, String> {
     system.contacts.clear();
+    /* A constraint is a promise about the trajectory. Only the DAE path
+     * can keep it, so an explicit method that cannot is refused by name
+     * rather than silently integrating the unconstrained system. */
+    if !system.constraints.is_empty() && !matches!(system.method, Method::Ida) {
+        return Err(format!(
+            "this system has {} rigid constraint(s), which only the DAE integrator can hold: \
+             use METHOD IDA (or remove them with CONSTRAIN OFF). The current method is {:?}",
+            system.constraints.len(),
+            system.method
+        ));
+    }
     match system.method.clone() {
         Method::Adams => run_cvode(system, t_end, nout, CV_ADAMS),
         Method::Bdf => run_cvode(system, t_end, nout, CV_BDF),
         Method::Sprk { table, dt } => run_sprk(system, t_end, nout, &table, dt),
+        Method::Ida => run_ida(system, t_end, nout),
     }
 }
 
@@ -1160,4 +1194,418 @@ pub fn propagate_single(
     step(&mut sys, dt)?;
     *obj = sys.objects.remove(0);
     Ok(())
+}
+
+/*=================================================================*/
+/* Constrained dynamics: the GGL index-2 DAE, driven by ida_rs      */
+/*=================================================================*/
+
+/// Parameters snapshot for the DAE residual. Same fields as
+/// [`RhsParams`] minus everything rotational — constrained motion is
+/// translational by construction (`ConstraintSet::gate`).
+#[derive(Clone, Debug)]
+struct DaeParams {
+    n: usize,
+    m: usize,
+    g: f64,
+    softening: f64,
+    uniform_gravity: Vec3,
+    e_field: Vec3,
+    b_field: Vec3,
+    masses: Vec<f64>,
+    charges: Vec<f64>,
+    ext_force: Vec<Vec3>,
+    /// `anchors[k]` — immovable body, receives no multiplier force.
+    anchors: Vec<bool>,
+    constraints: ConstraintSet,
+}
+
+impl DaeParams {
+    fn from_system(s: &PhysicalObjectSystem) -> Self {
+        Self {
+            n: s.objects.len(),
+            m: s.constraints.len(),
+            g: s.g_constant,
+            softening: s.softening,
+            uniform_gravity: s.uniform_gravity,
+            e_field: s.e_field,
+            b_field: s.b_field,
+            masses: s.objects.iter().map(|o| o.get_mass()).collect(),
+            charges: s.objects.iter().map(|o| o.get_charge()).collect(),
+            ext_force: s.external_forces.clone(),
+            anchors: ConstraintSet::anchor_flags(s),
+            constraints: s.constraints.clone(),
+        }
+    }
+
+    /// Applied force on body `i` — everything except the constraint
+    /// multipliers. The arithmetic order is deliberately identical to
+    /// [`rhs_full`]'s force block (hard rule 3: floating point is not
+    /// associative, so the same physics must be summed the same way).
+    fn force(&self, q: &[f64], v: &[f64], i: usize) -> Vec3 {
+        let pos_i = read_vec3(q, 3 * i);
+        let v_i = read_vec3(v, 3 * i);
+        let mut force = Vec3::zeros();
+        for j in 0..self.n {
+            if i == j {
+                continue;
+            }
+            let r_vec = read_vec3(q, 3 * j) - pos_i;
+            let dist_sq = r_vec.norm_squared() + self.softening * self.softening;
+            let dist = dist_sq.sqrt();
+            force += (self.g * self.masses[i] * self.masses[j] / (dist_sq * dist)) * r_vec;
+        }
+        force += self.masses[i] * self.uniform_gravity;
+        force += self.charges[i] * (self.e_field + v_i.cross(self.b_field));
+        force += self.ext_force[i];
+        force
+    }
+}
+
+/// The GGL-stabilized index-2 residual `F(t, y, ẏ) = 0` with
+/// `y = [q(3N) | v(3N) | λ(m) | μ(m)]`:
+///
+/// ```text
+///   0 = q̇ - v + Gᵀμ        (position, projected by the GGL multiplier)
+///   0 = M v̇ - F(q,v) + Gᵀλ  (momentum balance with the constraint force)
+///   0 = g(q)                (the constraint itself)
+///   0 = G v                 (and its derivative)
+/// ```
+///
+/// Plain index-1 (acceleration-level) constraints would satisfy only the
+/// last line and let `g` drift quadratically away from zero. Carrying
+/// **both** `g` and `ġ` as algebraic equations — the Gear–Gupta–
+/// Leimkuhler formulation, and the same shape `idaSlCrank_dns` uses —
+/// pins both at roundoff for the whole run. `RunReport::constraint_drift`
+/// reports what actually happened.
+///
+/// An anchored body (`inverse_mass == 0`) gets `0 = v̇` instead of the
+/// momentum balance, so it never moves and absorbs any reaction.
+fn dae_residual(
+    _t: sunrealtype,
+    yy: &N_Vector,
+    yp: &N_Vector,
+    rr: &N_Vector,
+    user_data: &mut UserData,
+) -> i32 {
+    let p = match user_data.as_mut().and_then(|b| b.downcast_mut::<DaeParams>()) {
+        Some(p) => p,
+        None => return -1,
+    };
+    let y = match N_VGetArrayPointer(yy) {
+        Some(d) => d,
+        None => return -1,
+    };
+    let ypv = match N_VGetArrayPointer(yp) {
+        Some(d) => d,
+        None => return -1,
+    };
+    let mut rg = match N_VGetArrayPointer(rr) {
+        Some(d) => d,
+        None => return -1,
+    };
+    let (n, m) = (p.n, p.m);
+    let (y, ypv, r) = (&y[..], &ypv[..], &mut rg[..]);
+    let q = &y[0..3 * n];
+    let v = &y[3 * n..6 * n];
+    let lam = &y[6 * n..6 * n + m];
+    let mu = &y[6 * n + m..6 * n + 2 * m];
+
+    /* --- 0 = q̇ - v + Gᵀμ --- */
+    for k in 0..3 * n {
+        r[k] = ypv[k] - v[k];
+    }
+    p.constraints
+        .add_jacobian_transpose(&p.anchors, q, mu, &mut r[0..3 * n]);
+
+    /* --- 0 = M v̇ - F + Gᵀλ  (or 0 = v̇ for an anchor) --- */
+    for i in 0..n {
+        let b = 3 * n + 3 * i;
+        if p.anchors[i] {
+            r[b] = ypv[b];
+            r[b + 1] = ypv[b + 1];
+            r[b + 2] = ypv[b + 2];
+            continue;
+        }
+        let f = p.force(q, v, i);
+        let mi = p.masses[i];
+        r[b] = mi * ypv[b] - f.x;
+        r[b + 1] = mi * ypv[b + 1] - f.y;
+        r[b + 2] = mi * ypv[b + 2] - f.z;
+    }
+    p.constraints
+        .add_jacobian_transpose(&p.anchors, q, lam, &mut r[3 * n..6 * n]);
+
+    /* --- 0 = g(q) and 0 = G v --- */
+    if m > 0 {
+        let (_, tail) = r.split_at_mut(6 * n);
+        let (gblk, gdblk) = tail.split_at_mut(m);
+        p.constraints.residual(q, gblk);
+        p.constraints.velocity_residual(q, v, gdblk);
+    }
+    0
+}
+
+/// The Lagrange multiplier — the rod tension — solved exactly from
+/// `g̈ = 0`.
+///
+/// With `g = |d| - L` the second derivative is
+/// `g̈ = d̂·d̈ + (|ḋ|² - (d̂·ḋ)²)/|d|`, where the second term is the
+/// centripetal one: a swinging pendulum's rod carries more than the
+/// static component of gravity, and leaving it out makes the initial
+/// acceleration wrong by exactly that much. Substituting the equations of
+/// motion (`v̇_i = (F_i + λd̂)/m_i`, `v̇_j = (F_j - λd̂)/m_j`) gives
+///
+/// ```text
+///        F_j·d̂/m_j - F_i·d̂/m_i + (|ḋ|² - (d̂·ḋ)²)/|d|
+///   λ = ---------------------------------------------
+///                     1/m_i + 1/m_j
+/// ```
+///
+/// An anchor contributes `1/m = 0` to both sums, which is the correct
+/// limit — for a pendulum this reduces to `λ = F·d̂`, the familiar rod
+/// tension.
+///
+/// This is **exact** for a single rod. With several rods sharing a body
+/// they couple and this is only a first guess — good enough that IDA
+/// starts from the right acceleration.
+fn seed_multipliers(p: &DaeParams, q: &[f64], v: &[f64]) -> Vec<f64> {
+    p.constraints
+        .distances
+        .iter()
+        .map(|c| {
+            let d = read_vec3(q, 3 * c.j) - read_vec3(q, 3 * c.i);
+            let dv = read_vec3(v, 3 * c.j) - read_vec3(v, 3 * c.i);
+            let len = d.norm();
+            if len == 0.0 {
+                return 0.0;
+            }
+            let dhat = d * (1.0 / len);
+            let wi = if p.anchors[c.i] { 0.0 } else { 1.0 / p.masses[c.i] };
+            let wj = if p.anchors[c.j] { 0.0 } else { 1.0 / p.masses[c.j] };
+            if wi + wj == 0.0 {
+                return 0.0;
+            }
+            let fi = if p.anchors[c.i] { Vec3::zeros() } else { p.force(q, v, c.i) };
+            let fj = if p.anchors[c.j] { Vec3::zeros() } else { p.force(q, v, c.j) };
+            let radial = dhat.dot(dv);
+            let centripetal = (dv.norm_squared() - radial * radial) / len;
+            (fj.dot(dhat) * wj - fi.dot(dhat) * wi + centripetal) / (wi + wj)
+        })
+        .collect()
+}
+
+/// IDA path — the only integrator that honours rigid constraints.
+///
+/// Layout `[q(3N) | v(3N) | λ(m) | μ(m)]`; note this is **velocity**, not
+/// the 13N momentum packing the CVODE path uses, and it carries no
+/// orientation: `ConstraintSet::gate` has already refused anything
+/// rotational. Positions and velocities are written back through the
+/// setters (hard rule 4) at every output point.
+fn run_ida(
+    system: &mut PhysicalObjectSystem,
+    t_end: f64,
+    nout: usize,
+) -> Result<RunReport, String> {
+    let t0 = system.time;
+    if t_end <= t0 {
+        return Err(format!("t_end ({t_end}) must be greater than current time ({t0})"));
+    }
+    system.constraints.gate(system)?;
+    let nout = nout.max(1);
+    let n = system.objects.len();
+    if n == 0 {
+        system.time = t_end;
+        return Ok(RunReport::default());
+    }
+    let m = system.constraints.len();
+    let neq = 6 * n + 2 * m;
+
+    let mut sunctx_out: Option<SUNContext> = None;
+    let retval_ctx = SUNContext_Create(SUN_COMM_NULL, &mut sunctx_out);
+    if retval_ctx != 0 {
+        return Err(format!("SUNContext_Create failed: {retval_ctx}"));
+    }
+    let sunctx = sunctx_out.ok_or_else(|| "SUNContext_Create returned NULL".to_string())?;
+
+    let yy = N_VNew_Serial(neq as i64, &sunctx)
+        .ok_or_else(|| format!("N_VNew_Serial({neq}) returned NULL"))?;
+    let yp = N_VNew_Serial(neq as i64, &sunctx)
+        .ok_or_else(|| format!("N_VNew_Serial({neq}) returned NULL"))?;
+    let id = N_VNew_Serial(neq as i64, &sunctx)
+        .ok_or_else(|| format!("N_VNew_Serial({neq}) returned NULL"))?;
+
+    let params = DaeParams::from_system(system);
+
+    /* y0 = [q, v, λ₀, 0]; yp0 = [v, (F - Gᵀλ₀)/m, 0, 0].
+     *
+     * λ₀ is NOT zero. IDACalcIC has to solve for the algebraic
+     * components and the differential derivatives together, and from
+     * λ = 0 the acceleration guess is the unconstrained one — for a
+     * pendulum released well off vertical that is wrong by the whole rod
+     * tension, and the initial-condition Newton iteration fails
+     * (IDA_CONV_FAIL). Seeding λ from the static force balance along each
+     * rod, λ ≈ (F·d)/(2|d|²), makes the guess right at rest and close
+     * otherwise. The same seed is used by `equilibrium::solve`. */
+    with_data_mut(&yy, |d| {
+        for (i, o) in system.objects.iter().enumerate() {
+            write_vec3(d, 3 * i, o.get_position());
+            write_vec3(d, 3 * (n + i), o.get_velocity());
+        }
+        for k in 6 * n..neq {
+            d[k] = 0.0;
+        }
+    })
+    .ok_or_else(|| no_array("yy"))?;
+    let q0: Vec<f64> = with_data(&yy, |d| d[0..3 * n].to_vec()).ok_or_else(|| no_array("yy"))?;
+    let v0: Vec<f64> = with_data(&yy, |d| d[3 * n..6 * n].to_vec()).ok_or_else(|| no_array("yy"))?;
+    let lam0 = seed_multipliers(&params, &q0, &v0);
+    with_data_mut(&yy, |d| d[6 * n..6 * n + m].copy_from_slice(&lam0))
+        .ok_or_else(|| no_array("yy"))?;
+    let mut gt0 = vec![0.0; 3 * n];
+    params
+        .constraints
+        .add_jacobian_transpose(&params.anchors, &q0, &lam0, &mut gt0);
+    with_data_mut(&yp, |d| {
+        for k in 0..3 * n {
+            d[k] = v0[k];
+        }
+        for i in 0..n {
+            let a = if params.anchors[i] {
+                Vec3::zeros()
+            } else {
+                (params.force(&q0, &v0, i) - read_vec3(&gt0, 3 * i))
+                    * (1.0 / params.masses[i])
+            };
+            write_vec3(d, 3 * (n + i), a);
+        }
+        for k in 6 * n..neq {
+            d[k] = 0.0;
+        }
+    })
+    .ok_or_else(|| no_array("yp"))?;
+
+    /* id: 1 = differential (q, v), 0 = algebraic (λ, μ). IDA needs this
+     * to know which components IDACalcIC may move and which ones the
+     * error test should ignore. */
+    with_data_mut(&id, |d| {
+        for k in 0..6 * n {
+            d[k] = 1.0;
+        }
+        for k in 6 * n..neq {
+            d[k] = 0.0;
+        }
+    })
+    .ok_or_else(|| no_array("id"))?;
+
+    let ida_mem = IDACreate(&sunctx).ok_or_else(|| "IDACreate returned NULL".to_string())?;
+    let mut retval = IDAInit(&ida_mem, dae_residual, t0, &yy, &yp);
+    if retval != IDA_SUCCESS {
+        return Err(format!("IDAInit failed: {retval}"));
+    }
+    retval = IDASStolerances(&ida_mem, system.rtol, system.atol);
+    if retval != IDA_SUCCESS {
+        return Err(format!("IDASStolerances failed: {retval}"));
+    }
+    retval = IDASetUserData(&ida_mem, Some(Box::new(params.clone())));
+    if retval != IDA_SUCCESS {
+        return Err(format!("IDASetUserData failed: {retval}"));
+    }
+    retval = IDASetId(&ida_mem, Some(&id));
+    if retval != IDA_SUCCESS {
+        return Err(format!("IDASetId failed: {retval}"));
+    }
+    /* The multipliers are algebraic; keeping them out of the local error
+     * test is what stops IDA chasing their (meaningless) accuracy. */
+    retval = IDASetSuppressAlg(&ida_mem, true);
+    if retval != IDA_SUCCESS {
+        return Err(format!("IDASetSuppressAlg failed: {retval}"));
+    }
+    retval = IDASetMaxNumSteps(&ida_mem, 500_000);
+    if retval != IDA_SUCCESS {
+        return Err(format!("IDASetMaxNumSteps failed: {retval}"));
+    }
+    let a = SUNDenseMatrix(neq as i64, neq as i64, &sunctx)
+        .ok_or_else(|| format!("SUNDenseMatrix({neq}, {neq}) returned NULL"))?;
+    let ls = SUNLinSol_Dense(&yy, &a, &sunctx)
+        .ok_or_else(|| "SUNLinSol_Dense returned NULL".to_string())?;
+    retval = IDASetLinearSolver(&ida_mem, &ls, Some(&a));
+    if retval != IDA_SUCCESS {
+        return Err(format!("IDASetLinearSolver failed: {retval}"));
+    }
+
+    /* Consistent initial conditions.
+     *
+     * The GGL formulation needs g(q₀) = 0 AND (G v₀) = 0. When the user
+     * built the constraint from the configuration the bodies are already
+     * in — which is what a bare `CONSTRAIN a b` does — both hold to
+     * roundoff, `seed_multipliers` has supplied the exact tension, and
+     * there is nothing left to solve: calling IDACalcIC anyway asks a
+     * Newton iteration to re-derive an answer it already has, at a
+     * tolerance meant for the trajectory, and it can and does fail
+     * (IDA_CONV_FAIL). The reference mechanism example `idaSlCrank_dns`
+     * likewise sets consistent conditions by hand and never calls it.
+     *
+     * So: check, and only correct if the check fails. */
+    let span = t_end - t0;
+    let (g0, gd0) = system.constraints.drift(system);
+    let scale = system
+        .constraints
+        .distances
+        .iter()
+        .fold(1.0f64, |a, c| a.max(c.length));
+    if g0 > 1e-10 * scale || gd0 > 1e-8 * scale {
+        let first_out = t0 + span / (nout as f64);
+        retval = IDACalcIC(&ida_mem, IDA_YA_YDP_INIT, first_out);
+        if retval != IDA_SUCCESS {
+            return Err(format!(
+                "the initial configuration does not satisfy its constraints \
+                 (worst |g| = {g0:e}, worst |g_dot| = {gd0:e}), and IDACalcIC could not correct \
+                 it: {retval}. A bare `CONSTRAIN a b` takes the length from where the bodies \
+                 already are and is always consistent; an explicit length must match the \
+                 current separation, and the velocities must not be pulling the rod apart"
+            ));
+        }
+    }
+
+    let mut report = RunReport::default();
+    let mut t = t0;
+    for k in 1..=nout {
+        let tout = t0 + span * (k as f64) / (nout as f64);
+        let r = IDASolve(&ida_mem, tout, &mut t, &yy, &yp, IDA_NORMAL);
+        if r < 0 {
+            return Err(format!("IDASolve failed with retval = {r} at t = {t}"));
+        }
+        with_data(&yy, |d| {
+            for (i, o) in system.objects.iter_mut().enumerate() {
+                o.set_position(read_vec3(d, 3 * i));
+                o.set_velocity(read_vec3(d, 3 * (n + i)));
+            }
+        })
+        .ok_or_else(|| no_array("yy"))?;
+        system.time = t;
+        report.snapshots.push(snapshot(system, t));
+    }
+
+    let (mut nst, mut nre, mut nni, mut netf) = (0i64, 0i64, 0i64, 0i64);
+    IDAGetNumSteps(&ida_mem, &mut nst);
+    IDAGetNumResEvals(&ida_mem, &mut nre);
+    IDAGetNumNonlinSolvIters(&ida_mem, &mut nni);
+    IDAGetNumErrTestFails(&ida_mem, &mut netf);
+    report.nst = nst;
+    report.nfe = nre;
+    report.nni = nni;
+    report.netf = netf;
+    report.constraint_drift = system.constraints.drift(system);
+
+    let mut ida_mem = Some(ida_mem);
+    IDAFree(&mut ida_mem);
+    SUNLinSolFree(Some(ls));
+    SUNMatDestroy(a);
+    N_VDestroy(yy);
+    N_VDestroy(yp);
+    N_VDestroy(id);
+    let mut sunctx = Some(sunctx);
+    SUNContext_Free(&mut sunctx);
+    Ok(report)
 }

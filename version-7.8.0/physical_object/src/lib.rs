@@ -1,7 +1,7 @@
 //! `physical_object` — the unique union of the three legacy simulator types
 //! (`PointParticle`, `RigidBody`, `RigidBody3D`) as a single pure-Rust
 //! library whose only numerical-integration backend is the local
-//! `sundials_rs` workspace (pure-Rust SUNDIALS 7.7.0).
+//! `sundials_rs` workspace (pure-Rust SUNDIALS 7.8.0).
 //!
 //! Guarantees: zero `unsafe`, zero external crate dependencies,
 //! zero warnings.
@@ -17,9 +17,13 @@ pub mod physical_object;
 pub mod system;
 pub mod integrate;
 pub mod collide;
+pub mod constrain;
+pub mod equilibrium;
+pub mod sensitivity;
 
 pub use crate::boundary::{analytic_inertia_tensor, Boundary, Sdf};
 pub use crate::collide::Contact;
+pub use crate::constrain::{ConstraintSet, DistanceConstraint};
 pub use crate::integrate::{Method, RunReport, Snapshot};
 pub use crate::linalg::{Mat3, Quat, Vec3};
 pub use crate::system::PhysicalObjectSystem;

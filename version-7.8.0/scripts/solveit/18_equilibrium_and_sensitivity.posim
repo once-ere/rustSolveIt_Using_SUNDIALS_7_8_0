@@ -1,0 +1,22 @@
+# 18. Two questions that are not "what happens next".
+# EQUILIBRIUM (KINSOL) asks where the system comes to REST.
+# SENSITIVITY (CVODES/IDAS) asks how much the answer DEPENDS on an input.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -9.81, 0]
+collide off
+new sphere as pivot { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+new sphere as bob { mass = 1, radius = 0.05, position = [0.8414709848078965, -0.5403023058681398, 0] }
+constrain pivot bob
+# Where does it rest? Straight down, one rod-length below the pivot.
+equilibrium
+get bob.position
+# Now a free body, and the exact derivative of free fall:
+#   y(T) = y0 + v0*T + g*T^2/2, so dy/dg = T^2/2 = 4.5 at T = 3.
+constrain off
+reset
+set system.uniform_gravity = [0, -9.81, 0]
+collide off
+new sphere as stone { mass = 2, radius = 0.05, position = [0, 0, 0], velocity = [1, 0, 0] }
+method adams
+sensitivity 3 "gravity.y" "mass 0"
+get stone.position

@@ -962,6 +962,523 @@
   "status": "reference"
  },
  {
+  "id": "rs.physical_object.constrain.DistanceConstraint",
+  "name": "DistanceConstraint",
+  "kind": "type",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "D"
+  ],
+  "summary": "A rigid distance constraint: `|q_j - q_i|` is held at `length`.",
+  "definition": "A rigid distance constraint: `|q_j - q_i|` is held at `length`.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/lib.rs`.",
+  "syntax": [
+   "pub struct DistanceConstraint"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 63,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/src/lib.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet",
+  "name": "ConstraintSet",
+  "kind": "type",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "C"
+  ],
+  "summary": "Every constraint acting on a system, in multiplier order.",
+  "definition": "Every constraint acting on a system, in multiplier order.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`.",
+  "syntax": [
+   "pub struct ConstraintSet"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 71,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.len",
+  "name": "ConstraintSet::len",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "L"
+  ],
+  "summary": "Number of scalar constraints \u2014 the number of Lagrange multipliers `\u03bb`, and equally the number of GGL multipliers `\u03bc`.",
+  "definition": "Number of scalar constraints \u2014 the number of Lagrange multipliers `\u03bb`, and equally the number of GGL multipliers `\u03bc`.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/examples/tumbling_body.rs`, `posim/examples/scene_server_reference.rs`, `special_functions/examples/bessel_complex_accuracy.rs`, `special_functions/examples/bessel_nu_accuracy.rs`.",
+  "syntax": [
+   "pub fn len(&self) -> usize"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 78,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/examples/tumbling_body.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "posim/examples/scene_server_reference.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "special_functions/examples/bessel_complex_accuracy.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "special_functions/examples/bessel_nu_accuracy.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.is_empty",
+  "name": "ConstraintSet::is_empty",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "I"
+  ],
+  "summary": "fn `is_empty` in `physical_object::constrain`.",
+  "definition": "No doc comment in the source.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/collision.rs`, `posim/examples/scene_server_reference.rs`.",
+  "syntax": [
+   "pub fn is_empty(&self) -> bool"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 82,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/collision.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "posim/examples/scene_server_reference.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.add_distance",
+  "name": "ConstraintSet::add_distance",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "A"
+  ],
+  "summary": "Adds a rod between `i` and `j`.",
+  "definition": "Adds a rod between `i` and `j`. `length` defaults to the distance they are already at, which is almost always what the user means (`CONSTRAIN a b` freezes the current separation).  Rejects the degenerate cases explicitly rather than producing a singular Jacobian three screens later.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`.",
+  "syntax": [
+   "pub fn add_distance( &mut self, system: &PhysicalObjectSystem, i: usize, j: usize, length: Option<f64>,"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 92,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.gate",
+  "name": "ConstraintSet::gate",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "G"
+  ],
+  "summary": "Refuses a constrained run whose physics this module cannot express, naming the offending feature \u2014 the same contract the SPRK gate follows.",
+  "definition": "Refuses a constrained run whose physics this module cannot express, naming the offending feature \u2014 the same contract the SPRK gate follows.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/collision.rs`, `physical_object/tests/dae.rs`.",
+  "syntax": [
+   "pub fn gate(&self, system: &PhysicalObjectSystem) -> Result<(), String>"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 141,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/collision.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.residual",
+  "name": "ConstraintSet::residual",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "R"
+  ],
+  "summary": "`g(q) = |d| - L` for every constraint.",
+  "definition": "`g(q) = |d| - L` for every constraint.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `special_functions/examples/bessel_nu_accuracy.rs`.",
+  "syntax": [
+   "pub fn residual(&self, q: &[f64], out: &mut [f64])"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 166,
+    "role": "definition"
+   },
+   {
+    "file": "special_functions/examples/bessel_nu_accuracy.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.velocity_residual",
+  "name": "ConstraintSet::velocity_residual",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "V"
+  ],
+  "summary": "`(G v)_k = d\u0302\u00b7(v_j - v_i)` \u2014 the time derivative `\u0121`, which the GGL formulation drives to zero alongside `g` itself.",
+  "definition": "`(G v)_k = d\u0302\u00b7(v_j - v_i)` \u2014 the time derivative `\u0121`, which the GGL formulation drives to zero alongside `g` itself. This is the component of the relative velocity ALONG the rod: zero means the rod is neither stretching nor shortening.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/integrate.rs`, `physical_object/src/sensitivity.rs`.",
+  "syntax": [
+   "pub fn velocity_residual(&self, q: &[f64], v: &[f64], out: &mut [f64])"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 177,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/src/integrate.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.add_jacobian_transpose",
+  "name": "ConstraintSet::add_jacobian_transpose",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "A"
+  ],
+  "summary": "Accumulates `G\u1d40 m` into `out` (a `3N` block), skipping anchors.",
+  "definition": "Accumulates `G\u1d40 m` into `out` (a `3N` block), skipping anchors.  This is the only place the multipliers touch the bodies, and the anchor rule lives here: a body with `inverse_mass == 0` receives no multiplier force, so a rod to it is a pin joint to the world.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/equilibrium.rs`, `physical_object/src/integrate.rs`, `physical_object/src/sensitivity.rs`.",
+  "syntax": [
+   "pub fn add_jacobian_transpose( &self, anchors: &[bool], q: &[f64], m: &[f64], out: &mut [f64],"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 190,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/src/integrate.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.anchor_flags",
+  "name": "ConstraintSet::anchor_flags",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "A"
+  ],
+  "summary": "`anchors[k]` \u2014 body `k` has `inverse_mass == 0` and is therefore immovable.",
+  "definition": "`anchors[k]` \u2014 body `k` has `inverse_mass == 0` and is therefore immovable. Multipliers are not allowed to push it, which is what turns a rod to it into a pin joint to the world.  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/equilibrium.rs`, `physical_object/src/integrate.rs`, `physical_object/src/sensitivity.rs`.",
+  "syntax": [
+   "pub fn anchor_flags(system: &PhysicalObjectSystem) -> Vec<bool>"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 212,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/src/integrate.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.constrain.ConstraintSet.drift",
+  "name": "ConstraintSet::drift",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "D"
+  ],
+  "summary": "The worst `|g|` and `|\u0121|` over the set, in the system's current configuration.",
+  "definition": "The worst `|g|` and `|\u0121|` over the set, in the system's current configuration. This is the number that tells you whether the constraint is actually being *held* \u2014 see [`crate::integrate::RunReport::constraint_drift`].  Declared in the `constrain` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/examples/charged_in_b_field.rs`, `physical_object/examples/kepler_orbit.rs`, `physical_object/examples/outer_solar_system.rs`, `physical_object/examples/tumbling_body.rs`.",
+  "syntax": [
+   "pub fn drift(&self, system: &PhysicalObjectSystem) -> (f64, f64)"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 220,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/examples/charged_in_b_field.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/examples/kepler_orbit.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/examples/outer_solar_system.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/examples/tumbling_body.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.equilibrium.EquilibriumReport",
+  "name": "EquilibriumReport",
+  "kind": "type",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "E"
+  ],
+  "summary": "What the solve achieved.",
+  "definition": "What the solve achieved. `residual_norm` is the scaled norm of `F(u)` KINSOL stopped at \u2014 the number that says how well \"nothing wants to move\" actually holds.  Declared in the `equilibrium` module of the `physical_object` crate.",
+  "syntax": [
+   "pub struct EquilibriumReport"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 66,
+    "role": "definition"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "stub"
+ },
+ {
+  "id": "rs.physical_object.equilibrium.solve",
+  "name": "solve",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "S"
+  ],
+  "summary": "Moves `system` to a static equilibrium, in place.",
+  "definition": "Moves `system` to a static equilibrium, in place.  Every body's position is updated through the setters (hard rule 4) and every velocity is zeroed \u2014 at equilibrium, by definition. The system's `time` is untouched: this is not an integration.  The initial guess is wherever the bodies already are, so `EQUILIBRIUM` finds *the nearby* rest state, not some global one. That is the useful behaviour: drop  Declared in the `equilibrium` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`, `posim/examples/scene_server_reference.rs`, `quantum/examples/nash_propagator.rs`, `special_functions/examples/scatter_1d.rs`.",
+  "syntax": [
+   "pub fn solve(system: &mut PhysicalObjectSystem) -> Result<EquilibriumReport, String>"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 177,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "posim/examples/scene_server_reference.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "quantum/examples/nash_propagator.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "special_functions/examples/scatter_1d.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
   "id": "rs.physical_object.integrate.Method",
   "name": "Method",
   "kind": "type",
@@ -981,7 +1498,7 @@
   "locations": [
    {
     "file": "physical_object/src/integrate.rs",
-    "line": 125,
+    "line": 135,
     "role": "definition"
    },
    {
@@ -1020,7 +1537,7 @@
    "S"
   ],
   "summary": "Conserved-quantity snapshot recorded at each output time.",
-  "definition": "Conserved-quantity snapshot recorded at each output time.  Declared in the `integrate` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/lib.rs`.",
+  "definition": "Conserved-quantity snapshot recorded at each output time.  Declared in the `integrate` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/equilibrium.rs`, `physical_object/src/lib.rs`.",
   "syntax": [
    "pub struct Snapshot"
   ],
@@ -1030,8 +1547,13 @@
   "locations": [
    {
     "file": "physical_object/src/integrate.rs",
-    "line": 138,
+    "line": 154,
     "role": "definition"
+   },
+   {
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 1,
+    "role": "used here"
    },
    {
     "file": "physical_object/src/lib.rs",
@@ -1054,7 +1576,7 @@
    "R"
   ],
   "summary": "Result of a solver run: per-output snapshots plus solver statistics.",
-  "definition": "Result of a solver run: per-output snapshots plus solver statistics.  Declared in the `integrate` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/lib.rs`.",
+  "definition": "Result of a solver run: per-output snapshots plus solver statistics.  Declared in the `integrate` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/constrain.rs`, `physical_object/src/lib.rs`.",
   "syntax": [
    "pub struct RunReport"
   ],
@@ -1064,8 +1586,13 @@
   "locations": [
    {
     "file": "physical_object/src/integrate.rs",
-    "line": 148,
+    "line": 164,
     "role": "definition"
+   },
+   {
+    "file": "physical_object/src/constrain.rs",
+    "line": 1,
+    "role": "used here"
    },
    {
     "file": "physical_object/src/lib.rs",
@@ -1098,7 +1625,7 @@
   "locations": [
    {
     "file": "physical_object/src/integrate.rs",
-    "line": 459,
+    "line": 481,
     "role": "definition"
    }
   ],
@@ -1136,7 +1663,7 @@
   "locations": [
    {
     "file": "physical_object/src/integrate.rs",
-    "line": 473,
+    "line": 507,
     "role": "definition"
    },
    {
@@ -1185,7 +1712,7 @@
   "locations": [
    {
     "file": "physical_object/src/integrate.rs",
-    "line": 1150,
+    "line": 1184,
     "role": "definition"
    },
    {
@@ -1475,7 +2002,7 @@
     "role": "used here"
    },
    {
-    "file": "physical_object/src/physical_object.rs",
+    "file": "physical_object/src/constrain.rs",
     "line": 1,
     "role": "used here"
    }
@@ -1585,12 +2112,12 @@
     "role": "used here"
    },
    {
-    "file": "physical_object/src/integrate.rs",
+    "file": "physical_object/src/equilibrium.rs",
     "line": 1,
     "role": "used here"
    },
    {
-    "file": "physical_object/src/physical_object.rs",
+    "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    }
@@ -1734,7 +2261,7 @@
    "M"
   ],
   "summary": "A 3x3 matrix, row-major.",
-  "definition": "A 3x3 matrix, row-major.  Declared in the `linalg` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/examples/bouncing_ball_restitution.rs`, `physical_object/tests/collision.rs`.",
+  "definition": "A 3x3 matrix, row-major.  Declared in the `linalg` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/examples/bouncing_ball_restitution.rs`, `physical_object/tests/collision.rs`, `physical_object/tests/dae.rs`.",
   "syntax": [
    "pub struct Mat3(pub [[f64; 3]; 3])"
   ],
@@ -1754,6 +2281,11 @@
    },
    {
     "file": "physical_object/tests/collision.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    }
@@ -1843,6 +2375,11 @@
     "file": "physical_object/src/linalg.rs",
     "line": 129,
     "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
    },
    {
     "file": "special_functions/examples/bessel_complex_accuracy.rs",
@@ -2321,6 +2858,11 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "special_functions/examples/bessel_complex_accuracy.rs",
     "line": 1,
     "role": "used here"
@@ -2375,6 +2917,11 @@
    },
    {
     "file": "physical_object/tests/collision.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    }
@@ -3077,17 +3624,7 @@
     "role": "definition"
    },
    {
-    "file": "physical_object/src/integrate.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/machine.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/notebook.rs",
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    }
@@ -3224,6 +3761,11 @@
     "file": "physical_object/tests/collision.rs",
     "line": 1,
     "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
    }
   ],
   "examples": [
@@ -3264,17 +3806,17 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    },
    {
-    "file": "posim/src/machine.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/scene/mod.rs",
+    "file": "physical_object/src/sensitivity.rs",
     "line": 1,
     "role": "used here"
    }
@@ -3423,12 +3965,12 @@
     "role": "used here"
    },
    {
-    "file": "physical_object/src/integrate.rs",
+    "file": "physical_object/src/equilibrium.rs",
     "line": 1,
     "role": "used here"
    },
    {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    }
@@ -3721,12 +4263,7 @@
     "role": "definition"
    },
    {
-    "file": "physical_object/src/collide.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    }
@@ -3812,7 +4349,7 @@
     "role": "definition"
    },
    {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    }
@@ -3855,12 +4392,17 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/src/constrain.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    },
    {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/src/sensitivity.rs",
     "line": 1,
     "role": "used here"
    }
@@ -4247,6 +4789,11 @@
     "file": "physical_object/tests/collision.rs",
     "line": 1,
     "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
    }
   ],
   "examples": [
@@ -4292,7 +4839,12 @@
     "role": "used here"
    },
    {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    }
@@ -5045,6 +5597,234 @@
   "status": "complete"
  },
  {
+  "id": "rs.physical_object.sensitivity.SensParam",
+  "name": "SensParam",
+  "kind": "type",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "S"
+  ],
+  "summary": "A scalar input the run can be differentiated with respect to.",
+  "definition": "A scalar input the run can be differentiated with respect to.  Spelled in the language exactly as the `Display` impl prints it: `g_constant`, `mass 2`, `charge 0`, `gravity.y`, `e_field.x`, `b_field.z`.  Declared in the `sensitivity` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`.",
+  "syntax": [
+   "pub enum SensParam"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 68,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.sensitivity.SensParam.parse",
+  "name": "SensParam::parse",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "P"
+  ],
+  "summary": "Parses the language spelling.",
+  "definition": "Parses the language spelling. Returns a message naming every accepted form on failure \u2014 a wrong parameter name is the most likely user error here.  Declared in the `sensitivity` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`, `posim/examples/scene_server_reference.rs`.",
+  "syntax": [
+   "pub fn parse(text: &str, n: usize) -> Result<Self, String>"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 115,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "posim/examples/scene_server_reference.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.sensitivity.ParamSensitivity",
+  "name": "ParamSensitivity",
+  "kind": "type",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "P"
+  ],
+  "summary": "`\u2202y(T)/\u2202p` for one parameter, split into the parts a user asks about.",
+  "definition": "`\u2202y(T)/\u2202p` for one parameter, split into the parts a user asks about.  Declared in the `sensitivity` module of the `physical_object` crate.",
+  "syntax": [
+   "pub struct ParamSensitivity"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 166,
+    "role": "definition"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "stub"
+ },
+ {
+  "id": "rs.physical_object.sensitivity.ParamSensitivity.max_position_sensitivity",
+  "name": "ParamSensitivity::max_position_sensitivity",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "M"
+  ],
+  "summary": "The largest single position derivative \u2014 the one-number answer to \"does this parameter matter?\".",
+  "definition": "The largest single position derivative \u2014 the one-number answer to \"does this parameter matter?\".  Declared in the `sensitivity` module of the `physical_object` crate.",
+  "syntax": [
+   "pub fn max_position_sensitivity(&self) -> f64"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 177,
+    "role": "definition"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "stub"
+ },
+ {
+  "id": "rs.physical_object.sensitivity.SensitivityReport",
+  "name": "SensitivityReport",
+  "kind": "type",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "S"
+  ],
+  "summary": "Everything a sensitivity run produces.",
+  "definition": "Everything a sensitivity run produces.  Declared in the `sensitivity` module of the `physical_object` crate.",
+  "syntax": [
+   "pub struct SensitivityReport"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 184,
+    "role": "definition"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "stub"
+ },
+ {
+  "id": "rs.physical_object.sensitivity.gate",
+  "name": "gate",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "G"
+  ],
+  "summary": "Refuses what the translational sensitivity path cannot express.",
+  "definition": "Refuses what the translational sensitivity path cannot express.  Declared in the `sensitivity` module of the `physical_object` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/collision.rs`, `physical_object/tests/dae.rs`.",
+  "syntax": [
+   "pub fn gate(system: &PhysicalObjectSystem) -> Result<(), String>"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 193,
+    "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/collision.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "reference"
+ },
+ {
+  "id": "rs.physical_object.sensitivity.run",
+  "name": "run",
+  "kind": "function",
+  "tier": "B",
+  "aliases": [],
+  "indexKeys": [
+   "R"
+  ],
+  "summary": "Integrates `system` to `t_end` **and** the sensitivity of the final state with respect to each parameter in `wanted`.",
+  "definition": "Integrates `system` to `t_end` **and** the sensitivity of the final state with respect to each parameter in `wanted`.  Picks IDAS when the system is constrained and CVODES when it is not. The system itself is advanced in place, exactly as [`crate::integrate::run`] would advance it \u2014 a sensitivity run is a real run that also carries derivatives.  Declared in the `sensitivity` module of the `physical_object` crate.",
+  "syntax": [
+   "pub fn run( system: &mut PhysicalObjectSystem, t_end: f64, wanted: &[SensParam], ) -> Result<SensitivityReport, String>"
+  ],
+  "parameters": [],
+  "returns": null,
+  "errors": [],
+  "locations": [
+   {
+    "file": "physical_object/src/sensitivity.rs",
+    "line": 438,
+    "role": "definition"
+   }
+  ],
+  "examples": [],
+  "seeAlso": [],
+  "invariants": [],
+  "status": "stub"
+ },
+ {
   "id": "rs.physical_object.system.VARS_PER_OBJECT",
   "name": "VARS_PER_OBJECT",
   "kind": "type",
@@ -5147,7 +5927,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 73,
+    "line": 77,
     "role": "definition"
    },
    {
@@ -5205,7 +5985,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 98,
+    "line": 103,
     "role": "definition"
    },
    {
@@ -5249,7 +6029,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 106,
+    "line": 111,
     "role": "definition"
    },
    {
@@ -5292,7 +6072,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 116,
+    "line": 121,
     "role": "definition"
    },
    {
@@ -5335,7 +6115,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 121,
+    "line": 126,
     "role": "definition"
    },
    {
@@ -5393,7 +6173,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 140,
+    "line": 145,
     "role": "definition"
    },
    {
@@ -5436,7 +6216,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 158,
+    "line": 163,
     "role": "definition"
    },
    {
@@ -5484,7 +6264,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 167,
+    "line": 172,
     "role": "definition"
    },
    {
@@ -5527,7 +6307,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 180,
+    "line": 185,
     "role": "definition"
    },
    {
@@ -5585,7 +6365,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 200,
+    "line": 205,
     "role": "definition"
    },
    {
@@ -5628,7 +6408,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 212,
+    "line": 217,
     "role": "definition"
    },
    {
@@ -5671,7 +6451,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 218,
+    "line": 223,
     "role": "definition"
    },
    {
@@ -5714,7 +6494,7 @@
   "locations": [
    {
     "file": "physical_object/src/system.rs",
-    "line": 235,
+    "line": 240,
     "role": "definition"
    },
    {
@@ -5791,7 +6571,7 @@
   "locations": [
    {
     "file": "posim/src/lexer.rs",
-    "line": 165,
+    "line": 177,
     "role": "definition"
    },
    {
@@ -5830,7 +6610,7 @@
   "locations": [
    {
     "file": "posim/src/lexer.rs",
-    "line": 199,
+    "line": 211,
     "role": "definition"
    },
    {
@@ -5864,7 +6644,7 @@
   "locations": [
    {
     "file": "posim/src/lexer.rs",
-    "line": 237,
+    "line": 249,
     "role": "definition"
    },
    {
@@ -6054,7 +6834,7 @@
    "P"
   ],
   "summary": "Parses a JSON document from a string.",
-  "definition": "Parses a JSON document from a string.  Declared in the `machine` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `posim/examples/scene_server_reference.rs`.",
+  "definition": "Parses a JSON document from a string.  Declared in the `machine` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`, `posim/examples/scene_server_reference.rs`.",
   "syntax": [
    "pub fn parse(text: &str) -> Result<Json, String>"
   ],
@@ -6066,6 +6846,11 @@
     "file": "posim/src/machine.rs",
     "line": 120,
     "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
    },
    {
     "file": "posim/examples/scene_server_reference.rs",
@@ -6446,7 +7231,7 @@
   "locations": [
    {
     "file": "posim/src/parser.rs",
-    "line": 217,
+    "line": 235,
     "role": "definition"
    }
   ],
@@ -6477,7 +7262,7 @@
   "locations": [
    {
     "file": "posim/src/parser.rs",
-    "line": 225,
+    "line": 243,
     "role": "definition"
    },
    {
@@ -6511,7 +7296,7 @@
   "locations": [
    {
     "file": "posim/src/parser.rs",
-    "line": 243,
+    "line": 261,
     "role": "definition"
    },
    {
@@ -7104,7 +7889,7 @@
    "C"
   ],
   "summary": "Dispatch a special-function call.",
-  "definition": "Dispatch a special-function call.  Returns `None` if `name` is not one of ours, so the caller can fall through to the core builtins and then to its own \"unknown function\" error \u2014 this module never swallows a name it does not own.  Declared in the `special` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/integrate.rs`, `physical_object/src/physical_object.rs`, `posim/src/notebook.rs`.",
+  "definition": "Dispatch a special-function call.  Returns `None` if `name` is not one of ours, so the caller can fall through to the core builtins and then to its own \"unknown function\" error \u2014 this module never swallows a name it does not own.  Declared in the `special` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/equilibrium.rs`, `physical_object/src/integrate.rs`, `physical_object/src/physical_object.rs`.",
   "syntax": [
    "pub fn call(name: &str, args: &[Value]) -> Option<Result<Value, String>>"
   ],
@@ -7118,17 +7903,17 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/src/equilibrium.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    },
    {
     "file": "physical_object/src/physical_object.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/notebook.rs",
     "line": 1,
     "role": "used here"
    }
@@ -7549,7 +8334,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 196,
+    "line": 199,
     "role": "definition"
    },
    {
@@ -7583,7 +8368,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 233,
+    "line": 236,
     "role": "definition"
    },
    {
@@ -7622,7 +8407,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 298,
+    "line": 315,
     "role": "definition"
    },
    {
@@ -7666,7 +8451,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 371,
+    "line": 388,
     "role": "definition"
    },
    {
@@ -7710,7 +8495,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 682,
+    "line": 718,
     "role": "definition"
    },
    {
@@ -7749,7 +8534,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 1875,
+    "line": 2021,
     "role": "definition"
    },
    {
@@ -7793,7 +8578,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 1933,
+    "line": 2079,
     "role": "definition"
    }
   ],
@@ -7824,7 +8609,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 1988,
+    "line": 2134,
     "role": "definition"
    }
   ],
@@ -7855,7 +8640,7 @@
   "locations": [
    {
     "file": "posim/src/vm.rs",
-    "line": 2789,
+    "line": 2935,
     "role": "definition"
    },
    {
@@ -7988,7 +8773,7 @@
    "S"
   ],
   "summary": "Starts the scene server: binds a local TCP port (an explicit `port`, or an OS-assigned one for 0), spawns the listener and playback threads, and (when.",
-  "definition": "Starts the scene server: binds a local TCP port (an explicit `port`, or an OS-assigned one for 0), spawns the listener and playback threads, and (when `open_browser`) tries to open the page in the user's browser.  Declared in the `scene` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/examples/charged_in_b_field.rs`, `posim/examples/scene_server_reference.rs`.",
+  "definition": "Starts the scene server: binds a local TCP port (an explicit `port`, or an OS-assigned one for 0), spawns the listener and playback threads, and (when `open_browser`) tries to open the page in the user's browser.  Declared in the `scene` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/examples/charged_in_b_field.rs`, `physical_object/tests/dae.rs`, `posim/examples/scene_server_reference.rs`.",
   "syntax": [
    "pub fn start( system: PhysicalObjectSystem, port: u16, emit_async: bool, open_browser: bool, ) -> Result<SceneHandle, String>"
   ],
@@ -8003,6 +8788,11 @@
    },
    {
     "file": "physical_object/examples/charged_in_b_field.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    },
@@ -8173,7 +8963,7 @@
    "T"
   ],
   "summary": "Moves the camera target (world units).",
-  "definition": "Moves the camera target (world units).  Declared in the `scene` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `posim/src/lexer.rs`, `posim/src/parser.rs`, `posim/src/vm.rs`.",
+  "definition": "Moves the camera target (world units).  Declared in the `scene` module of the `posim` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`.",
   "syntax": [
    "pub fn translate(&self, dx: f64, dy: f64, dz: f64) -> Result<String, String>"
   ],
@@ -8187,17 +8977,7 @@
     "role": "definition"
    },
    {
-    "file": "posim/src/lexer.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/parser.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    }
@@ -11215,6 +11995,11 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "special_functions/examples/hard_sphere.rs",
     "line": 1,
     "role": "used here"
@@ -11268,6 +12053,11 @@
     "file": "special_functions/src/complex.rs",
     "line": 117,
     "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
    },
    {
     "file": "quantum/examples/nash_propagator.rs",
@@ -11475,7 +12265,7 @@
    "U"
   ],
   "summary": "One scaled value with the estimate of its relative error.",
-  "definition": "One scaled value with the estimate of its relative error.  Declared in the `debye` module of the `special_functions` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `special_functions/examples/bessel_nu_accuracy.rs`.",
+  "definition": "One scaled value with the estimate of its relative error.  Declared in the `debye` module of the `special_functions` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/dae.rs`, `special_functions/examples/bessel_nu_accuracy.rs`.",
   "syntax": [
    "pub struct Uniform"
   ],
@@ -11487,6 +12277,11 @@
     "file": "special_functions/src/debye.rs",
     "line": 176,
     "role": "definition"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
+    "line": 1,
+    "role": "used here"
    },
    {
     "file": "special_functions/examples/bessel_nu_accuracy.rs",
@@ -16171,7 +16966,7 @@
    "A"
   ],
   "summary": "Apply `H` to a complex wavefunction, returning `H psi`.",
-  "definition": "Apply `H` to a complex wavefunction, returning `H psi`.  Declared in the `qm1d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/integrate.rs`, `posim/src/parser.rs`, `posim/src/vm.rs`.",
+  "definition": "Apply `H` to a complex wavefunction, returning `H psi`.  Declared in the `qm1d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/constrain.rs`, `physical_object/src/integrate.rs`, `physical_object/src/sensitivity.rs`.",
   "syntax": [
    "pub fn apply(&self, psi: &[C]) -> Vec<C>"
   ],
@@ -16185,17 +16980,17 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/src/constrain.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    },
    {
-    "file": "posim/src/parser.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/src/sensitivity.rs",
     "line": 1,
     "role": "used here"
    }
@@ -16521,7 +17316,7 @@
    "P"
   ],
   "summary": "`<x>`.",
-  "definition": "`<x>`.  Declared in the `qm1d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/collision.rs`, `posim/examples/scene_server_reference.rs`.",
+  "definition": "`<x>`.  Declared in the `qm1d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/tests/collision.rs`, `physical_object/tests/dae.rs`, `posim/examples/scene_server_reference.rs`.",
   "syntax": [
    "pub fn position(&self) -> f64"
   ],
@@ -16536,6 +17331,11 @@
    },
    {
     "file": "physical_object/tests/collision.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
+    "file": "physical_object/tests/dae.rs",
     "line": 1,
     "role": "used here"
    },
@@ -18041,7 +18841,7 @@
    "A"
   ],
   "summary": "The full `H psi`, used for `<E>`.",
-  "definition": "The full `H psi`, used for `<E>`. Five-point stencil.  Declared in the `qm2d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/integrate.rs`, `posim/src/parser.rs`, `posim/src/vm.rs`.",
+  "definition": "The full `H psi`, used for `<E>`. Five-point stencil.  Declared in the `qm2d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/constrain.rs`, `physical_object/src/integrate.rs`, `physical_object/src/sensitivity.rs`.",
   "syntax": [
    "pub fn apply(&self, psi: &[C]) -> Vec<C>"
   ],
@@ -18055,17 +18855,17 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/src/constrain.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    },
    {
-    "file": "posim/src/parser.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/src/sensitivity.rs",
     "line": 1,
     "role": "used here"
    }
@@ -19996,7 +20796,7 @@
    "A"
   ],
   "summary": "`H psi` for a complex vector, including any absorber.",
-  "definition": "`H psi` for a complex vector, including any absorber.  Declared in the `qm3d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/integrate.rs`, `posim/src/parser.rs`, `posim/src/vm.rs`.",
+  "definition": "`H psi` for a complex vector, including any absorber.  Declared in the `qm3d` module of the `quantum` crate.  No snippet is generated for this signature shape \u2014 see the status page for why an invented one would be worse than none \u2014 but it is called from `physical_object/src/constrain.rs`, `physical_object/src/integrate.rs`, `physical_object/src/sensitivity.rs`.",
   "syntax": [
    "pub fn apply(&self, psi: &[C]) -> Vec<C>"
   ],
@@ -20010,17 +20810,17 @@
     "role": "definition"
    },
    {
+    "file": "physical_object/src/constrain.rs",
+    "line": 1,
+    "role": "used here"
+   },
+   {
     "file": "physical_object/src/integrate.rs",
     "line": 1,
     "role": "used here"
    },
    {
-    "file": "posim/src/parser.rs",
-    "line": 1,
-    "role": "used here"
-   },
-   {
-    "file": "posim/src/vm.rs",
+    "file": "physical_object/src/sensitivity.rs",
     "line": 1,
     "role": "used here"
    }

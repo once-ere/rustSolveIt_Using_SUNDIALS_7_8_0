@@ -154,10 +154,15 @@ digits.
 
 ### 3.4 The test suite — 568 passed, 0 failed
 
-Unchanged in count and in composition: 40 `physical_object` lib +
-19 collision + 9 conservation + 109 posim + 92 quantum +
-233 special_functions + 11 vendored identities + 55 doctests. Log:
-`cargo-test-workspace.log`.
+**At the moment of the port**, unchanged in count and in composition:
+40 `physical_object` lib + 19 collision + 9 conservation + 109 posim +
+92 quantum + 233 special_functions + 11 vendored identities +
+55 doctests. Log: `cargo-test-workspace.log`.
+
+That equality of counts is the point of this section: the engine swap
+added no tests and removed none. The suite has since grown to **592**
+with the work that wired CVODES, IDA, IDAS and KINSOL into the
+simulator (§5) — a later change, on top of a port that moved nothing.
 
 ### 3.5 Build cleanliness
 
@@ -224,7 +229,7 @@ and they carry their own verified examples.
 git clone https://github.com/once-ere/rustSolveIt_Using_SUNDIALS_7_8_0.git
 cd rustSolveIt_Using_SUNDIALS_7_8_0/version-7.8.0
 cargo build --workspace --all-targets      # must be warning-free
-cargo test  --workspace                    # 568 passed
+cargo test  --workspace                    # 592 passed
 cargo run -p physical_object --release --example outer_solar_system
 python3 tools/record_video.py videos/scenes/kepler_ellipse.posim \
         -o /tmp/kepler.html --frames 360 --dt 0.02

@@ -1,0 +1,57 @@
+##### scripts/solveit/17_pendulum_dae.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.uniform_gravity = [0, -9.81, 0]
+In[3]:= collide off
+Out[3]= collisions OFF (0 collidable pair(s); 0 impulse(s) so far)
+In[4]:= new sphere as pivot { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+Out[4]= obj0 as pivot
+In[5]:= new sphere as bob { mass = 1, radius = 0.05, position = [0.019998666693333084, -0.9998000066665778, 0] }
+Out[5]= obj1 as bob
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1 (METHOD IDA is required to integrate it)
+In[7]:= constraints
+Out[7]= constraint0: obj0 <-> obj1 length 1 (currently 1)
+worst |g| = 0e0, worst |g_dot| = 0e0
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 2.0060666807106475 steps 200
+Out[9]= t = 2.0060666807106475 (339 solver steps, 200 snapshots, |dE/E| = 2.530e-12)
+In[10]:= get bob.position
+Out[10]= [0.019998666320588818, -0.9998000066740419, 0]
+In[11]:= constraints
+Out[11]= constraint0: obj0 <-> obj1 length 1 (currently 1.0000000000000082)
+worst |g| = 8.215650382226158e-15, worst |g_dot| = 2.557624136926477e-15
+##### scripts/solveit/18_equilibrium_and_sensitivity.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.uniform_gravity = [0, -9.81, 0]
+In[3]:= collide off
+Out[3]= collisions OFF (0 collidable pair(s); 0 impulse(s) so far)
+In[4]:= new sphere as pivot { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+Out[4]= obj0 as pivot
+In[5]:= new sphere as bob { mass = 1, radius = 0.05, position = [0.8414709848078965, -0.5403023058681398, 0] }
+Out[5]= obj1 as bob
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1 (METHOD IDA is required to integrate it)
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual evaluation(s); largest net force on any free body = 7.459152323898993e-13, worst |g| = 1.9317880628477724e-14
+In[8]:= get bob.position
+Out[8]= [0.0000000000000735262479725006, -0.9999999999999807, 0]
+In[9]:= constrain off
+Out[9]= removed 1 constraint(s)
+In[10]:= reset
+Out[10]= system reset
+In[11]:= set system.uniform_gravity = [0, -9.81, 0]
+In[12]:= collide off
+Out[12]= collisions OFF (0 collidable pair(s); 0 impulse(s) so far)
+In[13]:= new sphere as stone { mass = 2, radius = 0.05, position = [0, 0, 0], velocity = [1, 0, 0] }
+Out[13]= obj0 as stone
+In[14]:= method adams
+Out[14]= method = CVODE Adams
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+In[16]:= get stone.position
+Out[16]= [3.000000000000001, -44.14500000000045, 0]

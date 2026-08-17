@@ -24,7 +24,7 @@ including which donor sources were deliberately not carried over — is in
 ## Commands
 
 - Build: `cargo build --workspace --all-targets 2>&1 | tee /tmp/build.log`
-- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (568 expected)
+- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (592 expected)
 - Notebook: `cargo run` (type `HELP`); batch: `cargo run -p posim -- --script <f>`
 - Dynamic notebook (loads a file, opens its scene window, stays
   interactive): `cargo run -p posim --release -- --notebook
@@ -58,7 +58,9 @@ including which donor sources were deliberately not carried over — is in
 
 ## Layout
 
-- `physical_object/` — library: `linalg` (Vec3/Mat3/Quat + skew/outer),
+- `physical_object/` — library: `constrain` (rigid rods + the constraint
+  Jacobian), `equilibrium` (KINSOL rest states), `sensitivity` (CVODES /
+  IDAS derivatives), `linalg` (Vec3/Mat3/Quat + skew/outer),
   `boundary` (enum + `Sdf` trait; **every round shape is symmetric
   about its local z axis**), `physical_object` (the union struct,
   get/set), `system` (collection + 13N pack/unpack), `integrate`
@@ -180,10 +182,10 @@ that will bite you:
   output. ≤2 attempts per failing command, then switch strategy.
 - Commit after every coherent file group; keep
   `cargo build --workspace --all-targets` warning-free and
-  `cargo test --workspace` green at every commit (**568 tests**:
-  40 physical_object lib + 19 collision + 9 conservation + 109 posim +
-  92 quantum + 233 special_functions + 11 vendored identities +
-  55 doctests).
+  `cargo test --workspace` green at every commit (**592 tests**:
+  46 physical_object lib + 19 collision + 9 conservation +
+  16 constrained/DAE + 111 posim + 92 quantum + 233 special_functions +
+  11 vendored identities + 55 doctests).
 - New solver features need: a unit or conservation test with an
   **analytic** expectation (not a golden-output snapshot), a grammar
   hook if user-facing (lexer keyword → parser production → VM
@@ -203,6 +205,26 @@ that will bite you:
   `evidence/port-7.8.0/`. If you change something that moves a number,
   re-run and re-paste; do not adjust the prose to fit.
 
+## The constrained / equilibrium / sensitivity paths
+
+Read ARCHITECTURE §3.9 before touching `constrain.rs`, `equilibrium.rs`
+or `sensitivity.rs`. Four things that already cost a day:
+
+- **`g = |d| - L`, not `|d|² - L²`.** The squared form is better
+  behaved algebraically and *worse* numerically: its gradient scales
+  with `L`, and the index-2 corrector stops converging for `L ≠ 1`. Do
+  not "simplify" it back.
+- **GGL index-2, not index-1.** Both `g` and `ġ` are carried as
+  algebraic equations. Dropping `μ` gives an index-1 system whose `g`
+  drifts quadratically — and nothing fails loudly when it does.
+- **Do not call `IDACalcIC` when the ICs are already consistent.** A
+  bare `CONSTRAIN` guarantees they are, and `seed_multipliers` supplies
+  the exact tension; asking IDA to re-derive it at trajectory tolerance
+  fails with `IDA_CONV_FAIL`.
+- **The sensitivity parameter vector is shared (`Rc<RefCell<Vec<f64>>>`),
+  and the RHS must read every value out of it.** Capture a copy and the
+  difference-quotient sensitivities come back as zeros, silently.
+
 ## Traps that have already cost time
 
 - **`RUN` takes a duration, not an absolute time.** `run 1.7` then
@@ -217,6 +239,9 @@ that will bite you:
 - **A magnetic moment tensor's third column is what a B along z can
   grip.** `[[0, 0.5, 0], [-0.5, 0, 0], [0, 0, 0]]` looks like a
   reasonable antisymmetric tensor and produces exactly zero torque.
+- **A constrained system refuses every method but `METHOD IDA`**, and a
+  fully-free system has no isolated equilibrium at all (translate it and
+  nothing changes) — `EQUILIBRIUM` says so and tells you to pin a body.
 - **Quantum discretisation error converges; a bug does not.** Before
   calling a QM disagreement a defect, refine the grid and check the
   ratio: the square-barrier transmission at E = 2 goes 0.069368 →

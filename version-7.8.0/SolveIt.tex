@@ -146,7 +146,7 @@ A ``script'' is just a text file of the same commands you would type.
 Comments start with \code{\#}. Every example in \S\ref{sec:examples} is a
 script in \code{scripts/solveit/}.
 
-Checking your build: \code{cargo test -{}-workspace} --- 568 tests should
+Checking your build: \code{cargo test -{}-workspace} --- 592 tests should
 pass.
 
 \section{The five things you need to know}
@@ -302,16 +302,38 @@ replaced by the 7.8.0 one. Two things came with it.
 \textbf{crate} & \textbf{solves} & \textbf{used here?}\\\hline
 \code{cvode\_rs}  & ordinary differential equations (Adams / BDF) & yes\\
 \code{arkode\_rs} & Runge--Kutta: explicit, implicit, IMEX, multirate, symplectic & yes\\
-\code{cvodes\_rs} & CVODE plus forward and adjoint sensitivity analysis & not yet\\
-\code{ida\_rs}    & differential-algebraic systems $F(t,y,\dot y)=0$ & not yet\\
-\code{idas\_rs}   & IDA plus sensitivity analysis & not yet\\
-\code{kinsol\_rs} & nonlinear algebraic systems, Anderson acceleration & not yet\\
+\code{ida\_rs}    & differential-algebraic systems $F(t,y,\dot y)=0$ & yes --- \kw{constrain} + \kw{method ida}\\
+\code{kinsol\_rs} & nonlinear algebraic systems, Anderson acceleration & yes --- \kw{equilibrium}\\
+\code{cvodes\_rs} & CVODE plus forward and adjoint sensitivity analysis & yes --- \kw{sensitivity}\\
+\code{idas\_rs}   & IDA plus sensitivity analysis & yes --- \kw{sensitivity} while constrained\\
 \end{tabular}
 \end{center}
 
-The four unused ones build, carry their own examples, and each of those
-examples is compared byte-for-byte against the output of the original C
-program.
+All six are compared byte-for-byte against the output of the original C
+programs.
+
+\subsection{The three questions that are not ``what happens next''}
+
+\textbf{A rigid rod, held exactly} --- \kw{constrain} \emph{a b} then
+\kw{method ida}. A rod is a geometric fact, not a very stiff spring: the
+bob is \emph{exactly} $L$ from the pivot, always. Saying so turns the
+equations of motion from an ODE into a differential-algebraic equation,
+which is what IDA solves. A body with \code{inverse\_mass = 0} becomes
+an \textbf{anchor} --- it never moves and absorbs the reaction --- so
+anchor + bob + rod is a pendulum. \kw{constraints} reports how far the
+rod has strayed; over a 20-second swing it stays at roundoff.
+
+\textbf{Where it comes to rest} --- \kw{equilibrium}. Not an
+integration: KINSOL solves for a configuration where every free body has
+zero net force, every anchor is where it started and every rod is the
+right length, then puts the bodies there and stops them. It says nothing
+about \emph{stability} --- a pencil on its point is an equilibrium too.
+
+\textbf{How much the answer depends on an input} ---
+\kw{sensitivity} 3 \code{"gravity.y"}. Running twice with slightly
+different inputs and subtracting throws away most of your digits. This
+integrates the derivative alongside the state instead. CVODES for an
+ordinary system; IDAS when a \kw{constrain} is active.
 
 \textbf{A more faithful API.} The 7.8.0 translation models C's opaque
 pointers directly rather than smoothing them into idiomatic Rust. Vector
@@ -381,7 +403,7 @@ counting is per-burst rather than per-output-interval, because
 per-interval counting made the physics depend on how often you asked for
 output.
 
-\section{Sixteen worked examples}\label{sec:examples}
+\section{Eighteen worked examples}\label{sec:examples}
 
 Every transcript below is genuine program output. The scripts are in
 \code{scripts/solveit/}:
@@ -965,6 +987,84 @@ you to notice. Angular momenta, on the other hand, \emph{may} be
 half-integers, so the Wigner and Clebsch--Gordan routines take plain
 numbers.
 
+\subsection{A pendulum as a constraint, not a force}
+
+The small-amplitude period is $T = 2\pi\sqrt{L/g}$; released 0.02\,rad
+off vertical with $L=1$, $g=9.81$ that is $2.0060666807106475$\,s, and
+after exactly one period the bob must be back where it started. The rod
+is not a force but a geometric condition, and the only way to hold it
+exactly is to solve the DAE.
+
+\begin{lstlisting}
+In[4]:= new sphere as pivot { mass = 1, radius = 0.02,
+                              position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new sphere as bob   { mass = 1, radius = 0.05,
+          position = [0.019998666693333084, -0.9998000066665778, 0] }
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1
+        (METHOD IDA is required to integrate it)
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 2.0060666807106475 steps 200
+Out[9]= t = 2.0060666807106475 (339 solver steps, 200 snapshots,
+        |dE/E| = 2.530e-12)
+In[10]:= get bob.position
+Out[10]= [0.019998666320588818, -0.9998000066740419, 0]
+In[11]:= constraints
+Out[11]= constraint0: obj0 <-> obj1 length 1
+         (currently 1.0000000000000082)
+\end{lstlisting}
+
+The bob came back to within $3.7\times10^{-10}$ after a full period, and
+the rod reads $1.0000000000000082$ --- eight parts in $10^{15}$, one
+bit, after 339 solver steps. That is not luck: the formulation carries
+\emph{both} the rod's length and its rate of change as equations. The
+cheaper scheme that constrains only the acceleration lets the length
+drift quadratically, and you find out much later.
+
+The \code{inverse\_mass = 0} on the pivot is what makes it a pendulum
+rather than two bodies tumbling about their shared centre of mass joined
+by a stick.
+
+\subsection{Where it rests, and what the answer depends on}
+
+A pendulum released anywhere comes to rest hanging straight down, one
+rod-length below the pivot:
+
+\begin{lstlisting}
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual
+        evaluation(s); largest net force on any free body =
+        7.459152323898993e-13, worst |g| = 1.9317880628477724e-14
+In[8]:= get bob.position
+Out[8]= [0.0000000000000735262479725006, -0.9999999999999807, 0]
+\end{lstlisting}
+
+Released $57^\circ$ off vertical, the bob lands straight down to 13
+digits. Now the derivative, on a free body, where
+$\partial y/\partial g = T^2/2 = 4.5$ at $T=3$:
+
+\begin{lstlisting}
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+In[16]:= get stone.position
+Out[16]= [3.000000000000001, -44.14500000000045, 0]
+\end{lstlisting}
+
+$4.500000056696235$ against an analytic $4.5$ --- 1.3 parts in $10^8$,
+carried alongside a trajectory that itself landed on
+$-44.14500000000045$ where $-\tfrac12\cdot 9.81\cdot 9 = -44.145$.
+
+And the second derivative is \textbf{exactly zero}. In uniform gravity
+every mass accelerates equally, so the trajectory does not depend on the
+mass at all. A finite-difference estimate would have returned some small
+number and left you guessing whether it was noise or physics. The
+sensitivity equations return the zero.
+
 \section{Watching it: the scene window and browser videos}
 
 \subsection{The live window}
@@ -1057,7 +1157,7 @@ exiting nonzero if it fails: \code{kepler\_orbit},
 
 \subsection{The test suite}
 
-568 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
+592 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written. The
 collision tests in particular are analytic rather than
@@ -1131,7 +1231,7 @@ grammar and a further eighteen worked examples.
 \code{sundials\_rs/} & the pure-Rust SUNDIALS 7.8.0 engine (vendored, read-only)\\
 \code{jupyter/} & the JupyterLab kernel\\
 \code{dynamic\_notebooks/} & 59 runnable sessions, incl.\ 34 Routh problems\\
-\code{scripts/solveit/} & the sixteen examples in \S\ref{sec:examples}\\
+\code{scripts/solveit/} & the eighteen examples in \S\ref{sec:examples}\\
 \code{scripts/collisions/} & twelve documented collision scripts\\
 \code{videos/} & recorded browser videos; \code{videos/scenes/} the scripts behind them\\
 \code{tools/} & the index builder, the verifiers, \code{record\_video.py}\\

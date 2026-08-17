@@ -3260,26 +3260,138 @@ relative error      = 1.24e-16
 asked for 100 snapshots, and none of them falls anywhere near
 $0.894\ldots$. The solver interpolated to the crossing.
 
-\subsection{The four families you are not using yet}
+\subsection{All six families, and what reaches each}
 
 \begin{center}
-\begin{tabular}{ll}
-\textbf{crate} & \textbf{solves}\\\hline
-\code{cvode\_rs}  & ODE initial-value problems (Adams / BDF) --- \emph{used}\\
-\code{arkode\_rs} & Runge--Kutta: explicit, implicit, IMEX, multirate, symplectic --- \emph{used}\\
-\code{cvodes\_rs} & CVODE plus forward and adjoint sensitivity analysis\\
-\code{ida\_rs}    & differential-algebraic systems $F(t,y,\dot y)=0$\\
-\code{idas\_rs}   & IDA plus sensitivity analysis\\
-\code{kinsol\_rs} & nonlinear algebraic systems, with Anderson acceleration\\
+\begin{tabular}{p{2.6cm}p{6.6cm}p{4.6cm}}
+\textbf{crate} & \textbf{solves} & \textbf{reached by}\\\hline
+\code{cvode\_rs}  & ODE initial-value problems (Adams / BDF) & \kw{method adams}, \kw{method bdf}\\
+\code{arkode\_rs} & Runge--Kutta: explicit, implicit, IMEX, multirate, symplectic & \kw{method sprk}\\
+\code{ida\_rs}    & differential-algebraic systems $F(t,y,\dot y)=0$ & \kw{constrain} + \kw{method ida}\\
+\code{kinsol\_rs} & nonlinear algebraic systems, Anderson acceleration & \kw{equilibrium}\\
+\code{cvodes\_rs} & CVODE plus forward and adjoint sensitivity analysis & \kw{sensitivity}\\
+\code{idas\_rs}   & IDA plus sensitivity analysis & \kw{sensitivity} while constrained\\
 \end{tabular}
 \end{center}
 
-They build, they carry their own examples, and each of those examples is
-diffed against the upstream C reference output --- see
-\code{sundials\_rs/VERIFICATION.md}. Nothing in the command language
-reaches them today. If you add a constrained mechanism (a pendulum
-written as a rod constraint rather than a force), \code{ida\_rs} is
-where it would go.
+Every one of them is diffed against the upstream C reference output ---
+see \code{sundials\_rs/VERIFICATION.md}. The last four arrived with the
+7.8.0 engine and were wired into the language afterwards; the shape of
+that wiring is in ARCHITECTURE.md \S3.9.
+
+\section{Constrained dynamics, equilibrium and sensitivity}
+
+Everything so far answers \emph{``what happens next?''}. Three more
+commands ask different questions, each answered by a different solver.
+
+\begin{center}
+\begin{tabular}{p{5.4cm}p{5.6cm}p{2.8cm}}
+\textbf{you type} & \textbf{question} & \textbf{solver}\\\hline
+\kw{step} / \kw{run} & what happens next? & CVODE / ARKODE\\
+\kw{constrain} + \kw{method ida} + \kw{run} & \dots with this geometry held exactly & IDA\\
+\kw{equilibrium} & where does it come to rest? & KINSOL\\
+\kw{sensitivity} & how much does the answer depend on an input? & CVODES / IDAS\\
+\end{tabular}
+\end{center}
+
+\subsection{\kw{constrain} --- a rod, not a spring}
+
+\begin{lstlisting}
+CONSTRAIN <a> <b> [length]   rigid rod between two objects
+CONSTRAIN OFF                drop every rod
+CONSTRAINTS                  list them, and how well they are held
+\end{lstlisting}
+
+\code{<a>} and \code{<b>} are objects, written either positionally
+(\code{obj0}) or by a name registered with \kw{new} \dots\ \kw{as}.
+\textbf{With no length the rod freezes the separation the two bodies
+already have}, which is always consistent and is what you almost always
+want.
+
+You could model a rod as a very stiff spring. That is not the same
+thing: a stiff spring is an approximation that vibrates, needs a tiny
+step, and still lets the length wander. A constraint is an
+\emph{algebraic equation} the motion must satisfy exactly. Adding one
+changes the problem from an ODE into a \textbf{differential-algebraic
+equation}, and a constrained system refuses every method but IDA, by
+name:
+
+\begin{lstlisting}
+In[7]:= run 1 steps 5
+Err[7]: this system has 1 rigid constraint(s), which only the DAE
+        integrator can hold: use METHOD IDA (or remove them with
+        CONSTRAIN OFF). The current method is Adams
+\end{lstlisting}
+
+\textbf{A body with \code{inverse\_mass = 0} is an anchor.} It never
+moves and it absorbs the rod's reaction. Anchor + bob + rod is a
+pendulum.
+
+\textbf{What is held, and how well.} \kw{constraints} reports the worst
+$|g|$ (how far the rod is from its length) and $|\dot g|$ (how fast that
+is changing). Both stay at roundoff for the whole run, because the
+formulation carries them \emph{both} as equations. A cheaper scheme that
+constrains only the acceleration lets $g$ drift quadratically, and by
+the time you notice, the answer is quietly wrong.
+
+\textbf{Scope.} Constraints act on positions. A spinning rigid body, or
+an external torque, is refused with a message naming it.
+
+\subsection{\kw{equilibrium} --- where does it come to rest?}
+
+Finds a configuration where every free body has zero net force, every
+anchor is where it started, and every rod is the right length; moves the
+bodies there and stops them. \code{system.time} is untouched --- this is
+not an integration.
+
+\begin{lstlisting}
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual
+        evaluation(s); largest net force on any free body =
+        7.459152323898993e-13, worst |g| = 1.9317880628477724e-14
+\end{lstlisting}
+
+The starting guess is wherever the bodies already are, so it finds
+\emph{the nearby} rest state. \textbf{It says nothing about stability}
+--- a pencil balanced on its point is an equilibrium. Perturb the answer
+and \kw{run} if you need to know. And a system where every body is free
+has no isolated equilibrium at all (translate it and nothing changes);
+the refusal says exactly that.
+
+\subsection{\kw{sensitivity} --- how much does the answer depend on the input?}
+
+\begin{lstlisting}
+SENSITIVITY <t> "<param>" ["<param>" ...]
+\end{lstlisting}
+
+Runs for \code{<t>} \emph{and} reports $\partial(\text{state})/\partial
+p$ for each parameter. Names are quoted strings because \code{mass 0} is
+two tokens: \code{"g\_constant"}, \code{"mass 0"}, \code{"charge 1"},
+\code{"gravity.y"}, \code{"e\_field.x"}, \code{"b\_field.z"}.
+
+Running twice with slightly different inputs and subtracting is the
+difference of two nearly equal numbers and loses most of its digits.
+This integrates the derivative \emph{alongside} the state instead.
+CVODES normally; IDAS when the system is constrained, because only then
+are the equations a DAE.
+
+Free fall gives $y(T)=\tfrac12 gT^2$, so $\partial y/\partial g = T^2/2$,
+which at $T=3$ is exactly $4.5$:
+
+\begin{lstlisting}
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+\end{lstlisting}
+
+The second answer is worth a moment. In uniform gravity every mass
+accelerates equally, so the trajectory does not depend on the mass
+\textbf{at all} --- and the derivative comes back as exactly zero, not as
+a small number. That is the difference between a real sensitivity
+calculation and a finite difference.
 
 \subsection{The one rule that changed for anyone reading the Rust}
 

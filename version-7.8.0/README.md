@@ -48,7 +48,7 @@ rod as ONE rigid body, exact part-wise collisions conserving E, P and
 L through real solver events); the scene window gains a permanent
 Reset button (with `SCENE RESET` — bit-identical re-initialization,
 Start re-runs) and a live labeled conserved-quantities readout (E, P
-and L); 568 passed workspace-wide (40 physical_object lib +
+and L); 592 passed workspace-wide (40 physical_object lib +
 19 collision + 9 conservation + 109 posim + 92 quantum +
 233 special_functions + 11 vendored identities + 55 doctests).
 
@@ -66,6 +66,26 @@ and L); 568 passed workspace-wide (40 physical_object lib +
   self-contained workspace (read-only; upstream any changes).
 - `PLAN.md` — the integration plan / design record (union mapping,
   grammar, solver mapping, verification results).
+
+## Six solver families, four questions
+
+| you type | question | solver |
+|---|---|---|
+| `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
+| `CONSTRAIN a b` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
+| `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
+| `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES / IDAS |
+
+A rod is a geometric fact, not a stiff spring, so `CONSTRAIN` turns the
+equations of motion into a differential-algebraic equation. Over a full
+pendulum period IDA holds the rod to `1.0000000000000082` — one bit —
+and the bob closes to 3.7e-10. `EQUILIBRIUM` hangs the same pendulum
+straight down to 13 digits. `SENSITIVITY` returns `∂y/∂g = T²/2` on free
+fall to 1.3 parts in 10⁸, and **exactly zero** for `∂y/∂mass`, because
+in uniform gravity there is no dependence to find.
+
+See grammar.md §5.13 for the commands and SolveIt.md examples 17–18 for
+the worked cases.
 
 ## Documentation
 
@@ -213,7 +233,7 @@ catalogue is [dynamic_notebooks/README.md](dynamic_notebooks/README.md).
 ## The Index of Functions
 
 `index_of_entities.html` is a browsable catalog of **every named entity in this
-repository** — 6,276 of them — with a definition, the `file:line` where it is
+repository** — 6,296 of them — with a definition, the `file:line` where it is
 defined, its complete syntax, and examples you can paste into a notebook and
 run. Open it directly; it needs no server and fetches nothing.
 

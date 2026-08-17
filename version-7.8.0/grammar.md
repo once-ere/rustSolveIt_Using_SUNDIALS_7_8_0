@@ -74,6 +74,12 @@ and, for rigid-body collisions (§5.7):
 
 `COLLIDE CONTACTS ON OFF`
 
+and, for constrained dynamics, equilibrium and sensitivity (§5.13):
+
+`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA`
+
+(`EQUIL` is an alias for `EQUILIBRIUM`, `SENS` for `SENSITIVITY`.)
+
 and, for the quantum families (§5.10, §5.11, §5.12):
 
 `QM QM2 QM3`
@@ -132,13 +138,23 @@ command  := "NEW" shape [ "AS" (IDENT | STRING) ]
           | "LIST"
           | "STEP" expr                       (* advance by dt      *)
           | "RUN" expr [ "STEPS" NUMBER ]     (* advance by t, n outs *)
-          | "METHOD" ( "ADAMS" | "BDF" | "SPRK" IDENT [ NUMBER ] )
+          | "METHOD" ( "ADAMS" | "BDF" | "SPRK" IDENT [ NUMBER ]
+                      | "IDA" )               (* constrained DAE      *)
           | "ENERGY" | "COM" | "MOMENTUM" | "ANGMOM"
           | "LAPLACE" NUMBER
           | "RESET" | "HELP"
           | "SCENE" scenecmd                  (* graphical scene     *)
           | "COLLIDE" [ "ON" | "OFF" ]        (* bare: report status *)
           | "CONTACTS"                        (* list last contacts  *)
+          | "CONSTRAIN" ( "OFF" | IDENT IDENT [ expr ] )
+                                              (* rigid rod; no length
+                                                 = freeze the current
+                                                 separation          *)
+          | "CONSTRAINTS"                     (* list rods + drift   *)
+          | "EQUILIBRIUM"                     (* KINSOL rest state   *)
+          | "SENSITIVITY" expr STRING { STRING }
+                                              (* run, and report
+                                                 d(state)/d(param)   *)
           | "LET" IDENT "=" expr              (* session variable    *)
           | "FUNCS"                           (* list user functions *)
           | "SHOW" IDENT                      (* print a function    *)
@@ -1279,6 +1295,8 @@ METHOD ADAMS                 (default; CVODE Adams–Moulton, adaptive)
 METHOD BDF                   (CVODE BDF — for stiff problems, e.g. fast
                               magnetic gyration)
 METHOD SPRK <table> [dt]     (ARKODE symplectic, fixed step; default dt 0.01)
+METHOD IDA                   (IDA on the constrained DAE — required as
+                              soon as a CONSTRAIN rod exists, §5.13)
 ```
 
 SPRK table names may be abbreviated: `leapfrog_2_2` becomes
@@ -1608,6 +1626,139 @@ refused, a missing non-default argument fails as
 `name(): missing argument `p` (it has no default)`, too many
 arguments fail naming the signature, and the depth cap fails as
 `function call depth limit (32) exceeded`.
+
+### 5.13 `CONSTRAIN`, `EQUILIBRIUM`, `SENSITIVITY` — the other three questions
+
+Everything so far answers *"what happens next?"*. These three commands
+ask different questions, and each is answered by a different solver in
+the SUNDIALS suite.
+
+| you type | question | solver |
+|---|---|---|
+| `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
+| `CONSTRAIN` + `METHOD IDA` + `RUN` | …with this geometry held exactly | **IDA** |
+| `EQUILIBRIUM` | where does it come to rest? | **KINSOL** |
+| `SENSITIVITY` | how much does the answer depend on an input? | **CVODES** / **IDAS** |
+
+#### `CONSTRAIN` — a rod, not a spring
+
+```
+CONSTRAIN <a> <b> [length]   rigid rod between two objects
+CONSTRAIN OFF                drop every rod
+CONSTRAINTS                  list them, and how well they are being held
+```
+
+`<a>` and `<b>` are objects, written either positionally (`obj0`) or by
+a name registered with `NEW … AS`. **With no length, the rod freezes the
+separation the two bodies already have** — which is always consistent,
+and is what you almost always want.
+
+You could model a rod as a very stiff spring. That is not the same
+thing: a stiff spring is an approximation that vibrates, needs a tiny
+step, and still lets the length wander. A constraint is an *algebraic
+equation* the motion must satisfy exactly. Adding one changes the
+problem from an ODE into a **differential-algebraic equation**, and IDA
+is the solver for those — so a constrained system refuses every other
+method, by name:
+
+```
+In[7]:= run 1 steps 5
+Err[7]: this system has 1 rigid constraint(s), which only the DAE integrator
+        can hold: use METHOD IDA (or remove them with CONSTRAIN OFF).
+        The current method is Adams
+```
+
+**A body with `inverse_mass = 0` is an anchor.** It never moves and it
+absorbs the rod's reaction. Anchor + bob + rod is a pendulum — see
+Example 19.
+
+**What is held, and how well.** `CONSTRAINTS` reports the worst `|g|`
+(how far the rod is from its length) and `|ġ|` (how fast that is
+changing). Both stay at roundoff for the whole run, because the
+formulation carries them *both* as equations. A cheaper scheme that only
+constrains the acceleration lets `g` drift quadratically, and by the
+time you notice, the answer is quietly wrong.
+
+**Scope.** Constraints act on positions. A spinning rigid body, or an
+external torque, is refused with a message naming it — the same contract
+the SPRK separability gate follows (§5.4).
+
+#### `EQUILIBRIUM` — where does it come to rest?
+
+```
+EQUILIBRIUM                  (alias: EQUIL)
+```
+
+Finds a configuration where every free body has zero net force, every
+anchor is where it started, and every rod is the right length. It moves
+the bodies there and stops them; `system.time` is untouched, because
+this is not an integration.
+
+```
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual evaluation(s);
+        largest net force on any free body = 7.459152323898993e-13,
+        worst |g| = 1.9317880628477724e-14
+```
+
+The starting guess is wherever the bodies already are, so it finds *the
+nearby* rest state, not a global one. Drop a chain roughly into place
+and let it settle.
+
+**It says nothing about stability.** A pencil balanced on its point is
+an equilibrium. The honest test is to perturb the answer and `RUN`: a
+stable rest state comes back, an unstable one runs away.
+
+**A system where every body is free has no isolated equilibrium at all**
+— translate the whole thing and nothing changes — and the refusal says
+exactly that, and tells you to pin one body with
+`set objN.inverse_mass = 0`.
+
+#### `SENSITIVITY` — how much does the answer depend on the input?
+
+```
+SENSITIVITY <t> "<param>" ["<param>" ...]      (alias: SENS)
+```
+
+Runs for `<t>` **and** reports `∂(state)/∂(param)` for each parameter.
+Parameter names are quoted strings because `mass 0` is two tokens:
+
+| spelling | meaning |
+|---|---|
+| `"g_constant"` | the gravitational constant |
+| `"mass 0"`, `"charge 1"` | one body's mass or charge (`"mass obj0"` also works) |
+| `"gravity.y"` | a component of `system.uniform_gravity` |
+| `"e_field.x"`, `"b_field.z"` | a component of either field |
+
+The naive way to get such a derivative is to run twice with slightly
+different inputs and subtract. That answer is the difference of two
+nearly equal numbers and loses most of its digits. `SENSITIVITY`
+integrates the derivative *alongside* the state instead, so it is as
+accurate as the trajectory is.
+
+The solver is chosen for you: **CVODES** normally, **IDAS** when the
+system is constrained, because only then are the equations a DAE.
+
+Free fall is the case where you can check it by hand — `y(T) = ½gT²`
+gives `∂y/∂g = T²/2`, which at `T = 3` is exactly 4.5:
+
+```
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+```
+
+The second answer is worth a moment. In uniform gravity every mass
+accelerates equally, so the trajectory does not depend on the mass **at
+all** — and the derivative comes back as exactly zero, not as a small
+number. That is the difference between a real sensitivity calculation
+and a finite difference.
+
+Like `CONSTRAIN`, this runs the translational dynamics; a spinning body
+is refused by name.
 
 ### 5.10 `QM` — one-dimensional quantum mechanics
 
@@ -3239,25 +3390,24 @@ float. Nothing about the output cadence produced that: the run asked for
 100 snapshots, and none of them falls anywhere near `0.894…`. The
 solver interpolated to the crossing.
 
-### 11.3 The four families you are not using yet
+### 11.3 All six families, and what reaches each
 
-The 7.8.0 vendoring brings the whole suite, not only the two solvers
-the simulator drives:
+| crate | solves | reached by |
+|---|---|---|
+| `cvode_rs` | ODE initial-value problems (Adams / BDF) | `METHOD ADAMS`, `METHOD BDF` |
+| `arkode_rs` | Runge–Kutta: explicit, implicit, IMEX, multirate, symplectic | `METHOD SPRK` |
+| `ida_rs` | **differential-algebraic** systems `F(t, y, ẏ) = 0` | `CONSTRAIN` + `METHOD IDA` (§5.13) |
+| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration | `EQUILIBRIUM` (§5.13) |
+| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis | `SENSITIVITY` (§5.13) |
+| `idas_rs` | IDA plus sensitivity analysis | `SENSITIVITY` on a constrained system (§5.13) |
 
-| crate | solves |
-|---|---|
-| `cvode_rs` | ODE initial-value problems (Adams / BDF) — **used** |
-| `arkode_rs` | Runge–Kutta: explicit, implicit, IMEX, multirate, symplectic — **used** |
-| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis |
-| `ida_rs` | **differential-algebraic** systems `F(t, y, ẏ) = 0` |
-| `idas_rs` | IDA plus sensitivity analysis |
-| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration |
+Every one of them is diffed against the upstream C reference output —
+see `sundials_rs/VERIFICATION.md`.
 
-They build, they carry their own examples, and each of those examples is
-diffed against the upstream C reference output — see
-`sundials_rs/VERIFICATION.md`. Nothing in the command language reaches
-them today. If you add a constrained mechanism (a pendulum written as a
-rod constraint rather than a force), `ida_rs` is where it would go.
+The last four arrived with the 7.8.0 engine and were wired into the
+language afterwards; the shape of that wiring — the GGL index-2
+formulation, the anchor rule, the parameter vector — is in
+ARCHITECTURE.md §3.9.
 
 ### 11.4 The one rule that changed for anyone reading the Rust
 

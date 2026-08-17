@@ -614,6 +614,82 @@ crate root (module/type namespace collision) — do not try.
   silently making it a sphere
   (`torus_pair_is_order_independent_and_new_is_transactional`).
 
+### 3.9 Constrained dynamics, equilibrium and sensitivity (constrain.rs ↔ integrate.rs ↔ equilibrium.rs ↔ sensitivity.rs)
+
+The four solver families the 7.8.0 engine added, and the contracts that
+bind them.
+
+**The constraint function is NOT squared.** `g = |d| - L` with
+`∂g/∂q_j = -∂g/∂q_i = d̂`. The squared form `|d|² - L²` is a polynomial
+and needs no division, and it was tried first: its gradient is `2d`, of
+magnitude `2L`, and its value is in units of length *squared*, so the
+constraint rows of the DAE's iteration matrix are scaled by `L` relative
+to the differential rows. At `L = 1` that is invisible; at `L = 1.3` the
+index-2 corrector stops converging and the step collapses to `1e-17`.
+The unsquared form has a unit gradient everywhere. **Do not "simplify"
+it back.**
+
+**GGL index-2, not acceleration-level index-1.** State
+`y = [q(3N) | v(3N) | λ(m) | μ(m)]`, `neq = 6N + 2m`:
+
+```text
+  0 = q̇ - v + Gᵀμ         (position, projected by the GGL multiplier)
+  0 = M v̇ - F(q,v) + Gᵀλ   (momentum balance with the constraint force)
+  0 = g(q)                 (the constraint)
+  0 = G v                  (and its derivative)
+```
+
+Carrying **both** `g` and `ġ` as algebraic equations is what pins them at
+roundoff; index-1 lets `g` drift quadratically. Same shape as the
+reference mechanism example `sundials_rs/crates/ida_rs/examples/idaSlCrank_dns.rs`.
+`id` marks `q, v` differential (1) and `λ, μ` algebraic (0);
+`IDASetSuppressAlg(true)` keeps the multipliers out of the error test.
+
+**Anchors.** `inverse_mass == 0` ⇒ the body receives no multiplier force
+(`ConstraintSet::add_jacobian_transpose` skips it) and gets `0 = v̇`
+instead of the momentum balance. A rod to an anchor is a pin joint to
+the world. `equilibrium::solve` additionally restores anchor positions
+**exactly** after the solve rather than accepting the pin row's ~1e-27
+residual — "a wall never moves" is relied on bit-for-bit.
+
+**Initial conditions, and why `IDACalcIC` is conditional.** A bare
+`CONSTRAIN a b` takes the length from the current configuration, so
+`g = 0` and `G v = 0` already hold and `seed_multipliers` supplies the
+exact tension from `g̈ = 0` (including the centripetal term). Calling
+`IDACalcIC` anyway asks a Newton iteration to re-derive an answer it
+already has, at trajectory tolerance, and it fails with `IDA_CONV_FAIL`.
+So: check the drift, and correct only if the check fails.
+
+**Which solver, and the gates.**
+
+| entry point | solver | refuses |
+|---|---|---|
+| `integrate::run` with `Method::Ida` | `ida_rs` | spinning bodies, external torques (`ConstraintSet::gate`) |
+| `integrate::run` with any other method and `!constraints.is_empty()` | — | names `METHOD IDA` |
+| `equilibrium::solve` | `kinsol_rs`, `KIN_LINESEARCH` | all-anchor systems; a fully-free system gets the translation-invariance hint |
+| `sensitivity::run`, unconstrained | `cvodes_rs` | spinning bodies (`sensitivity::gate`) |
+| `sensitivity::run`, constrained | `idas_rs` | as above, plus the constraint gate |
+
+**The sensitivity parameter vector is shared, not captured.**
+`SensParams = Rc<RefCell<Vec<f64>>>` laid out
+`[g | gravity(3) | e_field(3) | b_field(3) | mass(N) | charge(N)]`. The
+right-hand side reads **every** value out of that vector on every call;
+`plist` selects which entries are differentiated. That indirection is
+what makes `fS: None` (internal difference quotients) correct — the
+solver perturbs an entry and re-calls the same RHS. A right-hand side
+that captured a copy would silently return zero sensitivities.
+
+**All three paths are translational.** Positions and velocities, no
+orientation, no 13N packing — deliberately narrower than
+`integrate::rhs_full`, and gated rather than silently different. The
+force block is byte-for-byte the same arithmetic order as `rhs_full`'s
+(hard rule 3).
+
+**Grammar.** `CONSTRAIN`/`CONSTRAINTS`/`EQUILIBRIUM`/`SENSITIVITY` and
+`METHOD IDA` follow the §3.4 lockstep. `SENSITIVITY` takes its parameter
+names as **STRING** tokens because `mass 0` is two tokens and would be
+ambiguous against a duration followed by a number.
+
 ## 4. Error-handling policy
 
 Library and VM return `Result<_, String>` with human-readable,
@@ -660,10 +736,10 @@ queues an event.
 | wire/kernel | `jupyter/test_protocol.py`, `jupyter/test_kernel.py` | machine protocol incl. the scene command family and the `events` op; full Jupyter ZMQ path |
 | real-browser gestures | scratchpad `verify_gestures.py` (headless Chrome CDP; not committed) | genuine key/mouse/wheel input: arrows translate right/left/up/down, left-drag rotates, wheel and +/- zoom, toolbar Start/Pause/Reverse, statusbar reporting |
 
-Regression invariant: `cargo test --workspace` green (**568 tests**:
-40 physical_object lib + 19 collision + 9 conservation + 109 posim +
-92 quantum + 233 special_functions + 11 vendored identities +
-55 doctests) and `cargo build --workspace --all-targets` warning-free at
+Regression invariant: `cargo test --workspace` green (**592 tests**:
+46 physical_object lib + 19 collision + 9 conservation +
+16 constrained/DAE + 111 posim + 92 quantum + 233 special_functions +
+11 vendored identities + 55 doctests) and `cargo build --workspace --all-targets` warning-free at
 every commit.
 
 ## 7. The video recorder (`tools/record_video.py`)

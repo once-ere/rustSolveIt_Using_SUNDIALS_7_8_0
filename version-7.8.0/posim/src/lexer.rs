@@ -70,6 +70,13 @@ pub enum Keyword {
     Contacts,
     On,
     Off,
+    /* constrained dynamics, equilibrium and sensitivity (IDA, KINSOL,
+     * CVODES, IDAS) */
+    Constrain,
+    Constraints,
+    Equilibrium,
+    Sensitivity,
+    Ida,
 }
 
 impl Keyword {
@@ -130,6 +137,11 @@ impl Keyword {
             "dumbbell" | "dumbell" => Some(Keyword::Dumbbell),
             "collide" => Some(Keyword::Collide),
             "contacts" => Some(Keyword::Contacts),
+            "constrain" => Some(Keyword::Constrain),
+            "constraints" => Some(Keyword::Constraints),
+            "equilibrium" | "equil" => Some(Keyword::Equilibrium),
+            "sensitivity" | "sens" => Some(Keyword::Sensitivity),
+            "ida" => Some(Keyword::Ida),
             "on" => Some(Keyword::On),
             "off" => Some(Keyword::Off),
             _ => None,
