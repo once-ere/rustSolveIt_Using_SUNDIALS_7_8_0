@@ -598,24 +598,112 @@ fn an_orientation_joint_reports_its_tolerance_floor() {
     assert!(!rr.tolerance_floored, "a rod needs no floor");
 }
 
-/// Orientation joints are integrated from rest. A body that is ALREADY
-/// turning when the run starts is refused by name rather than integrated
-/// into something other than the mechanism described — see
-/// `ConstraintSet::spin_gate` for what was ruled out.
+/// A body may be **already turning** when a run starts. A joint that
+/// grips orientation constrains velocity as well as position — a ball
+/// joint says `v + ω×r` is shared — so a body spinning about an offset
+/// pivot must have its centre moving. Giving it `ω` and leaving `v` at
+/// zero puts the state OFF the constraint manifold, and the run projects
+/// it back on before integrating, reporting how much it moved.
 #[test]
-fn an_orientation_joint_refuses_a_body_that_starts_spinning() {
-    let (mut s, _) = compound_pendulum([0.2, 0.4, 0.2], 0.5, 0.1);
-    s.objects[1].set_angular_momentum(Vec3::new(0.0, 0.0, 0.5));
-    let e = integrate::run(&mut s, 0.5, 10).unwrap_err();
-    assert!(e.contains("already turning"), "{e}");
-    assert!(e.contains("hinge"), "the message names the joint: {e}");
-    assert!(e.contains("CONSTRAIN"), "and the way out: {e}");
+fn a_spinning_body_is_projected_onto_the_constraint_manifold() {
+    let bx = physical_object::new_from_shape(
+        1,
+        1.0,
+        0.0,
+        Vec3::new(0.6, -0.8, 0.0),
+        Vec3::zeros(),               // centre at rest …
+        Vec3::new(0.0, 3.0, 0.0),    // … but spinning hard
+        Boundary::Cuboid { half_extents: [0.2, 0.2, 0.2] },
+    );
+    let mut s = PhysicalObjectSystem::new(vec![world_anchor(0, Vec3::zeros()), bx], 0.0);
+    s.uniform_gravity = Vec3::new(0.0, -G, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_ball(&snap, 0, 1).unwrap();
 
-    // a ROD has no such limit
+    // the state handed in genuinely violates the velocity constraint
+    let (_, gdot_before) = s.constraints.drift(&s);
+    assert!(gdot_before > 1e-3, "the test should start inconsistent: {gdot_before:e}");
+
+    let report = integrate::run(&mut s, 1.0, 40).expect("a spinning body on a ball joint");
+    assert!(
+        report.initial_velocity_projected > 1e-3,
+        "the projection should have been needed and reported: {}",
+        report.initial_velocity_projected
+    );
+    /* 3 rad/s is the fastest case in this file and it runs at the
+     * orientation-joint tolerance floor, so the bound is looser than the
+     * at-rest cases (which hold |g| to 1e-11). Measured: 1.3e-7. */
+    assert!(report.constraint_drift.0 < 1e-6, "|g| = {:e}", report.constraint_drift.0);
+    assert!(report.constraint_drift.1 < 1e-5, "|g_dot| = {:e}", report.constraint_drift.1);
+    /* What the projection actually did: the turn is nearly untouched and
+     * the CENTRE was set moving instead. That is the correct reading of
+     * "smallest mass-weighted change" here — the pivot was running at
+     * |ω × r| = 1.5 m/s and something had to absorb it, and giving a
+     * 1 kg body some velocity is cheaper than fighting a 3 rad/s turn.
+     * The physical picture is a coupling clutched onto a spinning shaft:
+     * the shaft keeps turning and the housing starts to move. */
+    let w_after = ::physical_object::constrain::angular_velocity(&s.objects[1]).norm();
+    assert!(w_after > 2.0, "the turn should largely survive: |ω| = {w_after}");
+    assert!(
+        report.initial_velocity_projected > 0.1 && report.initial_velocity_projected < 10.0,
+        "the correction should be of order the pivot speed: {}",
+        report.initial_velocity_projected
+    );
+}
+
+/// …and spin **about the arm** costs nothing, because it does not move
+/// the shared point at all. Same body, same speed, axis rotated onto the
+/// arm: no projection, and the body keeps every bit of its turn.
+#[test]
+fn spin_about_the_joint_arm_needs_no_projection() {
+    let arm = Vec3::new(0.3, -0.4, 0.0).normalize();
+    let bx = physical_object::new_from_shape(
+        1,
+        1.0,
+        0.0,
+        Vec3::new(0.6, -0.8, 0.0),
+        Vec3::zeros(),
+        3.0 * arm, // turning about the line through the pivot
+        Boundary::Cuboid { half_extents: [0.2, 0.2, 0.2] },
+    );
+    let mut s = PhysicalObjectSystem::new(vec![world_anchor(0, Vec3::zeros()), bx], 0.0);
+    s.uniform_gravity = Vec3::new(0.0, -G, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_ball(&snap, 0, 1).unwrap();
+
+    // ω × r = 0, so the state is already ON the manifold
+    let (_, gdot) = s.constraints.drift(&s);
+    assert!(gdot < 1e-15, "spin along the arm moves nothing: {gdot:e}");
+
+    let report = integrate::run(&mut s, 1.0, 40).expect("ball run");
+    assert_eq!(report.initial_velocity_projected, 0.0, "nothing to project");
+    assert!(report.constraint_drift.0 < 1e-6, "|g| = {:e}", report.constraint_drift.0);
+    /* Angular VELOCITY, not momentum: this cube's inertia is 0.0267, so
+     * turning at 3 rad/s is only |L| = 0.08. */
+    let w = ::physical_object::constrain::angular_velocity(&s.objects[1]);
+    assert!(w.norm() > 2.5, "the turn is free and must survive: |ω| = {}", w.norm());
+}
+
+/// A state that is already consistent is left **exactly** alone — the
+/// projection must not perturb the common case.
+#[test]
+fn a_consistent_start_is_not_projected() {
+    let (mut s, _) = compound_pendulum([0.2, 0.4, 0.2], 0.5, 0.1);
+    let report = integrate::run(&mut s, 0.3, 10).expect("hinge run");
+    assert_eq!(report.initial_velocity_projected, 0.0);
+
     let mut r = pendulum(0.3, 1.0);
     r.objects[1].set_inertia_tensor(::physical_object::linalg::Mat3::identity());
     r.objects[1].set_angular_momentum(Vec3::new(0.0, 0.7, 0.0));
-    integrate::run(&mut r, 0.5, 10).expect("a rod carries a spinning body");
+    let rr = integrate::run(&mut r, 0.5, 10).expect("a rod carries a spinning body");
+    /* A rod has no angular Jacobian, so spin never enters its ġ and the
+     * state was consistent all along — this is exactly why rods never
+     * revealed the missing projection. */
+    assert_eq!(rr.initial_velocity_projected, 0.0);
 }
 
 /// EQUILIBRIUM and SENSITIVITY solve for positions only, so an

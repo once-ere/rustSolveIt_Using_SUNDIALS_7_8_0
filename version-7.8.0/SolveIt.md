@@ -125,7 +125,7 @@ Comments start with `#`. Every example in section 7 is a script in
 cargo test --workspace
 ```
 
-603 tests should pass. If they do, your build is the same build this
+605 tests should pass. If they do, your build is the same build this
 documentation was written against.
 
 ---
@@ -1402,14 +1402,26 @@ with. Without it you would have two slabs tumbling about their shared
 centre of mass, hinged together — a perfectly good simulation, just not
 a door.
 
-**Two limits worth knowing.** Orientation joints are integrated *from
-rest*: a body the mechanism sets turning is fine, one that is already
-turning when the run starts is refused by name. And they carry a
-tolerance floor of `rtol = 1e-6`, because the differential-algebraic
-system a hinge produces is *index 2* and has an accuracy ceiling no
-tolerance can push past. `RUN` says when the floor was applied. Both are
-refusals rather than guesses — a run that looks like it worked and is
-not the mechanism you described is the worst possible outcome.
+**A joint constrains velocity, not just position.** A ball joint says
+the two bodies share a point, so at the velocity level it says
+`v_i + ω_i×r_i = v_j + ω_j×r_j`: a body turning about a pivot offset from
+its centre **must have its centre moving**. Give it a spin and leave its
+velocity at zero and the state is not on the constraint manifold. The run
+projects the starting velocities onto it — the smallest mass-weighted
+change that satisfies the joint, which is precisely the impulse a real
+coupling delivers when clutched onto a spinning shaft — and reports how
+big that change was. An already-consistent state is left exactly alone.
+
+For a cube spun at 3 rad/s on a half-metre arm, the projection leaves the
+turn nearly untouched and sets the *centre* moving instead: the pivot was
+running at 1.5 m/s and giving a 1 kg body some velocity is cheaper than
+fighting the spin.
+
+**One real limit.** Orientation joints carry a tolerance floor of
+`rtol = 1e-6`, because the differential-algebraic system a hinge produces
+is *index 2* and has an accuracy ceiling no tolerance can push past.
+Measured across twelve compound pendulums the boundary is sharp: `1e-6`
+converges in every one, `1e-8` in none. `RUN` says when the floor bit.
 
 ---
 
@@ -1515,7 +1527,7 @@ cargo run -p physical_object --release --example bouncing_ball_restitution
 
 ### 9.3 The test suite
 
-603 tests: 40 library, 19 collision, 9 conservation, 109 language,
+605 tests: 40 library, 19 collision, 9 conservation, 109 language,
 92 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written.
 

@@ -3338,12 +3338,25 @@ $T = 2\pi\sqrt{I_{\text{pivot}}/(mgd)}$ and
 $I_{\text{pivot}} = I_{\text{com}} + md^2$; the simulator reproduces it
 to about $3\times10^{-8}$ of a full swing.
 
-\textbf{Two limits, both refused by name.} Orientation joints are
-integrated \emph{from rest}: a body the mechanism sets turning is fine, a
-body already turning at $t_0$ is refused. And they carry a tolerance
-floor of $\texttt{rtol} = 10^{-6}$, because the differential-algebraic
-system a hinge produces is \emph{index 2} and has an accuracy ceiling no
-tolerance can push past. \kw{run} reports when the floor was applied.
+\textbf{A joint constrains velocity, not just position.} A ball joint
+says the two bodies share a point, so at the velocity level it says
+$v_i + \omega_i\times r_i = v_j + \omega_j\times r_j$ --- a body turning
+about a pivot offset from its centre \emph{must have its centre moving}.
+Give it a spin and leave its velocity at zero and the state is not on the
+constraint manifold at all. The run \textbf{projects} the starting
+velocities onto it --- the smallest mass-weighted change that satisfies
+the joint, which is exactly the impulse a real coupling delivers when
+clutched onto a spinning shaft --- and reports how big that change was.
+An already-consistent state is left exactly alone. (A rod has no angular
+Jacobian, so spin never enters its $\dot g$; that is why rods carried
+spinning bodies from the start and hid this.)
+
+\textbf{One real limit.} Orientation joints carry a tolerance floor of
+$\texttt{rtol}=10^{-6}$, because the differential-algebraic system a
+hinge produces is \emph{index 2} and has an accuracy ceiling no tolerance
+can push past --- measured across twelve compound pendulums, $10^{-6}$
+converges in every one and $10^{-8}$ in none. \kw{run} reports when the
+floor was applied.
 
 \kw{ball}, \kw{hinge} and \kw{universal} are \emph{contextual} keywords
 --- commands only at the start of a line --- so \code{new sphere as ball}

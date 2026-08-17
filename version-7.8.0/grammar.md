@@ -1696,23 +1696,27 @@ is `T = 2π√(I_pivot/(mgd))` with `I_pivot = I_com + md²`, not the
 point-mass `2π√(d/g)`. The simulator reproduces that period to about
 `3 × 10⁻⁸` of a full swing — see SolveIt.md, Example 19.
 
-**Two limits, both refused by name rather than guessed at.**
+**One limit, and one thing the simulator does for you.**
 
-*Orientation joints are integrated from rest.* A body the mechanism sets
-turning is fine — that is what a door does. A body that is **already
-turning** when the run starts is not yet supported:
+*A joint constrains velocity as well as position.* A ball joint says the
+two bodies share a point, so at the velocity level it says
+`v_i + ω_i×r_i = v_j + ω_j×r_j` — **a body turning about a pivot offset
+from its centre must have its centre moving.** Hand it a spin and leave
+its velocity at zero and the state is not on the constraint manifold at
+all. Rather than refuse, the run **projects** the starting velocities
+onto the manifold — the smallest mass-weighted change that satisfies the
+joint, which is exactly the impulse a real coupling delivers when you
+clutch it onto a spinning shaft — and reports how big that change was.
+A state that is already consistent is left exactly alone.
 
-```
-Err: obj1 is already turning at 5e-1 rad/s and is held by a hinge joint.
-     Orientation joints are integrated from REST … Zero obj1's angular
-     momentum, or use CONSTRAIN (a rod), which has no such limit
-```
+(A rod has no angular Jacobian, so spin never enters its `ġ`. That is
+why rods carried spinning bodies from the start, and why the missing
+projection stayed hidden until the first hinge.)
 
 *And they carry a tolerance floor.* The differential-algebraic system a
-hinge produces is *index 2*, and such systems have an accuracy ceiling
-no tolerance can push past. Asking for `rtol` below `1e-6` gets `1e-6`;
-asking for less than that is honoured. `RUN` says when the floor was
-applied.
+hinge produces is *index 2*, and such systems have an accuracy ceiling no
+tolerance can push past. Asking for `rtol` below `1e-6` gets `1e-6`;
+looser is honoured. `RUN` says when the floor was applied.
 
 #### `CONSTRAIN` — a rod, not a spring
 

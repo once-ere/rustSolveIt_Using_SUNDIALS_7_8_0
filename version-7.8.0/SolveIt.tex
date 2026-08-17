@@ -146,7 +146,7 @@ A ``script'' is just a text file of the same commands you would type.
 Comments start with \code{\#}. Every example in \S\ref{sec:examples} is a
 script in \code{scripts/solveit/}.
 
-Checking your build: \code{cargo test -{}-workspace} --- 603 tests should
+Checking your build: \code{cargo test -{}-workspace} --- 605 tests should
 pass.
 
 \section{The five things you need to know}
@@ -1109,12 +1109,24 @@ within $3\times10^{-8}$.
 The \code{inverse\_mass = 0} on the jamb is what makes it a door: an
 anchor, immovable, absorbing whatever the hinge pulls with.
 
-\textbf{Two limits worth knowing.} Orientation joints are integrated
-\emph{from rest} --- a body already turning at $t_0$ is refused by name
---- and they carry a tolerance floor of $\texttt{rtol}=10^{-6}$, because
-the index-2 system has an accuracy ceiling no tolerance can push past.
-Both are refusals rather than guesses: a run that looks like it worked
-and is not the mechanism you described is the worst possible outcome.
+\textbf{A joint constrains velocity, not just position.} A ball joint
+says the two bodies share a point, so at the velocity level
+$v_i + \omega_i\times r_i = v_j + \omega_j\times r_j$: a body turning
+about a pivot offset from its centre \emph{must have its centre moving}.
+Give it a spin and leave its velocity at zero and the state is not on the
+constraint manifold. The run projects the starting velocities onto it ---
+the smallest mass-weighted change that satisfies the joint, which is
+precisely the impulse a real coupling delivers when clutched onto a
+spinning shaft --- and reports how big that change was. For a cube spun
+at 3\,rad/s on a half-metre arm the projection leaves the turn nearly
+untouched and sets the \emph{centre} moving instead: the pivot was
+running at 1.5\,m/s, and giving a 1\,kg body some velocity is cheaper
+than fighting the spin.
+
+\textbf{One real limit.} Orientation joints carry a tolerance floor of
+$\texttt{rtol}=10^{-6}$: the index-2 system has an accuracy ceiling, and
+across twelve compound pendulums the boundary is sharp --- $10^{-6}$
+converges in every one, $10^{-8}$ in none.
 
 \section{Watching it: the scene window and browser videos}
 
@@ -1208,7 +1220,7 @@ exiting nonzero if it fails: \code{kepler\_orbit},
 
 \subsection{The test suite}
 
-603 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
+605 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written. The
 collision tests in particular are analytic rather than

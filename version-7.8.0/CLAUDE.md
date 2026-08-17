@@ -24,7 +24,7 @@ including which donor sources were deliberately not carried over — is in
 ## Commands
 
 - Build: `cargo build --workspace --all-targets 2>&1 | tee /tmp/build.log`
-- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (603 expected)
+- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (605 expected)
 - Notebook: `cargo run` (type `HELP`); batch: `cargo run -p posim -- --script <f>`
 - Dynamic notebook (loads a file, opens its scene window, stays
   interactive): `cargo run -p posim --release -- --notebook
@@ -182,7 +182,7 @@ that will bite you:
   output. ≤2 attempts per failing command, then switch strategy.
 - Commit after every coherent file group; keep
   `cargo build --workspace --all-targets` warning-free and
-  `cargo test --workspace` green at every commit (**603 tests**:
+  `cargo test --workspace` green at every commit (**605 tests**:
   46 physical_object lib + 19 collision + 9 conservation +
   16 constrained/DAE + 111 posim + 92 quantum + 233 special_functions +
   11 vendored identities + 55 doctests).
@@ -250,9 +250,15 @@ or `sensitivity.rs`. Four things that already cost a day:
   only at the start of a line. `ball` is exactly what a physics user
   calls a sphere, and `new sphere as ball` / `get ball.mass` were already
   in the tests and docs; reserving it outright broke them.
-- **Orientation joints are integrated from rest** (`spin_gate`) and carry
-  a tolerance floor of `rtol = 1e-6` (`ROT_JOINT_RTOL_FLOOR`). Both are
-  refusals/clamps with a stated reason, not silent behaviour.
+- **A joint constrains velocity, so starting velocities are PROJECTED**
+  (`project_initial_velocities`). A body turning about an offset pivot
+  must have its centre moving; a caller who sets ω and leaves v at zero
+  is off the manifold, and IDA then fails on the first step at every
+  tolerance. Reported via `RunReport::initial_velocity_projected`.
+  A rod has `J_ω = 0` and never needed it — which is why this hid.
+- **Orientation joints carry a tolerance floor** of `rtol = 1e-6`
+  (`ROT_JOINT_RTOL_FLOOR`): the index-2 accuracy ceiling is real, and
+  measured sharp across twelve pendulums.
 - **A constrained system refuses every method but `METHOD IDA`**, and a
   fully-free system has no isolated equilibrium at all (translate it and
   nothing changes) — `EQUILIBRIUM` says so and tells you to pin a body.

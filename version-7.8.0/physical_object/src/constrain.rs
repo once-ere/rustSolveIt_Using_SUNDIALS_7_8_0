@@ -477,55 +477,6 @@ impl ConstraintSet {
         )
     }
 
-    /// Refuses the case the orientation-joint DAE does not yet integrate:
-    /// a jointed body that is **already turning** when the run starts.
-    ///
-    /// A body that starts at rest and is set turning by the mechanism is
-    /// fine — that is what a swinging door or a compound pendulum does,
-    /// and both are verified against their closed forms. What fails is
-    /// non-zero angular velocity *at t₀* on a body held by a
-    /// BALL/HINGE/UNIVERSAL joint: above about `1e-6 rad/s` IDA's error
-    /// test fails on the first step, at every tolerance.
-    ///
-    /// What has been ruled out, so the next person does not repeat it:
-    /// it is not the tolerance (it fails at `1e-4` as readily as at
-    /// `1e-10`), not the initial multipliers (identical behaviour with
-    /// the `(dJ/dt)u` term computed, omitted, or differenced at three
-    /// step sizes), not the constraint scaling (every Jacobian block is
-    /// O(1) and finite-difference-verified), and not the mass metric —
-    /// that WAS wrong, and fixing it (`q̇ = v - M⁻¹Jᵀμ`) was necessary
-    /// but not sufficient. The remaining suspect is the GGL projection's
-    /// chart: `μ` is applied in the rotation-vector tangent space while
-    /// the state carries a quaternion, and the two agree only to first
-    /// order.
-    ///
-    /// Refusing is the honest behaviour: the alternative is a run that
-    /// looks like it worked and is not the mechanism the user described.
-    pub fn spin_gate(&self, system: &PhysicalObjectSystem) -> Result<(), String> {
-        if !self.has_rotational() {
-            return Ok(());
-        }
-        const SPIN_TOL: f64 = 1.0e-6;
-        for joint in self.joints.iter().filter(|j| j.is_rotational()) {
-            let (i, j) = joint.bodies();
-            for k in [i, j] {
-                let w = angular_velocity(&system.objects[k]).norm();
-                if w > SPIN_TOL {
-                    return Err(format!(
-                        "obj{k} is already turning at {w:e} rad/s and is held by a {} joint. \
-                         Orientation joints are integrated from REST: a body the mechanism \
-                         sets turning is fine (a door, a compound pendulum), but one that \
-                         starts turning is not yet supported and would integrate to something \
-                         other than the mechanism you described. Zero obj{k}'s angular \
-                         momentum, or use CONSTRAIN (a rod), which has no such limit",
-                        joint.kind()
-                    ));
-                }
-            }
-        }
-        Ok(())
-    }
-
     pub fn poses(system: &PhysicalObjectSystem) -> Vec<Pose> {
         system
             .objects

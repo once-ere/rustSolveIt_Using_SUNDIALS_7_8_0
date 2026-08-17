@@ -639,15 +639,33 @@ is one scalar and omitting it merely rescales μ — which is exactly why
 rods never revealed the error. Add a hinge and it breaks the
 integration outright.
 
-**Orientation joints carry two limits, both refused by name.**
-`ConstraintSet::spin_gate` refuses a jointed body that is *already*
-turning at t₀ (above 1e-6 rad/s); a body the mechanism sets turning is
-fine, which is what a door does. And `ROT_JOINT_RTOL_FLOOR = 1e-6`
-floors the tolerance, because the index-2 system has an accuracy ceiling
-— `1e-6` and `1e-7` give the same answer, `1e-8` never converges.
-`RunReport::tolerance_floored` reports when the floor bit. Both doc
-comments record what was ruled out, so the next person does not repeat
-the search.
+**Consistent initial velocities are PROJECTED, not assumed.**
+`project_initial_velocities` is the answer to what looked for a long time
+like an index-2 wall. A joint constrains velocity as well as position: a
+ball joint's `ġ = 0` reads `v_i + ω_i×r_i = v_j + ω_j×r_j`, so a body
+turning about an offset pivot must have its centre moving. A caller who
+sets `ω` and leaves `v` at zero hands in a state **off the manifold**,
+and IDA fails on the first step at every tolerance — which is exactly
+what was observed and misdiagnosed. The fix is the standard impulsive
+projection,
+
+```text
+  minimise ½ δuᵀ M δu  subject to  J(u + δu) = 0
+  ⟹  (J M⁻¹ Jᵀ) ν = J·u,   δu = -M⁻¹Jᵀν,   δ(p, L) = -Jᵀν
+```
+
+reusing the same `S = J M⁻¹ Jᵀ` the multiplier seed builds. It is
+reported via `RunReport::initial_velocity_projected` rather than done
+silently, because it changes the state the caller handed in. A rod has
+`J_ω = 0`, so spin never enters its `ġ` — which is why rods carried
+spinning bodies from the start and hid this for so long.
+
+**`ROT_JOINT_RTOL_FLOOR = 1e-6`** floors the tolerance, because the
+index-2 system has a real accuracy ceiling: across twelve compound
+pendulums `1e-6` converges in every one and `1e-8` in none.
+`RunReport::tolerance_floored` reports when it bit. (Before the velocity
+projection this boundary was *erratic* in the release angle, which is
+what first suggested a conditioning problem. It was not.)
 
 **EQUILIBRIUM and SENSITIVITY stay translational** and refuse
 orientation joints by name: solving for a mechanism's rest *pose* means
@@ -788,9 +806,9 @@ queues an event.
 | wire/kernel | `jupyter/test_protocol.py`, `jupyter/test_kernel.py` | machine protocol incl. the scene command family and the `events` op; full Jupyter ZMQ path |
 | real-browser gestures | scratchpad `verify_gestures.py` (headless Chrome CDP; not committed) | genuine key/mouse/wheel input: arrows translate right/left/up/down, left-drag rotates, wheel and +/- zoom, toolbar Start/Pause/Reverse, statusbar reporting |
 
-Regression invariant: `cargo test --workspace` green (**603 tests**:
+Regression invariant: `cargo test --workspace` green (**605 tests**:
 52 physical_object lib + 19 collision + 9 conservation +
-23 constrained/DAE + 113 posim + 92 quantum + 233 special_functions +
+25 constrained/DAE + 113 posim + 92 quantum + 233 special_functions +
 11 vendored identities + 55 doctests) and `cargo build --workspace --all-targets` warning-free at
 every commit.
 

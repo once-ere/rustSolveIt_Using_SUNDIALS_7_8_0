@@ -1,0 +1,675 @@
+   Compiling posim v0.1.0 (/home/nsh/Developer/github/rustSolveIt_Using_SUNDIALS_7_8_0/version-7.8.0/posim)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.40s
+     Running unittests src/lib.rs (target/debug/deps/physical_object-51f285d1a666aa8b)
+
+running 49 tests
+test boundary::tests::cuboid_sdf ... ok
+test boundary::tests::inertia_matches_legacy_formulas ... ok
+test boundary::tests::fat_rod_dumbbell_reports_honest_support_ranks ... ok
+test boundary::tests::dumbbell_constructor_com_sdf_and_supports ... ok
+test boundary::tests::support_extents_and_points_are_exact ... ok
+test boundary::tests::sphere_sdf_and_normal ... ok
+test collide::tests::aabb_overlap_and_support_vertex ... ok
+test collide::tests::ball_vs_disk_and_cylinder_contacts ... ok
+test collide::tests::ball_vs_torus_exact_contact_and_hole_passage ... ok
+test collide::tests::collidable_pairs_exclude_point_point_and_static_static ... ok
+test collide::tests::cuboid_cuboid_sat_face_and_edge_cases ... ok
+test boundary::tests::torus_disk_cylinder_sdfs ... ok
+test collide::tests::dumbbell_wall_gaps_and_ball_contacts_are_exact ... ok
+test collide::tests::effective_mass_central_sphere_hit_is_inverse_mass_sum ... ok
+test collide::tests::parallel_cylinders_side_contact_is_exact ... ok
+test collide::tests::parallel_disk_disk_separation_is_the_documented_limitation ... ok
+test collide::tests::penetration_projection_separates_overlap ... ok
+test collide::tests::separating_pair_is_untouched_and_plastic_flag_kills_bounce ... ok
+test collide::tests::small_cap_on_large_face_contacts_at_the_cap_center ... ok
+test collide::tests::sphere_cuboid_face_edge_corner_and_interior ... ok
+test collide::tests::sphere_sphere_separation_and_contact ... ok
+test collide::tests::separation_is_continuous_across_touch ... ok
+test collide::tests::static_slab_reflects_a_cylinder_elastically ... ok
+test collide::tests::static_wall_reflects_and_stays_bit_unchanged ... ok
+test constrain::tests::a_hinge_admits_its_own_axis_and_refuses_the_others ... ok
+test constrain::tests::anchors_take_no_force_and_no_torque ... ok
+test constrain::tests::a_universal_joint_admits_both_shafts ... ok
+test constrain::tests::degenerate_joints_are_refused_by_name ... ok
+test constrain::tests::row_counts_are_the_freedoms_removed ... ok
+test constrain::tests::every_joint_starts_satisfied ... ok
+test linalg::tests::mat3_add_sub_skew_outer_identities ... ok
+test constrain::tests::the_velocity_jacobian_matches_a_finite_difference_of_g ... ok
+test collide::tests::tilted_torus_fits_a_4x4_box_where_flat_does_not ... ok
+test linalg::tests::quat_rotation_matches_matrix ... ok
+test linalg::tests::vec3_dot_cross ... ok
+test physical_object::tests::coupled_mass_setters ... ok
+test physical_object::tests::local_world_space_roundtrip ... ok
+test physical_object::tests::point_particle_observables_match_donor ... ok
+test physical_object::tests::rigid_constructor_matches_donor_init ... ok
+test physical_object::tests::shape_constructor_matches_rigidbody3d ... ok
+test physical_object::tests::tensor_setters_stay_coupled ... ok
+test physical_object::tests::velocity_momentum_roundtrip ... ok
+test linalg::tests::mat3_inverse_roundtrip ... ok
+test sensitivity::tests::every_parameter_gets_its_own_slot ... ok
+test sensitivity::tests::parameter_names_round_trip_and_bad_ones_explain_themselves ... ok
+test system::tests::accelerations_match_donor_formula ... ok
+test system::tests::add_remove_keep_tables_aligned ... ok
+test system::tests::com_and_total_mass_match_donor ... ok
+test system::tests::pack_unpack_roundtrip ... ok
+
+test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/collision.rs (target/debug/deps/collision-90a16715f613f015)
+
+running 19 tests
+test armed_but_quiet_matches_unarmed_within_tolerance ... ok
+test oblique_impact_normal_is_line_of_centers ... ok
+test equal_mass_head_on_exchange_at_analytic_toi ... ok
+test unequal_mass_1d_elastic_formulas ... ok
+test newtons_cradle_three_spheres ... ok
+test bouncing_ball_apex_ratio_is_e_squared ... ok
+test off_center_cuboid_hit_spin_up_conserves_totals ... ok
+test restitution_ratio_and_plastic_loss ... ok
+test simultaneous_contacts_stay_elastic ... ok
+test point_threads_the_torus_hole_but_a_fat_ball_bounces ... ok
+test zero_pair_systems_are_bit_identical_with_collide_on ... ok
+test sprk_path_detects_collisions_and_keeps_its_gate ... ok
+test ball_in_a_rigid_box_conserves_energy_and_walls_never_move ... ok
+test thin_wall_no_tunneling_at_large_output_step ... ok
+test colliding_dumbbells_conserve_energy_momentum_and_angular_momentum ... ok
+test a_settling_ball_is_caught_by_the_zeno_guard_and_terminates ... ok
+test ball_released_from_rest_does_not_tunnel_the_thin_plate ... ok
+test energy_does_not_depend_on_how_often_output_is_requested ... ok
+test mixed_shapes_rattle_in_the_box_conserving_energy ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.41s
+
+     Running tests/conservation.rs (target/debug/deps/conservation-c3e5988830c37aea)
+
+running 9 tests
+test sprk_rejects_non_separable_systems ... ok
+test step_advances_time_and_empty_system_is_ok ... ok
+test uniform_gravity_matches_analytic_parabola ... ok
+test propagate_single_replaces_legacy_euler_integrate ... ok
+test constant_torque_spins_up_exactly ... ok
+test charged_particle_gyrates_at_analytic_radius ... ok
+test torque_free_top_conserves_L_and_energy ... ok
+test cvode_adams_conserves_two_body_invariants ... ok
+test sprk_leapfrog_matches_legacy_verlet_and_conserves_energy ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/dae.rs (target/debug/deps/dae-ebdf56c722279fab)
+
+running 25 tests
+[ERROR][rank 0][sundials_rs/crates/kinsol_rs/src/kinsol.rs:852][KINSol] The linear solver's setup function failed in an unrecoverable manner.
+test a_constrained_system_refuses_the_wrong_method ... ok
+test a_fully_free_system_is_refused_with_the_reason ... ok
+test kinsol_hangs_the_pendulum_straight_down ... ok
+test a_rod_between_two_anchors_is_refused_up_front ... ok
+test sensitivity_refusals_are_actionable ... ok
+test the_translational_solvers_refuse_orientation_joints ... ok
+test a_bare_constrain_is_immediately_consistent ... ok
+test kinsol_balances_a_body_against_its_rod ... ok
+test the_equilibrium_kinsol_finds_is_actually_stationary ... ok
+test idas_differentiates_a_constrained_fall ... ok
+test an_orientation_joint_reports_its_tolerance_floor ... ok
+test a_hinged_body_turns_only_about_its_axis ... ok
+test a_spinning_body_is_projected_onto_the_constraint_manifold ... ok
+test cvodes_sensitivity_scales_as_the_square_of_the_horizon ... ok
+test spin_about_the_joint_arm_needs_no_projection ... ok
+test cvodes_differentiates_free_fall_against_the_closed_form ... ok
+test a_universal_joint_keeps_its_shafts_square ... ok
+test a_rod_carries_a_spinning_rigid_body ... ok
+test ida_pendulum_returns_after_one_small_amplitude_period ... ok
+test a_consistent_start_is_not_projected ... ok
+test a_ball_joint_holds_the_point_and_frees_the_rotation ... ok
+test a_hinge_gives_the_compound_pendulum_period ... ok
+test ida_agrees_with_adams_when_nothing_is_constrained ... ok
+test ida_pendulum_conserves_energy ... ok
+test ida_holds_the_constraint_at_roundoff_over_many_swings ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running unittests src/main.rs (target/debug/deps/posim-ecb736908965ce35)
+
+running 112 tests
+test lexer::tests::scene_keywords ... ok
+test lexer::tests::keywords_case_insensitive_and_idents ... ok
+test machine::tests::json_roundtrip ... ok
+test lexer::tests::comments_and_errors ... ok
+test parser::tests::run_and_method ... ok
+test lexer::tests::paths_vectors_arith ... ok
+test parser::tests::new_with_inits ... ok
+test machine::tests::exec_get_set_state_flow ... ok
+test notebook::tests::save_load_round_trips_a_multiline_def ... ok
+test notebook::tests::magics_edit_and_rerun ... ok
+test parser::tests::errors_have_positions ... ok
+test machine::tests::state_reports_box_walls_and_inverse_mass ... ok
+test machine::tests::surrogate_pairs_decode_to_the_real_character ... ok
+test notebook::tests::cells_number_and_capture_output ... ok
+test parser::tests::fractional_indices_are_refused_not_truncated ... ok
+test notebook::tests::replay_into_keeps_state_and_numbering_for_the_repl ... ok
+test parser::tests::set_command_compiles_to_postfix ... ok
+test parser::tests::vector_literal_and_component_path ... ok
+test parser::tests::scene_commands_compile ... ok
+test qm2::tests::a_rectangular_grid_keeps_its_axes_straight ... ok
+test qm2::tests::missing_prerequisites_are_reported ... ok
+test qm2::tests::negative_arguments_need_commas ... ok
+test qm::tests::a_subgrid_feature_is_refused ... ok
+test qm3::tests::a_three_argument_potential_is_sampled_with_correct_axes ... ok
+test qm::tests::a_user_function_is_not_shadowed_by_the_builtin_shape ... ok
+test qm::tests::arguments_are_expressions ... ok
+test qm3::tests::missing_prerequisites_are_reported ... ok
+test qm::tests::drive_reports_missing_functions ... ok
+test qm::tests::a_barrier_can_be_written_as_a_user_function ... ok
+test qm::tests::missing_prerequisites_are_reported_helpfully ... ok
+test qm::tests::approaching_a_wall_is_reported ... ok
+test qm2::tests::a_two_argument_potential_is_sampled ... ok
+test qm::tests::nash_refuses_what_it_cannot_do ... ok
+test qm::tests::negative_arguments_need_comma_separation ... ok
+test qm2::tests::every_qm2_subcommand_is_documented_in_lockstep ... ok
+test qm3::tests::every_qm3_subcommand_is_documented_in_lockstep ... ok
+test qm::tests::qm_method_parses_every_form ... ok
+test qm::tests::switching_method_moves_no_grid_point ... ok
+test qm::tests::the_parser_owns_every_listed_subcommand ... ok
+test qm::tests::the_status_line_reports_the_boundary ... ok
+test qm::tests::the_transfer_matrix_refuses_an_absorbing_boundary ... ok
+test qm::tests::every_qm_subcommand_is_documented_in_lockstep ... ok
+test qm::tests::nash_propagates_through_the_language ... ok
+test qm::tests::propagation_conserves_the_norm ... ok
+test scene::tests::serves_the_scene_page_over_http ... ok
+test scene::tests::stale_notebook_contacts_never_reach_the_playback_copy ... ok
+test scene::tests::box_shapes_and_wall_flags_reach_the_init_message ... ok
+test scene::ws::tests::base64_known_vectors ... ok
+test scene::ws::tests::rfc6455_accept_key ... ok
+test scene::ws::tests::sha1_known_vectors ... ok
+test special::tests::airy_at_complex_argument_is_reachable ... ok
+test special::tests::complex_argument_bessel_is_reachable ... ok
+test special::tests::complex_order_and_gamma_are_reachable ... ok
+test special::tests::complex_values_work_end_to_end ... ok
+test special::tests::every_registered_name_is_reachable ... ok
+test qm3::tests::animate_writes_marginals_that_integrate_to_one ... ok
+test special::tests::fractional_orders_are_rejected_not_truncated ... ok
+test special::tests::hankel_entry_points_are_reachable ... ok
+test special::tests::library_errors_reach_the_user ... ok
+test special::tests::list_and_matrix_shapes ... ok
+test special::tests::non_integer_order_bessel_is_reachable ... ok
+test special::tests::overloaded_bracket_shapes_all_work_as_lists ... ok
+test special::tests::scaled_entry_points_are_reachable ... ok
+test special::tests::solve_tridiag_round_trips ... ok
+test special::tests::sph_harm_returns_re_and_im ... ok
+test special::tests::unknown_names_fall_through ... ok
+test special::tests::values_match_the_library ... ok
+test special::tests::wigner_symbols_are_reachable ... ok
+test vm::tests::abs_of_a_complex_value_is_its_modulus ... ok
+test special::tests::every_special_function_is_documented_in_lockstep ... ok
+test vm::tests::ball_hinge_and_universal_round_trip ... ok
+test vm::tests::box_off_inside_a_new_initializer_keeps_the_rollback_on_target ... ok
+test vm::tests::box_recreate_after_wall_deletion_leaks_nothing ... ok
+test qm::tests::nash_wraps_where_cayley_reflects ... ok
+test vm::tests::comparison_operators ... ok
+test vm::tests::collide_command_and_contact_paths ... ok
+test vm::tests::def_call_named_objects_and_dumbbell_members ... ok
+test vm::tests::def_hardening_reserved_words_duplicates_defaults_and_nesting ... ok
+test vm::tests::del_inside_a_new_initializer_keeps_the_rollback_on_target ... ok
+test vm::tests::expressions_and_builtins ... ok
+test vm::tests::failing_new_with_nested_creation_renumbers_names ... ok
+test vm::tests::box_family_and_infinite_mass_walls ... ok
+test vm::tests::help_lists_the_dae_family ... ok
+test vm::tests::new_set_get_roundtrip ... ok
+test vm::tests::new_shapes_and_parameter_paths ... ok
+test vm::tests::observables_and_errors ... ok
+test vm::tests::scene_commands_require_a_window ... ok
+test vm::tests::step_runs_sundials ... ok
+test vm::tests::method_switch_and_sprk_gate ... ok
+test vm::tests::torus_pair_is_order_independent_and_new_is_transactional ... ok
+test vm::tests::constrain_equilibrium_and_sensitivity_round_trip ... ok
+test scene::tests::websocket_session_end_to_end ... ok
+test qm2::tests::adi_propagation_conserves_the_norm ... ok
+test qm::tests::changing_the_grid_clears_downstream_state ... ok
+test qm::tests::a_square_barrier_transmits_and_reflects ... ok
+test qm3::tests::propagation_conserves_the_norm ... ok
+test qm3::tests::a_too_large_grid_is_refused_for_eigenstates ... ok
+test scene::tests::reset_restores_the_initial_state_and_start_reruns ... ok
+test qm::tests::a_loaded_eigenstate_is_stationary ... ok
+test scene::tests::playback_forward_then_reverse_restores_state ... ok
+test qm::tests::qm_scan_finds_the_resonances_wavepackets_could_not ... ok
+test qm::tests::absorber_blocks_bound_states_and_off_restores_them ... ok
+test qm2::tests::a_packet_drifts_along_its_momentum ... ok
+test qm::tests::an_absorbing_short_domain_agrees_with_a_long_one ... ok
+test qm3::tests::iso_and_animate_honour_the_drive ... ok
+test qm3::tests::the_oscillator_spectrum_through_the_language ... ok
+test qm3::tests::a_packet_drifts_along_its_momentum ... ok
+test qm::tests::harmonic_oscillator_through_the_language ... ok
+test qm3::tests::a_drive_moves_only_its_own_axis ... ok
+test qm::tests::drive_off_restores_a_stationary_state ... ok
+test qm::tests::a_well_binds_states_and_a_barrier_does_not ... ok
+test qm::tests::a_drive_reproduces_the_classical_trajectory ... ok
+
+test result: ok. 112 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 19.78s
+
+     Running unittests src/lib.rs (target/debug/deps/quantum-4bde315b22c9b974)
+
+running 92 tests
+test absorber::tests::it_refuses_bad_input ... ok
+test nash::tests::it_refuses_bad_input_rather_than_guessing ... ok
+test nash::tests::order_for_returns_the_smallest_order_that_works ... ok
+test absorber::tests::a_higher_ramp_exponent_reflects_less_at_fixed_strength ... ok
+test nash::tests::the_energy_is_the_lattice_dispersion_on_a_plane_wave ... ok
+test isosurface::tests::invalid_input_is_reported ... ok
+test nash::tests::a_stencil_wider_than_the_grid_still_wraps_correctly ... ok
+test nash::tests::lambda_follows_its_definition_in_every_unit ... ok
+test isosurface::tests::a_level_outside_the_range_gives_no_surface ... ok
+test nash::tests::a_plane_wave_gets_exactly_its_analytic_phase ... ok
+test nash::tests::with_no_potential_the_two_splittings_coincide ... ok
+test nash::tests::the_fused_run_matches_repeated_steps ... ok
+test nash::tests::the_propagator_commutes_with_the_wrapping_shift ... ok
+test qm1d::tests::absorber_parameters_are_validated ... ok
+test nash::tests::the_truncation_bound_actually_bounds_the_symbol_error ... ok
+test nash::tests::the_norm_is_conserved_at_every_step_size ... ok
+test nash::tests::a_packet_straddling_the_seam_loses_nothing ... ok
+test absorber::tests::the_shipped_resolution_is_accurate_enough ... ok
+test nash::tests::strang_is_unitary_too ... ok
+test nash::tests::strang_beats_lie_at_the_same_step ... ok
+test qm1d::tests::driven_propagator_validates_its_input ... ok
+test nash::tests::the_splitting_error_is_first_order_in_dt ... ok
+test nash::tests::strang_is_second_order_in_dt ... ok
+test qm1d::tests::a_constant_drive_matches_the_static_propagator ... ok
+test absorber::tests::the_result_is_converged_in_the_cell_count ... ok
+test isosurface::tests::a_non_cubic_grid_gives_the_right_volume ... ok
+test qm1d::tests::invalid_input_is_reported ... ok
+test qm1d::tests::infinite_well_matches_the_exact_discrete_spectrum ... ok
+test qm1d::tests::mismatched_grids_are_refused ... ok
+test qm1d::tests::propagation_is_unitary_even_at_absurd_step_sizes ... ok
+test qm1d::tests::the_momentum_operator_converges_second_order ... ok
+test absorber::tests::too_weak_leaks_and_too_strong_reflects ... ok
+test qm1d::tests::free_packet_moves_at_the_discrete_group_velocity ... ok
+test isosurface::tests::the_mesh_is_closed_and_consistently_wound ... ok
+test nash::tests::the_port_reproduces_the_original_algorithm_to_rounding ... ok
+test qm1d::tests::bound_states_refuse_an_absorbing_hamiltonian ... ok
+test isosurface::tests::a_sphere_has_the_right_volume_and_area ... ok
+test qm2d::tests::bound_states_refuse_an_absorbing_hamiltonian ... ok
+test qm1d::tests::infinite_well_converges_second_order ... ok
+test qm2d::tests::indexing_is_consistent_on_a_non_square_grid ... ok
+test qm2d::tests::infinite_square_well_energy ... ok
+test qm2d::tests::invalid_input_is_reported ... ok
+test qm1d::tests::energy_is_normalised_so_absorption_does_not_fake_a_drop ... ok
+test isosurface::tests::an_offset_ellipsoid_has_the_right_volume ... ok
+test qm2d::tests::adi_is_unitary_at_any_step_size ... ok
+test qm1d::tests::an_eigenstate_does_not_move ... ok
+test isosurface::tests::refinement_converges_on_the_exact_volume ... ok
+test qm2d::tests::a_2d_bound_state_is_stationary ... ok
+test absorber::tests::the_chosen_strength_beats_a_brute_force_sweep ... ok
+test absorber::tests::designing_for_a_band_beats_tuning_at_one_energy ... ok
+test qm1d::tests::absorbing_short_domain_reproduces_the_long_domain_answer ... ok
+test qm2d::tests::the_2d_oscillator_ground_state_is_stationary ... ok
+test qm3d::tests::bound_states_refuse_an_absorbing_hamiltonian ... ok
+test qm3d::tests::indexing_is_consistent_on_a_non_cubic_grid ... ok
+test qm3d::tests::invalid_input_is_reported ... ok
+test qm3d::tests::marginals_are_probability_densities ... ok
+test qm3d::tests::marginals_peak_at_the_packet_centre ... ok
+test qm1d::tests::an_absorber_removes_a_packet_that_a_wall_would_reflect ... ok
+test qm3d::tests::adi_3d_is_unitary_at_any_step_size ... ok
+test qm3d::tests::the_3d_oscillator_ground_state_is_stationary ... ok
+test transfer::tests::a_rectangular_barrier_matches_its_closed_form ... ok
+test transfer::tests::a_square_well_transmits_perfectly_at_the_ramsauer_energies ... ok
+test transfer::tests::an_absorbing_potential_takes_flux_out_of_the_books ... ok
+test transfer::tests::an_energy_below_the_asymptote_is_refused ... ok
+test transfer::tests::an_opaque_barrier_stays_conditioned ... ok
+test transfer::tests::it_refuses_bad_input ... ok
+test transfer::tests::mass_and_hbar_enter_only_through_the_wavenumber ... ok
+test transfer::tests::the_cell_error_is_second_order ... ok
+test transfer::tests::the_method_is_exact_on_cell_aligned_steps ... ok
+test qm1d::tests::bound_states_are_orthonormal ... ok
+test transfer::tests::a_double_barrier_shows_resonances_a_wavepacket_cannot ... ok
+test qm2d::tests::splitting_error_is_second_order ... ok
+test qm2d::tests::a_separable_problem_reproduces_the_1d_solver ... ok
+test qm1d::tests::barrier_transmission_matches_theory ... ok
+test absorber::tests::matches_the_propagated_measurement ... ok
+test qm3d::tests::a_separable_3d_ground_state_matches_the_1d_sum ... ok
+test qm2d::tests::a_2d_drive_moves_only_the_driven_axis ... ok
+test qm3d::tests::the_3d_oscillator_spectrum_with_its_degeneracy ... ok
+test qm2d::tests::a_free_packet_drifts_in_both_directions ... ok
+test qm1d::tests::harmonic_oscillator_spectrum ... ok
+test qm1d::tests::midpoint_sampling_is_second_order ... ok
+test qm1d::tests::a_driven_system_exchanges_energy_while_staying_unitary ... ok
+test qm2d::tests::degenerate_states_are_orthonormal ... ok
+test qm2d::tests::absorbing_edges_swallow_a_packet ... ok
+test qm3d::tests::a_z_independent_problem_matches_the_2d_solver ... ok
+test qm2d::tests::separable_2d_spectrum_is_the_sum_of_1d_spectra ... ok
+test qm3d::tests::a_3d_drive_moves_only_the_driven_axis ... ok
+test qm1d::tests::a_deeper_well_binds_more_states ... ok
+test qm2d::tests::the_2d_oscillator_spectrum_with_its_degeneracies ... ok
+test qm1d::tests::a_driven_oscillator_follows_the_classical_trajectory ... ok
+test qm3d::tests::a_free_packet_drifts_in_three_directions ... ok
+test qm3d::tests::absorbing_faces_swallow_a_packet has been running for over 60 seconds
+test qm3d::tests::absorbing_faces_swallow_a_packet ... ok
+
+test result: ok. 92 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 87.89s
+
+     Running unittests src/lib.rs (target/debug/deps/special_functions-785e58b8366e9cff)
+
+running 233 tests
+test airy_complex::tests::airy_edge_cases ... ok
+test airy_complex::tests::the_origin_values_are_exact ... ok
+test airy_complex::tests::conjugation_symmetry_holds ... ok
+test airy_complex::tests::the_real_axis_matches_cephes ... ok
+test airy_complex::tests::the_differential_equation_is_satisfied ... ok
+test airy_uniform::tests::airy_uniform_edge_cases ... ok
+test airy_uniform::tests::the_branch_anchor_is_constrained_away_from_the_turning_point ... ok
+test airy_complex::tests::the_connection_formula_holds ... ok
+test airy_uniform::tests::the_generated_series_match_the_closed_forms ... ok
+test airy_uniform::tests::y_matches_cephes_across_the_turning_point ... ok
+test airy_uniform::tests::the_turning_point_value_scales_as_the_cube_root ... ok
+test airy_uniform::tests::the_wronskian_holds_across_the_turning_point ... ok
+test bessel::tests::agrees_with_the_vendored_cephes_implementation ... ok
+test airy_uniform::tests::complex_order_at_the_turning_point_satisfies_the_wronskian ... ok
+test airy_uniform::tests::the_closed_form_zeta_agrees_with_the_series ... ok
+test airy_uniform::tests::it_matches_cephes_across_the_turning_point ... ok
+test airy_uniform::tests::the_known_constants_are_right ... ok
+test bessel::tests::decays_hard_once_order_exceeds_argument ... ok
+test airy_uniform::tests::the_complex_route_reproduces_the_real_one ... ok
+test bessel::tests::known_values_and_parity ... ok
+test bessel::tests::normalisation_identity_holds ... ok
+test bessel::tests::three_term_recurrence_is_satisfied ... ok
+test bessel_cnu::tests::complex_order_edge_cases ... ok
+test bessel_cnu::tests::k_is_even_in_the_order ... ok
+test bessel_cnu::tests::k_of_imaginary_order_is_real ... ok
+test bessel_cnu::tests::conjugating_both_arguments_conjugates_the_result ... ok
+test bessel_cnu::tests::the_i_k_wronskian_holds_at_complex_order ... ok
+test bessel_cnu::tests::a_whole_real_part_is_not_a_special_case_off_the_real_axis ... ok
+test bessel::tests::invalid_input_is_reported ... ok
+test bessel_cnu::tests::the_j_y_wronskian_holds_at_complex_order ... ok
+test airy_uniform::tests::the_complex_zeta_reproduces_the_real_one_on_both_sides ... ok
+test bessel_cnu_large::tests::large_order_edge_cases ... ok
+test bessel_cnu::tests::the_large_argument_routes_extend_the_reach ... ok
+test airy_complex::tests::the_wronskian_holds_across_the_plane ... ok
+test bessel_cnu::tests::the_complex_order_loss_law_holds ... ok
+test bessel_cnu::tests::a_nearly_real_order_reproduces_the_real_order_routines ... ok
+test bessel_cnu_large::tests::the_estimate_floor_binds_where_truncation_reports_zero ... ok
+test bessel_cnu_large::tests::the_i_k_wronskian_holds_at_complex_order ... ok
+test bessel_complex::tests::each_route_is_taken_where_it_belongs ... ok
+test bessel_complex::tests::half_integer_closed_forms ... ok
+test bessel_complex::tests::integer_order_accuracy_laws_hold ... ok
+test bessel_complex::tests::invalid_input_is_reported ... ok
+test bessel_complex::tests::conjugation_and_parity ... ok
+test bessel_complex::tests::i_k_wronskian_at_non_integer_order ... ok
+test bessel_cnu::tests::the_selector_is_accurate_where_the_raw_reflection_is_not ... ok
+test bessel_complex::tests::j_y_wronskian_at_non_integer_order ... ok
+test bessel_cnu_large::tests::the_half_integer_closed_form_pins_the_prefactor ... ok
+test bessel_complex::tests::k_half_integer_closed_form ... ok
+test bessel_complex::tests::documented_accuracy_bounds_hold ... ok
+test bessel_complex::tests::integer_order_agrees_with_the_integer_routines ... ok
+test bessel_complex::tests::modified_bessel_reduces_correctly_on_the_real_axis ... ok
+test bessel_complex::tests::non_integer_order_edge_cases ... ok
+test bessel_complex::tests::negative_whole_order_uses_the_gamma_poles ... ok
+test bessel_complex::tests::real_axis_matches_the_real_routine_and_cephes ... ok
+test bessel_complex::tests::negative_order_reflections ... ok
+test bessel_complex::tests::the_addition_theorem_holds ... ok
+test bessel_cnu::tests::the_order_recurrence_holds_at_complex_order ... ok
+test bessel_cnu_large::tests::the_uniform_route_holds_at_large_complex_order ... ok
+test bessel_complex::tests::near_integer_handover_is_continuous ... ok
+test bessel_complex::tests::the_branch_jump_is_unchanged ... ok
+test bessel_complex::tests::non_integer_order_matches_cephes_on_the_real_axis ... ok
+test bessel_cnu_large::tests::the_continuation_agrees_with_the_direct_route_where_both_apply ... ok
+test bessel_complex::tests::order_recurrence ... ok
+test bessel_complex::tests::accuracy_degrades_with_imaginary_part_as_documented ... ok
+test bessel_cnu_large::tests::the_wronskian_holds_far_beyond_the_series ... ok
+test bessel_complex::tests::the_imaginary_axis_matches_the_vendored_modified_bessel ... ok
+test bessel_complex::tests::the_modified_generating_function_holds ... ok
+test bessel_complex::tests::the_generating_function_identity_holds_off_the_real_axis ... ok
+test bessel_complex::tests::the_recurrence_is_satisfied ... ok
+test bessel_complex::tests::k_matches_cephes_on_the_real_axis ... ok
+test bessel_complex::tests::the_points_that_used_to_fail_now_work ... ok
+test bessel_complex::tests::the_j_y_wronskian_holds ... ok
+test bessel_complex::tests::the_y_recurrence_is_satisfied ... ok
+test bessel_complex::tests::y_matches_cephes_on_the_real_axis ... ok
+test bessel_complex::tests::the_i_k_wronskian_holds ... ok
+test bessel_cnu_large::tests::the_expansions_agree_with_the_series_where_it_is_sound ... ok
+test bessel_scaled::tests::scaled_edge_cases ... ok
+test bessel_complex::tests::the_negative_real_axis_satisfies_the_continuation_identities ... ok
+test bessel_complex::tests::y_is_discontinuous_across_the_negative_real_axis ... ok
+test bessel_complex::tests::the_wedge_beside_the_cut_is_covered ... ok
+test bessel_scaled::tests::scaled_j_matches_the_established_routines ... ok
+test bessel_scaled::tests::scaled_y_is_correct_where_the_unscaled_one_is_not ... ok
+test bessel_complex::tests::k_stays_on_the_right_sheet_past_the_imaginary_axis ... ok
+test bessel_scaled::tests::the_airy_type_route_is_chosen_across_the_turning_point ... ok
+test complex::tests::arithmetic_identities ... ok
+test bessel_scaled::tests::the_truncation_estimate_tracks_reality ... ok
+test complex::tests::eulers_identity_and_exp ... ok
+test complex::tests::logarithm_inverts_the_exponential ... ok
+test bessel_scaled::tests::the_large_order_route_fixes_the_recessive_j_region ... ok
+test complex::tests::reciprocal_survives_extreme_magnitudes ... ok
+test debye::tests::debye_edge_cases ... ok
+test debye::tests::the_band_that_had_no_method_now_has_one ... ok
+test debye::tests::deep_in_range_the_debye_expansion_is_exact_to_machine_precision ... ok
+test debye::tests::the_debye_polynomials_match_the_published_ones ... ok
+test debye::tests::the_estimate_detects_the_turning_point ... ok
+test debye::tests::the_guard_is_on_the_region_not_the_order ... ok
+test debye::tests::the_branch_choices_are_right_off_the_real_axis ... ok
+test bessel_scaled::tests::unscaling_reproduces_the_unscaled_routines_where_those_are_sound ... ok
+test debye::tests::the_wronskian_is_blind_to_a_shared_sign_and_to_a_dominant_hankel ... ok
+test bessel_scaled::tests::half_integer_closed_forms_hold_at_any_magnitude ... ok
+test bessel_scaled::tests::scaled_k_is_correct_where_the_unscaled_one_is_not ... ok
+test eigen::tests::diagonal_matrix_returns_its_diagonal_sorted ... ok
+test debye::tests::the_j_debye_expansion_matches_cephes_where_nothing_else_reaches ... ok
+test debye::tests::the_y_debye_expansion_matches_cephes ... ok
+test eigen::tests::eigenpairs_satisfy_the_eigenvalue_equation ... ok
+test eigen::tests::eigenvectors_are_orthonormal ... ok
+test eigen::tests::invalid_input_is_reported ... ok
+test eigen::tests::trace_and_determinant_invariants ... ok
+test eigen::tests::two_by_two_known_spectrum ... ok
+test debye::tests::the_oscillatory_region_matches_cephes ... ok
+test gamma_complex::tests::bernoulli_numbers_satisfy_their_recurrence ... ok
+test gamma_complex::tests::gamma_edge_cases ... ok
+test gamma_complex::tests::the_exact_values_are_exact ... ok
+test gamma_complex::tests::the_functional_equations_hold ... ok
+test gamma_complex::tests::the_imaginary_axis_closed_form_holds ... ok
+test gamma_complex::tests::the_real_axis_matches_cephes ... ok
+test bessel_scaled::tests::scaled_i_is_correct_and_survives_overflow ... ok
+test gamma_complex::tests::the_reciprocal_vanishes_at_the_poles ... ok
+test debye::tests::the_wronskian_confirms_these_beat_cephes_at_large_order ... ok
+test hankel::tests::hankel_edge_cases ... ok
+test hankel::tests::spherical_closed_forms ... ok
+test bessel_scaled::tests::scaled_y_holds_across_order ... ok
+test complex::tests::real_powers ... ok
+test debye::tests::the_ik_uniform_expansion_satisfies_the_wronskian ... ok
+test hankel::tests::the_spherical_amplitude_falls_exactly_as_one_over_r ... ok
+test hankel::tests::half_integer_closed_forms ... ok
+test hankel::tests::the_spherical_wronskian_holds ... ok
+test lanczos::tests::invalid_input_is_reported ... ok
+test hankel::tests::accuracy_is_a_half_plane_for_each ... ok
+test legendre::tests::associated_legendre_closed_forms_and_m0_reduction ... ok
+test bessel_scaled::tests::the_k_and_h1_expansions_agree ... ok
+test legendre::tests::associated_legendre_negative_order_relation ... ok
+test legendre::tests::invalid_arguments_are_errors ... ok
+test legendre::tests::bonnet_recurrence_is_satisfied ... ok
+test hankel::tests::the_outgoing_asymptotic_is_approached ... ok
+test hankel::tests::conjugate_on_the_real_axis ... ok
+test bessel_complex::tests::the_whole_plane_satisfies_the_wronskian ... ok
+test legendre::tests::legendre_special_values_and_closed_forms ... ok
+test legendre::tests::normalised_form_is_stable_where_the_raw_form_dies ... ok
+test orthopoly::tests::chebyshev_special_values_at_endpoints ... ok
+test orthopoly::tests::error_messages_are_actionable ... ok
+test legendre::tests::spherical_harmonic_known_values ... ok
+test orthopoly::tests::gegenbauer_alpha_zero_is_degenerate_not_chebyshev ... ok
+test orthopoly::tests::generalised_laguerre_low_order_closed_form ... ok
+test legendre::tests::normalised_matches_the_scaled_unnormalised_form ... ok
+test orthopoly::tests::gegenbauer_reduces_to_chebyshev_u_and_legendre ... ok
+test orthopoly::tests::associated_laguerre_partial_sum_identity ... ok
+test orthopoly::tests::hermite_special_values_at_origin ... ok
+test orthopoly::tests::chebyshev_matches_cosine_of_multiple_angle ... ok
+test hankel::tests::hankel_obeys_the_cylinder_recurrence ... ok
+test orthopoly::tests::jacobi_reduces_to_chebyshev_t ... ok
+test orthopoly::tests::jacobi_and_gegenbauer_endpoint_values ... ok
+test hankel::tests::the_hankel_wronskian_holds ... ok
+test bessel_scaled::tests::refusals_say_which_kind_of_failure_it_is ... ok
+test orthopoly::tests::jacobi_reduces_to_legendre ... ok
+test orthopoly::tests::hermite_conventions_agree ... ok
+test hankel::tests::the_two_routes_agree_at_whole_order ... ok
+test orthopoly::tests::laguerre_special_values_at_origin ... ok
+test orthopoly::tests::low_order_closed_forms ... ok
+test orthopoly::tests::negative_degree_is_an_error ... ok
+test orthopoly::tests::non_finite_argument_is_an_error ... ok
+test orthopoly::tests::out_of_range_parameters_are_errors ... ok
+test orthopoly::tests::parity_relations ... ok
+test orthopoly::tests::recurrences_are_satisfied_across_degree ... ok
+test quadrature::tests::adaptive_reports_an_unreachable_tolerance ... ok
+test quadrature::tests::adaptive_handles_a_peaked_integrand ... ok
+test quadrature::tests::adaptive_matches_gauss_legendre_on_smooth_integrands ... ok
+test quadrature::tests::adaptive_known_integrals ... ok
+test quadrature::tests::bad_inputs_are_errors ... ok
+test quadrature::tests::brent_converges_superlinearly ... ok
+test quadrature::tests::brent_finds_known_roots ... ok
+test quadrature::tests::brent_rejects_a_non_bracketing_interval ... ok
+test quadrature::tests::error_messages_are_actionable ... ok
+test quadrature::tests::find_roots_on_a_polynomial_and_a_shifted_scan ... ok
+test quadrature::tests::find_roots_recovers_the_zeros_of_sine ... ok
+test quadrature::tests::find_roots_returns_an_empty_vec_when_there_are_none ... ok
+test quadrature::tests::gauss_legendre_converges_spectrally ... ok
+test quadrature::tests::gauss_legendre_is_not_exact_at_degree_2n ... ok
+test quadrature::tests::iteration_caps_report_non_convergence ... ok
+test quadrature::tests::known_integrals_gauss_legendre ... ok
+test quadrature::tests::gauss_legendre_is_exact_to_degree_2n_minus_1 ... ok
+test quadrature::tests::legendre_helper_matches_closed_forms ... ok
+test quadrature::tests::mapped_weights_sum_to_the_interval_width ... ok
+test quadrature::tests::small_rules_match_closed_forms ... ok
+test quadrature::tests::nodes_are_roots_of_the_legendre_polynomial ... ok
+test sph_bessel::tests::closed_forms_for_low_orders ... ok
+test quadrature::tests::nodes_and_weights_are_sane ... ok
+test quadrature::tests::integrate_is_exact_for_polynomials_on_a_general_interval ... ok
+test sph_bessel::tests::invalid_arguments_are_errors ... ok
+test sph_bessel::tests::parity_and_origin_values ... ok
+test quadrature::tests::adaptive_tolerance_is_meaningful ... ok
+test sph_bessel::tests::small_argument_series_matches_leading_term ... ok
+test sph_bessel::tests::sph_j_upward_recurrence_is_unstable_for_n_gt_x ... ok
+test sph_bessel::tests::wronskian_holds_across_orders_and_arguments ... ok
+test sph_bessel::tests::three_term_recurrence_is_satisfied ... ok
+test tridiag::tests::cyclic_reduces_to_plain_when_corners_vanish ... ok
+test tridiag::tests::cyclic_residual_vanishes ... ok
+test tridiag::tests::invalid_input_is_reported ... ok
+test tridiag::tests::real_system_matches_hand_solution ... ok
+test tridiag::tests::residual_vanishes_for_a_complex_system ... ok
+test wigner::tests::known_3j_values ... ok
+test wigner::tests::known_6j_values ... ok
+test wigner::tests::known_clebsch_gordan_values ... ok
+test wigner::tests::large_j_does_not_overflow ... ok
+test wigner::tests::non_angular_momentum_arguments_are_errors ... ok
+test wigner::tests::nine_j_symmetries ... ok
+test wigner::tests::permutation_and_reflection_symmetries ... ok
+test wigner::tests::selection_rules_return_zero_not_errors ... ok
+test wigner::tests::clebsch_gordan_rows_are_normalised ... ok
+test wigner::tests::six_j_orthogonality_relation ... ok
+test wigner::tests::six_j_with_a_zero_argument_closed_form ... ok
+test wigner::tests::zero_coupling_closed_form_over_a_range ... ok
+test tridiag::tests::crank_nicolson_step_is_unitary_on_a_free_particle ... ok
+test wigner::tests::nine_j_with_a_zero_reduces_to_a_six_j ... ok
+test legendre::tests::spherical_harmonics_are_orthonormal ... ok
+test orthopoly::tests::chebyshev_u_orthogonality_by_quadrature ... ok
+test wigner::tests::nine_j_orthogonality ... ok
+test legendre::tests::legendre_orthogonality_by_quadrature ... ok
+test eigen::tests::tridiagonal_laplacian_matches_its_analytic_spectrum ... ok
+test orthopoly::tests::chebyshev_t_orthogonality_by_quadrature ... ok
+test bessel_scaled::tests::the_scaled_i_k_wronskian_holds ... ok
+test orthopoly::tests::hermite_orthogonality_by_quadrature ... ok
+test bessel_scaled::tests::the_scaled_routines_agree_with_the_series_wherever_the_series_is_sound ... ok
+test orthopoly::tests::jacobi_orthogonality_by_quadrature ... ok
+test orthopoly::tests::laguerre_orthogonality_by_quadrature ... ok
+test bessel_cnu::tests::the_chosen_values_satisfy_the_wronskian_across_the_plane ... ok
+test lanczos::tests::agrees_with_the_dense_solver ... ok
+test lanczos::tests::results_are_reproducible ... ok
+test eigen::tests::particle_in_a_box_energies_converge_to_the_analytic_result ... ok
+test lanczos::tests::real_degeneracies_are_found_and_ghosts_are_not_invented ... ok
+test lanczos::tests::eigenvectors_are_orthonormal ... ok
+test lanczos::tests::diagonal_operator ... ok
+test lanczos::tests::reported_residuals_match_the_true_ones ... ok
+
+test result: ok. 233 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 45.81s
+
+     Running tests/vendored_identities.rs (target/debug/deps/vendored_identities-af9bc9e82f8aa119)
+
+running 11 tests
+test bessel_half_integer_closed_form ... ok
+test digamma_at_one_is_negative_euler_gamma ... ok
+test gamma_exact_values_and_reflection ... ok
+test bessel_recurrence ... ok
+test native_spherical_bessel_agrees_with_vendored_cylindrical ... ok
+test jacobi_elliptic_pythagorean_identities ... ok
+test zeta_at_even_integers ... ok
+test airy_wronskian_and_origin_values ... ok
+test elliptic_special_values_and_legendre_relation ... ok
+test erf_identities ... ok
+test bessel_wronskian ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests physical_object
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests quantum
+
+running 5 tests
+test quantum/src/nash.rs - nash::order_for (line 158) ... ok
+test quantum/src/nash.rs - nash::NashPropagator::with_splitting (line 357) ... ok
+test quantum/src/absorber.rs - absorber::leak (line 164) ... ok
+test quantum/src/transfer.rs - transfer::scatter (line 159) ... ok
+test quantum/src/absorber.rs - absorber::choose_strength (line 226) ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.43s
+
+   Doc-tests special_functions
+
+running 50 tests
+test special_functions/src/bessel_scaled.rs - bessel_scaled::bessel_y_scaled_nu (line 871) ... ok
+test special_functions/src/bessel_complex.rs - bessel_complex::bessel_y_array_c (line 369) ... ok
+test special_functions/src/bessel_complex.rs - bessel_complex::bessel_j_nu (line 844) ... ok
+test special_functions/src/bessel_scaled.rs - bessel_scaled::hankel_h1_scaled_nu (line 478) ... ok
+test special_functions/src/bessel_complex.rs - bessel_complex::bessel_j_array_c (line 149) ... ok
+test special_functions/src/airy_complex.rs - airy_complex::airy_c (line 247) ... ok
+test special_functions/src/bessel_complex.rs - bessel_complex::bessel_j_c (line 221) ... ok
+test special_functions/src/airy_uniform.rs - airy_uniform::jy_airy (line 330) ... ok
+test special_functions/src/bessel_complex.rs - bessel_complex::bessel_k_c (line 683) ... ok
+test special_functions/src/hankel.rs - hankel::hankel_h1_c (line 102) ... ok
+test special_functions/src/bessel_complex.rs - bessel_complex::bessel_i_c (line 261) ... ok
+test special_functions/src/legendre.rs - legendre::legendre_p (line 36) ... ok
+test special_functions/src/legendre.rs - legendre::assoc_legendre_p (line 130) ... ok
+test special_functions/src/bessel.rs - bessel::bessel_j_array (line 38) ... ok
+test special_functions/src/hankel.rs - hankel::sph_hankel_h1 (line 241) ... ok
+test special_functions/src/bessel_scaled.rs - bessel_scaled::bessel_k_scaled_nu (line 625) ... ok
+test special_functions/src/bessel_cnu.rs - bessel_cnu::bessel_j_cnu (line 299) ... ok
+test special_functions/src/gamma_complex.rs - gamma_complex::ln_gamma_c (line 98) ... ok
+test special_functions/src/bessel.rs - bessel::bessel_j (line 129) ... ok
+test special_functions/src/eigen.rs - eigen::eigenvalues (line 204) ... ok
+test special_functions/src/gamma_complex.rs - gamma_complex::gamma_c (line 139) ... ok
+test special_functions/src/eigen.rs - eigen::jacobi_eigen (line 50) ... ok
+test special_functions/src/hankel.rs - hankel::hankel_h1_nu (line 143) ... ok
+test special_functions/src/legendre.rs - legendre::norm_assoc_legendre_p (line 231) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::chebyshev_u (line 310) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::hermite_he (line 137) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::hermite_h (line 94) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::chebyshev_t (line 268) ... ok
+test special_functions/src/legendre.rs - legendre::sph_harm_real (line 332) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::jacobi_p (line 424) ... ok
+test special_functions/src/legendre.rs - legendre::legendre_p_prime (line 74) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::laguerre_l_assoc (line 206) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::laguerre_l (line 172) ... ok
+test special_functions/src/legendre.rs - legendre::sph_harm (line 302) ... ok
+test special_functions/src/orthopoly.rs - orthopoly::gegenbauer_c (line 360) ... ok
+test special_functions/src/quadrature.rs - quadrature::integrate (line 293) ... ok
+test special_functions/src/quadrature.rs - quadrature::gauss_legendre (line 203) ... ok
+test special_functions/src/sph_bessel.rs - sph_bessel::sph_j (line 53) ... ok
+test special_functions/src/tridiag.rs - tridiag::solve_tridiag_c (line 78) ... ok
+test special_functions/src/quadrature.rs - quadrature::brent_root (line 655) ... ok
+test special_functions/src/sph_bessel.rs - sph_bessel::sph_y (line 151) ... ok
+test special_functions/src/sph_bessel.rs - sph_bessel::sph_j_prime (line 192) ... ok
+test special_functions/src/tridiag.rs - tridiag::solve_tridiag (line 45) ... ok
+test special_functions/src/quadrature.rs - quadrature::find_roots (line 712) ... ok
+test special_functions/src/wigner.rs - wigner::clebsch_gordan (line 230) ... ok
+test special_functions/src/quadrature.rs - quadrature::integrate_adaptive (line 448) ... ok
+test special_functions/src/wigner.rs - wigner::wigner_3j (line 125) ... ok
+test special_functions/src/wigner.rs - wigner::wigner_6j (line 269) ... ok
+test special_functions/src/wigner.rs - wigner::wigner_9j (line 387) ... ok
+test special_functions/src/lanczos.rs - lanczos::lanczos_lowest (line 141) ... ok
+
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+

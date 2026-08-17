@@ -133,18 +133,17 @@ fn no_array(what: &str) -> String {
 /// variables. With a rod that trace is small; with a hinge, `μ` has five
 /// components acting on both `v` and `ω`, and `ω` drives the quaternion.
 ///
-/// Measured on compound pendulums of several inertias and release
-/// angles: `1e-6` and `1e-7` give the same answer (`|g| ≈ 1e-11`, a full
-/// period closing to `2e-8`) and `1e-8` never converges — the corrector
-/// fails and the step collapses to `1e-15`. Tightening past the floor
-/// buys no accuracy and costs the run.
+/// Measured across twelve compound pendulums — four inertias × three
+/// release angles — the boundary is sharp and uniform: `1e-6` converges
+/// in every one, holding `|g|` to between `1e-11` and `1e-9`, and `1e-8`
+/// converges in none. Tightening past the floor buys no accuracy and
+/// costs the run.
 ///
-/// `1e-6` is chosen over the even safer `1e-5` because the accuracy
-/// difference is two orders of magnitude (`|g|` goes from `1e-11` to
-/// `5e-7`) and only one probed configuration in fifteen needed the
-/// looser value. A run that does hit it fails with a message saying to
-/// raise `system.rtol`, which is a better outcome than quietly handing
-/// everyone a worse answer.
+/// (Before the initial velocities were projected onto the constraint
+/// manifold this boundary was *erratic* in the release angle, which is
+/// what first suggested a conditioning problem. It was not: it was an
+/// inconsistent starting state. Projecting made the boundary uniform —
+/// but did not remove it, because the index-2 accuracy ceiling is real.)
 ///
 /// So the floor is applied, and [`RunReport::tolerance_floored`] says it
 /// was, rather than silently changing what the caller asked for.
@@ -215,6 +214,11 @@ pub struct RunReport {
     /// (`ROT_JOINT_RTOL_FLOOR`). Only ever true on the IDA path with a
     /// BALL/HINGE/UNIVERSAL joint.
     pub tolerance_floored: bool,
+    /// Largest velocity change the run had to make to put the starting
+    /// state ON the constraint manifold — see
+    /// [`project_initial_velocities`]. Zero when the caller's velocities
+    /// were already consistent, which is the usual case.
+    pub initial_velocity_projected: f64,
 }
 
 /// Parameters snapshot handed to the CVODE right-hand side.
@@ -1573,6 +1577,7 @@ fn seed_multipliers(
         e[l] = 0.0;
     }
     solve_dense(&mut mat, &mut rhs, m);
+
     rhs
 }
 
@@ -1645,7 +1650,7 @@ fn run_ida(
         system.time = t_end;
         return Ok(RunReport::default());
     }
-    system.constraints.spin_gate(system)?;
+    let velocity_correction = project_initial_velocities(system)?;
     let m = system.constraints.len();
     let base = system.state_len();
     let neq = base + 2 * m;
@@ -1813,6 +1818,7 @@ fn run_ida(
     report.netf = netf;
     report.constraint_drift = system.constraints.drift(system);
     report.tolerance_floored = floored;
+    report.initial_velocity_projected = velocity_correction;
 
     let mut ida_mem = Some(ida_mem);
     IDAFree(&mut ida_mem);
@@ -1824,4 +1830,147 @@ fn run_ida(
     let mut sunctx = Some(sunctx);
     SUNContext_Free(&mut sunctx);
     Ok(report)
+}
+
+/// Makes the starting velocities **consistent with the joints**, and
+/// returns how big a correction that took.
+///
+/// This is the whole answer to what looked for a long time like an
+/// index-2 wall. A ball joint says the two bodies share a point, so at
+/// the velocity level it says
+///
+/// ```text
+///   v_i + ω_i × r_i = v_j + ω_j × r_j
+/// ```
+///
+/// — a body turning about a pivot offset from its centre **must have its
+/// centre moving**. Give it `ω` and leave `v` at zero and `ġ = J·u ≠ 0`:
+/// the initial condition violates the constraint, and IDA is being asked
+/// to integrate a state that is not on the manifold. It fails on the
+/// first step, at every tolerance, which is exactly what was observed.
+///
+/// A rod has `J_ω = 0`, so spin never enters its `ġ` — which is why rods
+/// tolerated spinning bodies from the start and hid the problem.
+///
+/// The fix is the standard impulsive projection: find the smallest
+/// (mass-weighted) velocity change that lands on the manifold,
+///
+/// ```text
+///   minimise ½ δuᵀ M δu   subject to   J(u + δu) = 0
+///   ⟹  (J M⁻¹ Jᵀ) ν = J·u,     δu = -M⁻¹Jᵀν
+/// ```
+///
+/// and the momentum-level form is simply `δ(p, L) = -Jᵀν`, because
+/// `M·M⁻¹Jᵀν = Jᵀν`. Anchors have `M⁻¹ = 0` and are untouched.
+///
+/// Physically this is the impulse the joint delivers the instant it is
+/// engaged — exactly what a real coupling does when you clutch it to a
+/// spinning shaft. It is reported rather than done silently, because it
+/// changes the state the caller handed in.
+fn project_initial_velocities(system: &mut PhysicalObjectSystem) -> Result<f64, String> {
+    let m = system.constraints.len();
+    if m == 0 {
+        return Ok(0.0);
+    }
+    let n = system.objects.len();
+    let p = DaeParams::from_system(system);
+    let pose = ConstraintSet::poses(system);
+    let a: Vec<Mat3> = (0..n)
+        .map(|i| {
+            let r = pose[i].orientation.normalize().to_rotation_matrix();
+            r * p.inverse_inertia[i] * r.transpose()
+        })
+        .collect();
+    let apply_minv = |f: &[Vec3], t: &[Vec3]| -> (Vec<Vec3>, Vec<Vec3>) {
+        (
+            (0..n)
+                .map(|i| {
+                    if p.anchors.translation_fixed[i] {
+                        Vec3::zeros()
+                    } else {
+                        f[i] * p.inverse_masses[i]
+                    }
+                })
+                .collect(),
+            (0..n)
+                .map(|i| {
+                    if p.anchors.rotation_fixed[i] {
+                        Vec3::zeros()
+                    } else {
+                        a[i] * t[i]
+                    }
+                })
+                .collect(),
+        )
+    };
+    let apply_j = |lin: &[Vec3], ang: &[Vec3]| -> Vec<f64> {
+        let mut out = vec![0.0; m];
+        p.constraints.for_each_block(&pose, |row, b| {
+            out[row] += b.jv.dot(lin[b.body]) + b.jw.dot(ang[b.body]);
+        });
+        out
+    };
+
+    let v: Vec<Vec3> = system.objects.iter().map(|o| o.get_velocity()).collect();
+    let w: Vec<Vec3> = system.objects.iter().map(crate::constrain::angular_velocity).collect();
+    let mut rhs = vec![0.0; m];
+    p.constraints.velocity_residual(&pose, &v, &w, &mut rhs);
+    let worst = rhs.iter().fold(0.0f64, |acc, x| acc.max(x.abs()));
+    if worst <= 1.0e-12 {
+        return Ok(0.0);
+    }
+
+    /* S = J M⁻¹ Jᵀ, the same matrix `seed_multipliers` builds. */
+    let mut mat = vec![0.0; m * m];
+    let mut e = vec![0.0; m];
+    for l in 0..m {
+        e[l] = 1.0;
+        let (mut f, mut t) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+        p.constraints.add_jacobian_transpose(&pose, &p.anchors, &e, &mut f, &mut t);
+        let (lin, ang) = apply_minv(&f, &t);
+        for (k, val) in apply_j(&lin, &ang).into_iter().enumerate() {
+            mat[k * m + l] = val;
+        }
+        e[l] = 0.0;
+    }
+    solve_dense(&mut mat, &mut rhs, m);
+
+    /* δ(p, L) = -Jᵀν, applied through the setters (hard rule 4). */
+    let (mut dp, mut dl) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+    p.constraints
+        .add_jacobian_transpose(&pose, &p.anchors, &rhs, &mut dp, &mut dl);
+    let mut correction = 0.0f64;
+    for i in 0..n {
+        if !p.anchors.translation_fixed[i] {
+            let before = system.objects[i].get_velocity();
+            let momentum = system.objects[i].get_momentum();
+            system.objects[i].set_momentum(momentum - dp[i]);
+            correction = correction.max((system.objects[i].get_velocity() - before).norm());
+        }
+        if !p.anchors.rotation_fixed[i] {
+            let before = crate::constrain::angular_velocity(&system.objects[i]);
+            let angmom = system.objects[i].get_angular_momentum();
+            system.objects[i].set_angular_momentum(angmom - dl[i]);
+            correction = correction
+                .max((crate::constrain::angular_velocity(&system.objects[i]) - before).norm());
+        }
+    }
+
+    /* It must have worked: if the residual survives, the constraint set
+     * is singular (an over-constrained mechanism), and saying so beats
+     * integrating something that is not on the manifold. */
+    let v2: Vec<Vec3> = system.objects.iter().map(|o| o.get_velocity()).collect();
+    let w2: Vec<Vec3> = system.objects.iter().map(crate::constrain::angular_velocity).collect();
+    let mut after = vec![0.0; m];
+    p.constraints.velocity_residual(&pose, &v2, &w2, &mut after);
+    let left = after.iter().fold(0.0f64, |acc, x| acc.max(x.abs()));
+    if left > 1.0e-9 * worst.max(1.0) {
+        return Err(format!(
+            "the starting velocities cannot be made consistent with the joints \
+             (|J·u| = {worst:e} before the projection, {left:e} after). That means the joint \
+             set is singular — usually two joints competing for the same freedom, or a \
+             mechanism with no assembly at all. CONSTRAINTS lists them"
+        ));
+    }
+    Ok(correction)
 }
