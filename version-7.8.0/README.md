@@ -48,7 +48,7 @@ rod as ONE rigid body, exact part-wise collisions conserving E, P and
 L through real solver events); the scene window gains a permanent
 Reset button (with `SCENE RESET` — bit-identical re-initialization,
 Start re-runs) and a live labeled conserved-quantities readout (E, P
-and L); 592 passed workspace-wide (40 physical_object lib +
+and L); 603 passed workspace-wide (40 physical_object lib +
 19 collision + 9 conservation + 109 posim + 92 quantum +
 233 special_functions + 11 vendored identities + 55 doctests).
 
@@ -72,7 +72,7 @@ and L); 592 passed workspace-wide (40 physical_object lib +
 | you type | question | solver |
 |---|---|---|
 | `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
-| `CONSTRAIN a b` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
+| `CONSTRAIN` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
 | `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
 | `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES / IDAS |
 
@@ -233,7 +233,7 @@ catalogue is [dynamic_notebooks/README.md](dynamic_notebooks/README.md).
 ## The Index of Functions
 
 `index_of_entities.html` is a browsable catalog of **every named entity in this
-repository** — 6,296 of them — with a definition, the `file:line` where it is
+repository** — 6,310 of them — with a definition, the `file:line` where it is
 defined, its complete syntax, and examples you can paste into a notebook and
 run. Open it directly; it needs no server and fetches nothing.
 

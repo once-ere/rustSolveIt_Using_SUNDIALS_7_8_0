@@ -3294,6 +3294,61 @@ commands ask different questions, each answered by a different solver.
 \end{tabular}
 \end{center}
 
+\subsection{The four joints}
+
+\begin{center}
+\begin{tabular}{p{4.6cm}p{1.2cm}p{4.4cm}p{3.4cm}}
+\textbf{command} & \textbf{rows} & \textbf{holds} & \textbf{freedoms left}\\\hline
+\kw{constrain} \emph{a b} [\emph{len}] & 1 & a fixed distance & 5\\
+\kw{ball} \emph{a b} & 3 & a shared point & 3\\
+\kw{universal} \emph{a b u w} & 4 & a shared point, two shafts square & 2\\
+\kw{hinge} \emph{a b axis} & 5 & a shared point and an axis & 1 (the swing)\\
+\end{tabular}
+\end{center}
+
+The last three grip \emph{orientation}, which is why \kw{method ida}
+carries the full 13-numbers-per-object state rather than positions
+alone. \textbf{The pivot is the midpoint of the two bodies as they stand
+when you make the joint}, carried into each body's frame --- the same
+``freeze what you have'' rule a bare \kw{constrain} follows, so the joint
+is satisfied the instant it is made.
+
+A door is an anchor, a slab and a hinge:
+
+\begin{lstlisting}
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02,
+                             position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2],
+          position = [0.0199986666933331, -0.9998000066665778, 0] }
+In[6]:= hinge jamb door [0, 0, 1]
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]
+\end{lstlisting}
+
+The door swings about \emph{z and nothing else} --- the two rows a hinge
+has over a ball joint are exactly the ones that forbid the other two
+axes --- and the joint is held to $2.7\times10^{-10}$ after 70 steps. A
+hinged rigid body is a \emph{compound} pendulum, with period
+$T = 2\pi\sqrt{I_{\text{pivot}}/(mgd)}$ and
+$I_{\text{pivot}} = I_{\text{com}} + md^2$; the simulator reproduces it
+to about $3\times10^{-8}$ of a full swing.
+
+\textbf{Two limits, both refused by name.} Orientation joints are
+integrated \emph{from rest}: a body the mechanism sets turning is fine, a
+body already turning at $t_0$ is refused. And they carry a tolerance
+floor of $\texttt{rtol} = 10^{-6}$, because the differential-algebraic
+system a hinge produces is \emph{index 2} and has an accuracy ceiling no
+tolerance can push past. \kw{run} reports when the floor was applied.
+
+\kw{ball}, \kw{hinge} and \kw{universal} are \emph{contextual} keywords
+--- commands only at the start of a line --- so \code{new sphere as ball}
+and \code{get ball.mass} keep working.
+
 \subsection{\kw{constrain} --- a rod, not a spring}
 
 \begin{lstlisting}

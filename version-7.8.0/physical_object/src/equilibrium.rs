@@ -38,8 +38,8 @@
 
 use std::any::Any;
 
-use crate::constrain::ConstraintSet;
-use crate::linalg::Vec3;
+use crate::constrain::{Anchors, ConstraintSet, Pose};
+use crate::linalg::{Quat, Vec3};
 use crate::system::PhysicalObjectSystem;
 
 use sundials_core::nvector_serial::N_VNew_Serial;
@@ -87,9 +87,22 @@ struct KinParams {
     masses: Vec<f64>,
     charges: Vec<f64>,
     ext_force: Vec<Vec3>,
-    anchors: Vec<bool>,
+    anchors: Anchors,
     anchor_positions: Vec<f64>,
+    /// Orientations are FIXED here: equilibrium solves for positions
+    /// only, so a joint that grips orientation is refused up front.
+    orientations: Vec<Quat>,
     constraints: ConstraintSet,
+}
+
+impl KinParams {
+    /// Poses at a candidate configuration: the unknown positions with the
+    /// (fixed) starting orientations.
+    fn poses(&self, q: &[f64]) -> Vec<Pose> {
+        (0..self.n)
+            .map(|i| Pose { position: read3(q, 3 * i), orientation: self.orientations[i] })
+            .collect()
+    }
 }
 
 impl KinParams {
@@ -138,7 +151,7 @@ fn kin_residual(uu: &N_Vector, fval: &N_Vector, user_data: &mut Option<Box<dyn A
 
     for i in 0..n {
         let b = 3 * i;
-        if p.anchors[i] {
+        if p.anchors.translation_fixed[i] {
             /* An anchor is not free to move: pin it to where it was. */
             f[b] = q[b] - p.anchor_positions[b];
             f[b + 1] = q[b + 1] - p.anchor_positions[b + 1];
@@ -152,15 +165,19 @@ fn kin_residual(uu: &N_Vector, fval: &N_Vector, user_data: &mut Option<Box<dyn A
     }
     /* Subtract the constraint force Gᵀλ; anchors are skipped inside, and
      * their rows above already pin them, so the two never fight. */
-    let mut gt = vec![0.0; 3 * n];
-    p.constraints.add_jacobian_transpose(&p.anchors, q, lam, &mut gt);
-    for k in 0..3 * n {
-        f[k] -= gt[k];
+    let pose = p.poses(q);
+    let (mut gf, mut gt) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+    p.constraints
+        .add_jacobian_transpose(&pose, &p.anchors, lam, &mut gf, &mut gt);
+    for i in 0..n {
+        f[3 * i] -= gf[i].x;
+        f[3 * i + 1] -= gf[i].y;
+        f[3 * i + 2] -= gf[i].z;
     }
 
     if m > 0 {
         let (_, tail) = f.split_at_mut(3 * n);
-        p.constraints.residual(q, &mut tail[0..m]);
+        p.constraints.residual(&pose, &mut tail[0..m]);
     }
     0
 }
@@ -185,6 +202,21 @@ pub fn solve(system: &mut PhysicalObjectSystem) -> Result<EquilibriumReport, Str
              is whatever you already have"
                 .to_string(),
         );
+    }
+    if system.constraints.has_rotational() {
+        let kinds: Vec<&str> = system
+            .constraints
+            .joints
+            .iter()
+            .filter(|j| j.is_rotational())
+            .map(|j| j.kind())
+            .collect();
+        return Err(format!(
+            "EQUILIBRIUM solves for positions only, and this system has orientation-gripping \
+             joint(s): {kinds:?}. Finding the rest pose of a mechanism means solving for \
+             orientations too, which this does not do — integrate it with METHOD IDA and let \
+             it settle, or drop the joint"
+        ));
     }
     let m = system.constraints.len();
     let neq = 3 * n + m;
@@ -225,7 +257,8 @@ pub fn solve(system: &mut PhysicalObjectSystem) -> Result<EquilibriumReport, Str
         masses: system.objects.iter().map(|o| o.get_mass()).collect(),
         charges: system.objects.iter().map(|o| o.get_charge()).collect(),
         ext_force: system.external_forces.clone(),
-        anchors: ConstraintSet::anchor_flags(system),
+        anchors: Anchors::of(system),
+        orientations: system.objects.iter().map(|o| o.get_orientation().normalize()).collect(),
         anchor_positions: anchor_positions.clone(),
         constraints: system.constraints.clone(),
     };
@@ -308,10 +341,10 @@ pub fn solve(system: &mut PhysicalObjectSystem) -> Result<EquilibriumReport, Str
      * behind — harmless numerically, but "a wall never moves" is a
      * property callers rely on bit-for-bit (the collision suite asserts
      * it), and it costs nothing to make it exact. */
-    let anchors = ConstraintSet::anchor_flags(system);
+    let anchors = Anchors::of(system);
     with_data(&u, |d| {
         for (i, o) in system.objects.iter_mut().enumerate() {
-            if anchors[i] {
+            if anchors.translation_fixed[i] {
                 o.set_position(read3(&anchor_positions, 3 * i));
             } else {
                 o.set_position(read3(d, 3 * i));
@@ -332,24 +365,25 @@ pub fn solve(system: &mut PhysicalObjectSystem) -> Result<EquilibriumReport, Str
         masses: system.objects.iter().map(|o| o.get_mass()).collect(),
         charges: system.objects.iter().map(|o| o.get_charge()).collect(),
         ext_force: system.external_forces.clone(),
-        anchors: ConstraintSet::anchor_flags(system),
+        anchors: Anchors::of(system),
+        orientations: system.objects.iter().map(|o| o.get_orientation().normalize()).collect(),
         anchor_positions,
         constraints: system.constraints.clone(),
     };
     let q: Vec<f64> = with_data(&u, |d| d[0..3 * n].to_vec()).ok_or_else(|| no_array("u"))?;
     let lam: Vec<f64> =
         with_data(&u, |d| d[3 * n..3 * n + m].to_vec()).ok_or_else(|| no_array("u"))?;
-    let mut gt = vec![0.0; 3 * n];
+    let pose2 = params2.poses(&q);
+    let (mut gf, mut gt2) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
     params2
         .constraints
-        .add_jacobian_transpose(&params2.anchors, &q, &lam, &mut gt);
+        .add_jacobian_transpose(&pose2, &params2.anchors, &lam, &mut gf, &mut gt2);
     let mut worst = 0.0f64;
     for i in 0..n {
-        if params2.anchors[i] {
+        if params2.anchors.translation_fixed[i] {
             continue;
         }
-        let net = params2.force(&q, i) - read3(&gt, 3 * i);
-        worst = worst.max(net.norm());
+        worst = worst.max((params2.force(&q, i) - gf[i]).norm());
     }
     report.max_net_force = worst;
     report.constraint_error = system.constraints.drift(system).0;
@@ -370,12 +404,19 @@ pub fn solve(system: &mut PhysicalObjectSystem) -> Result<EquilibriumReport, Str
 /// configuration — see the comment at the call site for why zero is not
 /// an option. Uses whichever end of the rod is free; if both are, their
 /// average, which is exact for a symmetric pair.
+/// Force-balance estimate of each Lagrange multiplier at the starting
+/// configuration — see the comment at the call site for why zero is not
+/// an option.
+///
+/// Only rods reach here: [`solve`] refuses orientation-gripping joints
+/// up front, so every joint is a single row whose Jacobian is `±d̂`.
 fn initial_multipliers(p: &KinParams, q: &[f64]) -> Vec<f64> {
     p.constraints
-        .distances
+        .joints
         .iter()
-        .map(|c| {
-            let d = read3(q, 3 * c.j) - read3(q, 3 * c.i);
+        .map(|joint| {
+            let (i, j) = joint.bodies();
+            let d = read3(q, 3 * j) - read3(q, 3 * i);
             let len = d.norm();
             if len == 0.0 {
                 return 0.0;
@@ -384,13 +425,13 @@ fn initial_multipliers(p: &KinParams, q: &[f64]) -> Vec<f64> {
             // dg/dq_i = -d̂ and dg/dq_j = +d̂, so the two ends read the
             // same tension with OPPOSITE signs. At rest the balance is
             // F_j·d̂ = λ on one end and F_i·d̂ = -λ on the other.
-            let wi = if p.anchors[c.i] { 0.0 } else { 1.0 / p.masses[c.i] };
-            let wj = if p.anchors[c.j] { 0.0 } else { 1.0 / p.masses[c.j] };
+            let wi = if p.anchors.translation_fixed[i] { 0.0 } else { 1.0 / p.masses[i] };
+            let wj = if p.anchors.translation_fixed[j] { 0.0 } else { 1.0 / p.masses[j] };
             if wi + wj == 0.0 {
                 return 0.0;
             }
-            let fi = if p.anchors[c.i] { Vec3::zeros() } else { p.force(q, c.i) };
-            let fj = if p.anchors[c.j] { Vec3::zeros() } else { p.force(q, c.j) };
+            let fi = if p.anchors.translation_fixed[i] { Vec3::zeros() } else { p.force(q, i) };
+            let fj = if p.anchors.translation_fixed[j] { Vec3::zeros() } else { p.force(q, j) };
             (fj.dot(dhat) * wj - fi.dot(dhat) * wi) / (wi + wj)
         })
         .collect()

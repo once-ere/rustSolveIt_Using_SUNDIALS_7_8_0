@@ -125,7 +125,7 @@ Comments start with `#`. Every example in section 7 is a script in
 cargo test --workspace
 ```
 
-592 tests should pass. If they do, your build is the same build this
+603 tests should pass. If they do, your build is the same build this
 documentation was written against.
 
 ---
@@ -305,6 +305,13 @@ they do for you.
 `STEP` and `RUN` answer one question. The four families above answer
 three more.
 
+**Four joints.** `CONSTRAIN a b` is a rod (1 row, 5 freedoms left).
+`BALL a b` shares a point (3 rows). `UNIVERSAL a b u w` shares a point
+and keeps two shafts square — a Cardan joint (4 rows). `HINGE a b axis`
+shares a point *and* an axis, leaving exactly one freedom (5 rows): a
+door, a knee, a pendulum. The last three grip orientation, which is why
+`METHOD IDA` carries the full 13-numbers-per-object state.
+
 **A rigid rod, held exactly** — `CONSTRAIN a b` then `METHOD IDA`. A rod
 is a geometric fact, not a very stiff spring: the bob is *exactly* `L`
 from the pivot, always. Saying so turns the equations of motion from an
@@ -423,7 +430,7 @@ output, which is exactly the property section 5.2 promises you have.
 
 ---
 
-## 7. Eighteen worked examples
+## 7. Nineteen worked examples
 
 Every transcript below is genuine program output. The scripts are in
 [`scripts/solveit/`](scripts/solveit) and you can run any of them:
@@ -1348,6 +1355,64 @@ sensitivity equations return the zero.
 
 ---
 
+---
+
+### Example 19 — a door on a hinge
+
+**The physics.** A hinge fixes a point *and* an axis, leaving one
+freedom. A hinged rigid body is a **compound** pendulum: its
+small-amplitude period is
+
+*T = 2π√(I_pivot/(mgd))*,  *I_pivot = I_com + md²*
+
+— the moment of inertia about the pivot, not just the distance to the
+centre of mass. Using the point-mass formula instead is wrong by 15 %
+for the slab below.
+
+**Why it is a real test.** Three independent things must come out right:
+the period (physics), the rod-and-axis holding (numerics), and the fact
+that the body turns about the hinge axis and *nothing else*.
+
+```
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2], position = [0.0199986666933331, -0.9998000066665778, 0] }
+In[6]:= hinge jamb door [0, 0, 1]
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]
+```
+
+**What to notice.** The angular momentum is `[0, 0, 0.0037]` — *exactly*
+zero on x and y. The two rows a hinge has over a ball joint are the ones
+that forbid those axes, and they are doing their job to the last bit.
+
+The joint itself is held to `2.7 × 10⁻¹⁰` after 70 solver steps, and
+energy to 1.6 parts in 10⁹. Run the same thing for one compound-pendulum
+period and the slab returns to where it started to about `3 × 10⁻⁸`.
+
+**The `inverse_mass = 0` on the jamb is what makes it a door.** It marks
+the jamb as an anchor: immovable, and absorbing whatever the hinge pulls
+with. Without it you would have two slabs tumbling about their shared
+centre of mass, hinged together — a perfectly good simulation, just not
+a door.
+
+**Two limits worth knowing.** Orientation joints are integrated *from
+rest*: a body the mechanism sets turning is fine, one that is already
+turning when the run starts is refused by name. And they carry a
+tolerance floor of `rtol = 1e-6`, because the differential-algebraic
+system a hinge produces is *index 2* and has an accuracy ceiling no
+tolerance can push past. `RUN` says when the floor was applied. Both are
+refusals rather than guesses — a run that looks like it worked and is
+not the mechanism you described is the worst possible outcome.
+
+---
+
 ## 8. Watching it: the scene window and browser videos
 
 ### 8.1 The live window
@@ -1450,7 +1515,7 @@ cargo run -p physical_object --release --example bouncing_ball_restitution
 
 ### 9.3 The test suite
 
-592 tests: 40 library, 19 collision, 9 conservation, 109 language,
+603 tests: 40 library, 19 collision, 9 conservation, 109 language,
 92 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written.
 
@@ -1510,7 +1575,7 @@ with the complete EBNF grammar and a further eighteen worked examples.
 | `sundials_rs/` | the pure-Rust SUNDIALS 7.8.0 engine (vendored, read-only) |
 | `jupyter/` | the JupyterLab kernel |
 | `dynamic_notebooks/` | 59 runnable sessions, incl. 34 Routh problems |
-| `scripts/solveit/` | the eighteen examples in section 7 |
+| `scripts/solveit/` | the nineteen examples in section 7 |
 | `scripts/collisions/` | twelve documented collision scripts |
 | `videos/` | recorded browser videos; `videos/scenes/` the scripts behind them |
 | `tools/` | the index builder, the verifiers, `record_video.py` |

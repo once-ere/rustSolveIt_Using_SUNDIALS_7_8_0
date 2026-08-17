@@ -174,16 +174,22 @@ fn a_constrained_system_refuses_the_wrong_method() {
     assert!(e.contains("1 rigid constraint"), "{e}");
 }
 
-/// Constraints act on positions, so a spinning rigid body is refused —
-/// the same contract the SPRK separability gate follows.
+/// A rod now carries a SPINNING rigid body. This used to be refused —
+/// the DAE state was translational — and the whole point of moving it to
+/// the full 13N packing is that the spin comes along for the ride: the
+/// bob turns freely while the rod holds its length.
 #[test]
-fn the_constrained_gate_names_the_feature_that_blocks_it() {
+fn a_rod_carries_a_spinning_rigid_body() {
     let mut s = pendulum(0.5, 1.0);
-    s.objects[1].set_angular_momentum(Vec3::new(0.0, 1.0, 0.0));
     s.objects[1].set_inertia_tensor(::physical_object::linalg::Mat3::identity());
-    let e = integrate::run(&mut s, 1.0, 10).unwrap_err();
-    assert!(e.contains("translational only"), "{e}");
-    assert!(e.contains("obj1"), "{e}");
+    s.objects[1].set_angular_momentum(Vec3::new(0.0, 1.0, 0.0));
+
+    let report = integrate::run(&mut s, 1.0, 10).expect("a rod may carry a spinning body");
+    assert!(report.constraint_drift.0 < 1e-10, "|g| = {:e}", report.constraint_drift.0);
+    // torque-free spin about a principal axis is conserved exactly
+    let l = s.objects[1].get_angular_momentum();
+    assert!((l.y - 1.0).abs() < 1e-9, "spin should be carried unchanged: {l:?}");
+    assert!(!report.tolerance_floored, "a rod needs no tolerance floor");
 }
 
 /// A pendulum released anywhere comes to rest hanging straight down,
@@ -380,7 +386,7 @@ fn a_bare_constrain_is_immediately_consistent() {
     let snapshot = s.clone();
     let k = s.constraints.add_distance(&snapshot, 0, 1, None).unwrap();
     assert_eq!(k, 0);
-    assert!((s.constraints.distances[0].length - 0.5).abs() < 1e-15, "3-4-5 triangle");
+    assert!((match s.constraints.joints[0] { ::physical_object::constrain::Joint::Distance { length, .. } => length, _ => unreachable!() } - 0.5).abs() < 1e-15, "3-4-5 triangle");
     assert_eq!(s.constraints.drift(&s).0, 0.0, "consistent at once");
 
     // and it stays consistent through a run
@@ -400,4 +406,228 @@ fn a_rod_between_two_anchors_is_refused_up_front() {
     let mut cs = ConstraintSet::default();
     let e = cs.add_distance(&s, 0, 1, None).unwrap_err();
     assert!(e.contains("both have inverse_mass"), "{e}");
+}
+
+/* ===================================================================
+ * Orientation joints: ball, hinge and universal (IDA on the full 13N
+ * rigid state). Every check below is against a closed form.
+ * =================================================================== */
+
+use ::physical_object::boundary::Boundary;
+use ::physical_object::linalg::Mat3;
+
+/// An immovable, non-rotating pivot.
+fn world_anchor(id: usize, at: Vec3) -> physical_object {
+    let mut a = physical_object::new_point(id, 1.0, at, Vec3::zeros());
+    a.set_inverse_mass(0.0);
+    a.set_inertia_tensor(Mat3::zeros());
+    a
+}
+
+/// A box of half-extents `he`, hinged to a world anchor at the origin.
+/// The pivot is the MIDPOINT of the two bodies, so putting the box at
+/// `2d` from the anchor puts the pivot `d` from the box's centre of mass.
+fn compound_pendulum(he: [f64; 3], d: f64, tilt: f64) -> (PhysicalObjectSystem, f64) {
+    let bx = physical_object::new_from_shape(
+        1,
+        1.0,
+        0.0,
+        Vec3::new(2.0 * d * tilt.sin(), -2.0 * d * tilt.cos(), 0.0),
+        Vec3::zeros(),
+        Vec3::zeros(),
+        Boundary::Cuboid { half_extents: he },
+    );
+    // small-amplitude period of a physical pendulum:
+    //   T = 2 pi sqrt(I_pivot / (m g d)),  I_pivot = I_com + m d^2
+    let izz = bx.get_inertia_tensor().0[2][2];
+    let t = 2.0 * std::f64::consts::PI * ((izz + d * d) / (G * d)).sqrt();
+    let mut s = PhysicalObjectSystem::new(vec![world_anchor(0, Vec3::zeros()), bx], 0.0);
+    s.uniform_gravity = Vec3::new(0.0, -G, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_hinge(&snap, 0, 1, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+    (s, t)
+}
+
+/// A hinged rigid body is a *compound* pendulum: its period involves the
+/// moment of inertia about the pivot, not just the distance to the centre
+/// of mass. After one such period the body must be back where it started.
+///
+/// This is the check a point-mass model cannot pass: swap in `m d²` for
+/// `I_com + m d²` and the period is wrong by 15 % for this box.
+#[test]
+fn a_hinge_gives_the_compound_pendulum_period() {
+    for he in [[0.1, 0.5, 0.1], [0.4, 0.2, 0.2], [0.3, 0.3, 0.3]] {
+        let (mut s, t) = compound_pendulum(he, 0.5, 0.02);
+        let start = s.objects[1].get_position();
+        let report = integrate::run(&mut s, t, 100).expect("hinge run");
+        let closure = (s.objects[1].get_position() - start).norm();
+        /* Bounds are the measured values with headroom, not aspirations:
+         * at the orientation-joint tolerance floor these run 2e-8..4e-8
+         * for the closure and 1e-11..7e-11 for |g|. */
+        assert!(
+            closure < 1e-6,
+            "{he:?}: the body should return after one compound period, |Δ| = {closure:e}"
+        );
+        assert!(report.constraint_drift.0 < 1e-8, "|g| = {:e}", report.constraint_drift.0);
+        assert!(report.constraint_drift.1 < 1e-7, "|g_dot| = {:e}", report.constraint_drift.1);
+        // the pivot never moved
+        assert_eq!(s.objects[0].get_position(), Vec3::zeros());
+    }
+}
+
+/// A hinge leaves exactly one freedom, and it is the right one: the body
+/// turns about the hinge axis and about nothing else. Its angular
+/// momentum stays parallel to that axis for the whole swing.
+#[test]
+fn a_hinged_body_turns_only_about_its_axis() {
+    let (mut s, t) = compound_pendulum([0.1, 0.5, 0.1], 0.5, 0.6);
+    integrate::run(&mut s, t * 0.37, 60).expect("hinge run");
+    let l = s.objects[1].get_angular_momentum();
+    assert!(
+        l.z.abs() > 1e-3,
+        "it should actually be turning about z, L = {l:?}"
+    );
+    assert!(
+        l.x.abs() < 1e-7 * l.z.abs().max(1.0) && l.y.abs() < 1e-7 * l.z.abs().max(1.0),
+        "the hinge must admit no off-axis spin: L = {l:?}"
+    );
+}
+
+/// A body on a ball joint keeps its distance from the pivot exactly,
+/// while being free to turn any way — the spherical-pendulum case.
+#[test]
+fn a_ball_joint_holds_the_point_and_frees_the_rotation() {
+    let bx = physical_object::new_from_shape(
+        1,
+        1.0,
+        0.0,
+        Vec3::new(0.6, -0.8, 0.0),
+        Vec3::zeros(),
+        Vec3::zeros(),
+        Boundary::Cuboid { half_extents: [0.2, 0.2, 0.2] },
+    );
+    let mut s = PhysicalObjectSystem::new(vec![world_anchor(0, Vec3::zeros()), bx], 0.0);
+    s.uniform_gravity = Vec3::new(0.0, -G, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_ball(&snap, 0, 1).unwrap();
+    assert_eq!(s.constraints.len(), 3, "a ball joint is three rows");
+
+    let report = integrate::run(&mut s, 2.0, 100).expect("ball run");
+    assert!(report.constraint_drift.0 < 1e-7, "|g| = {:e}", report.constraint_drift.0);
+
+    /* The joint pins the shared point, which sits at the MIDPOINT of the
+     * two bodies as they stood when it was made — here (0.3, -0.4, 0).
+     * The body's centre must therefore stay exactly one arm-length from
+     * that pivot, whatever else it does. */
+    let pivot = Vec3::new(0.3, -0.4, 0.0);
+    let arm = (Vec3::new(0.6, -0.8, 0.0) - pivot).norm();
+    let r = (s.objects[1].get_position() - pivot).norm();
+    assert!((r - arm).abs() < 1e-8, "centre should stay at radius {arm} from the pivot, got {r}");
+    /* A ball joint frees rotation, and gravity acting off the pivot is a
+     * torque about it — so the body must have started turning. */
+    assert!(
+        s.objects[1].get_angular_momentum().norm() > 1e-6,
+        "gravity about the pivot should have set it turning"
+    );
+}
+
+/// A universal joint keeps its two shafts square to each other while both
+/// bodies turn — that IS the joint, and the residual measures it directly.
+#[test]
+fn a_universal_joint_keeps_its_shafts_square() {
+    let bx = |id: usize, x: f64, spin: Vec3| {
+        physical_object::new_from_shape(
+            id,
+            1.0,
+            0.0,
+            Vec3::new(x, 0.0, 0.0),
+            Vec3::zeros(),
+            spin,
+            Boundary::Cuboid { half_extents: [0.4, 0.2, 0.2] },
+        )
+    };
+    let mut s = PhysicalObjectSystem::new(
+        vec![bx(0, -0.5, Vec3::zeros()), bx(1, 0.5, Vec3::zeros())],
+        0.0,
+    );
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    /* Driven from REST by a torque on the input shaft — which is what a
+     * Cardan joint is for, and what `spin_gate` supports. */
+    s.external_torques[0] = Vec3::new(0.4, 0.0, 0.0);
+    let snap = s.clone();
+    s.constraints
+        .add_universal(&snap, 0, 1, Vec3::new(1.0, 0.0, 0.0), Vec3::new(0.0, 1.0, 0.0))
+        .unwrap();
+    assert_eq!(s.constraints.len(), 4, "a universal joint is four rows");
+
+    let report = integrate::run(&mut s, 2.0, 80).expect("universal run");
+    /* |g| covers BOTH the shared point and the shaft angle — the fourth
+     * row IS the dot product of the two shafts — so this single number
+     * says the whole joint held. */
+    assert!(report.constraint_drift.0 < 1e-7, "|g| = {:e}", report.constraint_drift.0);
+    // the torque really did spin the input shaft up from rest
+    let l = s.objects[0].get_angular_momentum();
+    assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
+}
+
+/// Orientation joints are integrated at a tolerance floor, because the
+/// index-2 system cannot deliver more — and the report says when the
+/// floor was applied rather than silently changing what was asked for.
+#[test]
+fn an_orientation_joint_reports_its_tolerance_floor() {
+    let (mut s, _) = compound_pendulum([0.2, 0.4, 0.2], 0.5, 0.02);
+    s.rtol = 1.0e-12; // tighter than the DAE can hold
+    let report = integrate::run(&mut s, 0.5, 20).expect("hinge run");
+    assert!(report.tolerance_floored, "the floor should have been applied and reported");
+
+    // a ROD-only system has no such limit and is not floored
+    let a = physical_object::new_point(0, 1.0, Vec3::zeros(), Vec3::zeros());
+    let b = physical_object::new_point(1, 1.0, Vec3::new(1.0, 0.0, 0.0), Vec3::zeros());
+    let mut r = PhysicalObjectSystem::new(vec![a, b], 0.0);
+    r.collide_enabled = false;
+    r.method = Method::Ida;
+    r.rtol = 1.0e-12;
+    let snap = r.clone();
+    r.constraints.add_distance(&snap, 0, 1, None).unwrap();
+    let rr = integrate::run(&mut r, 0.5, 20).expect("rod run");
+    assert!(!rr.tolerance_floored, "a rod needs no floor");
+}
+
+/// Orientation joints are integrated from rest. A body that is ALREADY
+/// turning when the run starts is refused by name rather than integrated
+/// into something other than the mechanism described — see
+/// `ConstraintSet::spin_gate` for what was ruled out.
+#[test]
+fn an_orientation_joint_refuses_a_body_that_starts_spinning() {
+    let (mut s, _) = compound_pendulum([0.2, 0.4, 0.2], 0.5, 0.1);
+    s.objects[1].set_angular_momentum(Vec3::new(0.0, 0.0, 0.5));
+    let e = integrate::run(&mut s, 0.5, 10).unwrap_err();
+    assert!(e.contains("already turning"), "{e}");
+    assert!(e.contains("hinge"), "the message names the joint: {e}");
+    assert!(e.contains("CONSTRAIN"), "and the way out: {e}");
+
+    // a ROD has no such limit
+    let mut r = pendulum(0.3, 1.0);
+    r.objects[1].set_inertia_tensor(::physical_object::linalg::Mat3::identity());
+    r.objects[1].set_angular_momentum(Vec3::new(0.0, 0.7, 0.0));
+    integrate::run(&mut r, 0.5, 10).expect("a rod carries a spinning body");
+}
+
+/// EQUILIBRIUM and SENSITIVITY solve for positions only, so an
+/// orientation joint is refused by name rather than quietly solving a
+/// different problem.
+#[test]
+fn the_translational_solvers_refuse_orientation_joints() {
+    let (mut s, _) = compound_pendulum([0.2, 0.4, 0.2], 0.5, 0.3);
+    let e = equilibrium::solve(&mut s).unwrap_err();
+    assert!(e.contains("positions only"), "{e}");
+    assert!(e.contains("hinge"), "the message should name the joint: {e}");
+
+    let e = sensitivity::run(&mut s, 1.0, &[SensParam::Gravity(1)]).unwrap_err();
+    assert!(e.contains("grips orientation"), "{e}");
 }

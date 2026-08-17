@@ -11,7 +11,7 @@ pure-Rust translation of **SUNDIALS 7.7.0** to one of **SUNDIALS
 git clone https://github.com/once-ere/rustSolveIt_Using_SUNDIALS_7_8_0.git
 cd rustSolveIt_Using_SUNDIALS_7_8_0/version-7.8.0
 cargo run                 # the notebook REPL (type HELP)
-cargo test --workspace    # 592 tests
+cargo test --workspace    # 603 tests
 ```
 
 Zero `unsafe`, zero crates.io dependencies, zero warnings. The clone is
@@ -48,7 +48,7 @@ and [`version-7.8.0/evidence/port-7.8.0/`](version-7.8.0/evidence/port-7.8.0).
 | you type | question | solver |
 |---|---|---|
 | `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
-| `CONSTRAIN a b` + `METHOD IDA` | …with this geometry held **exactly** | IDA |
+| `CONSTRAIN` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` | …with this geometry held **exactly** | IDA |
 | `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
 | `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES, or IDAS when constrained |
 
@@ -68,7 +68,7 @@ dependence to find.
 | [`version-7.8.0/grammar.md`](version-7.8.0/grammar.md) · [`.pdf`](version-7.8.0/grammar.pdf) | the complete command language: lexer, full EBNF, type system, stack machine, the 7.8.0 engine, browser videos, and **18** more worked examples |
 | [`version-7.8.0/ARCHITECTURE.md`](version-7.8.0/ARCHITECTURE.md) | the pinned cross-module contracts, for anyone changing the code |
 | [`version-7.8.0/CLAUDE.md`](version-7.8.0/CLAUDE.md) | the working rules for contributors and agents |
-| [`version-7.8.0/README.md`](version-7.8.0/README.md) | the full project README, including the 34 Routh notebooks and the index of 6,296 entities |
+| [`version-7.8.0/README.md`](version-7.8.0/README.md) | the full project README, including the 34 Routh notebooks and the index of 6,310 entities |
 
 ## Browser videos
 

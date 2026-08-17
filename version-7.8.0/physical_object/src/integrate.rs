@@ -51,7 +51,7 @@
 
 use crate::boundary::{self, Boundary};
 use crate::collide;
-use crate::constrain::ConstraintSet;
+use crate::constrain::{Anchors, ConstraintSet, Pose};
 use crate::linalg::{Mat3, Quat, Vec3};
 use crate::physical_object::physical_object;
 use crate::system::{PhysicalObjectSystem, VARS_PER_OBJECT};
@@ -91,8 +91,7 @@ use arkode_rs::arkode_sprkstep::SPRKStepCreate;
 use arkode_rs::arkode_sprkstep_io::SPRKStepSetMethodName;
 
 use ida_rs::ida::{IDACreate, IDAFree, IDAInit, IDASStolerances, IDASolve};
-use ida_rs::ida_ic::IDACalcIC;
-use ida_rs::ida_impl::{IDA_NORMAL, IDA_SUCCESS, IDA_YA_YDP_INIT};
+use ida_rs::ida_impl::{IDA_NORMAL, IDA_SUCCESS};
 use ida_rs::ida_io::{
     IDAGetNumErrTestFails, IDAGetNumNonlinSolvIters, IDAGetNumResEvals, IDAGetNumSteps,
     IDASetId, IDASetMaxNumSteps, IDASetSuppressAlg, IDASetUserData,
@@ -124,6 +123,33 @@ fn with_data_mut<R>(v: &N_Vector, f: impl FnOnce(&mut [f64]) -> R) -> Option<R> 
 fn no_array(what: &str) -> String {
     format!("N_VGetArrayPointer returned NULL for {what} (not a serial N_Vector)")
 }
+
+/// Tolerance floor for a DAE whose joints grip **orientation**.
+///
+/// The GGL system is index 2: the multiplier `μ` enters the *kinematic*
+/// equations, so the local error of `q̇` and `Q̇` carries an O(h) term
+/// that `IDASetSuppressAlg` cannot remove — it suppresses the
+/// multipliers themselves, not their trace in the differential
+/// variables. With a rod that trace is small; with a hinge, `μ` has five
+/// components acting on both `v` and `ω`, and `ω` drives the quaternion.
+///
+/// Measured on compound pendulums of several inertias and release
+/// angles: `1e-6` and `1e-7` give the same answer (`|g| ≈ 1e-11`, a full
+/// period closing to `2e-8`) and `1e-8` never converges — the corrector
+/// fails and the step collapses to `1e-15`. Tightening past the floor
+/// buys no accuracy and costs the run.
+///
+/// `1e-6` is chosen over the even safer `1e-5` because the accuracy
+/// difference is two orders of magnitude (`|g|` goes from `1e-11` to
+/// `5e-7`) and only one probed configuration in fifteen needed the
+/// looser value. A run that does hit it fails with a message saying to
+/// raise `system.rtol`, which is a better outcome than quietly handing
+/// everyone a worse answer.
+///
+/// So the floor is applied, and [`RunReport::tolerance_floored`] says it
+/// was, rather than silently changing what the caller asked for.
+const ROT_JOINT_RTOL_FLOOR: f64 = 1.0e-6;
+const ROT_JOINT_ATOL_FLOOR: f64 = 1.0e-8;
 
 /// Quaternion-norm drift beyond which the packed state is renormalized
 /// and CVODE re-initialized (re-init discards the multistep history, so
@@ -184,6 +210,11 @@ pub struct RunReport {
     /// a growing first component means the constraint is drifting and
     /// the answer is quietly wrong (see `constrain.rs`).
     pub constraint_drift: (f64, f64),
+    /// The run asked for a tighter tolerance than an orientation-gripping
+    /// DAE can deliver, and it was raised to the floor
+    /// (`ROT_JOINT_RTOL_FLOOR`). Only ever true on the IDA path with a
+    /// BALL/HINGE/UNIVERSAL joint.
+    pub tolerance_floored: bool,
 }
 
 /// Parameters snapshot handed to the CVODE right-hand side.
@@ -1200,9 +1231,11 @@ pub fn propagate_single(
 /* Constrained dynamics: the GGL index-2 DAE, driven by ida_rs      */
 /*=================================================================*/
 
-/// Parameters snapshot for the DAE residual. Same fields as
-/// [`RhsParams`] minus everything rotational — constrained motion is
-/// translational by construction (`ConstraintSet::gate`).
+/// Parameters snapshot for the DAE residual.
+///
+/// Unlike the CVODE path this carries the *whole* rigid-body problem —
+/// the DAE state is the same 13-per-object packing `system.rs` defines,
+/// so joints can grip orientation as well as position.
 #[derive(Clone, Debug)]
 struct DaeParams {
     n: usize,
@@ -1213,10 +1246,13 @@ struct DaeParams {
     e_field: Vec3,
     b_field: Vec3,
     masses: Vec<f64>,
+    inverse_masses: Vec<f64>,
     charges: Vec<f64>,
+    inverse_inertia: Vec<Mat3>,
+    magnetic: Vec<Mat3>,
     ext_force: Vec<Vec3>,
-    /// `anchors[k]` — immovable body, receives no multiplier force.
-    anchors: Vec<bool>,
+    ext_torque: Vec<Vec3>,
+    anchors: Anchors,
     constraints: ConstraintSet,
 }
 
@@ -1231,56 +1267,89 @@ impl DaeParams {
             e_field: s.e_field,
             b_field: s.b_field,
             masses: s.objects.iter().map(|o| o.get_mass()).collect(),
+            inverse_masses: s.objects.iter().map(|o| o.get_inverse_mass()).collect(),
             charges: s.objects.iter().map(|o| o.get_charge()).collect(),
+            inverse_inertia: s.objects.iter().map(|o| o.get_inverse_inertia_tensor()).collect(),
+            magnetic: s.objects.iter().map(|o| o.get_magnetic_moment_tensor()).collect(),
             ext_force: s.external_forces.clone(),
-            anchors: ConstraintSet::anchor_flags(s),
+            ext_torque: s.external_torques.clone(),
+            anchors: Anchors::of(s),
             constraints: s.constraints.clone(),
         }
     }
 
-    /// Applied force on body `i` — everything except the constraint
-    /// multipliers. The arithmetic order is deliberately identical to
-    /// [`rhs_full`]'s force block (hard rule 3: floating point is not
-    /// associative, so the same physics must be summed the same way).
-    fn force(&self, q: &[f64], v: &[f64], i: usize) -> Vec3 {
-        let pos_i = read_vec3(q, 3 * i);
-        let v_i = read_vec3(v, 3 * i);
-        let mut force = Vec3::zeros();
-        for j in 0..self.n {
-            if i == j {
-                continue;
-            }
-            let r_vec = read_vec3(q, 3 * j) - pos_i;
-            let dist_sq = r_vec.norm_squared() + self.softening * self.softening;
-            let dist = dist_sq.sqrt();
-            force += (self.g * self.masses[i] * self.masses[j] / (dist_sq * dist)) * r_vec;
+    /// Poses, linear and angular velocities read out of a packed 13N
+    /// state — the three things the constraint algebra works in.
+    fn kinematics(&self, y: &[f64]) -> (Vec<Pose>, Vec<Vec3>, Vec<Vec3>) {
+        let mut pose = Vec::with_capacity(self.n);
+        let mut v = Vec::with_capacity(self.n);
+        let mut w = Vec::with_capacity(self.n);
+        for i in 0..self.n {
+            let b = VARS_PER_OBJECT * i;
+            let q = Quat::new(y[b + 6], y[b + 7], y[b + 8], y[b + 9]).normalize();
+            let r = q.to_rotation_matrix();
+            pose.push(Pose { position: read_vec3(y, b), orientation: q });
+            v.push(read_vec3(y, b + 3) * self.inverse_masses[i]);
+            w.push(r * self.inverse_inertia[i] * r.transpose() * read_vec3(y, b + 10));
         }
-        force += self.masses[i] * self.uniform_gravity;
-        force += self.charges[i] * (self.e_field + v_i.cross(self.b_field));
-        force += self.ext_force[i];
-        force
+        (pose, v, w)
+    }
+
+    /// Applied force and torque on every body — the same expressions, in
+    /// the same arithmetic order, as [`rhs_full`] (hard rule 3).
+    fn applied(&self, y: &[f64], pose: &[Pose], v: &[Vec3]) -> (Vec<Vec3>, Vec<Vec3>) {
+        let mut force = vec![Vec3::zeros(); self.n];
+        let mut torque = vec![Vec3::zeros(); self.n];
+        for i in 0..self.n {
+            let pos_i = pose[i].position;
+            let mut f = Vec3::zeros();
+            for j in 0..self.n {
+                if i == j {
+                    continue;
+                }
+                let r_vec = pose[j].position - pos_i;
+                let dist_sq = r_vec.norm_squared() + self.softening * self.softening;
+                let dist = dist_sq.sqrt();
+                f += (self.g * self.masses[i] * self.masses[j] / (dist_sq * dist)) * r_vec;
+            }
+            f += self.masses[i] * self.uniform_gravity;
+            f += self.charges[i] * (self.e_field + v[i].cross(self.b_field));
+            f += self.ext_force[i];
+            force[i] = f;
+
+            let r = pose[i].orientation.to_rotation_matrix();
+            torque[i] = self.ext_torque[i] + r * self.magnetic[i] * r.transpose() * self.b_field;
+            let _ = y;
+        }
+        (force, torque)
     }
 }
 
-/// The GGL-stabilized index-2 residual `F(t, y, ẏ) = 0` with
-/// `y = [q(3N) | v(3N) | λ(m) | μ(m)]`:
+/// The GGL-stabilized index-2 residual `F(t, y, ẏ) = 0` over the full
+/// rigid state `y = [pos, momentum, quat, angmom]ⁿ ⧺ λ(m) ⧺ μ(m)`:
 ///
 /// ```text
-///   0 = q̇ - v + Gᵀμ        (position, projected by the GGL multiplier)
-///   0 = M v̇ - F(q,v) + Gᵀλ  (momentum balance with the constraint force)
-///   0 = g(q)                (the constraint itself)
-///   0 = G v                 (and its derivative)
+///   0 = q̇   - (v - J_vᵀμ)              (position, GGL-projected)
+///   0 = Q̇   - ½(0, ω - J_ωᵀμ) ⊗ Q      (orientation, likewise)
+///   0 = ṗ   - F + J_vᵀλ                 (linear momentum balance)
+///   0 = L̇   - τ + J_ωᵀλ                 (angular momentum balance)
+///   0 = g(q, Q)                          (the joints)
+///   0 = J·u                              (and their rates)
 /// ```
 ///
-/// Plain index-1 (acceleration-level) constraints would satisfy only the
-/// last line and let `g` drift quadratically away from zero. Carrying
-/// **both** `g` and `ġ` as algebraic equations — the Gear–Gupta–
-/// Leimkuhler formulation, and the same shape `idaSlCrank_dns` uses —
-/// pins both at roundoff for the whole run. `RunReport::constraint_drift`
-/// reports what actually happened.
+/// Two things are worth pointing at. First, the multipliers act on
+/// **velocity** — `J_vᵀμ` corrects `v`, `J_ωᵀμ` corrects `ω` *before* it
+/// drives the quaternion. That is the GGL projection expressed in the
+/// chart the constraint Jacobian is already written in, which is what
+/// lets one formulation cover rods and hinges alike.
 ///
-/// An anchored body (`inverse_mass == 0`) gets `0 = v̇` instead of the
-/// momentum balance, so it never moves and absorbs any reaction.
+/// Second, carrying **both** `g` and `ġ` as algebraic equations is what
+/// pins them at roundoff. Plain index-1 (acceleration-level) constraints
+/// satisfy only the second and let `g` drift quadratically — and nothing
+/// fails loudly when it does.
+///
+/// An anchored body gets `0 = ṗ` (or `0 = L̇`) instead of its balance,
+/// so it never moves and absorbs any reaction.
 fn dae_residual(
     _t: sunrealtype,
     yy: &N_Vector,
@@ -1306,102 +1375,261 @@ fn dae_residual(
     };
     let (n, m) = (p.n, p.m);
     let (y, ypv, r) = (&y[..], &ypv[..], &mut rg[..]);
-    let q = &y[0..3 * n];
-    let v = &y[3 * n..6 * n];
-    let lam = &y[6 * n..6 * n + m];
-    let mu = &y[6 * n + m..6 * n + 2 * m];
+    let base = VARS_PER_OBJECT * n;
 
-    /* --- 0 = q̇ - v + Gᵀμ --- */
-    for k in 0..3 * n {
-        r[k] = ypv[k] - v[k];
-    }
-    p.constraints
-        .add_jacobian_transpose(&p.anchors, q, mu, &mut r[0..3 * n]);
+    let (pose, v, w) = p.kinematics(y);
+    let (force, torque) = p.applied(y, &pose, &v);
 
-    /* --- 0 = M v̇ - F + Gᵀλ  (or 0 = v̇ for an anchor) --- */
-    for i in 0..n {
-        let b = 3 * n + 3 * i;
-        if p.anchors[i] {
-            r[b] = ypv[b];
-            r[b + 1] = ypv[b + 1];
-            r[b + 2] = ypv[b + 2];
-            continue;
-        }
-        let f = p.force(q, v, i);
-        let mi = p.masses[i];
-        r[b] = mi * ypv[b] - f.x;
-        r[b + 1] = mi * ypv[b + 1] - f.y;
-        r[b + 2] = mi * ypv[b + 2] - f.z;
-    }
-    p.constraints
-        .add_jacobian_transpose(&p.anchors, q, lam, &mut r[3 * n..6 * n]);
-
-    /* --- 0 = g(q) and 0 = G v --- */
+    /* Jᵀλ is a wrench — a force and a torque per body — and goes
+     * straight into the momentum balances.
+     *
+     * Jᵀμ is a wrench too, and that is the point: the GGL projection is
+     * `q̇ = v - M⁻¹Jᵀμ`, NOT `v - Jᵀμ`. The mass metric is not optional
+     * bookkeeping. `J_v` is dimensionless but `J_ω` carries the
+     * attachment arm, so `J_ωᵀμ` has units of length × μ; subtracting it
+     * from an angular velocity is dimensionally wrong by a factor of
+     * length². For translation alone `M⁻¹` is a single scalar and
+     * omitting it merely rescales μ, which is why rods never noticed —
+     * add a hinge and the same omission breaks the integration outright
+     * (a body spinning at 1e-3 rad/s was enough). */
+    let (mut fc, mut tc) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+    let (mut dv, mut dw) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
     if m > 0 {
-        let (_, tail) = r.split_at_mut(6 * n);
+        let lam = &y[base..base + m];
+        let mu = &y[base + m..base + 2 * m];
+        p.constraints.add_jacobian_transpose(&pose, &p.anchors, lam, &mut fc, &mut tc);
+        p.constraints.add_jacobian_transpose(&pose, &p.anchors, mu, &mut dv, &mut dw);
+        for i in 0..n {
+            dv[i] = dv[i] * p.inverse_masses[i];
+            let r = pose[i].orientation.to_rotation_matrix();
+            dw[i] = r * p.inverse_inertia[i] * r.transpose() * dw[i];
+        }
+    }
+
+    for i in 0..n {
+        let b = VARS_PER_OBJECT * i;
+        /* --- translation --- */
+        if p.anchors.translation_fixed[i] {
+            for k in 0..3 {
+                r[b + k] = ypv[b + k];
+                r[b + 3 + k] = ypv[b + 3 + k];
+            }
+        } else {
+            write_vec3_from(r, b, |k| ypv[b + k] - (v[i] - dv[i]).to_array()[k]);
+            write_vec3_from(r, b + 3, |k| ypv[b + 3 + k] - force[i].to_array()[k] + fc[i].to_array()[k]);
+        }
+        /* --- rotation --- */
+        if p.anchors.rotation_fixed[i] {
+            for k in 0..4 {
+                r[b + 6 + k] = ypv[b + 6 + k];
+            }
+            for k in 0..3 {
+                r[b + 10 + k] = ypv[b + 10 + k];
+            }
+        } else {
+            let qdot = (Quat::pure(w[i] - dw[i]) * pose[i].orientation) * 0.5;
+            r[b + 6] = ypv[b + 6] - qdot.w;
+            r[b + 7] = ypv[b + 7] - qdot.x;
+            r[b + 8] = ypv[b + 8] - qdot.y;
+            r[b + 9] = ypv[b + 9] - qdot.z;
+            write_vec3_from(r, b + 10, |k| {
+                ypv[b + 10 + k] - torque[i].to_array()[k] + tc[i].to_array()[k]
+            });
+        }
+    }
+
+    /* --- 0 = g(q, Q) and 0 = J·u --- */
+    if m > 0 {
+        let (_, tail) = r.split_at_mut(base);
         let (gblk, gdblk) = tail.split_at_mut(m);
-        p.constraints.residual(q, gblk);
-        p.constraints.velocity_residual(q, v, gdblk);
+        p.constraints.residual(&pose, gblk);
+        p.constraints.velocity_residual(&pose, &v, &w, gdblk);
     }
     0
 }
 
-/// The Lagrange multiplier — the rod tension — solved exactly from
-/// `g̈ = 0`.
-///
-/// With `g = |d| - L` the second derivative is
-/// `g̈ = d̂·d̈ + (|ḋ|² - (d̂·ḋ)²)/|d|`, where the second term is the
-/// centripetal one: a swinging pendulum's rod carries more than the
-/// static component of gravity, and leaving it out makes the initial
-/// acceleration wrong by exactly that much. Substituting the equations of
-/// motion (`v̇_i = (F_i + λd̂)/m_i`, `v̇_j = (F_j - λd̂)/m_j`) gives
-///
-/// ```text
-///        F_j·d̂/m_j - F_i·d̂/m_i + (|ḋ|² - (d̂·ḋ)²)/|d|
-///   λ = ---------------------------------------------
-///                     1/m_i + 1/m_j
-/// ```
-///
-/// An anchor contributes `1/m = 0` to both sums, which is the correct
-/// limit — for a pendulum this reduces to `λ = F·d̂`, the familiar rod
-/// tension.
-///
-/// This is **exact** for a single rod. With several rods sharing a body
-/// they couple and this is only a first guess — good enough that IDA
-/// starts from the right acceleration.
-fn seed_multipliers(p: &DaeParams, q: &[f64], v: &[f64]) -> Vec<f64> {
-    p.constraints
-        .distances
-        .iter()
-        .map(|c| {
-            let d = read_vec3(q, 3 * c.j) - read_vec3(q, 3 * c.i);
-            let dv = read_vec3(v, 3 * c.j) - read_vec3(v, 3 * c.i);
-            let len = d.norm();
-            if len == 0.0 {
-                return 0.0;
-            }
-            let dhat = d * (1.0 / len);
-            let wi = if p.anchors[c.i] { 0.0 } else { 1.0 / p.masses[c.i] };
-            let wj = if p.anchors[c.j] { 0.0 } else { 1.0 / p.masses[c.j] };
-            if wi + wj == 0.0 {
-                return 0.0;
-            }
-            let fi = if p.anchors[c.i] { Vec3::zeros() } else { p.force(q, v, c.i) };
-            let fj = if p.anchors[c.j] { Vec3::zeros() } else { p.force(q, v, c.j) };
-            let radial = dhat.dot(dv);
-            let centripetal = (dv.norm_squared() - radial * radial) / len;
-            (fj.dot(dhat) * wj - fi.dot(dhat) * wi + centripetal) / (wi + wj)
-        })
-        .collect()
+fn write_vec3_from(d: &mut [f64], at: usize, f: impl Fn(usize) -> f64) {
+    for k in 0..3 {
+        d[at + k] = f(k);
+    }
 }
 
-/// IDA path — the only integrator that honours rigid constraints.
+/// Solves for the Lagrange multipliers at the starting configuration —
+/// the forces and torques the joints must carry so that `g̈ = 0`.
 ///
-/// Layout `[q(3N) | v(3N) | λ(m) | μ(m)]`; note this is **velocity**, not
-/// the 13N momentum packing the CVODE path uses, and it carries no
-/// orientation: `ConstraintSet::gate` has already refused anything
-/// rotational. Positions and velocities are written back through the
-/// setters (hard rule 4) at every output point.
+/// **This is not an optimisation, it is required.** The GGL system
+/// carries `g` and `ġ` as equations but *not* `g̈`, so at an instant
+/// where every body is at rest, `ġ = 0` holds no matter what the
+/// accelerations are: free fall satisfies the residual exactly, with
+/// `λ = 0`. `IDACalcIC` therefore has nothing to solve and leaves the
+/// derivative in free fall — after which BDF spends its first step
+/// discovering that a hinge is attached, and the step size collapses to
+/// `1e-15`. Differentiating once more is what pins the accelerations:
+///
+/// ```text
+///   g̈ = J u̇ + (dJ/dt) u = 0,     u̇ = u̇_applied - M⁻¹Jᵀλ
+///   ⟹  (J M⁻¹ Jᵀ) λ = J u̇_applied + (dJ/dt) u
+/// ```
+///
+/// `M⁻¹` is block diagonal: `1/m` on the linear part, and `A = R I⁻¹ Rᵀ`
+/// on the angular part. The angular acceleration is
+/// `ω̇ = A(L̇ - ω × L)` — differentiating `ω = A L` gives
+/// `Ȧ = [ω]ₓA - A[ω]ₓ`, and `ω × ω` vanishes, leaving exactly that. The
+/// `ω × L` term is the gyroscopic one; a spinning body's joint carries
+/// it, and dropping it makes the initial acceleration wrong by that
+/// much.
+///
+/// `(dJ/dt)u` is taken as a central difference of `J·u` along the motion
+/// at fixed `u`, which is what it means.
+fn seed_multipliers(
+    p: &DaeParams,
+    pose: &[Pose],
+    v: &[Vec3],
+    w: &[Vec3],
+    angmom: &[Vec3],
+    force: &[Vec3],
+    torque: &[Vec3],
+) -> Vec<f64> {
+    let m = p.m;
+    if m == 0 {
+        return Vec::new();
+    }
+    let n = p.n;
+    /* A_i = R I⁻¹ Rᵀ, the world-frame inverse inertia. */
+    let a: Vec<Mat3> = (0..n)
+        .map(|i| {
+            let r = pose[i].orientation.to_rotation_matrix();
+            r * p.inverse_inertia[i] * r.transpose()
+        })
+        .collect();
+
+    /* Generalized inverse mass applied to a wrench. */
+    let apply_minv = |f: &[Vec3], t: &[Vec3]| -> (Vec<Vec3>, Vec<Vec3>) {
+        let lin = (0..n)
+            .map(|i| {
+                if p.anchors.translation_fixed[i] {
+                    Vec3::zeros()
+                } else {
+                    f[i] * p.inverse_masses[i]
+                }
+            })
+            .collect();
+        let ang = (0..n)
+            .map(|i| {
+                if p.anchors.rotation_fixed[i] {
+                    Vec3::zeros()
+                } else {
+                    a[i] * t[i]
+                }
+            })
+            .collect();
+        (lin, ang)
+    };
+    /* J · (lin, ang) */
+    let apply_j = |lin: &[Vec3], ang: &[Vec3]| -> Vec<f64> {
+        let mut out = vec![0.0; m];
+        p.constraints.for_each_block(pose, |row, b| {
+            out[row] += b.jv.dot(lin[b.body]) + b.jw.dot(ang[b.body]);
+        });
+        out
+    };
+
+    /* Right-hand side: J u̇_applied + (dJ/dt) u. */
+    let gyro: Vec<Vec3> = (0..n).map(|i| torque[i] - w[i].cross(angmom[i])).collect();
+    let (lin_app, ang_app) = apply_minv(force, &gyro);
+    let mut rhs = apply_j(&lin_app, &ang_app);
+
+    let h = 1e-6;
+    let advance = |dt: f64| -> Vec<Pose> {
+        pose.iter()
+            .enumerate()
+            .map(|(k, q)| Pose {
+                position: q.position + dt * v[k],
+                orientation: (q.orientation + (Quat::pure(w[k]) * q.orientation) * (0.5 * dt))
+                    .normalize(),
+            })
+            .collect()
+    };
+    let (mut gp, mut gm) = (vec![0.0; m], vec![0.0; m]);
+    p.constraints.velocity_residual(&advance(h), v, w, &mut gp);
+    p.constraints.velocity_residual(&advance(-h), v, w, &mut gm);
+    for k in 0..m {
+        rhs[k] += (gp[k] - gm[k]) / (2.0 * h);
+    }
+
+    /* S = J M⁻¹ Jᵀ, one column at a time. `m` is the number of joint
+     * rows — a handful — so a dense build and solve is the cheap way. */
+    let mut mat = vec![0.0; m * m];
+    let mut e = vec![0.0; m];
+    for l in 0..m {
+        e[l] = 1.0;
+        let (mut f, mut t) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+        p.constraints.add_jacobian_transpose(pose, &p.anchors, &e, &mut f, &mut t);
+        let (lin, ang) = apply_minv(&f, &t);
+        let col = apply_j(&lin, &ang);
+        for (k, val) in col.into_iter().enumerate() {
+            mat[k * m + l] = val;
+        }
+        e[l] = 0.0;
+    }
+    solve_dense(&mut mat, &mut rhs, m);
+    rhs
+}
+
+/// Gaussian elimination with partial pivoting, in place. A singular
+/// system leaves the affected multipliers at zero rather than producing
+/// infinities: an over-constrained mechanism is reported by IDA with a
+/// message the caller can act on, and a NaN here would only obscure it.
+fn solve_dense(mat: &mut [f64], b: &mut [f64], m: usize) {
+    for col in 0..m {
+        let mut piv = col;
+        for r in col + 1..m {
+            if mat[r * m + col].abs() > mat[piv * m + col].abs() {
+                piv = r;
+            }
+        }
+        if mat[piv * m + col].abs() < 1e-14 {
+            b[col] = 0.0;
+            continue;
+        }
+        if piv != col {
+            for k in 0..m {
+                mat.swap(col * m + k, piv * m + k);
+            }
+            b.swap(col, piv);
+        }
+        let d = mat[col * m + col];
+        for r in col + 1..m {
+            let factor = mat[r * m + col] / d;
+            if factor == 0.0 {
+                continue;
+            }
+            for k in col..m {
+                mat[r * m + k] -= factor * mat[col * m + k];
+            }
+            b[r] -= factor * b[col];
+        }
+    }
+    for col in (0..m).rev() {
+        let d = mat[col * m + col];
+        if d.abs() < 1e-14 {
+            b[col] = 0.0;
+            continue;
+        }
+        let mut acc = b[col];
+        for k in col + 1..m {
+            acc -= mat[col * m + k] * b[k];
+        }
+        b[col] = acc / d;
+    }
+}
+
+/// IDA path — the only integrator that honours rigid joints.
+///
+/// The state is the ordinary 13-per-object packing (`system.rs`), so this
+/// integrates the *same* rigid-body dynamics as the CVODE path, plus the
+/// joints. With no joints at all it is simply a BDF integration of that
+/// system, which is how the cross-check in the tests works.
 fn run_ida(
     system: &mut PhysicalObjectSystem,
     t_end: f64,
@@ -1411,15 +1639,16 @@ fn run_ida(
     if t_end <= t0 {
         return Err(format!("t_end ({t_end}) must be greater than current time ({t0})"));
     }
-    system.constraints.gate(system)?;
     let nout = nout.max(1);
     let n = system.objects.len();
     if n == 0 {
         system.time = t_end;
         return Ok(RunReport::default());
     }
+    system.constraints.spin_gate(system)?;
     let m = system.constraints.len();
-    let neq = 6 * n + 2 * m;
+    let base = system.state_len();
+    let neq = base + 2 * m;
 
     let mut sunctx_out: Option<SUNContext> = None;
     let retval_ctx = SUNContext_Create(SUN_COMM_NULL, &mut sunctx_out);
@@ -1437,62 +1666,68 @@ fn run_ida(
 
     let params = DaeParams::from_system(system);
 
-    /* y0 = [q, v, λ₀, 0]; yp0 = [v, (F - Gᵀλ₀)/m, 0, 0].
-     *
-     * λ₀ is NOT zero. IDACalcIC has to solve for the algebraic
-     * components and the differential derivatives together, and from
-     * λ = 0 the acceleration guess is the unconstrained one — for a
-     * pendulum released well off vertical that is wrong by the whole rod
-     * tension, and the initial-condition Newton iteration fails
-     * (IDA_CONV_FAIL). Seeding λ from the static force balance along each
-     * rod, λ ≈ (F·d)/(2|d|²), makes the guess right at rest and close
-     * otherwise. The same seed is used by `equilibrium::solve`. */
+    /* y0 = [packed state | λ₀ | 0]; the multipliers are solved for below
+     * (`seed_multipliers`), because IDACalcIC cannot find them — see the
+     * comment on that function. The configuration itself is consistent by
+     * construction: every joint is built from the pose the bodies are
+     * already in. */
     with_data_mut(&yy, |d| {
-        for (i, o) in system.objects.iter().enumerate() {
-            write_vec3(d, 3 * i, o.get_position());
-            write_vec3(d, 3 * (n + i), o.get_velocity());
-        }
-        for k in 6 * n..neq {
+        d[0..base].copy_from_slice(&system.pack_state());
+        for k in base..neq {
             d[k] = 0.0;
         }
     })
     .ok_or_else(|| no_array("yy"))?;
-    let q0: Vec<f64> = with_data(&yy, |d| d[0..3 * n].to_vec()).ok_or_else(|| no_array("yy"))?;
-    let v0: Vec<f64> = with_data(&yy, |d| d[3 * n..6 * n].to_vec()).ok_or_else(|| no_array("yy"))?;
-    let lam0 = seed_multipliers(&params, &q0, &v0);
-    with_data_mut(&yy, |d| d[6 * n..6 * n + m].copy_from_slice(&lam0))
-        .ok_or_else(|| no_array("yy"))?;
-    let mut gt0 = vec![0.0; 3 * n];
-    params
-        .constraints
-        .add_jacobian_transpose(&params.anchors, &q0, &lam0, &mut gt0);
+
+    /* yp0 from the UNCONSTRAINED dynamics — the derivative IDACalcIC
+     * refines. */
+    let y0: Vec<f64> = with_data(&yy, |d| d.to_vec()).ok_or_else(|| no_array("yy"))?;
+    let (pose0, v0, w0) = params.kinematics(&y0);
+    let (f0, tq0) = params.applied(&y0, &pose0, &v0);
+    let angmom0: Vec<Vec3> = (0..n)
+        .map(|i| read_vec3(&y0, VARS_PER_OBJECT * i + 10))
+        .collect();
+    let lam0 = seed_multipliers(&params, &pose0, &v0, &w0, &angmom0, &f0, &tq0);
+    let (mut fc0, mut tc0) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+    if m > 0 {
+        params
+            .constraints
+            .add_jacobian_transpose(&pose0, &params.anchors, &lam0, &mut fc0, &mut tc0);
+        with_data_mut(&yy, |d| d[base..base + m].copy_from_slice(&lam0))
+            .ok_or_else(|| no_array("yy"))?;
+    }
     with_data_mut(&yp, |d| {
-        for k in 0..3 * n {
-            d[k] = v0[k];
-        }
         for i in 0..n {
-            let a = if params.anchors[i] {
-                Vec3::zeros()
+            let b = VARS_PER_OBJECT * i;
+            let trans_free = !params.anchors.translation_fixed[i];
+            let rot_free = !params.anchors.rotation_fixed[i];
+            write_vec3(d, b, if trans_free { v0[i] } else { Vec3::zeros() });
+            write_vec3(d, b + 3, if trans_free { f0[i] - fc0[i] } else { Vec3::zeros() });
+            let qdot = if rot_free {
+                (Quat::pure(w0[i]) * pose0[i].orientation) * 0.5
             } else {
-                (params.force(&q0, &v0, i) - read_vec3(&gt0, 3 * i))
-                    * (1.0 / params.masses[i])
+                Quat::new(0.0, 0.0, 0.0, 0.0)
             };
-            write_vec3(d, 3 * (n + i), a);
+            d[b + 6] = qdot.w;
+            d[b + 7] = qdot.x;
+            d[b + 8] = qdot.y;
+            d[b + 9] = qdot.z;
+            write_vec3(d, b + 10, if rot_free { tq0[i] - tc0[i] } else { Vec3::zeros() });
         }
-        for k in 6 * n..neq {
+        for k in base..neq {
             d[k] = 0.0;
         }
     })
     .ok_or_else(|| no_array("yp"))?;
 
-    /* id: 1 = differential (q, v), 0 = algebraic (λ, μ). IDA needs this
-     * to know which components IDACalcIC may move and which ones the
-     * error test should ignore. */
+    /* id: 1 = differential (the whole 13N state), 0 = algebraic (λ, μ).
+     * IDA needs this to know which components IDACalcIC may move and
+     * which the error test should ignore. */
     with_data_mut(&id, |d| {
-        for k in 0..6 * n {
+        for k in 0..base {
             d[k] = 1.0;
         }
-        for k in 6 * n..neq {
+        for k in base..neq {
             d[k] = 0.0;
         }
     })
@@ -1503,7 +1738,19 @@ fn run_ida(
     if retval != IDA_SUCCESS {
         return Err(format!("IDAInit failed: {retval}"));
     }
-    retval = IDASStolerances(&ida_mem, system.rtol, system.atol);
+    /* An orientation-gripping DAE cannot be integrated to an arbitrarily
+     * tight tolerance — see ROT_JOINT_RTOL_FLOOR. Raise it, and record
+     * that it was raised. */
+    let (rtol, atol) = if system.constraints.has_rotational() {
+        (
+            system.rtol.max(ROT_JOINT_RTOL_FLOOR),
+            system.atol.max(ROT_JOINT_ATOL_FLOOR),
+        )
+    } else {
+        (system.rtol, system.atol)
+    };
+    let floored = rtol != system.rtol || atol != system.atol;
+    retval = IDASStolerances(&ida_mem, rtol, atol);
     if retval != IDA_SUCCESS {
         return Err(format!("IDASStolerances failed: {retval}"));
     }
@@ -1534,39 +1781,7 @@ fn run_ida(
         return Err(format!("IDASetLinearSolver failed: {retval}"));
     }
 
-    /* Consistent initial conditions.
-     *
-     * The GGL formulation needs g(q₀) = 0 AND (G v₀) = 0. When the user
-     * built the constraint from the configuration the bodies are already
-     * in — which is what a bare `CONSTRAIN a b` does — both hold to
-     * roundoff, `seed_multipliers` has supplied the exact tension, and
-     * there is nothing left to solve: calling IDACalcIC anyway asks a
-     * Newton iteration to re-derive an answer it already has, at a
-     * tolerance meant for the trajectory, and it can and does fail
-     * (IDA_CONV_FAIL). The reference mechanism example `idaSlCrank_dns`
-     * likewise sets consistent conditions by hand and never calls it.
-     *
-     * So: check, and only correct if the check fails. */
     let span = t_end - t0;
-    let (g0, gd0) = system.constraints.drift(system);
-    let scale = system
-        .constraints
-        .distances
-        .iter()
-        .fold(1.0f64, |a, c| a.max(c.length));
-    if g0 > 1e-10 * scale || gd0 > 1e-8 * scale {
-        let first_out = t0 + span / (nout as f64);
-        retval = IDACalcIC(&ida_mem, IDA_YA_YDP_INIT, first_out);
-        if retval != IDA_SUCCESS {
-            return Err(format!(
-                "the initial configuration does not satisfy its constraints \
-                 (worst |g| = {g0:e}, worst |g_dot| = {gd0:e}), and IDACalcIC could not correct \
-                 it: {retval}. A bare `CONSTRAIN a b` takes the length from where the bodies \
-                 already are and is always consistent; an explicit length must match the \
-                 current separation, and the velocities must not be pulling the rod apart"
-            ));
-        }
-    }
 
     let mut report = RunReport::default();
     let mut t = t0;
@@ -1574,15 +1789,15 @@ fn run_ida(
         let tout = t0 + span * (k as f64) / (nout as f64);
         let r = IDASolve(&ida_mem, tout, &mut t, &yy, &yp, IDA_NORMAL);
         if r < 0 {
-            return Err(format!("IDASolve failed with retval = {r} at t = {t}"));
+            let hint = if system.constraints.has_rotational() {
+                " — an orientation-gripping DAE is index 2 and does not converge at every \
+                 tolerance; try a looser one (`set system.rtol = 1e-5`)"
+            } else {
+                ""
+            };
+            return Err(format!("IDASolve failed with retval = {r} at t = {t}{hint}"));
         }
-        with_data(&yy, |d| {
-            for (i, o) in system.objects.iter_mut().enumerate() {
-                o.set_position(read_vec3(d, 3 * i));
-                o.set_velocity(read_vec3(d, 3 * (n + i)));
-            }
-        })
-        .ok_or_else(|| no_array("yy"))?;
+        with_data(&yy, |d| system.unpack_state(&d[0..base])).ok_or_else(|| no_array("yy"))?;
         system.time = t;
         report.snapshots.push(snapshot(system, t));
     }
@@ -1597,6 +1812,7 @@ fn run_ida(
     report.nni = nni;
     report.netf = netf;
     report.constraint_drift = system.constraints.drift(system);
+    report.tolerance_floored = floored;
 
     let mut ida_mem = Some(ida_mem);
     IDAFree(&mut ida_mem);

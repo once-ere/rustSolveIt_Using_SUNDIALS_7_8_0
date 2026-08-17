@@ -74,6 +74,9 @@ pub enum Keyword {
      * CVODES, IDAS) */
     Constrain,
     Constraints,
+    Ball,
+    Hinge,
+    Universal,
     Equilibrium,
     Sensitivity,
     Ida,
@@ -139,6 +142,9 @@ impl Keyword {
             "contacts" => Some(Keyword::Contacts),
             "constrain" => Some(Keyword::Constrain),
             "constraints" => Some(Keyword::Constraints),
+            "ball" => Some(Keyword::Ball),
+            "hinge" => Some(Keyword::Hinge),
+            "universal" | "cardan" => Some(Keyword::Universal),
             "equilibrium" | "equil" => Some(Keyword::Equilibrium),
             "sensitivity" | "sens" => Some(Keyword::Sensitivity),
             "ida" => Some(Keyword::Ida),
@@ -386,7 +392,24 @@ pub fn tokenize(line: &str) -> Result<Vec<Token>, String> {
                     i += 1;
                 }
                 let word: String = chars[start..i].iter().collect();
+                /* BALL, HINGE and UNIVERSAL are *contextual* keywords:
+                 * they name commands, and only in command position. Any
+                 * other word does not need this, but `ball` is exactly
+                 * the sort of thing a physics simulator's user calls an
+                 * object — `new sphere as ball` and `get ball.mass` were
+                 * both already in the tests and the docs — and reserving
+                 * it outright would have broken them. Off the front of
+                 * the line these three lex as ordinary identifiers. */
                 let kind = match Keyword::from_ident(&word) {
+                    Some(k)
+                        if !toks.is_empty()
+                            && matches!(
+                                k,
+                                Keyword::Ball | Keyword::Hinge | Keyword::Universal
+                            ) =>
+                    {
+                        TokKind::Ident(word)
+                    }
                     Some(k) => TokKind::Keyword(k),
                     None => TokKind::Ident(word),
                 };

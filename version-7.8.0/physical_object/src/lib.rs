@@ -23,7 +23,7 @@ pub mod sensitivity;
 
 pub use crate::boundary::{analytic_inertia_tensor, Boundary, Sdf};
 pub use crate::collide::Contact;
-pub use crate::constrain::{ConstraintSet, DistanceConstraint};
+pub use crate::constrain::{Anchors, ConstraintSet, Joint};
 pub use crate::integrate::{Method, RunReport, Snapshot};
 pub use crate::linalg::{Mat3, Quat, Vec3};
 pub use crate::system::PhysicalObjectSystem;

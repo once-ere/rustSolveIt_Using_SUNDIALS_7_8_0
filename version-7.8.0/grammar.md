@@ -76,7 +76,13 @@ and, for rigid-body collisions (§5.7):
 
 and, for constrained dynamics, equilibrium and sensitivity (§5.13):
 
-`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA`
+`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL`
+
+(`BALL`, `HINGE` and `UNIVERSAL` are **contextual**: they are commands
+only at the start of a line. Anywhere else they are ordinary
+identifiers, so `new sphere as ball` and `get ball.mass` keep working —
+`ball` is exactly what a physics user calls a sphere, and reserving it
+outright would have broken existing notebooks.)
 
 (`EQUIL` is an alias for `EQUILIBRIUM`, `SENS` for `SENSITIVITY`.)
 
@@ -1639,6 +1645,74 @@ the SUNDIALS suite.
 | `CONSTRAIN` + `METHOD IDA` + `RUN` | …with this geometry held exactly | **IDA** |
 | `EQUILIBRIUM` | where does it come to rest? | **KINSOL** |
 | `SENSITIVITY` | how much does the answer depend on an input? | **CVODES** / **IDAS** |
+
+#### The four joints
+
+| command | rows | holds | freedoms left |
+|---|---|---|---|
+| `CONSTRAIN a b [len]` | 1 | a fixed distance | 5 |
+| `BALL a b` | 3 | a shared point | 3 (any rotation about it) |
+| `UNIVERSAL a b <u> <w>` | 4 | a shared point, two shafts kept square | 2 |
+| `HINGE a b <axis>` | 5 | a shared point and a shared axis | 1 (the swing) |
+
+`BALL`, `HINGE` and `UNIVERSAL` grip **orientation** as well as position,
+so they need orientation in the solver's state — which is why
+`METHOD IDA` carries the full 13-numbers-per-object packing (§4) rather
+than positions alone.
+
+**The pivot is the midpoint of the two bodies as they stand when you
+make the joint**, carried into each body's own frame. That is the same
+"freeze what you have" rule a bare `CONSTRAIN` follows, and it means the
+joint is satisfied the instant it is made. Place the bodies where you
+want the pivot.
+
+A door is an anchor, a slab and a hinge:
+
+```
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2], position = [0.0199986666933331, -0.9998000066665778, 0] }
+In[6]:= hinge jamb door [0, 0, 1]
+Out[6]= constraint0: hinge obj0 <-> obj1 about [0, 0, 1], 5 row(s) — one freedom left (METHOD IDA is required to integrate it)
+In[7]:= constraints
+Out[7]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 0e0, worst |g_dot| = 0e0
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]
+```
+
+The door swings about **z and nothing else** — the two extra rows a
+hinge has over a ball joint are exactly the ones that forbid the other
+two axes. And the joint is held to 2.7 × 10⁻¹⁰ after 70 solver steps.
+
+A hinged rigid body is a *compound* pendulum: its small-amplitude period
+is `T = 2π√(I_pivot/(mgd))` with `I_pivot = I_com + md²`, not the
+point-mass `2π√(d/g)`. The simulator reproduces that period to about
+`3 × 10⁻⁸` of a full swing — see SolveIt.md, Example 19.
+
+**Two limits, both refused by name rather than guessed at.**
+
+*Orientation joints are integrated from rest.* A body the mechanism sets
+turning is fine — that is what a door does. A body that is **already
+turning** when the run starts is not yet supported:
+
+```
+Err: obj1 is already turning at 5e-1 rad/s and is held by a hinge joint.
+     Orientation joints are integrated from REST … Zero obj1's angular
+     momentum, or use CONSTRAIN (a rod), which has no such limit
+```
+
+*And they carry a tolerance floor.* The differential-algebraic system a
+hinge produces is *index 2*, and such systems have an accuracy ceiling
+no tolerance can push past. Asking for `rtol` below `1e-6` gets `1e-6`;
+asking for less than that is honoured. `RUN` says when the floor was
+applied.
 
 #### `CONSTRAIN` — a rod, not a spring
 

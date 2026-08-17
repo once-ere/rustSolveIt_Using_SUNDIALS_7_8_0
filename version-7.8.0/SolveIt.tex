@@ -146,7 +146,7 @@ A ``script'' is just a text file of the same commands you would type.
 Comments start with \code{\#}. Every example in \S\ref{sec:examples} is a
 script in \code{scripts/solveit/}.
 
-Checking your build: \code{cargo test -{}-workspace} --- 592 tests should
+Checking your build: \code{cargo test -{}-workspace} --- 603 tests should
 pass.
 
 \section{The five things you need to know}
@@ -314,6 +314,14 @@ programs.
 
 \subsection{The three questions that are not ``what happens next''}
 
+\textbf{Four joints.} \kw{constrain} \emph{a b} is a rod (1 row, 5
+freedoms left); \kw{ball} \emph{a b} shares a point (3 rows);
+\kw{universal} \emph{a b u w} shares a point and keeps two shafts square,
+a Cardan joint (4 rows); \kw{hinge} \emph{a b axis} shares a point
+\emph{and} an axis, leaving exactly one freedom (5 rows) --- a door, a
+knee, a pendulum. The last three grip orientation, which is why
+\kw{method ida} carries the full 13-numbers-per-object state.
+
 \textbf{A rigid rod, held exactly} --- \kw{constrain} \emph{a b} then
 \kw{method ida}. A rod is a geometric fact, not a very stiff spring: the
 bob is \emph{exactly} $L$ from the pivot, always. Saying so turns the
@@ -403,7 +411,7 @@ counting is per-burst rather than per-output-interval, because
 per-interval counting made the physics depend on how often you asked for
 output.
 
-\section{Eighteen worked examples}\label{sec:examples}
+\section{Nineteen worked examples}\label{sec:examples}
 
 Every transcript below is genuine program output. The scripts are in
 \code{scripts/solveit/}:
@@ -1065,6 +1073,49 @@ mass at all. A finite-difference estimate would have returned some small
 number and left you guessing whether it was noise or physics. The
 sensitivity equations return the zero.
 
+\subsection{A door on a hinge}
+
+A hinge fixes a point \emph{and} an axis, leaving one freedom. A hinged
+rigid body is a \textbf{compound} pendulum: its small-amplitude period is
+$T = 2\pi\sqrt{I_{\text{pivot}}/(mgd)}$ with
+$I_{\text{pivot}} = I_{\text{com}} + md^2$ --- the moment of inertia
+about the pivot, not just the distance to the centre of mass. The
+point-mass formula is wrong by 15\,\% for the slab below.
+
+\begin{lstlisting}
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02,
+                             position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2],
+          position = [0.0199986666933331, -0.9998000066665778, 0] }
+In[6]:= hinge jamb door [0, 0, 1]
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]
+\end{lstlisting}
+
+The angular momentum is $[0, 0, 0.0037]$ --- \emph{exactly} zero on $x$
+and $y$. The two rows a hinge has over a ball joint are the ones that
+forbid those axes, and they are doing their job to the last bit. The
+joint is held to $2.7\times10^{-10}$ after 70 solver steps, and energy to
+1.6 parts in $10^{9}$; run one compound period and the slab returns to
+within $3\times10^{-8}$.
+
+The \code{inverse\_mass = 0} on the jamb is what makes it a door: an
+anchor, immovable, absorbing whatever the hinge pulls with.
+
+\textbf{Two limits worth knowing.} Orientation joints are integrated
+\emph{from rest} --- a body already turning at $t_0$ is refused by name
+--- and they carry a tolerance floor of $\texttt{rtol}=10^{-6}$, because
+the index-2 system has an accuracy ceiling no tolerance can push past.
+Both are refusals rather than guesses: a run that looks like it worked
+and is not the mechanism you described is the worst possible outcome.
+
 \section{Watching it: the scene window and browser videos}
 
 \subsection{The live window}
@@ -1157,7 +1208,7 @@ exiting nonzero if it fails: \code{kepler\_orbit},
 
 \subsection{The test suite}
 
-592 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
+603 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written. The
 collision tests in particular are analytic rather than

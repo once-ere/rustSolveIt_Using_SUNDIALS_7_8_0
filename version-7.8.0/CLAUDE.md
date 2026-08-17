@@ -24,7 +24,7 @@ including which donor sources were deliberately not carried over — is in
 ## Commands
 
 - Build: `cargo build --workspace --all-targets 2>&1 | tee /tmp/build.log`
-- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (592 expected)
+- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (603 expected)
 - Notebook: `cargo run` (type `HELP`); batch: `cargo run -p posim -- --script <f>`
 - Dynamic notebook (loads a file, opens its scene window, stays
   interactive): `cargo run -p posim --release -- --notebook
@@ -182,7 +182,7 @@ that will bite you:
   output. ≤2 attempts per failing command, then switch strategy.
 - Commit after every coherent file group; keep
   `cargo build --workspace --all-targets` warning-free and
-  `cargo test --workspace` green at every commit (**592 tests**:
+  `cargo test --workspace` green at every commit (**603 tests**:
   46 physical_object lib + 19 collision + 9 conservation +
   16 constrained/DAE + 111 posim + 92 quantum + 233 special_functions +
   11 vendored identities + 55 doctests).
@@ -210,6 +210,13 @@ that will bite you:
 Read ARCHITECTURE §3.9 before touching `constrain.rs`, `equilibrium.rs`
 or `sensitivity.rs`. Four things that already cost a day:
 
+- **The GGL projection is mass-weighted: `q̇ = v - M⁻¹Jᵀμ`.** Dropping
+  `M⁻¹` is dimensionally wrong the moment a joint grips orientation
+  (`J_ω` carries the attachment arm), and *invisible* for rods, where it
+  is only a rescaling of μ. This cost a day; do not undo it.
+- **`IDACalcIC` cannot find the multipliers and is not called.** The
+  index-2 residual is satisfied by free fall with λ = 0, so there is
+  nothing for it to solve. `seed_multipliers` solves `g̈ = 0` directly.
 - **`g = |d| - L`, not `|d|² - L²`.** The squared form is better
   behaved algebraically and *worse* numerically: its gradient scales
   with `L`, and the index-2 corrector stops converging for `L ≠ 1`. Do
@@ -239,6 +246,13 @@ or `sensitivity.rs`. Four things that already cost a day:
 - **A magnetic moment tensor's third column is what a B along z can
   grip.** `[[0, 0.5, 0], [-0.5, 0, 0], [0, 0, 0]]` looks like a
   reasonable antisymmetric tensor and produces exactly zero torque.
+- **`BALL`, `HINGE` and `UNIVERSAL` are CONTEXTUAL keywords** — commands
+  only at the start of a line. `ball` is exactly what a physics user
+  calls a sphere, and `new sphere as ball` / `get ball.mass` were already
+  in the tests and docs; reserving it outright broke them.
+- **Orientation joints are integrated from rest** (`spin_gate`) and carry
+  a tolerance floor of `rtol = 1e-6` (`ROT_JOINT_RTOL_FLOOR`). Both are
+  refusals/clamps with a stated reason, not silent behaviour.
 - **A constrained system refuses every method but `METHOD IDA`**, and a
   fully-free system has no isolated equilibrium at all (translate it and
   nothing changes) — `EQUILIBRIUM` says so and tells you to pin a body.

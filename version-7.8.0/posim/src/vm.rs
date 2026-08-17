@@ -288,6 +288,14 @@ pub enum Instr {
     /// "freeze the separation they already have". The optional length
     /// arrives on the operand stack.
     Constrain { a: String, b: String, has_len: bool },
+    /// `BALL <a> <b>` — a spherical joint at the bodies' midpoint.
+    Ball { a: String, b: String },
+    /// `HINGE <a> <b> <axis>` — one rotational freedom about `axis`
+    /// (a vec3 on the operand stack).
+    Hinge { a: String, b: String },
+    /// `UNIVERSAL <a> <b> <axis_a> <axis_b>` — a Cardan joint; the two
+    /// axes arrive on the operand stack.
+    Universal { a: String, b: String },
     /// `CONSTRAIN OFF` — drop every rod.
     ConstrainOff,
     /// `CONSTRAINTS` — list the rods and how well they are being held.
@@ -667,8 +675,19 @@ rigid-body collisions (event-detected at the exact time of impact):
                             consistent. A body with inverse_mass = 0 is a
                             fixed ANCHOR: anchor + bob + rod = pendulum.
                             Requires METHOD IDA to integrate.
-  CONSTRAIN OFF             drop every rod
-  CONSTRAINTS               list the rods, and how well they are held
+  BALL <a> <b>              spherical joint at the two bodies' midpoint:
+                            they share a point and may turn any way about
+                            it (3 rows, 3 freedoms left)
+  HINGE <a> <b> <axis>      like BALL, and the hinge axis is held too, so
+                            ONE freedom is left -- a door, a knee
+                            (5 rows). <axis> is a vec3 in world
+                            coordinates as things stand now.
+  UNIVERSAL <a> <b> <u> <w> Cardan joint: a shared point plus two shafts
+                            held square to each other (4 rows, 2 left).
+                            <u> is carried by <a>, <w> by <b>, and they
+                            must start 90 degrees apart.
+  CONSTRAIN OFF             drop every joint
+  CONSTRAINTS               list the joints, and how well they are held
                             (worst |g| and |g_dot|; both stay at roundoff)
   EQUILIBRIUM               KINSOL: move the system to a static rest
                             state and stop there. Reports the largest net
@@ -1354,16 +1373,50 @@ fn exec_one(instr: &Instr, state: &mut SimState, stack: &mut Vec<Value>) -> Resu
             let j = resolve_object_ref(state, b)?;
             let snapshot = state.system.clone();
             let k = state.system.constraints.add_distance(&snapshot, i, j, len)?;
-            let c = state.system.constraints.distances[k];
+            let c = state.system.constraints.joints[k];
+            let (i, j) = c.bodies();
             stack.push(Value::Str(format!(
-                "constraint{k}: obj{} <-> obj{} held at {} \
+                "constraint{k}: {} obj{i} <-> obj{j}, {} row(s) \
                  (METHOD IDA is required to integrate it)",
-                c.i, c.j, c.length
+                c.kind(),
+                c.rows()
+            )));
+        }
+        Instr::Ball { a, b } => {
+            let (i, j) = (resolve_object_ref(state, a)?, resolve_object_ref(state, b)?);
+            let snapshot = state.system.clone();
+            let k = state.system.constraints.add_ball(&snapshot, i, j)?;
+            stack.push(Value::Str(format!(
+                "constraint{k}: ball obj{i} <-> obj{j}, 3 row(s) — they share a point and may \
+                 turn any way about it (METHOD IDA is required to integrate it)"
+            )));
+        }
+        Instr::Hinge { a, b } => {
+            let axis = as_vec3(pop(stack)?)?;
+            let (i, j) = (resolve_object_ref(state, a)?, resolve_object_ref(state, b)?);
+            let snapshot = state.system.clone();
+            let k = state.system.constraints.add_hinge(&snapshot, i, j, axis)?;
+            stack.push(Value::Str(format!(
+                "constraint{k}: hinge obj{i} <-> obj{j} about [{}, {}, {}], 5 row(s) — one \
+                 freedom left (METHOD IDA is required to integrate it)",
+                axis.x, axis.y, axis.z
+            )));
+        }
+        Instr::Universal { a, b } => {
+            /* two vec3 arguments: the SECOND is on top of the stack */
+            let axis_b = as_vec3(pop(stack)?)?;
+            let axis_a = as_vec3(pop(stack)?)?;
+            let (i, j) = (resolve_object_ref(state, a)?, resolve_object_ref(state, b)?);
+            let snapshot = state.system.clone();
+            let k = state.system.constraints.add_universal(&snapshot, i, j, axis_a, axis_b)?;
+            stack.push(Value::Str(format!(
+                "constraint{k}: universal obj{i} <-> obj{j}, 4 row(s) — two freedoms left \
+                 (METHOD IDA is required to integrate it)"
             )));
         }
         Instr::ConstrainOff => {
             let n = state.system.constraints.len();
-            state.system.constraints.distances.clear();
+            state.system.constraints.joints.clear();
             stack.push(Value::Str(format!("removed {n} constraint(s)")));
         }
         Instr::Constraints => {
@@ -1374,13 +1427,12 @@ fn exec_one(instr: &Instr, state: &mut SimState, stack: &mut Vec<Value>) -> Resu
             } else {
                 let (g, gdot) = state.system.constraints.drift(&state.system);
                 let mut out = String::new();
-                for (k, c) in state.system.constraints.distances.iter().enumerate() {
-                    let here = (state.system.objects[c.j].get_position()
-                        - state.system.objects[c.i].get_position())
-                    .norm();
+                for (k, c) in state.system.constraints.joints.iter().enumerate() {
+                    let (i, j) = c.bodies();
                     out.push_str(&format!(
-                        "constraint{k}: obj{} <-> obj{} length {} (currently {})\n",
-                        c.i, c.j, c.length, here
+                        "constraint{k}: {} obj{i} <-> obj{j}, {} row(s)\n",
+                        c.kind(),
+                        c.rows()
                     ));
                 }
                 out.push_str(&format!(
@@ -3264,8 +3316,8 @@ mod tests {
         // Bare CONSTRAIN freezes the separation they already have (3-4-5).
         match execute_line("constrain pivot bob", &mut st).unwrap() {
             Value::Str(s) => {
-                assert!(s.contains("obj0 <-> obj1"), "{s}");
-                assert!(s.contains("held at 1"), "{s}");
+                assert!(s.contains("rod obj0 <-> obj1"), "{s}");
+                assert!(s.contains("1 row(s)"), "{s}");
                 assert!(s.contains("METHOD IDA"), "the reply must say what to do next: {s}");
             }
             v => panic!("expected string, got {v}"),
@@ -3328,6 +3380,64 @@ mod tests {
         assert!(execute_line("sensitivity 1", &mut st).unwrap_err().contains("quoted parameter"));
     }
 
+    /// The three orientation joints, through the language — including
+    /// the compatibility point that `ball` is still a legal object name.
+    #[test]
+    fn ball_hinge_and_universal_round_trip() {
+        let mut st = SimState::default();
+        for line in [
+            "set system.g_constant = 0",
+            "set system.uniform_gravity = [0, -9.81, 0]",
+            "collide off",
+            "new sphere as jamb { mass = 1, radius = 0.02, inverse_mass = 0 }",
+            "new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2], \
+             position = [0.02, -0.9998, 0] }",
+        ] {
+            execute_line(line, &mut st).unwrap();
+        }
+        match execute_line("hinge jamb door [0, 0, 1]", &mut st).unwrap() {
+            Value::Str(s) => {
+                assert!(s.contains("hinge obj0 <-> obj1"), "{s}");
+                assert!(s.contains("5 row(s)"), "a hinge removes five freedoms: {s}");
+                assert!(s.contains("METHOD IDA"), "{s}");
+            }
+            v => panic!("expected string, got {v}"),
+        }
+        assert_eq!(st.system.constraints.len(), 5);
+        execute_line("method ida", &mut st).unwrap();
+        execute_line("run 1 steps 10", &mut st).unwrap();
+        let (g, _) = st.system.constraints.drift(&st.system);
+        assert!(g < 1e-8, "the hinge should hold: |g| = {g:e}");
+        // gravity about the jamb swings the door
+        assert!(st.system.objects[1].get_angular_momentum().z.abs() > 1e-6);
+
+        // one joint per pair
+        assert!(execute_line("ball jamb door", &mut st).unwrap_err().contains("already joined"));
+        execute_line("constrain off", &mut st).unwrap();
+        match execute_line("ball jamb door", &mut st).unwrap() {
+            Value::Str(s) => assert!(s.contains("3 row(s)"), "{s}"),
+            v => panic!("expected string, got {v}"),
+        }
+        execute_line("constrain off", &mut st).unwrap();
+        match execute_line("universal jamb door [1, 0, 0] [0, 1, 0]", &mut st).unwrap() {
+            Value::Str(s) => assert!(s.contains("4 row(s)"), "{s}"),
+            v => panic!("expected string, got {v}"),
+        }
+        // shafts that are not square name the angle
+        execute_line("constrain off", &mut st).unwrap();
+        let e = execute_line("universal jamb door [1, 0, 0] [1, 1, 0]", &mut st).unwrap_err();
+        assert!(e.contains("perpendicular"), "{e}");
+
+        /* BALL/HINGE/UNIVERSAL are CONTEXTUAL keywords — commands only.
+         * `ball` has to stay usable as an object name, because it is
+         * exactly what a physics user calls a sphere. */
+        let mut st2 = SimState::default();
+        execute_line("new sphere as ball { mass = 2, radius = 0.5 }", &mut st2).unwrap();
+        assert_eq!(execute_line("get ball.radius", &mut st2).unwrap(), Value::Num(0.5));
+        execute_line("new sphere as hinge { mass = 1, radius = 0.1 }", &mut st2).unwrap();
+        assert_eq!(execute_line("get hinge.mass", &mut st2).unwrap(), Value::Num(1.0));
+    }
+
     /// Every new command appears in the quick-reference card — the
     /// lexer/parser/VM/HELP lockstep rule.
     #[test]
@@ -3341,6 +3451,9 @@ mod tests {
                 assert!(h.contains("SENSITIVITY"), "help lists SENSITIVITY");
                 assert!(h.contains("| IDA"), "help lists METHOD IDA");
                 assert!(h.contains("ANCHOR"), "help explains what an anchor is");
+                assert!(h.contains("BALL <a> <b>"), "help lists BALL");
+                assert!(h.contains("HINGE <a> <b> <axis>"), "help lists HINGE");
+                assert!(h.contains("UNIVERSAL"), "help lists UNIVERSAL");
             }
             v => panic!("expected string, got {v}"),
         }

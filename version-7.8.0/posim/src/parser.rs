@@ -29,7 +29,10 @@
 //!                                                  freeze the current
 //!                                                  separation. Needs
 //!                                                  METHOD IDA to run.   *)
-//!           | "CONSTRAINTS"                     (* list rods + drift    *)
+//!           | "BALL" IDENT IDENT                (* shared point, 3 rows *)
+//!           | "HINGE" IDENT IDENT expr          (* + shared axis, 5     *)
+//!           | "UNIVERSAL" IDENT IDENT expr expr (* Cardan joint, 4      *)
+//!           | "CONSTRAINTS"                     (* list joints + drift  *)
 //!           | "EQUILIBRIUM"                     (* KINSOL: rest state   *)
 //!           | "SENSITIVITY" expr STRING { STRING }
 //!                                               (* CVODES, or IDAS when
@@ -580,6 +583,29 @@ impl Parser {
                     }
                     prog.push(Instr::Constrain { a, b, has_len });
                 }
+            }
+            TokKind::Keyword(Keyword::Ball) => {
+                self.pos += 1;
+                let a = self.expect_ident("the first object")?;
+                let b = self.expect_ident("the second object")?;
+                prog.push(Instr::Ball { a, b });
+            }
+            TokKind::Keyword(Keyword::Hinge) => {
+                self.pos += 1;
+                let a = self.expect_ident("the first object")?;
+                let b = self.expect_ident("the second object")?;
+                /* the hinge axis is a full expression, so `[0, 0, 1]`
+                 * and `normalize([1, 1, 0])` both work */
+                self.expr(&mut prog)?;
+                prog.push(Instr::Hinge { a, b });
+            }
+            TokKind::Keyword(Keyword::Universal) => {
+                self.pos += 1;
+                let a = self.expect_ident("the first object")?;
+                let b = self.expect_ident("the second object")?;
+                self.expr(&mut prog)?;
+                self.expr(&mut prog)?;
+                prog.push(Instr::Universal { a, b });
             }
             TokKind::Keyword(Keyword::Constraints) => {
                 self.pos += 1;

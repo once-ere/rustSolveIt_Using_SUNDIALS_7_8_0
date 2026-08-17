@@ -44,7 +44,7 @@ use std::any::Any;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use crate::constrain::ConstraintSet;
+use crate::constrain::{Anchors, ConstraintSet, Pose};
 use crate::linalg::{Mat3, Vec3};
 use crate::system::PhysicalObjectSystem;
 
@@ -202,6 +202,14 @@ pub fn gate(system: &PhysicalObjectSystem) -> Result<(), String> {
             ));
         }
     }
+    if system.constraints.has_rotational() {
+        return Err(
+            "sensitivity analysis runs the translational dynamics, and this system has a joint \
+             that grips orientation (BALL/HINGE/UNIVERSAL). Ask for the trajectory with \
+             METHOD IDA instead, or drop the joint"
+                .to_string(),
+        );
+    }
     for (k, tq) in system.external_torques.iter().enumerate() {
         if *tq != Vec3::zeros() {
             return Err(format!(
@@ -219,7 +227,8 @@ struct SensCommon {
     m: usize,
     softening: f64,
     ext_force: Vec<Vec3>,
-    anchors: Vec<bool>,
+    anchors: Anchors,
+    orientations: Vec<crate::linalg::Quat>,
     constraints: ConstraintSet,
     p: Rc<RefCell<Vec<f64>>>,
 }
@@ -291,7 +300,7 @@ fn sens_rhs(
         out[k] = v[k];
     }
     for i in 0..n {
-        let a = if c.anchors[i] {
+        let a = if c.anchors.translation_fixed[i] {
             Vec3::zeros()
         } else {
             c.force(q, v, i) * (1.0 / c.mass(i))
@@ -333,14 +342,32 @@ fn sens_residual(
     let lam = &y[6 * n..6 * n + m];
     let mu = &y[6 * n + m..6 * n + 2 * m];
 
-    for k in 0..3 * n {
-        r[k] = ypv[k] - v[k];
+    /* Sensitivity runs the translational dynamics, so every body's
+     * orientation is the (fixed) one it started with — `gate` has
+     * already refused an orientation-gripping joint. */
+    let pose: Vec<Pose> = (0..n)
+        .map(|i| Pose { position: read3(q, 3 * i), orientation: c.orientations[i] })
+        .collect();
+    let vel: Vec<Vec3> = (0..n).map(|i| read3(v, 3 * i)).collect();
+    let zero_w = vec![Vec3::zeros(); n];
+    let (mut fmu, mut tmu) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+    let (mut flam, mut tlam) = (vec![Vec3::zeros(); n], vec![Vec3::zeros(); n]);
+    if m > 0 {
+        c.constraints.add_jacobian_transpose(&pose, &c.anchors, mu, &mut fmu, &mut tmu);
+        c.constraints.add_jacobian_transpose(&pose, &c.anchors, lam, &mut flam, &mut tlam);
     }
-    c.constraints
-        .add_jacobian_transpose(&c.anchors, q, mu, &mut r[0..3 * n]);
+    for i in 0..n {
+        /* GGL projection is mass-weighted: q̇ = v - M⁻¹J_vᵀμ. With one
+         * mass it is only a rescaling of μ, but it is what the equation
+         * says — see the note in `integrate::dae_residual`. */
+        let d = fmu[i] * (1.0 / c.mass(i));
+        r[3 * i] = ypv[3 * i] - (v[3 * i] - d.x);
+        r[3 * i + 1] = ypv[3 * i + 1] - (v[3 * i + 1] - d.y);
+        r[3 * i + 2] = ypv[3 * i + 2] - (v[3 * i + 2] - d.z);
+    }
     for i in 0..n {
         let b = 3 * n + 3 * i;
-        if c.anchors[i] {
+        if c.anchors.translation_fixed[i] {
             r[b] = ypv[b];
             r[b + 1] = ypv[b + 1];
             r[b + 2] = ypv[b + 2];
@@ -348,17 +375,15 @@ fn sens_residual(
         }
         let f = c.force(q, v, i);
         let mi = c.mass(i);
-        r[b] = mi * ypv[b] - f.x;
-        r[b + 1] = mi * ypv[b + 1] - f.y;
-        r[b + 2] = mi * ypv[b + 2] - f.z;
+        r[b] = mi * ypv[b] - f.x + flam[i].x;
+        r[b + 1] = mi * ypv[b + 1] - f.y + flam[i].y;
+        r[b + 2] = mi * ypv[b + 2] - f.z + flam[i].z;
     }
-    c.constraints
-        .add_jacobian_transpose(&c.anchors, q, lam, &mut r[3 * n..6 * n]);
     if m > 0 {
         let (_, tail) = r.split_at_mut(6 * n);
         let (gblk, gdblk) = tail.split_at_mut(m);
-        c.constraints.residual(q, gblk);
-        c.constraints.velocity_residual(q, v, gdblk);
+        c.constraints.residual(&pose, gblk);
+        c.constraints.velocity_residual(&pose, &vel, &zero_w, gdblk);
     }
     0
 }
@@ -422,7 +447,8 @@ fn common(system: &PhysicalObjectSystem, p: Rc<RefCell<Vec<f64>>>) -> SensCommon
         m: system.constraints.len(),
         softening: system.softening,
         ext_force: system.external_forces.clone(),
-        anchors: ConstraintSet::anchor_flags(system),
+        anchors: Anchors::of(system),
+        orientations: system.objects.iter().map(|o| o.get_orientation().normalize()).collect(),
         constraints: system.constraints.clone(),
         p,
     }
@@ -457,7 +483,8 @@ pub fn run(
     if system.constraints.is_empty() {
         run_cvodes(system, t_end, wanted)
     } else {
-        system.constraints.gate(system)?;
+        /* Rotational joints were refused by `gate` above; what is left
+         * is rods, which the translational DAE holds. */
         run_idas(system, t_end, wanted)
     }
 }
@@ -639,7 +666,7 @@ fn run_idas(
     with_data_mut(&yp, |d| {
         d[0..3 * n].copy_from_slice(&v0);
         for i in 0..n {
-            let a = if c.anchors[i] {
+            let a = if c.anchors.translation_fixed[i] {
                 Vec3::zeros()
             } else {
                 c.force(&q0, &v0, i) * (1.0 / c.mass(i))
