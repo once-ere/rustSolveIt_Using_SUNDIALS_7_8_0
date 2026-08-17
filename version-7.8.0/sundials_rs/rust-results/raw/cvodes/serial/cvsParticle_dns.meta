@@ -1,0 +1,10 @@
+example:  cvsParticle_dns
+crate:    cvodes_rs
+source:   crates/cvodes_rs/examples/cvsParticle_dns.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsParticle_dns
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsParticle_dns
+exit:     0 (OK)
+seconds:  0.106
+stdout:   885 bytes, sha256 fa77abe19cddd1f7e57fded63fe23ac0936af0433f2822fccc69eb4c4e48ff3d
+stderr:   0 bytes

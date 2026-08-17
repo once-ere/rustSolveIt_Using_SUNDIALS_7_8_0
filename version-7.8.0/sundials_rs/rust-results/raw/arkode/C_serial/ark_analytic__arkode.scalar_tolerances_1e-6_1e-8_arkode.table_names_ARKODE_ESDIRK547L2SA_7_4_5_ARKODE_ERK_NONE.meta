@@ -1,0 +1,10 @@
+example:  ark_analytic
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_analytic.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic
+argv:     arkode.scalar_tolerances 1e-6 1e-8 arkode.table_names ARKODE_ESDIRK547L2SA_7_4_5 ARKODE_ERK_NONE
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic__arkode.scalar_tolerances_1e-6_1e-8_arkode.table_names_ARKODE_ESDIRK547L2SA_7_4_5_ARKODE_ERK_NONE
+exit:     0 (OK)
+seconds:  0.108
+stdout:   2021 bytes, sha256 1b87b7662db001021c59c0272d46a4fa05bf38a97d7dc08ec2b0709a07c4cc73
+stderr:   0 bytes

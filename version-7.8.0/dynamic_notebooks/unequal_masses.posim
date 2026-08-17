@@ -1,0 +1,23 @@
+# Unequal masses: 1-vs-3 head-on, textbook one-dimensional formulas — dynamic notebook
+#
+# m1 = 1 at v = 1 strikes m2 = 3 at rest (gravity off, restitution 1).
+# The 1-D elastic textbook formulas give the outgoing velocities:
+#   v1' = (m1 - m2)/(m1 + m2) = -1/2      v2' = 2 m1/(m1 + m2) = +1/2
+# The light ball bounces BACK — the classic surprise. Watch the hud:
+# P stays (1, 0, 0) and E stays 0.5 through the impact; press C to see
+# the golden contact-normal arrows at the moment the spheres touch.
+#
+# Launch:   posim_notebook unequal_masses
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/unequal_masses.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+new sphere { mass = 3, radius = 0.5, position = [0, 0, 0] }
+
+# Baselines before anything moves: E = 1/2 * 1 * 1^2 = 0.5, P = (1, 0, 0)
+energy
+momentum
+
+scene create

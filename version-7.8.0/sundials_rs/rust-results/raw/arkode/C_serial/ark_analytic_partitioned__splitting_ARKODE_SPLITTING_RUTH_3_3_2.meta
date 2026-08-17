@@ -1,0 +1,10 @@
+example:  ark_analytic_partitioned
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_analytic_partitioned.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic_partitioned
+argv:     splitting ARKODE_SPLITTING_RUTH_3_3_2
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic_partitioned__splitting_ARKODE_SPLITTING_RUTH_3_3_2
+exit:     0 (OK)
+seconds:  0.106
+stdout:   1754 bytes, sha256 94a46ae122f59f3dcfa01bd895b3afd4b24f408a290e465a8be3de2b1b86df86
+stderr:   0 bytes

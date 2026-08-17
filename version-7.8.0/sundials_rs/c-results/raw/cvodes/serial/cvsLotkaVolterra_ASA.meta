@@ -1,0 +1,10 @@
+example:  cvsLotkaVolterra_ASA
+source:   examples/cvodes/serial/cvsLotkaVolterra_ASA.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsLotkaVolterra_ASA
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsLotkaVolterra_ASA
+exit:     0 (OK)
+seconds:  0.205
+stdout:   405 bytes, sha256 44d47a6d5cd349cc345ce00c3452fa61fe8e109d063400fc0688833f524dc612
+stderr:   0 bytes

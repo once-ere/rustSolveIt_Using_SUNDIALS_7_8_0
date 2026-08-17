@@ -1,0 +1,35 @@
+# Example 3 — the restitution ladder: the SAME approach (closing speed
+# 2), four different bouncinesses. The separation speed afterwards is
+# exactly e x 2 (the pair uses min(e_i, e_j), so setting one side is
+# enough). Watch the kinetic energy drop as e falls.
+set system.g_constant = 0
+# --- e = 1.0 (elastic): separation speed 2 ---------------------------
+new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+step 3
+obj1.velocity.x - obj0.velocity.x
+energy
+reset
+# --- e = 0.8: separation speed 1.6 -----------------------------------
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0], restitution = 0.8 }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+step 3
+obj1.velocity.x - obj0.velocity.x
+energy
+reset
+# --- e = 0.5: separation speed 1 -------------------------------------
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0], restitution = 0.5 }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+step 3
+obj1.velocity.x - obj0.velocity.x
+energy
+reset
+# --- e = 0.2: separation speed 0.4 -----------------------------------
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0], restitution = 0.2 }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+step 3
+obj1.velocity.x - obj0.velocity.x
+energy

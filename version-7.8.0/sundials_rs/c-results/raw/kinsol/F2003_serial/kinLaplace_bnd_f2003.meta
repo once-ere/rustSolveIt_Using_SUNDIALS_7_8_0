@@ -1,0 +1,10 @@
+example:  kinLaplace_bnd_f2003
+source:   examples/kinsol/F2003_serial/kinLaplace_bnd_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/F2003_serial/kinLaplace_bnd_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/F2003_serial/kinLaplace_bnd_f2003
+exit:     0 (OK)
+seconds:  0.207
+stdout:   1874 bytes, sha256 5d423d471ff7c301f94d714b9992842b9ed7f9b61d0d6516e3f134ceffc655bc
+stderr:   0 bytes

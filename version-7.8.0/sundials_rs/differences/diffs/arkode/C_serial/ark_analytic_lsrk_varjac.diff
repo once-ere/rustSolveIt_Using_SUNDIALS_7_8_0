@@ -1,0 +1,35 @@
+--- c-results/raw/arkode/C_serial/ark_analytic_lsrk_varjac.stdout
++++ rust-results/raw/arkode/C_serial/ark_analytic_lsrk_varjac.stdout
+@@ -25,8 +25,8 @@
+ Final Statistics:
+-Current time                  = 10.0181114871358
+-Steps                         = 1221
+-Step attempts                 = 1284
+-Stability limited steps       = 46
+-Accuracy limited steps        = 1284
+-Error test fails              = 63
++Current time                  = 10.0227126297637
++Steps                         = 1234
++Step attempts                 = 1286
++Stability limited steps       = 53
++Accuracy limited steps        = 1286
++Error test fails              = 52
+ NLS step fails                = 0
+@@ -34,11 +34,11 @@
+ Initial step size             = 1.93010111094261e-10
+-Last step size                = 0.0238469974262343
+-Current step size             = 0.0246549719301742
+-RHS fn evals                  = 132469
+-Number of dom_eig updates     = 86
++Last step size                = 0.0256754602090389
++Current step size             = 0.0293955313214084
++RHS fn evals                  = 132389
++Number of dom_eig updates     = 78
+ Max. num. of stages used      = 200
+ Max. num. of stages allowed   = 200
+-Max. spectral radius          = 1010099.3295648
++Max. spectral radius          = 1010099.96983513
+ Min. spectral radius          = 1009899
+ 
+-ACCURACY at the final time   = 8.96616e-13
++ACCURACY at the final time   = 7.14095e-13

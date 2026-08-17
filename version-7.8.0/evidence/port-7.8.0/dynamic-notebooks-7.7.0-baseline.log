@@ -1,0 +1,2612 @@
+<cwd>
+##### dynamic_notebooks/billiard_box.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new cuboid { mass = 1, position = [-3, 0, 0], half_extents = [0.2, 2, 2] }
+Out[2]= obj0
+In[3]:= set obj0.inverse_mass = 0
+In[4]:= set obj0.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+In[5]:= new cuboid { mass = 1, position = [3, 0, 0], half_extents = [0.2, 2, 2] }
+Out[5]= obj1
+In[6]:= set obj1.inverse_mass = 0
+In[7]:= set obj1.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+In[8]:= new sphere { mass = 1, radius = 0.3, position = [0, 0, 0], velocity = [1.7, 0, 0] }
+Out[8]= obj2
+In[9]:= energy
+Out[9]= 1.4449999999999998
+In[10]:= get obj2.velocity.x
+Out[10]= 1.7
+In[11]:= scene create
+Out[11]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[12]:= scene set_time_step 0.02
+Out[12]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/billiard_break.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-4, 0, 0], velocity = [2, 0, 0], restitution = 0.95 }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [0, 0, 0], restitution = 0.95 }
+Out[3]= obj1
+In[4]:= new sphere { mass = 1, radius = 0.5, position = [0.9, 0.55, 0], restitution = 0.95 }
+Out[4]= obj2
+In[5]:= new sphere { mass = 1, radius = 0.5, position = [0.9, -0.55, 0], restitution = 0.95 }
+Out[5]= obj3
+In[6]:= energy
+Out[6]= 2
+In[7]:= momentum
+Out[7]= [2, 0, 0]
+In[8]:= angmom
+Out[8]= [0, 0, 0]
+In[9]:= scene create
+Out[9]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 4 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/bouncing_ball_restitution.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.gravity = [0, -10, 0]
+In[3]:= new cuboid { mass = 1, half_extents = [5, 0.5, 5], position = [0, -0.5, 0] }
+Out[3]= obj0
+In[4]:= set obj0.inverse_mass = 0
+In[5]:= set obj0.inverse_inertia_tensor = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+In[6]:= new sphere { mass = 1, radius = 0.5, position = [0, 5, 0] }
+Out[6]= obj1
+In[7]:= set obj1.restitution = 0.8
+In[8]:= collide
+Out[8]= collisions ON (1 collidable pair(s); 0 impulse(s) so far)
+In[9]:= energy
+Out[9]= 50
+In[10]:= momentum
+Out[10]= [0, 0, 0]
+In[11]:= get obj1.restitution
+Out[11]= 0.8
+In[12]:= sqrt(2 * 4.5 / 10)
+Out[12]= 0.9486832980505138
+In[13]:= 0.64 * 4.5 + 0.5
+Out[13]= 3.38
+In[14]:= scene create
+Out[14]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[15]:= scene translate 0 2
+Out[15]= camera target = [0, 2, 0]
+rc=0
+##### dynamic_notebooks/box_of_shapes_m32.posim
+In[1]:= set system.g_constant = 0
+In[2]:= box 4
+Out[2]= box: inner size 4 x 4 x 4 — six static walls obj0, obj1, obj2, obj3, obj4, obj5 with inverse_mass = 0 (infinitely massive); objects collide elastically off the inside faces
+In[3]:= new torus { mass = 1, inner_radius = 1, outer_radius = 2, orientation = [0.888073833977115, -0.325057583671868, 0.325057583671868, 0] }
+Out[3]= obj6
+In[4]:= new point { mass = 32, position = [1.406590, -0.995859, 0.569601], velocity = [100, 200, 100] }
+Out[4]= obj7
+In[5]:= new sphere { mass = 2, radius = 1/2, position = [1.424704, 1.367496, -0.493612] }
+Out[5]= obj8
+In[6]:= new disk { mass = 2/3, radius = 1, position = [-0.677386, -1.041493, -1.091679], orientation = [0.900447102352677, 0.307567078752479, -0.307567078752479, 0] }
+Out[6]= obj9
+In[7]:= new cuboid { mass = 5/3, half_extents = [0.5, 0.5, 0.5], position = [1.074397, 0.816223, 1.102099] }
+Out[7]= obj10
+In[8]:= new cylinder { mass = 2, radius = 1/2, height = 3/2, position = [-1.027024, -1.403890, -0.485619], orientation = [0.968912421710645, 0, 0.247403959254523, 0] }
+Out[8]= obj11
+In[9]:= list
+Out[9]= obj0: cuboid he=[1, 4, 4], mass=0, charge=0, pos=[3, 0, 0] [wall: static, inverse_mass=0]
+obj1: cuboid he=[1, 4, 4], mass=0, charge=0, pos=[-3, 0, 0] [wall: static, inverse_mass=0]
+obj2: cuboid he=[4, 1, 4], mass=0, charge=0, pos=[0, 3, 0] [wall: static, inverse_mass=0]
+obj3: cuboid he=[4, 1, 4], mass=0, charge=0, pos=[0, -3, 0] [wall: static, inverse_mass=0]
+obj4: cuboid he=[4, 4, 1], mass=0, charge=0, pos=[0, 0, 3] [wall: static, inverse_mass=0]
+obj5: cuboid he=[4, 4, 1], mass=0, charge=0, pos=[0, 0, -3] [wall: static, inverse_mass=0]
+obj6: torus ring=1.5 tube=0.5, mass=1, charge=0, pos=[0, 0, 0]
+obj7: point, mass=32, charge=0, pos=[1.40659, -0.995859, 0.569601]
+obj8: sphere r=0.5, mass=2, charge=0, pos=[1.424704, 1.367496, -0.493612]
+obj9: disk r=1, mass=0.6666666666666666, charge=0, pos=[-0.677386, -1.041493, -1.091679]
+obj10: cuboid he=[0.5, 0.5, 0.5], mass=1.6666666666666667, charge=0, pos=[1.074397, 0.816223, 1.102099]
+obj11: cylinder r=0.5 h=1.5, mass=2, charge=0, pos=[-1.027024, -1.40389, -0.485619]
+In[10]:= collide
+Out[10]= collisions ON (51 collidable pair(s); 0 impulse(s) so far)
+In[11]:= get obj0.inverse_mass
+Out[11]= 0
+In[12]:= get obj7.restitution
+Out[12]= 1
+In[13]:= energy
+Out[13]= 960000
+In[14]:= momentum
+Out[14]= [3200, 6400, 3200]
+In[15]:= scene create
+Out[15]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 12 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[16]:= scene set_time_step 0.0002
+Out[16]= scene time step dt = 0.0002
+In[17]:= scene zoom 2
+Out[17]= camera distance = 6
+rc=0
+##### dynamic_notebooks/box_of_shapes.posim
+In[1]:= set system.g_constant = 0
+In[2]:= box 4
+Out[2]= box: inner size 4 x 4 x 4 — six static walls obj0, obj1, obj2, obj3, obj4, obj5 with inverse_mass = 0 (infinitely massive); objects collide elastically off the inside faces
+In[3]:= new torus { mass = 1, inner_radius = 1, outer_radius = 2, orientation = [0.888073833977115, -0.325057583671868, 0.325057583671868, 0] }
+Out[3]= obj6
+In[4]:= new point { mass = 1, position = [1.406590, -0.995859, 0.569601], velocity = [100, 200, 100] }
+Out[4]= obj7
+In[5]:= new sphere { mass = 2, radius = 1/2, position = [1.424704, 1.367496, -0.493612] }
+Out[5]= obj8
+In[6]:= new disk { mass = 2/3, radius = 1, position = [-0.677386, -1.041493, -1.091679], orientation = [0.900447102352677, 0.307567078752479, -0.307567078752479, 0] }
+Out[6]= obj9
+In[7]:= new cuboid { mass = 5/3, half_extents = [0.5, 0.5, 0.5], position = [1.074397, 0.816223, 1.102099] }
+Out[7]= obj10
+In[8]:= new cylinder { mass = 2, radius = 1/2, height = 3/2, position = [-1.027024, -1.403890, -0.485619], orientation = [0.968912421710645, 0, 0.247403959254523, 0] }
+Out[8]= obj11
+In[9]:= list
+Out[9]= obj0: cuboid he=[1, 4, 4], mass=0, charge=0, pos=[3, 0, 0] [wall: static, inverse_mass=0]
+obj1: cuboid he=[1, 4, 4], mass=0, charge=0, pos=[-3, 0, 0] [wall: static, inverse_mass=0]
+obj2: cuboid he=[4, 1, 4], mass=0, charge=0, pos=[0, 3, 0] [wall: static, inverse_mass=0]
+obj3: cuboid he=[4, 1, 4], mass=0, charge=0, pos=[0, -3, 0] [wall: static, inverse_mass=0]
+obj4: cuboid he=[4, 4, 1], mass=0, charge=0, pos=[0, 0, 3] [wall: static, inverse_mass=0]
+obj5: cuboid he=[4, 4, 1], mass=0, charge=0, pos=[0, 0, -3] [wall: static, inverse_mass=0]
+obj6: torus ring=1.5 tube=0.5, mass=1, charge=0, pos=[0, 0, 0]
+obj7: point, mass=1, charge=0, pos=[1.40659, -0.995859, 0.569601]
+obj8: sphere r=0.5, mass=2, charge=0, pos=[1.424704, 1.367496, -0.493612]
+obj9: disk r=1, mass=0.6666666666666666, charge=0, pos=[-0.677386, -1.041493, -1.091679]
+obj10: cuboid he=[0.5, 0.5, 0.5], mass=1.6666666666666667, charge=0, pos=[1.074397, 0.816223, 1.102099]
+obj11: cylinder r=0.5 h=1.5, mass=2, charge=0, pos=[-1.027024, -1.40389, -0.485619]
+In[10]:= collide
+Out[10]= collisions ON (51 collidable pair(s); 0 impulse(s) so far)
+In[11]:= get obj0.inverse_mass
+Out[11]= 0
+In[12]:= get obj6.inertia_tensor
+Out[12]= [[1.28125, 0, 0], [0, 1.28125, 0], [0, 0, 2.4375]]
+In[13]:= energy
+Out[13]= 30000
+In[14]:= momentum
+Out[14]= [100, 200, 100]
+In[15]:= scene create
+Out[15]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 12 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[16]:= scene set_time_step 0.0002
+Out[16]= scene time step dt = 0.0002
+In[17]:= scene zoom 2
+Out[17]= camera distance = 6
+rc=0
+##### dynamic_notebooks/charged_in_b_field.posim
+In[1]:= new sphere { mass = 2, radius = 0.1, charge = -1.5, velocity = [3, 0, 0] }
+Out[1]= obj0
+In[2]:= set system.b_field = [0, 0, 4]
+In[3]:= method bdf
+Out[3]= method = CVODE BDF
+In[4]:= 2 * pi * 2 / (1.5 * 4)
+Out[4]= 2.0943951023931953
+In[5]:= 2 * 3 / (1.5 * 4)
+Out[5]= 1
+In[6]:= energy
+Out[6]= 9
+In[7]:= momentum
+Out[7]= [6, 0, 0]
+In[8]:= norm(obj0.velocity)
+Out[8]= 3
+In[9]:= scene create
+Out[9]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[10]:= scene set_time_step 0.005
+Out[10]= scene time step dt = 0.005
+In[11]:= scene translate 0 1
+Out[11]= camera target = [0, 1, 0]
+In[12]:= scene zoom 2.5
+Out[12]= camera distance = 4.8
+rc=0
+##### dynamic_notebooks/charged_in_e_field.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new point { mass = 2, charge = 3, position = [0, 0, 0], velocity = [0, 0, 0] }
+Out[2]= obj0
+In[3]:= set system.e_field = [0.5, 0, 0]
+In[4]:= energy
+Out[4]= 0
+In[5]:= momentum
+Out[5]= [0, 0, 0]
+In[6]:= get obj0.charge
+Out[6]= 3
+In[7]:= scene create
+Out[7]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[8]:= scene translate 3 0
+Out[8]= camera target = [3, 0, 0]
+rc=0
+##### dynamic_notebooks/colliding_binary.posim
+In[1]:= set system.g_constant = 1
+In[2]:= new sphere { mass = 1, radius = 0.3, position = [-1, 0, 0], velocity = [0, -0.316227766, 0], restitution = 0.6 }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.3, position = [1, 0, 0], velocity = [0, 0.316227766, 0], restitution = 0.6 }
+Out[3]= obj1
+In[4]:= energy
+Out[4]= -0.4000000000105867
+In[5]:= momentum
+Out[5]= [0, 0, 0]
+In[6]:= scene create
+Out[6]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[7]:= scene zoom 3
+Out[7]= camera distance = 4
+rc=0
+##### dynamic_notebooks/double_slit.posim
+In[1]:= def openings(y) { (y > 1.5) * (y < 2.5) + (y > -2.5) * (y < -1.5) }
+Out[1]= function openings(1 parameter(s)) defined — 1 body line(s)
+In[2]:= def slit(x, y) { 60 * (x > 0) * (x < 0.4) * (1 - openings(y)) }
+Out[2]= function slit(2 parameter(s)) defined — 1 body line(s)
+In[3]:= slit(0.2, 0)        # on the wall, between the slits -> 60
+Out[3]= 60
+In[4]:= slit(0.2, 2)        # in the upper slit             -> 0
+Out[4]= 0
+In[5]:= slit(0.2, -2)       # in the lower slit             -> 0
+Out[5]= 0
+In[6]:= slit(0.2, 6)        # on the wall, outside          -> 60
+Out[6]= 60
+In[7]:= slit(-2, 2)         # upstream of the wall          -> 0
+Out[7]= 0
+In[8]:= qm2 grid -12 24 450, -16 16 400
+Out[8]= grid x [-12, 24] x 450, y [-16, 16] x 400 — 180000 points, hx = 0.079823, hy = 0.079800 (potential and psi cleared)
+In[9]:= qm2 potential slit
+Out[9]= potential `slit` sampled at 180000 points, V in [0, 60] (psi cleared)
+In[10]:= qm2 absorb 4, 8
+Out[10]= absorbing edges on all four walls: width 4, strength 8, power 2. Propagation is no longer unitary — the norm decays by design.
+In[11]:= qm2 packet -4.5, 0, 1.2 4, 8 0
+Out[11]= psi = 2-D Gaussian at (-4.5, 0), sigma (1.2, 4), k (8, 0), t = 0
+  warning: 2.643e-4 already sits within 5% of a wall
+In[12]:= qm2 energy
+Out[12]= 31.008336923103123
+In[13]:= qm2 norm
+Out[13]= 0.999999999999975
+In[14]:= qm2 prob 0.4 24, -18 18
+Out[14]= 0.000021159931426
+In[15]:= qm2 run 2.6 steps 800
+Out[15]= t = 2.6 (800 ADI step(s) of dt = 0.0032500000000000003), <E> = 30.990650438623, norm drift = 7.796e-1
+In[16]:= qm2 prob 0.4 24, -18 18
+Out[16]= 0.194797531317859
+In[17]:= qm2 centroid
+Out[17]= [2.418641680149562, -0.0000000000000010033413583591005]
+In[18]:= qm2 norm
+Out[18]= 0.220410865359295
+In[19]:= qm2 prob 11 19, -0.5 0.5
+Out[19]= 0.015766137658865
+In[20]:= qm2 prob 11 19, 0.5 1.5
+Out[20]= 0.004524177973093
+In[21]:= qm2 prob 11 19, 1.5 2.5
+Out[21]= 0.009164400220525
+In[22]:= qm2 prob 11 19, 2.5 3.5
+Out[22]= 0.017416488189815
+In[23]:= qm2 prob 11 19, 3.5 4.5
+Out[23]= 0.004708263315466
+In[24]:= qm2 prob 11 19, 4.5 5.5
+Out[24]= 0.006459341509658
+In[25]:= qm2 prob 11 19, 5.5 6.5
+Out[25]= 0.013993383178195
+In[26]:= qm2 prob 11 19, 6.5 7.5
+Out[26]= 0.005019205668637
+In[27]:= qm2 packet -4.5, 0, 1.2 4, 8 0
+Out[27]= psi = 2-D Gaussian at (-4.5, 0), sigma (1.2, 4), k (8, 0), t = 0
+  warning: 2.643e-4 already sits within 5% of a wall
+In[28]:= qm2 animate "double_slit.html" 3 frames 100
+Out[28]= wrote double_slit.html — 100 frames over t = 3 (dt = 0.003000, 225 x 200 cells), worst norm drift 8.046e-1. Open it in a browser.
+rc=0
+##### dynamic_notebooks/head_on_exchange.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+Out[3]= obj1
+In[4]:= collide
+Out[4]= collisions ON (1 collidable pair(s); 0 impulse(s) so far)
+In[5]:= momentum
+Out[5]= [0, 0, 0]
+In[6]:= energy
+Out[6]= 1
+In[7]:= scene create
+Out[7]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/kepler_orbit.posim
+In[1]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[1]= obj0
+In[2]:= new point { mass = 1, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[2]= obj1
+In[3]:= set system.g_constant = 1e-9
+In[4]:= set system.softening = 0
+In[5]:= energy
+Out[5]= -0.5
+In[6]:= laplace 1
+Out[6]= [0.5999999974000001, 0, 0]
+In[7]:= scene create
+Out[7]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/magnetic_spin_up.posim
+In[1]:= new sphere { mass = 1, radius = 0.5, magnetic_moment_tensor = [[0.2, 0, 0], [0, 0.2, 0], [0, 0, 0.2]] }
+Out[1]= obj0
+In[2]:= set system.b_field = [0, 0.5, 0]
+In[3]:= get obj0.angular_momentum
+Out[3]= [0, 0, 0]
+In[4]:= energy
+Out[4]= 0
+In[5]:= scene create
+Out[5]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[6]:= scene zoom 3
+Out[6]= camera distance = 4
+rc=0
+##### dynamic_notebooks/newtons_cradle.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [0, 0, 0] }
+Out[3]= obj1
+In[4]:= new sphere { mass = 1, radius = 0.5, position = [1, 0, 0] }
+Out[4]= obj2
+In[5]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0] }
+Out[5]= obj3
+In[6]:= new sphere { mass = 1, radius = 0.5, position = [3, 0, 0] }
+Out[6]= obj4
+In[7]:= energy
+Out[7]= 0.5
+In[8]:= momentum
+Out[8]= [1, 0, 0]
+In[9]:= get obj0.velocity.x
+Out[9]= 1
+In[10]:= get obj4.velocity.x
+Out[10]= 0
+In[11]:= scene create
+Out[11]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 5 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/outer_solar_system.posim
+In[1]:= new point as sun { mass = 1.00000597682 }
+Out[1]= obj0 as sun
+In[2]:= new point as jupiter { mass = 9.54786104043e-4, position = [-3.5023653, -3.8169847, -1.5507963], velocity = [0.00565429, -0.00412490, -0.00190589] }
+Out[2]= obj1 as jupiter
+In[3]:= new point as saturn { mass = 2.85583733151e-4, position = [9.0755314, -3.0458353, -1.6483708], velocity = [0.00168318, 0.00483525, 0.00192462] }
+Out[3]= obj2 as saturn
+In[4]:= new point as uranus { mass = 4.37273164546e-5, position = [8.3101420, -16.2901086, -7.2521278], velocity = [0.00354178, 0.00137102, 0.00055029] }
+Out[4]= obj3 as uranus
+In[5]:= new point as neptune { mass = 5.17759138449e-5, position = [11.4707666, -25.7294829, -10.8169456], velocity = [0.00288930, 0.00114527, 0.00039677] }
+Out[5]= obj4 as neptune
+In[6]:= new point as pluto { mass = 1 / 1.3e8, position = [-15.5387357, -25.2225594, -3.1902382], velocity = [0.00276725, -0.00170702, -0.00136504] }
+Out[6]= obj5 as pluto
+In[7]:= set system.g_constant = 2.95912208286e-4
+In[8]:= set system.softening = 0
+In[9]:= set system.rtol = 1e-10
+In[10]:= set system.atol = 1e-12
+In[11]:= energy
+Out[11]= -0.000000032154531832081636
+In[12]:= momentum
+Out[12]= [0.000006183816317477499, -0.000002438293159516941, -0.0000012254817893370849]
+In[13]:= com
+Out[13]= [0.0002047098298789105, -0.006550139855052495, -0.002824833990245127]
+In[14]:= scene create
+Out[14]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 6 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[15]:= scene set_time_step 50
+Out[15]= scene time step dt = 50
+rc=0
+##### dynamic_notebooks/restitution_ladder.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-2, 3, 0], velocity = [1, 0, 0], restitution = 1.0 }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [2, 3, 0], velocity = [-1, 0, 0], restitution = 1.0 }
+Out[3]= obj1
+In[4]:= new sphere { mass = 1, radius = 0.5, position = [-2, 1, 0], velocity = [1, 0, 0], restitution = 0.8 }
+Out[4]= obj2
+In[5]:= new sphere { mass = 1, radius = 0.5, position = [2, 1, 0], velocity = [-1, 0, 0], restitution = 0.8 }
+Out[5]= obj3
+In[6]:= new sphere { mass = 1, radius = 0.5, position = [-2, -1, 0], velocity = [1, 0, 0], restitution = 0.5 }
+Out[6]= obj4
+In[7]:= new sphere { mass = 1, radius = 0.5, position = [2, -1, 0], velocity = [-1, 0, 0], restitution = 0.5 }
+Out[7]= obj5
+In[8]:= new sphere { mass = 1, radius = 0.5, position = [-2, -3, 0], velocity = [1, 0, 0], restitution = 0.2 }
+Out[8]= obj6
+In[9]:= new sphere { mass = 1, radius = 0.5, position = [2, -3, 0], velocity = [-1, 0, 0], restitution = 0.2 }
+Out[9]= obj7
+In[10]:= energy
+Out[10]= 4
+In[11]:= momentum
+Out[11]= [0, 0, 0]
+In[12]:= angmom
+Out[12]= [0, 0, 0]
+In[13]:= get obj0.restitution
+Out[13]= 1
+In[14]:= get obj2.restitution
+Out[14]= 0.8
+In[15]:= get obj4.restitution
+Out[15]= 0.5
+In[16]:= get obj6.restitution
+Out[16]= 0.2
+In[17]:= scene create
+Out[17]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 8 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/routh_double_star_period.posim
+In[1]:= set system.g_constant = 1
+In[2]:= set system.softening = 0
+In[3]:= set system.rtol = 1e-13
+In[4]:= set system.atol = 1e-15
+In[5]:= new point { mass = 1.0, position = [-0.5, 0, 0], velocity = [0, -0.7071067811865476, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1.0, position = [ 0.5, 0, 0], velocity = [0,  0.7071067811865476, 0] }
+Out[6]= obj1
+In[7]:= run pi * sqrt(2) steps 1
+Out[7]= t = 4.442882938158366 (196 solver steps, 1 snapshots, |dE/E| = 3.141e-12)
+In[8]:= norm(obj1.position - [0.5, 0, 0])
+Out[8]= 0.00000000001619020970710841
+In[9]:= reset
+Out[9]= system reset
+In[10]:= set system.g_constant = 1
+In[11]:= set system.softening = 0
+In[12]:= set system.rtol = 1e-13
+In[13]:= set system.atol = 1e-15
+In[14]:= new point { mass = 1.5, position = [-0.25, 0, 0], velocity = [0, -0.35355339059327373, 0] }
+Out[14]= obj0
+In[15]:= new point { mass = 0.5, position = [ 0.75, 0, 0], velocity = [0,  1.0606601717798212, 0] }
+Out[15]= obj1
+In[16]:= run pi * sqrt(2) steps 1
+Out[16]= t = 4.442882938158366 (213 solver steps, 1 snapshots, |dE/E| = 1.193e-12)
+In[17]:= norm(obj1.position - [0.75, 0, 0])
+Out[17]= 0.000000000020250519535979178
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.g_constant = 1
+In[20]:= set system.softening = 0
+In[21]:= set system.rtol = 1e-13
+In[22]:= set system.atol = 1e-15
+In[23]:= new point { mass = 1.9, position = [-0.05, 0, 0], velocity = [0, -0.07071067811865475, 0] }
+Out[23]= obj0
+In[24]:= new point { mass = 0.1, position = [ 0.95, 0, 0], velocity = [0,  1.3435028842544403, 0] }
+Out[24]= obj1
+In[25]:= run pi * sqrt(2) steps 1
+Out[25]= t = 4.442882938158366 (202 solver steps, 1 snapshots, |dE/E| = 1.224e-12)
+In[26]:= norm(obj1.position - [0.95, 0, 0])
+Out[26]= 0.0000000000336437996744414
+In[27]:= reset
+Out[27]= system reset
+In[28]:= set system.g_constant = 1
+In[29]:= set system.softening = 0
+In[30]:= set system.rtol = 1e-13
+In[31]:= set system.atol = 1e-15
+In[32]:= new point { mass = 2.4, position = [-0.04, 0, 0], velocity = [0, -0.06324555320336758, 0] }
+Out[32]= obj0
+In[33]:= new point { mass = 0.1, position = [ 0.96, 0, 0], velocity = [0,  1.517893276880822, 0] }
+Out[33]= obj1
+In[34]:= run pi * sqrt(2) steps 1
+Out[34]= t = 4.442882938158366 (221 solver steps, 1 snapshots, |dE/E| = 2.828e-13)
+In[35]:= norm(obj1.position - [0.96, 0, 0])
+Out[35]= 0.6957597889920557
+In[36]:= reset
+Out[36]= system reset
+In[37]:= set system.g_constant = 1
+In[38]:= set system.softening = 0
+In[39]:= set system.rtol = 1e-13
+In[40]:= set system.atol = 1e-15
+In[41]:= new point { mass = 2.4, position = [-0.04, 0, 0], velocity = [0, -0.06324555320336758, 0] }
+Out[41]= obj0
+In[42]:= new point { mass = 0.1, position = [ 0.96, 0, 0], velocity = [0,  1.517893276880822, 0] }
+Out[42]= obj1
+In[43]:= run 2 * pi / sqrt(2.5) steps 1
+Out[43]= t = 3.97383530631844 (204 solver steps, 1 snapshots, |dE/E| = 1.781e-14)
+In[44]:= norm(obj1.position - [0.96, 0, 0])
+Out[44]= 0.00000000004570390859562565
+In[45]:= reset
+Out[45]= system reset
+In[46]:= set system.g_constant = 1
+In[47]:= set system.softening = 0
+In[48]:= set system.rtol = 1e-13
+In[49]:= set system.atol = 1e-15
+In[50]:= new point { mass = 1.9, position = [-0.05, 0, 0], velocity = [0, -0.07071067811865475, 0] }
+Out[50]= obj0
+In[51]:= new point { mass = 0.1, position = [ 0.95, 0, 0], velocity = [0,  1.3435028842544403, 0] }
+Out[51]= obj1
+In[52]:= energy
+Out[52]= -0.095
+In[53]:= momentum
+Out[53]= [0, 0, 0]
+In[54]:= pi * sqrt(2)
+Out[54]= 4.442882938158366
+In[55]:= scene create
+Out[55]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[56]:= scene zoom in
+Out[56]= camera distance = 9.6
+In[57]:= scene zoom in
+Out[57]= camera distance = 7.68
+In[58]:= scene zoom in
+Out[58]= camera distance = 6.144
+In[59]:= scene set_time_step 0.02
+Out[59]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_apsidal_symmetry.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= set system.softening = 0
+In[4]:= set system.g_constant = 1e-9
+In[5]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[6]= obj1
+In[7]:= norm(obj1.position)
+Out[7]= 0.4
+In[8]:= dot(obj1.position, obj1.velocity)
+Out[8]= 0
+In[9]:= run 1 steps 1
+Out[9]= t = 1 (191 solver steps, 1 snapshots, |dE/E| = 3.585e-11)
+In[10]:= norm(obj1.position)
+Out[10]= 1.017368906081887
+In[11]:= reset
+Out[11]= system reset
+In[12]:= set system.rtol = 1e-13
+In[13]:= set system.atol = 1e-15
+In[14]:= set system.softening = 0
+In[15]:= set system.g_constant = 1e-9
+In[16]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[16]= obj0
+In[17]:= new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[17]= obj1
+In[18]:= run 2 * pi - 1 steps 4
+Out[18]= t = 5.283185307179586 (318 solver steps, 4 snapshots, |dE/E| = 5.875e-10)
+In[19]:= norm(obj1.position)
+Out[19]= 1.0173689031147921
+In[20]:= reset
+Out[20]= system reset
+In[21]:= set system.rtol = 1e-13
+In[22]:= set system.atol = 1e-15
+In[23]:= set system.softening = 0
+In[24]:= set system.g_constant = 1e-9
+In[25]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[25]= obj0
+In[26]:= new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[26]= obj1
+In[27]:= run pi steps 3
+Out[27]= t = 3.141592653589793 (251 solver steps, 3 snapshots, |dE/E| = 4.821e-10)
+In[28]:= norm(obj1.position)
+Out[28]= 1.5999999991516158
+In[29]:= dot(obj1.position, obj1.velocity)
+Out[29]= -0.0000000008808001253132602
+In[30]:= reset
+Out[30]= system reset
+In[31]:= set system.rtol = 1e-13
+In[32]:= set system.atol = 1e-15
+In[33]:= set system.softening = 0
+In[34]:= set system.g_constant = 1e-9
+In[35]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[35]= obj0
+In[36]:= new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[36]= obj1
+In[37]:= energy
+Out[37]= -0.0000004999999999999999
+In[38]:= scene create
+Out[38]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[39]:= scene zoom in
+Out[39]= camera distance = 9.6
+In[40]:= scene set_time_step 0.01
+Out[40]= scene time step dt = 0.01
+rc=0
+##### dynamic_notebooks/routh_p1_centre_of_gravity.posim
+In[1]:= set system.g_constant = 1
+In[2]:= set system.rtol = 1e-12
+In[3]:= set system.atol = 1e-14
+In[4]:= collide on
+Out[4]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[5]:= new sphere { mass = 1, radius = 0.3, position = [-1.5,  0.2, 0], velocity = [ 1.2,  0,   0], restitution = 1 }
+Out[5]= obj0
+In[6]:= new sphere { mass = 1, radius = 0.3, position = [ 1.5, -0.2, 0], velocity = [-0.8,  0,   0], restitution = 1 }
+Out[6]= obj1
+In[7]:= new sphere { mass = 1, radius = 0.3, position = [ 0,    1.5, 0], velocity = [ 0,   -1.0, 0], restitution = 1 }
+Out[7]= obj2
+In[8]:= new sphere { mass = 1, radius = 0.3, position = [ 0,   -1.5, 0], velocity = [ 0,    0.9, 0], restitution = 1 }
+Out[8]= obj3
+In[9]:= momentum
+Out[9]= [0.3999999999999999, -0.09999999999999998, 0]
+In[10]:= (obj0.position + obj1.position + obj2.position + obj3.position) / 4
+Out[10]= [0, 0, 0]
+In[11]:= run 5 steps 10
+Out[11]= t = 5 (957 solver steps, 10 snapshots, |dE/E| = 3.212e-10, 8 collision(s) — CONTACTS lists them)
+In[12]:= system.collisions
+Out[12]= 8
+In[13]:= momentum
+Out[13]= [0.40000000000000546, -0.10000000000000739, 0]
+In[14]:= (obj0.position + obj1.position + obj2.position + obj3.position) / 4
+Out[14]= [0.5000000000000044, -0.12500000000000583, 0]
+In[15]:= norm((obj0.position + obj1.position + obj2.position + obj3.position) / 4 - [0.5, -0.125, 0])
+Out[15]= 0.000000000000007327682229021407
+In[16]:= reset
+Out[16]= system reset
+In[17]:= set system.g_constant = 1
+In[18]:= set system.rtol = 1e-12
+In[19]:= set system.atol = 1e-14
+In[20]:= collide on
+Out[20]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[21]:= new sphere { mass = 1, radius = 0.3, position = [-1.5,  0.2, 0], velocity = [ 1.2,  0,   0], restitution = 1 }
+Out[21]= obj0
+In[22]:= new sphere { mass = 1, radius = 0.3, position = [ 1.5, -0.2, 0], velocity = [-0.8,  0,   0], restitution = 1 }
+Out[22]= obj1
+In[23]:= new sphere { mass = 1, radius = 0.3, position = [ 0,    1.5, 0], velocity = [ 0,   -1.0, 0], restitution = 1 }
+Out[23]= obj2
+In[24]:= new sphere { mass = 1, radius = 0.3, position = [ 0,   -1.5, 0], velocity = [ 0,    0.9, 0], restitution = 1 }
+Out[24]= obj3
+In[25]:= momentum
+Out[25]= [0.3999999999999999, -0.09999999999999998, 0]
+In[26]:= scene create
+Out[26]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 4 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[27]:= scene set_time_step 0.02
+Out[27]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_collinear_three_body.posim
+In[1]:= set system.g_constant = 1
+In[2]:= set system.softening = 0
+In[3]:= set system.rtol = 1e-13
+In[4]:= set system.atol = 1e-15
+In[5]:= new point { mass = 1, position = [-1, 0, 0], velocity = [0, -1.118033988749895, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1, position = [ 0, 0, 0] }
+Out[6]= obj1
+In[7]:= new point { mass = 1, position = [ 1, 0, 0], velocity = [0,  1.118033988749895, 0] }
+Out[7]= obj2
+In[8]:= momentum
+Out[8]= [0, 0, 0]
+In[9]:= norm(obj0.position - obj1.position)
+Out[9]= 1
+In[10]:= norm(obj2.position - obj1.position)
+Out[10]= 1
+In[11]:= run 5.619851784832581 steps 8
+Out[11]= t = 5.619851784832581 (226 solver steps, 8 snapshots, |dE/E| = 5.454e-12)
+In[12]:= norm(obj0.position - [-1, 0, 0])
+Out[12]= 0.00000000006405587301341359
+In[13]:= norm(obj1.position - [0, 0, 0])
+Out[13]= 0.000000000002565003650786077
+In[14]:= norm(obj2.position - [ 1, 0, 0])
+Out[14]= 0.00000000006256907979299003
+In[15]:= reset
+Out[15]= system reset
+In[16]:= set system.g_constant = 1
+In[17]:= set system.softening = 1e-6
+In[18]:= set system.rtol = 1e-12
+In[19]:= set system.atol = 1e-14
+In[20]:= new point { mass = 1, position = [-1.001, 0, 0], velocity = [0, -1.118033988749895, 0] }
+Out[20]= obj0
+In[21]:= new point { mass = 1, position = [ 0, 0, 0] }
+Out[21]= obj1
+In[22]:= new point { mass = 1, position = [ 1, 0, 0], velocity = [0,  1.118033988749895, 0] }
+Out[22]= obj2
+In[23]:= norm(obj0.position - obj1.position)
+Out[23]= 1.001
+In[24]:= norm(obj2.position - obj1.position)
+Out[24]= 1
+In[25]:= run 16.859555354497743 steps 12
+Out[25]= t = 16.859555354497743 (2669 solver steps, 12 snapshots, |dE/E| = 1.397e-11)
+In[26]:= norm(obj0.position - obj1.position)
+Out[26]= 3.4436481175481823
+In[27]:= norm(obj2.position - obj1.position)
+Out[27]= 0.34058819953596386
+In[28]:= run 33.719110708995486 steps 16
+Out[28]= t = 50.57866606349323 (8151 solver steps, 16 snapshots, |dE/E| = 9.377e-10)
+In[29]:= norm(obj0.position - obj1.position)
+Out[29]= 7.847764693194425
+In[30]:= norm(obj2.position - obj1.position)
+Out[30]= 0.7149633209205206
+In[31]:= reset
+Out[31]= system reset
+In[32]:= set system.g_constant = 1
+In[33]:= set system.softening = 0
+In[34]:= set system.rtol = 1e-13
+In[35]:= set system.atol = 1e-15
+In[36]:= new point { mass = 1, position = [-1, 0, 0], velocity = [0, -1.118033988749895, 0] }
+Out[36]= obj0
+In[37]:= new point { mass = 1, position = [ 0, 0, 0] }
+Out[37]= obj1
+In[38]:= new point { mass = 1, position = [ 1, 0, 0], velocity = [0,  1.118033988749895, 0] }
+Out[38]= obj2
+In[39]:= energy
+Out[39]= -1.2499999999999998
+In[40]:= scene create
+Out[40]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[41]:= scene zoom in
+Out[41]= camera distance = 9.6
+In[42]:= scene set_time_step 0.02
+Out[42]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_equal_periods.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= set system.softening = 0
+In[4]:= set system.g_constant = 1e-9
+In[5]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1e-6, position = [ 1,  0, 0], velocity = [ 0.9526279441628827, 0.55, 0] }
+Out[6]= obj1
+In[7]:= new point { mass = 1e-6, position = [ 0,  1, 0], velocity = [-0.9526279441628827, 0.55, 0] }
+Out[7]= obj2
+In[8]:= new point { mass = 1e-6, position = [-1,  0, 0], velocity = [ 0, -1.1, 0] }
+Out[8]= obj3
+In[9]:= new point { mass = 1e-6, position = [ 0, -1, 0], velocity = [ 0.9526279441628826, 0.55, 0] }
+Out[9]= obj4
+In[10]:= norm(obj1.velocity)
+Out[10]= 1.1
+In[11]:= norm(obj2.velocity)
+Out[11]= 1.1
+In[12]:= norm(obj3.velocity)
+Out[12]= 1.1
+In[13]:= norm(obj4.velocity)
+Out[13]= 1.1
+In[14]:= run 2.23706828113415 steps 2
+Out[14]= t = 2.23706828113415 (207 solver steps, 2 snapshots, |dE/E| = 4.201e-11)
+In[15]:= norm(obj1.position)
+Out[15]= 2.1782053839918185
+In[16]:= norm(obj3.position)
+Out[16]= 1.3200860093132558
+In[17]:= run 6.711204843402455 steps 6
+Out[17]= t = 8.948273124536605 (482 solver steps, 6 snapshots, |dE/E| = 6.623e-11)
+In[18]:= norm(obj1.position - [ 1,  0, 0])
+Out[18]= 0.000000000037876959828645684
+In[19]:= norm(obj2.position - [ 0,  1, 0])
+Out[19]= 0.00000000034257792646856677
+In[20]:= norm(obj3.position - [-1,  0, 0])
+Out[20]= 0.0000000000055760596518119
+In[21]:= norm(obj4.position - [ 0, -1, 0])
+Out[21]= 0.0000000025692228173289967
+In[22]:= reset
+Out[22]= system reset
+In[23]:= set system.rtol = 1e-13
+In[24]:= set system.atol = 1e-15
+In[25]:= set system.softening = 0
+In[26]:= set system.g_constant = 1e-9
+In[27]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[27]= obj0
+In[28]:= new point { mass = 1e-6, position = [ 1,  0, 0], velocity = [ 0.9526279441628827, 0.55, 0] }
+Out[28]= obj1
+In[29]:= new point { mass = 1e-6, position = [ 0,  1, 0], velocity = [-0.9526279441628827, 0.55, 0] }
+Out[29]= obj2
+In[30]:= new point { mass = 1e-6, position = [-1,  0, 0], velocity = [ 0, -1.1, 0] }
+Out[30]= obj3
+In[31]:= new point { mass = 1e-6, position = [ 0, -1, 0], velocity = [ 0.9526279441628826, 0.55, 0] }
+Out[31]= obj4
+In[32]:= scene create
+Out[32]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 5 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[33]:= scene zoom in
+Out[33]= camera distance = 9.6
+In[34]:= scene set_time_step 0.02
+Out[34]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_equilateral_three_body.posim
+In[1]:= set system.g_constant = 1
+In[2]:= set system.softening = 0
+In[3]:= set system.rtol = 1e-13
+In[4]:= set system.atol = 1e-15
+In[5]:= new point { mass = 1, position = [ 0.5773502691896258,  0,                   0], velocity = [ 0,                   1,                    0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1, position = [-0.2886751345948128,  0.5000000000000001,  0], velocity = [-0.8660254037844387, -0.49999999999999983, 0] }
+Out[6]= obj1
+In[7]:= new point { mass = 1, position = [-0.2886751345948132, -0.4999999999999999,  0], velocity = [ 0.8660254037844384, -0.5000000000000004,  0] }
+Out[7]= obj2
+In[8]:= norm(obj0.position - obj1.position)
+Out[8]= 1
+In[9]:= norm(obj0.velocity)
+Out[9]= 1
+In[10]:= momentum
+Out[10]= [-0.00000000000000033306690738754696, -0.0000000000000002220446049250313, 0]
+In[11]:= run 3.6275987284684357 steps 6
+Out[11]= t = 3.627598728468436 (540 solver steps, 6 snapshots, |dE/E| = 1.075e-10)
+In[12]:= norm(obj0.position - [ 0.5773502691896258, 0, 0])
+Out[12]= 0.000000000294882824416601
+In[13]:= norm(obj1.position - [-0.2886751345948128,  0.5000000000000001, 0])
+Out[13]= 0.0000000002942515721478085
+In[14]:= norm(obj2.position - [-0.2886751345948132, -0.4999999999999999, 0])
+Out[14]= 0.00000000029408223171048144
+In[15]:= norm(obj0.position - obj1.position)
+Out[15]= 0.9999999998909217
+In[16]:= reset
+Out[16]= system reset
+In[17]:= set system.g_constant = 1
+In[18]:= set system.softening = 1e-6
+In[19]:= set system.rtol = 1e-12
+In[20]:= set system.atol = 1e-14
+In[21]:= new point { mass = 1, position = [ 0.5783502691896258,  0,                   0], velocity = [ 0,                   1,                    0] }
+Out[21]= obj0
+In[22]:= new point { mass = 1, position = [-0.2886751345948128,  0.5000000000000001,  0], velocity = [-0.8660254037844387, -0.49999999999999983, 0] }
+Out[22]= obj1
+In[23]:= new point { mass = 1, position = [-0.2886751345948132, -0.4999999999999999,  0], velocity = [ 0.8660254037844384, -0.5000000000000004,  0] }
+Out[23]= obj2
+In[24]:= norm(obj0.position - obj1.position)
+Out[24]= 1.0008661502956173
+In[25]:= norm(obj1.position - obj2.position)
+Out[25]= 1
+In[26]:= run 10.882796185405307 steps 9
+Out[26]= t = 10.882796185405306 (1730 solver steps, 9 snapshots, |dE/E| = 7.845e-10)
+In[27]:= norm(obj0.position - obj1.position)
+Out[27]= 0.4047071224445402
+In[28]:= norm(obj1.position - obj2.position)
+Out[28]= 1.80156993024477
+In[29]:= norm(obj2.position - obj0.position)
+Out[29]= 1.4093743031305064
+In[30]:= run 21.765592370810614 steps 12
+Out[30]= t = 32.64838855621592 (6500 solver steps, 12 snapshots, |dE/E| = 2.071e-10)
+In[31]:= norm(obj0.position - obj1.position)
+Out[31]= 2.5638491867798034
+In[32]:= norm(obj1.position - obj2.position)
+Out[32]= 0.6612644470576517
+In[33]:= norm(obj2.position - obj0.position)
+Out[33]= 2.5601350190565038
+In[34]:= reset
+Out[34]= system reset
+In[35]:= set system.g_constant = 1
+In[36]:= set system.softening = 0
+In[37]:= set system.rtol = 1e-13
+In[38]:= set system.atol = 1e-15
+In[39]:= new point { mass = 1, position = [ 0.5773502691896258,  0,                   0], velocity = [ 0,                   1,                    0] }
+Out[39]= obj0
+In[40]:= new point { mass = 1, position = [-0.2886751345948128,  0.5000000000000001,  0], velocity = [-0.8660254037844387, -0.49999999999999983, 0] }
+Out[40]= obj1
+In[41]:= new point { mass = 1, position = [-0.2886751345948132, -0.4999999999999999,  0], velocity = [ 0.8660254037844384, -0.5000000000000004,  0] }
+Out[41]= obj2
+In[42]:= energy
+Out[42]= -1.4999999999999998
+In[43]:= scene create
+Out[43]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[44]:= scene zoom in
+Out[44]= camera distance = 9.6
+In[45]:= scene set_time_step 0.02
+Out[45]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_escape_velocity.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= set system.softening = 0
+In[4]:= set system.g_constant = 1e-9
+In[5]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1e-6, position = [ 1, 0, 0], velocity = [ 1.2727922061357855, 0, 0] }
+Out[6]= obj1
+In[7]:= new point { mass = 1e-6, position = [ 0, 1, 0], velocity = [ 0, 1.4142135623730951, 0] }
+Out[7]= obj2
+In[8]:= new point { mass = 1e-6, position = [-1, 0, 0], velocity = [-1.5556349186104046, 0, 0] }
+Out[8]= obj3
+In[9]:= sqrt(2)
+Out[9]= 1.4142135623730951
+In[10]:= 0.5 * dot(obj1.velocity, obj1.velocity) - 1 / norm(obj1.position)
+Out[10]= -0.1900000000000004
+In[11]:= 0.5 * dot(obj2.velocity, obj2.velocity) - 1 / norm(obj2.position)
+Out[11]= 0.0000000000000002220446049250313
+In[12]:= 0.5 * dot(obj3.velocity, obj3.velocity) - 1 / norm(obj3.position)
+Out[12]= 0.20999999999999996
+In[13]:= run 12 steps 4
+Out[13]= t = 12 (228 solver steps, 4 snapshots, |dE/E| = 2.192e-9)
+In[14]:= 0.5 * dot(obj1.velocity, obj1.velocity) - 1 / norm(obj1.position)
+Out[14]= -0.19000000001519238
+In[15]:= 0.5 * dot(obj2.velocity, obj2.velocity) - 1 / norm(obj2.position)
+Out[15]= -0.000000000016873377695070246
+In[16]:= 0.5 * dot(obj3.velocity, obj3.velocity) - 1 / norm(obj3.position)
+Out[16]= 0.209999999988232
+In[17]:= norm(obj1.position)
+Out[17]= 5.248196142073576
+In[18]:= norm(obj2.position)
+Out[18]= 8.878666609335468
+In[19]:= norm(obj3.position)
+Out[19]= 11.761334472331404
+In[20]:= reset
+Out[20]= system reset
+In[21]:= set system.rtol = 1e-13
+In[22]:= set system.atol = 1e-15
+In[23]:= set system.softening = 0
+In[24]:= set system.g_constant = 1e-9
+In[25]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[25]= obj0
+In[26]:= new point { mass = 1e-6, position = [ 1, 0, 0], velocity = [ 1.2727922061357855, 0, 0] }
+Out[26]= obj1
+In[27]:= new point { mass = 1e-6, position = [ 0, 1, 0], velocity = [ 0, 1.4142135623730951, 0] }
+Out[27]= obj2
+In[28]:= new point { mass = 1e-6, position = [-1, 0, 0], velocity = [-1.5556349186104046, 0, 0] }
+Out[28]= obj3
+In[29]:= scene create
+Out[29]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 4 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[30]:= scene set_time_step 0.02
+Out[30]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_expanding_sphere.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.gravity = [0, -9.81, 0]
+In[3]:= set system.rtol = 1e-13
+In[4]:= set system.atol = 1e-15
+In[5]:= new point { mass = 1, position = [0,0,0], velocity = [ 5, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1, position = [0,0,0], velocity = [-5, 0, 0] }
+Out[6]= obj1
+In[7]:= new point { mass = 1, position = [0,0,0], velocity = [ 0, 5, 0] }
+Out[7]= obj2
+In[8]:= new point { mass = 1, position = [0,0,0], velocity = [ 0,-5, 0] }
+Out[8]= obj3
+In[9]:= new point { mass = 1, position = [0,0,0], velocity = [ 0, 0, 5] }
+Out[9]= obj4
+In[10]:= new point { mass = 1, position = [0,0,0], velocity = [ 0, 0,-5] }
+Out[10]= obj5
+In[11]:= run 1 steps 1
+Out[11]= t = 1 (15 solver steps, 1 snapshots, |dE/E| = 3.790e-16)
+In[12]:= norm(obj0.position - [0, -4.905, 0])
+Out[12]= 5
+In[13]:= norm(obj3.position - [0, -4.905, 0])
+Out[13]= 5.000000000000001
+In[14]:= norm(obj4.position - [0, -4.905, 0])
+Out[14]= 5
+In[15]:= run 1 steps 1
+Out[15]= t = 2 (12 solver steps, 1 snapshots, |dE/E| = 4.889e-14)
+In[16]:= norm(obj0.position - [0, -19.62, 0])
+Out[16]= 9.999999999999996
+In[17]:= norm(obj3.position - [0, -19.62, 0])
+Out[17]= 10.000000000000004
+In[18]:= norm(obj4.position - [0, -19.62, 0])
+Out[18]= 9.999999999999996
+In[19]:= reset
+Out[19]= system reset
+In[20]:= set system.g_constant = 0
+In[21]:= set system.gravity = [0, -9.81, 0]
+In[22]:= new point { mass = 1, position = [0,0,0], velocity = [ 5, 0, 0] }
+Out[22]= obj0
+In[23]:= new point { mass = 1, position = [0,0,0], velocity = [-5, 0, 0] }
+Out[23]= obj1
+In[24]:= new point { mass = 1, position = [0,0,0], velocity = [ 0, 5, 0] }
+Out[24]= obj2
+In[25]:= new point { mass = 1, position = [0,0,0], velocity = [ 0,-5, 0] }
+Out[25]= obj3
+In[26]:= new point { mass = 1, position = [0,0,0], velocity = [ 0, 0, 5] }
+Out[26]= obj4
+In[27]:= new point { mass = 1, position = [0,0,0], velocity = [ 0, 0,-5] }
+Out[27]= obj5
+In[28]:= scene create
+Out[28]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 6 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[29]:= scene set_time_step 0.02
+Out[29]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_geometric_progression.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= collide on
+Out[4]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[5]:= new sphere { mass = 1, radius = 0.4, position = [0, 0, 0], velocity = [1, 0, 0], restitution = 1 }
+Out[5]= obj0
+In[6]:= new sphere { mass = 2, radius = 0.4, position = [2, 0, 0], restitution = 1 }
+Out[6]= obj1
+In[7]:= new sphere { mass = 4, radius = 0.4, position = [4, 0, 0], restitution = 1 }
+Out[7]= obj2
+In[8]:= new sphere { mass = 8, radius = 0.4, position = [6, 0, 0], restitution = 1 }
+Out[8]= obj3
+In[9]:= momentum
+Out[9]= [1, 0, 0]
+In[10]:= energy
+Out[10]= 0.5
+In[11]:= run 8 steps 8
+Out[11]= t = 8 (48 solver steps, 8 snapshots, |dE/E| = 1.110e-16, 3 collision(s) — CONTACTS lists them)
+In[12]:= obj0.vx
+Out[12]= -0.33333333333333326
+In[13]:= obj1.vx
+Out[13]= -0.2222222222222222
+In[14]:= obj2.vx
+Out[14]= -0.14814814814814814
+In[15]:= obj3.vx
+Out[15]= 0.2962962962962963
+In[16]:= obj3.vx / 0.2962962962962963
+Out[16]= 1
+In[17]:= system.collisions
+Out[17]= 3
+In[18]:= momentum
+Out[18]= [1, 0, 0]
+In[19]:= energy
+Out[19]= 0.49999999999999994
+In[20]:= reset
+Out[20]= system reset
+In[21]:= set system.g_constant = 0
+In[22]:= set system.rtol = 1e-13
+In[23]:= set system.atol = 1e-15
+In[24]:= collide on
+Out[24]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[25]:= new sphere { mass = 1, radius = 0.4, position = [0, 0, 0], velocity = [1, 0, 0], restitution = 1 }
+Out[25]= obj0
+In[26]:= new sphere { mass = 2, radius = 0.4, position = [2, 0, 0], restitution = 1 }
+Out[26]= obj1
+In[27]:= new sphere { mass = 4, radius = 0.4, position = [4, 0, 0], restitution = 1 }
+Out[27]= obj2
+In[28]:= new sphere { mass = 8, radius = 0.4, position = [6, 0, 0], restitution = 1 }
+Out[28]= obj3
+In[29]:= scene create
+Out[29]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 4 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[30]:= scene set_time_step 0.02
+Out[30]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_hodograph_circle.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= set system.softening = 0
+In[4]:= set system.g_constant = 1e-9
+In[5]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[6]= obj1
+In[7]:= norm(obj1.velocity)
+Out[7]= 2
+In[8]:= norm(obj1.velocity - [0, 0.75, 0])
+Out[8]= 1.25
+In[9]:= run pi / 2 steps 2
+Out[9]= t = 1.5707963267948966 (275 solver steps, 2 snapshots, |dE/E| = 1.695e-12)
+In[10]:= norm(obj1.velocity)
+Out[10]= 0.7350856930816005
+In[11]:= norm(obj1.velocity - [0, 0.75, 0])
+Out[11]= 1.2500000000008071
+In[12]:= run pi / 2 steps 2
+Out[12]= t = 3.141592653589793 (78 solver steps, 2 snapshots, |dE/E| = 2.809e-13)
+In[13]:= norm(obj1.velocity)
+Out[13]= 0.499999999999809
+In[14]:= norm(obj1.velocity - [0, 0.75, 0])
+Out[14]= 1.249999999999809
+In[15]:= run pi steps 2
+Out[15]= t = 6.283185307179586 (340 solver steps, 2 snapshots, |dE/E| = 1.286e-11)
+In[16]:= norm(obj1.velocity)
+Out[16]= 2.000000000062431
+In[17]:= norm(obj1.velocity - [0, 0.75, 0])
+Out[17]= 1.2500000000624412
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.rtol = 1e-13
+In[20]:= set system.atol = 1e-15
+In[21]:= set system.softening = 0
+In[22]:= set system.g_constant = 1e-9
+In[23]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[23]= obj0
+In[24]:= new point { mass = 1, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[24]= obj1
+In[25]:= energy
+Out[25]= -0.5
+In[26]:= laplace 1
+Out[26]= [0.5999999974000001, 0, 0]
+In[27]:= scene create
+Out[27]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[28]:= scene zoom in
+Out[28]= camera distance = 9.6
+In[29]:= scene set_time_step 0.01
+Out[29]= scene time step dt = 0.01
+rc=0
+##### dynamic_notebooks/routh_p1_kepler_equation.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= set system.softening = 0
+In[4]:= set system.g_constant = 1e-9
+In[5]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[6]= obj1
+In[7]:= norm(obj1.position)
+Out[7]= 0.4
+In[8]:= norm(obj1.velocity)
+Out[8]= 2
+In[9]:= run 1 steps 1
+Out[9]= t = 1 (191 solver steps, 1 snapshots, |dE/E| = 3.585e-11)
+In[10]:= norm(obj1.position)
+Out[10]= 1.017368906081887
+In[11]:= norm(obj1.position) - 1.0173689060959745
+Out[11]= -0.000000000014087619959468611
+In[12]:= run 1 steps 1
+Out[12]= t = 2 (67 solver steps, 1 snapshots, |dE/E| = 4.645e-12)
+In[13]:= norm(obj1.position)
+Out[13]= 1.443915428252816
+In[14]:= norm(obj1.position) - 1.443915428283383
+Out[14]= -0.00000000003056710440318966
+In[15]:= run 1 steps 1
+Out[15]= t = 3 (59 solver steps, 1 snapshots, |dE/E| = 2.140e-12)
+In[16]:= norm(obj1.position)
+Out[16]= 1.597649801659709
+In[17]:= norm(obj1.position) - 1.5976498017220984
+Out[17]= -0.00000000006238942695802052
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.rtol = 1e-13
+In[20]:= set system.atol = 1e-15
+In[21]:= set system.softening = 0
+In[22]:= set system.g_constant = 1e-9
+In[23]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[23]= obj0
+In[24]:= new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+Out[24]= obj1
+In[25]:= energy
+Out[25]= -0.0000004999999999999999
+In[26]:= scene create
+Out[26]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[27]:= scene zoom in
+Out[27]= camera distance = 9.6
+In[28]:= scene set_time_step 0.01
+Out[28]= scene time step dt = 0.01
+rc=0
+##### dynamic_notebooks/routh_p1_lambert_theorem.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= set system.softening = 0
+In[4]:= set system.g_constant = 1e-9
+In[5]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1e-6, position = [0.09670670934716541, 0.5738848727196183, 0], velocity = [-1.2326214869081589, 0.9577119881285612, 0] }
+Out[6]= obj1
+In[7]:= norm(obj1.position)
+Out[7]= 0.5819759743917009
+In[8]:= run 1.3453158122479596 steps 3
+Out[8]= t = 1.3453158122479596 (127 solver steps, 3 snapshots, |dE/E| = 4.405e-12)
+In[9]:= norm(obj1.position)
+Out[9]= 1.3531006703500303
+In[10]:= norm(obj1.position - [-1.188501117255346, 0.6467971230556722, 0])
+Out[10]= 0.000000000004778675718797375
+In[11]:= reset
+Out[11]= system reset
+In[12]:= set system.rtol = 1e-13
+In[13]:= set system.atol = 1e-15
+In[14]:= set system.softening = 0
+In[15]:= set system.g_constant = 1e-9
+In[16]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[16]= obj0
+In[17]:= new point { mass = 1e-6, position = [0.382211216366071, 0.6379992630370535, 0], velocity = [-0.9157640844146201, 0.9222463226977163, 0] }
+Out[17]= obj1
+In[18]:= norm(obj1.position)
+Out[18]= 0.7437260742718752
+In[19]:= run 1.3453158122479596 steps 3
+Out[19]= t = 1.3453158122479596 (96 solver steps, 3 snapshots, |dE/E| = 2.418e-13)
+In[20]:= norm(obj1.position)
+Out[20]= 1.1913505704747411
+In[21]:= norm(obj1.position - [-0.896715915637238, 0.784357538632282, 0])
+Out[21]= 0.0000000000033258613006479608
+In[22]:= reset
+Out[22]= system reset
+In[23]:= set system.rtol = 1e-13
+In[24]:= set system.atol = 1e-15
+In[25]:= set system.softening = 0
+In[26]:= set system.g_constant = 1e-9
+In[27]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[27]= obj0
+In[28]:= new point { mass = 1e-6, position = [0.09670670934716541, 0.5738848727196183, 0], velocity = [-1.2326214869081589, 0.9577119881285612, 0] }
+Out[28]= obj1
+In[29]:= new point { mass = 1e-6, position = [0.382211216366071, 0.6379992630370535, 0], velocity = [-0.9157640844146201, 0.9222463226977163, 0] }
+Out[29]= obj2
+In[30]:= scene create
+Out[30]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[31]:= scene zoom in
+Out[31]= camera distance = 9.6
+In[32]:= scene set_time_step 0.01
+Out[32]= scene time step dt = 0.01
+rc=0
+##### dynamic_notebooks/routh_p1_oblique_impact.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= collide on
+Out[4]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[5]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0.5, 0], velocity = [1, 0, 0], restitution = 1 }
+Out[5]= obj0
+In[6]:= new sphere { mass = 1, radius = 0.5, position = [ 0, 0,   0], restitution = 1 }
+Out[6]= obj1
+In[7]:= momentum
+Out[7]= [1, 0, 0]
+In[8]:= energy
+Out[8]= 0.5
+In[9]:= run 4 steps 4
+Out[9]= t = 4 (29 solver steps, 4 snapshots, |dE/E| = 2.220e-16, 1 collision(s) — CONTACTS lists them)
+In[10]:= obj0.velocity
+Out[10]= [0.25000000000000044, 0.4330127018922197, 0]
+In[11]:= obj1.velocity
+Out[11]= [0.7499999999999996, -0.4330127018922197, 0]
+In[12]:= dot(obj0.velocity, obj1.velocity)
+Out[12]= -0.00000000000000008326672684688674
+In[13]:= norm(obj0.velocity)
+Out[13]= 0.5000000000000006
+In[14]:= norm(obj1.velocity)
+Out[14]= 0.8660254037844385
+In[15]:= momentum
+Out[15]= [1, 0, 0]
+In[16]:= energy
+Out[16]= 0.5000000000000001
+In[17]:= system.collisions
+Out[17]= 1
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.g_constant = 0
+In[20]:= set system.rtol = 1e-13
+In[21]:= set system.atol = 1e-15
+In[22]:= collide on
+Out[22]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[23]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0.5, 0], velocity = [1, 0, 0], restitution = 1 }
+Out[23]= obj0
+In[24]:= new sphere { mass = 1, radius = 0.5, position = [ 0, 0,   0], restitution = 1 }
+Out[24]= obj1
+In[25]:= scene create
+Out[25]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[26]:= scene set_time_step 0.02
+Out[26]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_parabola_of_safety.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.gravity = [0, -9.81, 0]
+In[3]:= set system.rtol = 1e-13
+In[4]:= set system.atol = 1e-15
+In[5]:= new point { mass = 1, position = [0,0,0], velocity = [3.62969990030487, 9.318008297577697, 0] }
+Out[5]= obj0
+In[6]:= run 1.6530292213678714 steps 2
+Out[6]= t = 1.6530292213678714 (15 solver steps, 2 snapshots, |dE/E| = 9.948e-16)
+In[7]:= obj0.position
+Out[7]= [6, 2.0000000000000036, 0]
+In[8]:= norm(obj0.position - [6, 2, 0])
+Out[8]= 0.000000000000003552713678800501
+In[9]:= reset
+Out[9]= system reset
+In[10]:= set system.g_constant = 0
+In[11]:= set system.gravity = [0, -9.81, 0]
+In[12]:= set system.rtol = 1e-13
+In[13]:= set system.atol = 1e-15
+In[14]:= new point { mass = 1, position = [0,0,0], velocity = [7.692026952223115, 6.390048620024201, 0] }
+Out[14]= obj0
+In[15]:= run 0.7800284680835533 steps 2
+Out[15]= t = 0.7800284680835533 (14 solver steps, 2 snapshots, |dE/E| = 2.842e-16)
+In[16]:= obj0.position
+Out[16]= [6.000000000000001, 1.9999999999999991, 0]
+In[17]:= norm(obj0.position - [6, 2, 0])
+Out[17]= 0.0000000000000012560739669470201
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.g_constant = 0
+In[20]:= set system.gravity = [0, -9.81, 0]
+In[21]:= set system.rtol = 1e-13
+In[22]:= set system.atol = 1e-15
+In[23]:= new point { mass = 1, position = [0,0,0], velocity = [9.396926207859084, 3.420201433256687, 0] }
+Out[23]= obj0
+In[24]:= new point { mass = 1, position = [0,0,0], velocity = [8.191520442889918, 5.735764363510462, 0] }
+Out[24]= obj1
+In[25]:= new point { mass = 1, position = [0,0,0], velocity = [6.427876096865394, 7.660444431189780, 0] }
+Out[25]= obj2
+In[26]:= new point { mass = 1, position = [0,0,0], velocity = [4.226182617406994, 9.063077870366499, 0] }
+Out[26]= obj3
+In[27]:= new point { mass = 1, position = [0,0,0], velocity = [1.736481776669303, 9.848077530122080, 0] }
+Out[27]= obj4
+In[28]:= run 0.8 steps 1
+Out[28]= t = 0.8 (15 solver steps, 1 snapshots, |dE/E| = 0.000e0)
+In[29]:= 5.09683995922528 - 0.04905 * obj0.position.x * obj0.position.x - obj0.position.y
+Out[29]= 2.727895454700383
+In[30]:= 5.09683995922528 - 0.04905 * obj2.position.x * obj2.position.x - obj2.position.y
+Out[30]= 0.8106425939394688
+In[31]:= 5.09683995922528 - 0.04905 * obj4.position.x * obj4.position.x - obj4.position.y
+Out[31]= 0.2629194727131807
+In[32]:= run 0.7 steps 1
+Out[32]= t = 1.5 (11 solver steps, 1 snapshots, |dE/E| = 3.138e-14)
+In[33]:= 5.09683995922528 - 0.04905 * obj0.position.x * obj0.position.x - obj0.position.y
+Out[33]= 1.2575338166544938
+In[34]:= 5.09683995922528 - 0.04905 * obj2.position.x * obj2.position.x - obj2.position.y
+Out[34]= 0.08251066282909303
+In[35]:= 5.09683995922528 - 0.04905 * obj4.position.x * obj4.position.x - obj4.position.y
+Out[35]= 1.028190007116562
+In[36]:= reset
+Out[36]= system reset
+In[37]:= set system.g_constant = 0
+In[38]:= set system.gravity = [0, -9.81, 0]
+In[39]:= new point { mass = 1, position = [0,0,0], velocity = [3.62969990030487, 9.318008297577697, 0] }
+Out[39]= obj0
+In[40]:= new point { mass = 1, position = [0,0,0], velocity = [7.692026952223115, 6.390048620024201, 0] }
+Out[40]= obj1
+In[41]:= new point { mass = 1, position = [0,0,0], velocity = [9.396926207859084, 3.420201433256687, 0] }
+Out[41]= obj2
+In[42]:= new point { mass = 1, position = [0,0,0], velocity = [6.427876096865394, 7.660444431189780, 0] }
+Out[42]= obj3
+In[43]:= new point { mass = 1, position = [0,0,0], velocity = [1.736481776669303, 9.848077530122080, 0] }
+Out[43]= obj4
+In[44]:= scene create
+Out[44]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 5 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[45]:= scene set_time_step 0.02
+Out[45]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_sphere_exchange.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= collide on
+Out[4]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[5]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0], restitution = 1 }
+Out[5]= obj0
+In[6]:= new sphere { mass = 1, radius = 0.5, position = [ 0, 0, 0], restitution = 1 }
+Out[6]= obj1
+In[7]:= run 4 steps 4
+Out[7]= t = 4 (28 solver steps, 4 snapshots, |dE/E| = 0.000e0, 1 collision(s) — CONTACTS lists them)
+In[8]:= obj0.vx
+Out[8]= 0
+In[9]:= obj1.vx
+Out[9]= 1
+In[10]:= system.collisions
+Out[10]= 1
+In[11]:= reset
+Out[11]= system reset
+In[12]:= set system.g_constant = 0
+In[13]:= set system.rtol = 1e-13
+In[14]:= set system.atol = 1e-15
+In[15]:= collide on
+Out[15]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[16]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0], restitution = 0.5 }
+Out[16]= obj0
+In[17]:= new sphere { mass = 2, radius = 0.5, position = [ 0, 0, 0], restitution = 0.5 }
+Out[17]= obj1
+In[18]:= run 4 steps 4
+Out[18]= t = 4 (24 solver steps, 4 snapshots, |dE/E| = 5.000e-1, 1 collision(s) — CONTACTS lists them)
+In[19]:= obj0.vx
+Out[19]= 0
+In[20]:= obj1.vx
+Out[20]= 0.5
+In[21]:= obj0.momentum + obj1.momentum
+Out[21]= [1, 0, 0]
+In[22]:= reset
+Out[22]= system reset
+In[23]:= set system.g_constant = 0
+In[24]:= set system.rtol = 1e-13
+In[25]:= set system.atol = 1e-15
+In[26]:= collide on
+Out[26]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[27]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0], restitution = 0.5 }
+Out[27]= obj0
+In[28]:= new sphere { mass = 2, radius = 0.5, position = [ 0, 0, 0], restitution = 0.5 }
+Out[28]= obj1
+In[29]:= momentum
+Out[29]= [1, 0, 0]
+In[30]:= scene create
+Out[30]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[31]:= scene set_time_step 0.02
+Out[31]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_three_projectiles.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.gravity = [0, -9.81, 0]
+In[3]:= set system.rtol = 1e-13
+In[4]:= set system.atol = 1e-15
+In[5]:= new point { mass = 1, position = [0, 0, 0], velocity = [ 3, 8,  1] }
+Out[5]= obj0
+In[6]:= new point { mass = 1, position = [0, 0, 0], velocity = [-2, 6,  4] }
+Out[6]= obj1
+In[7]:= new point { mass = 1, position = [0, 0, 0], velocity = [ 1, 9, -3] }
+Out[7]= obj2
+In[8]:= run 1 steps 1
+Out[8]= t = 1 (15 solver steps, 1 snapshots, |dE/E| = 3.858e-16)
+In[9]:= normalize(cross(obj1.position - obj0.position, obj2.position - obj0.position))
+Out[9]= [0.17879963496303766, -0.9297581018077972, -0.3218393429334681]
+In[10]:= run 1 steps 1
+Out[10]= t = 2 (11 solver steps, 1 snapshots, |dE/E| = 8.359e-14)
+In[11]:= normalize(cross(obj1.position - obj0.position, obj2.position - obj0.position))
+Out[11]= [0.17879963496303783, -0.9297581018077973, -0.32183934293346744]
+In[12]:= run 2 steps 2
+Out[12]= t = 4 (11 solver steps, 2 snapshots, |dE/E| = 1.215e-13)
+In[13]:= normalize(cross(obj1.position - obj0.position, obj2.position - obj0.position))
+Out[13]= [0.1787996349630378, -0.9297581018077973, -0.3218393429334674]
+In[14]:= norm(obj1.position - obj0.position)
+Out[14]= 24.657656011875904
+In[15]:= reset
+Out[15]= system reset
+In[16]:= set system.g_constant = 0
+In[17]:= set system.gravity = [0, -9.81, 0]
+In[18]:= new point { mass = 1, position = [0, 0, 0], velocity = [ 3, 8,  1] }
+Out[18]= obj0
+In[19]:= new point { mass = 1, position = [0, 0, 0], velocity = [-2, 6,  4] }
+Out[19]= obj1
+In[20]:= new point { mass = 1, position = [0, 0, 0], velocity = [ 1, 9, -3] }
+Out[20]= obj2
+In[21]:= scene create
+Out[21]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[22]:= scene set_time_step 0.02
+Out[22]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p1_two_trajectories.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= set system.softening = 0
+In[4]:= set system.g_constant = 1e-9
+In[5]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[5]= obj0
+In[6]:= new point { mass = 1, position = [1, 0, 0], velocity = [0.1679448414712004, 1.1376706598234891, 0] }
+Out[6]= obj1
+In[7]:= norm(obj1.velocity)
+Out[7]= 1.15
+In[8]:= run 2.16112 steps 2
+Out[8]= t = 2.16112 (113 solver steps, 2 snapshots, |dE/E| = 5.752e-14)
+In[9]:= norm(obj1.position - [0, 1.6, 0])
+Out[9]= 0.0000013110768555525594
+In[10]:= reset
+Out[10]= system reset
+In[11]:= set system.rtol = 1e-13
+In[12]:= set system.atol = 1e-15
+In[13]:= set system.softening = 0
+In[14]:= set system.g_constant = 1e-9
+In[15]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[15]= obj0
+In[16]:= new point { mass = 1, position = [1, 0, 0], velocity = [0.8757322020879298, 0.745381184513149, 0] }
+Out[16]= obj1
+In[17]:= norm(obj1.velocity)
+Out[17]= 1.15
+In[18]:= run 8.89752 steps 4
+Out[18]= t = 8.89752 (282 solver steps, 4 snapshots, |dE/E| = 3.706e-12)
+In[19]:= norm(obj1.position - [0, 1.6, 0])
+Out[19]= 0.0000008977840636835201
+In[20]:= reset
+Out[20]= system reset
+In[21]:= set system.rtol = 1e-13
+In[22]:= set system.atol = 1e-15
+In[23]:= set system.softening = 0
+In[24]:= set system.g_constant = 1e-9
+In[25]:= new point { mass = 1e9, position = [0, 0, 0] }
+Out[25]= obj0
+In[26]:= new point { mass = 1e-6, position = [1, 0, 0.0005], velocity = [0.1679448414712004, 1.1376706598234891, 0] }
+Out[26]= obj1
+In[27]:= new point { mass = 1e-6, position = [1, 0, -0.0005], velocity = [0.8757322020879298, 0.745381184513149, 0] }
+Out[27]= obj2
+In[28]:= energy
+Out[28]= -0.0000006774997500010473
+In[29]:= scene create
+Out[29]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[30]:= scene zoom in
+Out[30]= camera distance = 9.6
+In[31]:= scene set_time_step 0.02
+Out[31]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p2_correlated_bodies.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+Out[4]= obj0
+In[5]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+Out[5]= obj1
+In[6]:= get obj0.inertia_tensor
+Out[6]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[7]:= get obj1.inertia_tensor
+Out[7]= [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]]
+In[8]:= set obj0.angular_momentum = [1.5, 12.75, 0.125]
+In[9]:= set obj1.angular_momentum = [1.5, 12.75, 0.125]
+In[10]:= get obj0.angular_velocity
+Out[10]= [0.30000000000000004, 3, 0.1]
+In[11]:= get obj1.angular_velocity
+Out[11]= [0.15000000000000002, 1.7249999999999999, 0.08750000000000001]
+In[12]:= obj0.angular_velocity - obj1.angular_velocity
+Out[12]= [0.15000000000000002, 1.2750000000000001, 0.012499999999999997]
+In[13]:= norm(obj0.angular_velocity - obj1.angular_velocity)
+Out[13]= 1.283854061020956
+In[14]:= run 3 steps 3
+Out[14]= t = 3 (933 solver steps, 3 snapshots, |dE/E| = 2.295e-12)
+In[15]:= obj0.angular_velocity - obj1.angular_velocity
+Out[15]= [0.7019371569591121, 1.2140792754085568, -0.39683197574987156]
+In[16]:= norm(obj0.angular_velocity - obj1.angular_velocity)
+Out[16]= 1.4574566464474867
+In[17]:= run 4 steps 4
+Out[17]= t = 7 (1235 solver steps, 4 snapshots, |dE/E| = 7.229e-15)
+In[18]:= obj0.angular_velocity - obj1.angular_velocity
+Out[18]= [-0.4625100834958395, 1.345608268490916, 0.1605776153078603]
+In[19]:= norm(obj0.angular_velocity - obj1.angular_velocity)
+Out[19]= 1.4319086423736707
+In[20]:= reset
+Out[20]= system reset
+In[21]:= set system.g_constant = 0
+In[22]:= set system.rtol = 1e-13
+In[23]:= set system.atol = 1e-15
+In[24]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+Out[24]= obj0
+In[25]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+Out[25]= obj1
+In[26]:= set obj0.angular_momentum = [1.5, 12.75, 0.125]
+In[27]:= set obj1.angular_momentum = [1.5, 12.75, 0.125]
+In[28]:= scene create
+Out[28]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[29]:= scene set_time_step 0.03
+Out[29]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_fixed_couple.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], orientation = [0.9396926207859084, 0.3420201433256687, 0, 0], torque = [0, 0, 2] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[6]:= get obj0.angular_momentum
+Out[6]= [0, 0, 0]
+In[7]:= get obj0.angular_velocity
+Out[7]= [0, 0, 0]
+In[8]:= energy
+Out[8]= 0
+In[9]:= run 5 steps 5
+Out[9]= t = 5 (440 solver steps, 5 snapshots, |dE/E| = 2.833e1)
+In[10]:= get obj0.angular_momentum
+Out[10]= [0, 0, 10]
+In[11]:= norm(obj0.angular_velocity)
+Out[11]= 6.372576935166228
+In[12]:= energy
+Out[12]= 28.33385662577337
+In[13]:= run 5 steps 5
+Out[13]= t = 10 (1052 solver steps, 5 snapshots, |dE/E| = 3.000e0)
+In[14]:= get obj0.angular_momentum
+Out[14]= [0, 0, 20]
+In[15]:= norm(obj0.angular_velocity)
+Out[15]= 12.723302881560707
+In[16]:= energy
+Out[16]= 113.33542650352301
+In[17]:= reset
+Out[17]= system reset
+In[18]:= set system.g_constant = 0
+In[19]:= set system.rtol = 1e-13
+In[20]:= set system.atol = 1e-15
+In[21]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], orientation = [0.9396926207859084, 0.3420201433256687, 0, 0], torque = [0, 0, 2] }
+Out[21]= obj0
+In[22]:= scene create
+Out[22]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[23]:= scene set_time_step 0.02
+Out[23]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p2_impulsive_couple.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[4]= obj0
+In[5]:= get obj0.angular_momentum
+Out[5]= [1.5, 12.75, 0.125]
+In[6]:= norm(obj0.angular_momentum)
+Out[6]= 12.838540610209558
+In[7]:= normalize(obj0.angular_momentum)
+Out[7]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[8]:= energy
+Out[8]= 19.356250000000003
+In[9]:= set obj0.angular_momentum = [6.465753021614381, 12.165793762163014, 0.125]
+In[10]:= norm(obj0.angular_momentum)
+Out[10]= 13.777812779973459
+In[11]:= normalize(obj0.angular_momentum)
+Out[11]= [0.4692873335463364, 0.8829989169141874, 0.009072557596492526]
+In[12]:= dot(normalize(obj0.angular_momentum), normalize([1.5, 12.75, 0.125]))
+Out[12]= 0.931827193128276
+In[13]:= get obj0.angular_velocity
+Out[13]= [1.2931506043228762, 2.862539708744239, 0.1]
+In[14]:= energy
+Out[14]= 21.59938007994385
+In[15]:= run 4 steps 4
+Out[15]= t = 4 (489 solver steps, 4 snapshots, |dE/E| = 1.447e-12)
+In[16]:= normalize(obj0.angular_momentum)
+Out[16]= [0.4692873335463364, 0.8829989169141874, 0.009072557596492526]
+In[17]:= norm(obj0.angular_momentum)
+Out[17]= 13.777812779973459
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.g_constant = 0
+In[20]:= set system.rtol = 1e-13
+In[21]:= set system.atol = 1e-15
+In[22]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[22]= obj0
+In[23]:= scene create
+Out[23]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[24]:= scene set_time_step 0.03
+Out[24]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_invariable_line.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[4]= obj0
+In[5]:= get obj0.angular_momentum
+Out[5]= [1.5, 12.75, 0.125]
+In[6]:= normalize(obj0.angular_momentum)
+Out[6]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[7]:= normalize(obj0.angular_velocity)
+Out[7]= [0.0994490316197694, 0.9944903161976938, 0.033149677206589796]
+In[8]:= run 2 steps 2
+Out[8]= t = 2 (212 solver steps, 2 snapshots, |dE/E| = 6.094e-14)
+In[9]:= normalize(obj0.angular_momentum)
+Out[9]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[10]:= normalize(obj0.angular_velocity)
+Out[10]= [-0.12401574830627657, 0.8919398784619176, 0.434814152692129]
+In[11]:= run 2 steps 2
+Out[11]= t = 4 (229 solver steps, 2 snapshots, |dE/E| = 8.994e-15)
+In[12]:= normalize(obj0.angular_momentum)
+Out[12]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[13]:= normalize(obj0.angular_velocity)
+Out[13]= [0.15268144741315112, 0.9882473844450986, 0.007448674596638006]
+In[14]:= run 3 steps 3
+Out[14]= t = 7 (359 solver steps, 3 snapshots, |dE/E| = 2.874e-13)
+In[15]:= normalize(obj0.angular_momentum)
+Out[15]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[16]:= normalize(obj0.angular_velocity)
+Out[16]= [0.009813713737283234, 0.9998859357127, 0.011480704970557816]
+In[17]:= reset
+Out[17]= system reset
+In[18]:= set system.g_constant = 0
+In[19]:= set system.rtol = 1e-13
+In[20]:= set system.atol = 1e-15
+In[21]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[21]= obj0
+In[22]:= scene create
+Out[22]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[23]:= scene set_time_step 0.03
+Out[23]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_mean_axis_instability.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-12
+In[3]:= set system.atol = 1e-14
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [3, 0.01, 0.01] }
+Out[4]= obj0
+In[5]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+Out[5]= obj1
+In[6]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 0.01, 3] }
+Out[6]= obj2
+In[7]:= get obj0.inertia_tensor
+Out[7]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[8]:= angmom
+Out[8]= [16.55, 12.835, 3.8875]
+In[9]:= energy
+Out[9]= 47.4819875
+In[10]:= run 2 steps 1
+Out[10]= t = 2 (720 solver steps, 1 snapshots, |dE/E| = 9.856e-13)
+In[11]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[11]= quat[w=0, x=2.30336403848522, y=-1.1533290091139086, z=2.2859321717148333]
+In[12]:= run 2 steps 1
+Out[12]= t = 4 (718 solver steps, 1 snapshots, |dE/E| = 3.481e-13)
+In[13]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[13]= quat[w=0, x=0.3129469977778011, y=-2.9980543142939124, z=-0.1339246925499873]
+In[14]:= run 2 steps 1
+Out[14]= t = 6 (718 solver steps, 1 snapshots, |dE/E| = 3.179e-11)
+In[15]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[15]= quat[w=0.00000000000000008326672684688674, x=2.19681456944822, y=1.4266403083856056, z=-2.1785302971999934]
+In[16]:= run 2 steps 1
+Out[16]= t = 8 (717 solver steps, 1 snapshots, |dE/E| = 8.051e-13)
+In[17]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[17]= quat[w=0.000000000000000011167282376600696, x=0.32972602098217274, y=2.995408435005031, z=0.1694675547248159]
+In[18]:= norm(obj0.angular_velocity - [3, 0, 0])
+Out[18]= 0.0052898827958414735
+In[19]:= norm(obj2.angular_velocity - [0, 0, 3])
+Out[19]= 0.01837000956434583
+In[20]:= angmom
+Out[20]= [16.55, 12.835, 3.8875]
+In[21]:= energy
+Out[21]= 47.48198750140807
+In[22]:= reset
+Out[22]= system reset
+In[23]:= set system.g_constant = 0
+In[24]:= set system.rtol = 1e-12
+In[25]:= set system.atol = 1e-14
+In[26]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [3, 0.01, 0.01] }
+Out[26]= obj0
+In[27]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+Out[27]= obj1
+In[28]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 0.01, 3] }
+Out[28]= obj2
+In[29]:= scene create
+Out[29]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[30]:= scene set_time_step 0.03
+Out[30]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_period_ratio.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0], angular_velocity = [0.05, 0, 3] }
+Out[4]= obj0
+In[5]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], angular_velocity = [0.30, 0, 3] }
+Out[5]= obj1
+In[6]:= get obj0.inertia_tensor
+Out[6]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[7]:= norm(obj0.angular_momentum)
+Out[7]= 3.758324094593227
+In[8]:= norm(obj1.angular_momentum)
+Out[8]= 4.038873605350878
+In[9]:= run 2.878470742981153 steps 4
+Out[9]= t = 2.878470742981153 (310 solver steps, 4 snapshots, |dE/E| = 1.578e-14)
+In[10]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[10]= quat[w=0.0000000000000004440892098500626, x=0.04999999523886024, y=0.000026460666366509566, z=2.9999999999206493]
+In[11]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[11]= quat[w=0.00000000000000011102230246251565, x=0.2999625693177412, y=0.005746739264170964, z=2.9999962571630157]
+In[12]:= run 2.878470742981153 steps 4
+Out[12]= t = 5.756941485962306 (304 solver steps, 4 snapshots, |dE/E| = 9.593e-15)
+In[13]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[13]= quat[w=-0.0000000000000002220446049250313, x=0.0499999809554599, y=0.00005292132768880409, z=2.9999999996825912]
+In[14]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[14]= quat[w=0, x=0.29985028698495514, y=0.011492030168699152, z=2.9999850323968476]
+In[15]:= reset
+Out[15]= system reset
+In[16]:= set system.g_constant = 0
+In[17]:= set system.rtol = 1e-13
+In[18]:= set system.atol = 1e-15
+In[19]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0], angular_velocity = [0.05, 0, 3] }
+Out[19]= obj0
+In[20]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], angular_velocity = [0.30, 0, 3] }
+Out[20]= obj1
+In[21]:= scene create
+Out[21]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[22]:= scene set_time_step 0.02
+Out[22]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p2_poinsot_rolling.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[6]:= norm(obj0.angular_momentum)
+Out[6]= 12.838540610209558
+In[7]:= energy
+Out[7]= 19.356250000000003
+In[8]:= dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+Out[8]= 3.015334933724069
+In[9]:= norm(obj0.angular_velocity)
+Out[9]= 3.0166206257996713
+In[10]:= run 2 steps 2
+Out[10]= t = 2 (212 solver steps, 2 snapshots, |dE/E| = 6.094e-14)
+In[11]:= dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+Out[11]= 3.0153349337238855
+In[12]:= norm(obj0.angular_velocity)
+Out[12]= 3.4440005213149356
+In[13]:= run 2 steps 2
+Out[13]= t = 4 (229 solver steps, 2 snapshots, |dE/E| = 8.994e-15)
+In[14]:= dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+Out[14]= 3.0153349337239126
+In[15]:= norm(obj0.angular_velocity)
+Out[15]= 3.0173169071458257
+In[16]:= run 3 steps 3
+Out[16]= t = 7 (359 solver steps, 3 snapshots, |dE/E| = 2.874e-13)
+In[17]:= dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+Out[17]= 3.0153349337230457
+In[18]:= norm(obj0.angular_velocity)
+Out[18]= 3.032777577138756
+In[19]:= reset
+Out[19]= system reset
+In[20]:= set system.g_constant = 0
+In[21]:= set system.rtol = 1e-13
+In[22]:= set system.atol = 1e-15
+In[23]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[23]= obj0
+In[24]:= scene create
+Out[24]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[25]:= scene set_time_step 0.03
+Out[25]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_polhode_quarter_period.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [2, 0, 1] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[6]:= norm(obj0.angular_momentum)
+Out[6]= 10.077822185373186
+In[7]:= energy
+Out[7]= 10.625
+In[8]:= run 1.1584211285524637 steps 2
+Out[8]= t = 1.1584211285524637 (123 solver steps, 2 snapshots, |dE/E| = 2.163e-13)
+In[9]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[9]= quat[w=-0.00000000000000005551115123125783, x=1.7320508075703824, y=-1.2126781251786896, z=-0.0000000000063126170957161776]
+In[10]:= run 1.1584211285524637 steps 2
+Out[10]= t = 2.3168422571049274 (119 solver steps, 2 snapshots, |dE/E| = 6.788e-14)
+In[11]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[11]= quat[w=-0.00000000000000008711716799062873, x=2.000000000000102, y=0.000000000019429680087057477, z=-0.9999999999967766]
+In[12]:= run 2.3168422571049274 steps 4
+Out[12]= t = 4.633684514209855 (213 solver steps, 4 snapshots, |dE/E| = 4.330e-14)
+In[13]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[13]= quat[w=-0.000000000000000001734723475976807, x=2.0000000000000857, y=-0.00000000001824147777274021, z=0.9999999999972675]
+In[14]:= norm(obj0.angular_momentum)
+Out[14]= 10.077822185373186
+In[15]:= energy
+Out[15]= 10.62499999999744
+In[16]:= reset
+Out[16]= system reset
+In[17]:= set system.g_constant = 0
+In[18]:= set system.rtol = 1e-13
+In[19]:= set system.atol = 1e-15
+In[20]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [2, 0, 1] }
+Out[20]= obj0
+In[21]:= scene create
+Out[21]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[22]:= scene set_time_step 0.02
+Out[22]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p2_principal_axes_in_space.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[6]:= norm(obj0.angular_momentum)
+Out[6]= 12.838540610209558
+In[7]:= normalize(obj0.angular_momentum)
+Out[7]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[8]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+Out[8]= quat[w=0, x=1.5, y=12.75, z=0.125]
+In[9]:= run 2 steps 2
+Out[9]= t = 2 (212 solver steps, 2 snapshots, |dE/E| = 6.094e-14)
+In[10]:= normalize(obj0.angular_momentum)
+Out[10]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[11]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+Out[11]= quat[w=-0.0000000000000004440892098500626, x=11.51682019240888, y=-4.9016482887606125, z=2.857415214667472]
+In[12]:= run 2 steps 2
+Out[12]= t = 4 (229 solver steps, 2 snapshots, |dE/E| = 8.994e-15)
+In[13]:= normalize(obj0.angular_momentum)
+Out[13]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[14]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+Out[14]= quat[w=0.0000000000000008881784197001252, x=1.564734986926688, y=-12.741730835996503, z=-0.1674058652001621]
+In[15]:= run 3 steps 3
+Out[15]= t = 7 (359 solver steps, 3 snapshots, |dE/E| = 2.874e-13)
+In[16]:= normalize(obj0.angular_momentum)
+Out[16]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[17]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+Out[17]= quat[w=0.0000000000000015681900222830336, x=2.620208405068383, y=12.556215180485635, z=-0.5514465117771397]
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.g_constant = 0
+In[20]:= set system.rtol = 1e-13
+In[21]:= set system.atol = 1e-15
+In[22]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[22]= obj0
+In[23]:= scene create
+Out[23]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[24]:= scene set_time_step 0.03
+Out[24]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_rolling_cones.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [1, 1, 2], angular_velocity = [0.6, 0, 3] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[5, 0, 0], [0, 5, 0], [0, 0, 2]]
+In[6]:= norm(obj0.angular_momentum)
+Out[6]= 6.708203932499369
+In[7]:= norm(obj0.angular_velocity)
+Out[7]= 3.059411708155671
+In[8]:= dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+Out[8]= 0.9647638212377322
+In[9]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[9]= quat[w=0, x=0.6000000000000001, y=0, z=3]
+In[10]:= run 1.2 steps 2
+Out[10]= t = 1.2 (64 solver steps, 2 snapshots, |dE/E| = 2.494e-14)
+In[11]:= dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+Out[11]= 0.9647638212377259
+In[12]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[12]= quat[w=-0.00000000000000011102230246251565, x=-0.33341948775046837, y=-0.4988300764672089, z=2.999999999999931]
+In[13]:= norm(obj0.angular_velocity)
+Out[13]= 3.0594117081556145
+In[14]:= run 1.2 steps 2
+Out[14]= t = 2.4 (66 solver steps, 2 snapshots, |dE/E| = 2.261e-14)
+In[15]:= dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+Out[15]= 0.9647638212377202
+In[16]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[16]= quat[w=0, x=-0.22943815062753525, y=0.5543988952340568, z=2.9999999999998694]
+In[17]:= norm(obj0.angular_velocity)
+Out[17]= 3.0594117081555634
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.g_constant = 0
+In[20]:= set system.rtol = 1e-13
+In[21]:= set system.atol = 1e-15
+In[22]:= new cuboid { mass = 3, half_extents = [1, 1, 2], angular_velocity = [0.6, 0, 3] }
+Out[22]= obj0
+In[23]:= scene create
+Out[23]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[24]:= scene set_time_step 0.02
+Out[24]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p2_separatrix.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-12
+In[3]:= set system.atol = 1e-14
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+Out[4]= obj0
+In[5]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.01, 3, 0.01] }
+Out[5]= obj1
+In[6]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 3, 0.3] }
+Out[6]= obj2
+In[7]:= get obj0.inertia_tensor
+Out[7]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[8]:= run 2 steps 2
+Out[8]= t = 2 (665 solver steps, 2 snapshots, |dE/E| = 2.071e-12)
+In[9]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[9]= quat[w=0, x=2.303364038486124, y=-1.1533290091133521, z=2.2859321717035055]
+In[10]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[10]= quat[w=0.000000000000000013877787807814457, x=0.3640028500667075, y=2.967372061056743, z=0.3640028500671222]
+In[11]:= [obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+Out[11]= quat[w=-0.0000000000000002220446049250313, x=2.4474157932758973, y=-0.4376675054632405, z=2.4657137029807985]
+In[12]:= run 2 steps 2
+Out[12]= t = 4 (662 solver steps, 2 snapshots, |dE/E| = 5.551e-13)
+In[13]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[13]= quat[w=0, x=0.31294699794088476, y=-2.9980543142697216, z=-0.13392469271241392]
+In[14]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[14]= quat[w=0, x=1.6081502209578773, y=-2.2796906610434515, z=1.608150220957849]
+In[15]:= [obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+Out[15]= quat[w=0, x=-0.07832156142122311, y=-2.9985206482493507, z=0.3098939606419717]
+In[16]:= run 2 steps 2
+Out[16]= t = 6 (661 solver steps, 2 snapshots, |dE/E| = 2.554e-12)
+In[17]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[17]= quat[w=-0.00000000000000008326672684688674, x=2.1968145693000136, y=1.4266403088319433, z=-2.178530296212315]
+In[18]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[18]= quat[w=0.0000000000000002220446049250313, x=0.0499291047608078, y=-2.999413443761123, z=0.049929104696094725]
+In[19]:= [obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+Out[19]= quat[w=0.000000000000000020816681711721685, x=-2.3106241702393517, y=1.0717741914853471, z=2.329996578494813]
+In[20]:= run 2 steps 2
+Out[20]= t = 8 (661 solver steps, 2 snapshots, |dE/E| = 7.676e-13)
+In[21]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[21]= quat[w=0.000000000000000027592945289756088, x=0.32972603220047597, y=2.995408433241188, z=0.1694675658951541]
+In[22]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[22]= quat[w=0, x=0.0013643489116444514, y=-3.0000240534703426, z=0.0013643465316144259]
+In[23]:= [obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+Out[23]= quat[w=-0.00000000000000008977193988179977, x=0.15055597175359575, y=2.9944637395263567, z=0.3355102089058171]
+In[24]:= run 2 steps 2
+Out[24]= t = 10 (660 solver steps, 2 snapshots, |dE/E| = 2.654e-12)
+In[25]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[25]= quat[w=0, x=2.075437008161927, y=-1.672687703872596, z=2.0560736305524374]
+In[26]:= [obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+Out[26]= quat[w=0.0000000000000002220446049250313, x=0.000037321518719068015, y=-3.000024509362499, z=0.00003723441103608942]
+In[27]:= [obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+Out[27]= quat[w=-0.00000000000000011102230246251565, x=2.085898473982859, y=-1.6129656446993819, z=2.107337762021382]
+In[28]:= reset
+Out[28]= system reset
+In[29]:= set system.g_constant = 0
+In[30]:= set system.rtol = 1e-12
+In[31]:= set system.atol = 1e-14
+In[32]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+Out[32]= obj0
+In[33]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.01, 3, 0.01] }
+Out[33]= obj1
+In[34]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 3, 0.3] }
+Out[34]= obj2
+In[35]:= scene create
+Out[35]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[36]:= scene set_time_step 0.03
+Out[36]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_spin_stabilisation.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [1, 1, 2], position = [-6, 0, 0], angular_velocity = [0.3, 0, 1] }
+Out[4]= obj0
+In[5]:= new cuboid { mass = 3, half_extents = [1, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.3, 0, 3] }
+Out[5]= obj1
+In[6]:= new cuboid { mass = 3, half_extents = [1, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.3, 0, 9] }
+Out[6]= obj2
+In[7]:= get obj0.inertia_tensor
+Out[7]= [[5, 0, 0], [0, 5, 0], [0, 0, 2]]
+In[8]:= dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+Out[8]= 0.9386697595167284
+In[9]:= dot(obj1.angular_velocity, obj1.angular_momentum) / (norm(obj1.angular_velocity) * norm(obj1.angular_momentum))
+Out[9]= 0.9894610641341026
+In[10]:= dot(obj2.angular_velocity, obj2.angular_momentum) / (norm(obj2.angular_velocity) * norm(obj2.angular_momentum))
+Out[10]= 0.9987592287124399
+In[11]:= run 10 steps 5
+Out[11]= t = 10 (1060 solver steps, 5 snapshots, |dE/E| = 3.100e-15)
+In[12]:= dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+Out[12]= 0.9386697595167284
+In[13]:= dot(obj1.angular_velocity, obj1.angular_momentum) / (norm(obj1.angular_velocity) * norm(obj1.angular_momentum))
+Out[13]= 0.9894610641341026
+In[14]:= dot(obj2.angular_velocity, obj2.angular_momentum) / (norm(obj2.angular_velocity) * norm(obj2.angular_momentum))
+Out[14]= 0.9987592287124388
+In[15]:= norm(obj0.angular_momentum)
+Out[15]= 2.5
+In[16]:= norm(obj2.angular_momentum)
+Out[16]= 18.062391868188442
+In[17]:= reset
+Out[17]= system reset
+In[18]:= set system.g_constant = 0
+In[19]:= set system.rtol = 1e-13
+In[20]:= set system.atol = 1e-15
+In[21]:= new cuboid { mass = 3, half_extents = [1, 1, 2], position = [-6, 0, 0], angular_velocity = [0.3, 0, 1] }
+Out[21]= obj0
+In[22]:= new cuboid { mass = 3, half_extents = [1, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.3, 0, 3] }
+Out[22]= obj1
+In[23]:= new cuboid { mass = 3, half_extents = [1, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.3, 0, 9] }
+Out[23]= obj2
+In[24]:= scene create
+Out[24]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[25]:= scene set_time_step 0.02
+Out[25]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p2_sylvester_time.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+Out[4]= obj0
+In[5]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+Out[5]= obj1
+In[6]:= set obj0.angular_momentum = [1.5, 12.75, 0.125]
+In[7]:= set obj1.angular_momentum = [1.5, 12.75, 0.125]
+In[8]:= norm(obj0.angular_velocity - obj1.angular_velocity)
+Out[8]= 1.283854061020956
+In[9]:= normalize(obj0.angular_velocity - obj1.angular_velocity)
+Out[9]= [0.11683570941132976, 0.9931035299963029, 0.009736309117610809]
+In[10]:= normalize(obj0.angular_momentum)
+Out[10]= [0.11683570941132974, 0.9931035299963029, 0.009736309117610812]
+In[11]:= norm(obj0.angular_velocity)
+Out[11]= 3.0166206257996713
+In[12]:= run 3 steps 3
+Out[12]= t = 3 (933 solver steps, 3 snapshots, |dE/E| = 2.295e-12)
+In[13]:= norm(obj0.angular_velocity)
+Out[13]= 3.0376911727251255
+In[14]:= norm(obj0.angular_velocity - obj1.angular_velocity)
+Out[14]= 1.4574566464474867
+In[15]:= normalize(obj0.angular_velocity - obj1.angular_velocity)
+Out[15]= [0.48161786401678974, 0.8330122740651283, -0.2722770359702564]
+In[16]:= 1.2838540610209558 * 3
+Out[16]= 3.8515621830628675
+In[17]:= run 4 steps 4
+Out[17]= t = 7 (1235 solver steps, 4 snapshots, |dE/E| = 7.229e-15)
+In[18]:= norm(obj0.angular_velocity)
+Out[18]= 3.0327775770706236
+In[19]:= norm(obj0.angular_velocity - obj1.angular_velocity)
+Out[19]= 1.4319086423736707
+In[20]:= normalize(obj0.angular_velocity - obj1.angular_velocity)
+Out[20]= [-0.32300250854631196, 0.9397305307553039, 0.11214236059199369]
+In[21]:= 1.2838540610209558 * 7
+Out[21]= 8.986978427146692
+In[22]:= reset
+Out[22]= system reset
+In[23]:= set system.g_constant = 0
+In[24]:= set system.rtol = 1e-13
+In[25]:= set system.atol = 1e-15
+In[26]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+Out[26]= obj0
+In[27]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+Out[27]= obj1
+In[28]:= set obj0.angular_momentum = [1.5, 12.75, 0.125]
+In[29]:= set obj1.angular_momentum = [1.5, 12.75, 0.125]
+In[30]:= scene create
+Out[30]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[31]:= scene set_time_step 0.03
+Out[31]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_thin_rod.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cylinder { mass = 3, radius = 0.02, half_height = 2, angular_velocity = [1, 0, 50] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[4.0003, 0, 0], [0, 4.0003, 0], [0, 0, 0.0006000000000000001]]
+In[6]:= get obj0.angular_momentum
+Out[6]= [4.0003, 0, 0.030000000000000002]
+In[7]:= norm(obj0.angular_momentum)
+Out[7]= 4.000412489981502
+In[8]:= obj0.angular_momentum.z / obj0.angular_momentum.x
+Out[8]= 0.007499437542184337
+In[9]:= normalize(obj0.angular_momentum)
+Out[9]= [0.9999718804043873, 0, 0.007499226661033327]
+In[10]:= run 5 steps 5
+Out[10]= t = 5 (6735 solver steps, 5 snapshots, |dE/E| = 3.150e-10)
+In[11]:= norm(obj0.angular_momentum)
+Out[11]= 4.000412489981502
+In[12]:= normalize(obj0.angular_momentum)
+Out[12]= [0.9999718804043873, 0, 0.007499226661033327]
+In[13]:= norm(obj0.angular_velocity)
+Out[13]= 50.00999902907271
+In[14]:= energy
+Out[14]= 2.7501500008662263
+In[15]:= reset
+Out[15]= system reset
+In[16]:= set system.g_constant = 0
+In[17]:= set system.rtol = 1e-13
+In[18]:= set system.atol = 1e-15
+In[19]:= new cylinder { mass = 3, radius = 0.02, half_height = 2, angular_velocity = [1, 0, 50] }
+Out[19]= obj0
+In[20]:= scene create
+Out[20]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[21]:= scene set_time_step 0.02
+Out[21]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_p2_two_quadrics.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[6]:= get obj0.angular_momentum
+Out[6]= [1.5, 12.75, 0.125]
+In[7]:= norm(obj0.angular_momentum)
+Out[7]= 12.838540610209558
+In[8]:= energy
+Out[8]= 19.356250000000003
+In[9]:= norm(obj0.angular_velocity)
+Out[9]= 3.0166206257996713
+In[10]:= run 3 steps 3
+Out[10]= t = 3 (321 solver steps, 3 snapshots, |dE/E| = 7.782e-14)
+In[11]:= norm(obj0.angular_momentum)
+Out[11]= 12.838540610209558
+In[12]:= energy
+Out[12]= 19.356249999998496
+In[13]:= norm(obj0.angular_velocity)
+Out[13]= 3.0376911727373113
+In[14]:= run 3 steps 3
+Out[14]= t = 6 (298 solver steps, 3 snapshots, |dE/E| = 3.452e-13)
+In[15]:= norm(obj0.angular_momentum)
+Out[15]= 12.838540610209558
+In[16]:= energy
+Out[16]= 19.356249999991814
+In[17]:= norm(obj0.angular_velocity)
+Out[17]= 3.406947472501729
+In[18]:= run 3 steps 3
+Out[18]= t = 9 (326 solver steps, 3 snapshots, |dE/E| = 5.369e-13)
+In[19]:= norm(obj0.angular_momentum)
+Out[19]= 12.838540610209558
+In[20]:= energy
+Out[20]= 19.356249999981422
+In[21]:= norm(obj0.angular_velocity)
+Out[21]= 3.178273033435918
+In[22]:= reset
+Out[22]= system reset
+In[23]:= set system.g_constant = 0
+In[24]:= set system.rtol = 1e-13
+In[25]:= set system.atol = 1e-15
+In[26]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+Out[26]= obj0
+In[27]:= scene create
+Out[27]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[28]:= scene set_time_step 0.03
+Out[28]= scene time step dt = 0.03
+rc=0
+##### dynamic_notebooks/routh_p2_uniaxal_precession.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.rtol = 1e-13
+In[3]:= set system.atol = 1e-15
+In[4]:= new cuboid { mass = 3, half_extents = [1, 1, 2], angular_velocity = [0.6, 0, 3] }
+Out[4]= obj0
+In[5]:= get obj0.inertia_tensor
+Out[5]= [[5, 0, 0], [0, 5, 0], [0, 0, 2]]
+In[6]:= get obj0.angular_momentum
+Out[6]= [3, 0, 6]
+In[7]:= norm(obj0.angular_momentum)
+Out[7]= 6.708203932499369
+In[8]:= norm(obj0.angular_velocity)
+Out[8]= 3.059411708155671
+In[9]:= dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+Out[9]= 0.9647638212377322
+In[10]:= run 3.490658503988659 steps 4
+Out[10]= t = 3.490658503988659 (119 solver steps, 4 snapshots, |dE/E| = 1.958e-13)
+In[11]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[11]= quat[w=-0.0000000000000002220446049250313, x=0.6000000000004303, y=-0.00000000000008204548151979907, z=2.9999999999994627]
+In[12]:= norm(obj0.angular_velocity)
+Out[12]= 3.0594117081552277
+In[13]:= dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+Out[13]= 0.9647638212376831
+In[14]:= run 3.490658503988659 steps 4
+Out[14]= t = 6.981317007977318 (167 solver steps, 4 snapshots, |dE/E| = 1.753e-13)
+In[15]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[15]= quat[w=0, x=0.6000000000008158, y=-0.0000000000011189174586867523, z=2.99999999999898]
+In[16]:= norm(obj0.angular_velocity)
+Out[16]= 3.0594117081548307
+In[17]:= reset
+Out[17]= system reset
+In[18]:= set system.g_constant = 0
+In[19]:= set system.rtol = 1e-13
+In[20]:= set system.atol = 1e-15
+In[21]:= new cuboid { mass = 3, half_extents = [1, 1, 2], angular_velocity = [0.6, 0, 3] }
+Out[21]= obj0
+In[22]:= scene create
+Out[22]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[23]:= scene set_time_step 0.02
+Out[23]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/routh_rectangle_diagonal.posim
+In[1]:= set system.rtol = 1e-13
+In[2]:= set system.atol = 1e-15
+In[3]:= new cuboid { mass = 3, half_extents = [1, 0.5, 0.02], inertia_tensor = [[0.25, 0, 0], [0, 1, 0], [0, 0, 1.25]], angular_velocity = [0.8944271909999159, 0.4472135954999579, 0] }
+Out[3]= obj0
+In[4]:= run 4.285129705594264 steps 1
+Out[4]= t = 4.285129705594264 (126 solver steps, 1 snapshots, |dE/E| = 9.523e-13)
+In[5]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[5]= quat[w=-0.000000000000000027755575615628914, x=0.8944271910010517, y=-0.4472135954998159, z=0.00000000000031066815786573443]
+In[6]:= run 4.285129705594264 steps 1
+Out[6]= t = 8.570259411188529 (161 solver steps, 1 snapshots, |dE/E| = 7.559e-13)
+In[7]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[7]= quat[w=0.000000000000000018934457277838704, x=0.8944271910001502, y=0.4472135954999288, z=-0.0000000000009168776848866855]
+In[8]:= reset
+Out[8]= system reset
+In[9]:= set system.rtol = 1e-13
+In[10]:= set system.atol = 1e-15
+In[11]:= new cuboid { mass = 3, half_extents = [1, 0.5, 0.02], inertia_tensor = [[0.25, 0, 0], [0, 1, 0], [0, 0, 1.25]], angular_velocity = [0.8944271909999159, 0.4472135954999579, 0] }
+Out[11]= obj0
+In[12]:= run 2.142564852797132 steps 1
+Out[12]= t = 2.142564852797132 (75 solver steps, 1 snapshots, |dE/E| = 1.193e-12)
+In[13]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[13]= quat[w=-0.000000000000000027755575615628914, x=1.0000000000011926, y=0.00000000000029637403642368554, z=-0.3464101615136378]
+In[14]:= sqrt(0.12)
+Out[14]= 0.34641016151377546
+In[15]:= reset
+Out[15]= system reset
+In[16]:= set system.rtol = 1e-13
+In[17]:= set system.atol = 1e-15
+In[18]:= new cuboid { mass = 3, half_extents = [1, 0.5, 0.02], inertia_tensor = [[0.25, 0, 0], [0, 1, 0], [0, 0, 1.25]], angular_velocity = [0.8944271909999159, 0.4472135954999579, 0] }
+Out[18]= obj0
+In[19]:= get obj0.inertia_tensor
+Out[19]= [[0.25, 0, 0], [0, 1, 0], [0, 0, 1.25]]
+In[20]:= angmom
+Out[20]= [0.22360679774997896, 0.4472135954999579, 0]
+In[21]:= energy
+Out[21]= 0.19999999999999998
+In[22]:= 4.285129705594264
+Out[22]= 4.285129705594264
+In[23]:= scene create
+Out[23]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[24]:= scene zoom in
+Out[24]= camera distance = 9.6
+In[25]:= scene zoom in
+Out[25]= camera distance = 7.68
+In[26]:= scene set_time_step 0.02
+Out[26]= scene time step dt = 0.02
+rc=0
+##### dynamic_notebooks/spinning_target.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.6, 0.6, 0.6], angular_velocity = [0, 0, 2] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.3, position = [-3, 0.4, 0], velocity = [2, 0, 0] }
+Out[3]= obj1
+In[4]:= get obj0.angular_momentum
+Out[4]= [0, 0, 0.96]
+In[5]:= angmom
+Out[5]= [0, 0, 0.15999999999999992]
+In[6]:= momentum
+Out[6]= [2, 0, 0]
+In[7]:= energy
+Out[7]= 2.96
+In[8]:= scene create
+Out[8]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/spin_up.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.25, position = [-2, 0.5, 0], velocity = [4, 0, 0] }
+Out[2]= obj0
+In[3]:= new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.5, 1, 1] }
+Out[3]= obj1
+In[4]:= get obj1.angular_momentum
+Out[4]= [0, 0, 0]
+In[5]:= momentum
+Out[5]= [4, 0, 0]
+In[6]:= angmom
+Out[6]= [0, 0, -2]
+In[7]:= energy
+Out[7]= 8
+In[8]:= scene create
+Out[8]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/static_anchor.posim
+In[1]:= new point { mass = 5, position = [0, 10, 0], velocity = [0, 0, 0] }
+Out[1]= obj0
+In[2]:= set obj0.inverse_mass = 0
+In[3]:= new point { mass = 1, position = [1, 10, 0], velocity = [0, 0, 0] }
+Out[3]= obj1
+In[4]:= set system.g_constant = 0
+In[5]:= set system.uniform_gravity = [0, -9.81, 0]
+In[6]:= get obj0.mass
+Out[6]= 0
+In[7]:= get obj0.inverse_mass
+Out[7]= 0
+In[8]:= get obj0.position
+Out[8]= [0, 10, 0]
+In[9]:= get obj1.position
+Out[9]= [1, 10, 0]
+In[10]:= list
+Out[10]= obj0: point, mass=0, charge=0, pos=[0, 10, 0] [static, inverse_mass=0]
+obj1: point, mass=1, charge=0, pos=[1, 10, 0]
+In[11]:= energy
+Out[11]= 98.10000000000001
+In[12]:= momentum
+Out[12]= [0, 0, 0]
+In[13]:= angmom
+Out[13]= [0, 0, 0]
+In[14]:= scene create
+Out[14]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[15]:= scene set_time_step 0.02
+Out[15]= scene time step dt = 0.02
+In[16]:= scene translate 0.5 4 0
+Out[16]= camera target = [0.5, 4, 0]
+In[17]:= scene zoom 0.8
+Out[17]= camera distance = 31.40586131600278
+rc=0
+##### dynamic_notebooks/thin_wall_toi.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new cuboid { mass = 1, position = [0, 0, 0], half_extents = [0.005, 5, 5] }
+Out[2]= obj0
+In[3]:= set obj0.inverse_mass = 0
+In[4]:= set obj0.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+In[5]:= new sphere { mass = 1, radius = 0.01, position = [-2, 0, 0], velocity = [100, 0, 0] }
+Out[5]= obj1
+In[6]:= energy
+Out[6]= 5000
+In[7]:= momentum
+Out[7]= [100, 0, 0]
+In[8]:= get obj0.inverse_mass
+Out[8]= 0
+In[9]:= get obj1.velocity.x
+Out[9]= 100
+In[10]:= get obj1.position.x
+Out[10]= -2
+In[11]:= scene create
+Out[11]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[12]:= scene set_time_step 0.0005
+Out[12]= scene time step dt = 0.0005
+In[13]:= scene translate -1 0
+Out[13]= camera target = [-1, 0, 0]
+In[14]:= scene zoom 4
+Out[14]= camera distance = 3
+rc=0
+##### dynamic_notebooks/three_bodies.posim
+In[1]:= new point { mass = 1,   position = [1, 0, 0],  velocity = [0, 1, 0] }
+Out[1]= obj0
+In[2]:= new point { mass = 4,   position = [-1, 0, 0], velocity = [0, -0.25, 0] }
+Out[2]= obj1
+In[3]:= new point { mass = 256, position = [0, 8, 0],  velocity = [0, 0, 0] }
+Out[3]= obj2
+In[4]:= set system.g_constant = 0.001
+In[5]:= momentum
+Out[5]= [0, 0, 0]
+In[6]:= com
+Out[6]= [-0.011494252873563218, 7.846743295019157, 0]
+In[7]:= scene create
+Out[7]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 3 entities; SCENE START begins the evolution — HELP lists all scene commands
+In[8]:= scene translate 0 4
+Out[8]= camera target = [0, 4, 0]
+rc=0
+##### dynamic_notebooks/thrown_ball.posim
+In[1]:= new point { mass = 0.145, position = [0, 1, 0], velocity = [30, 30, 0] }
+Out[1]= obj0
+In[2]:= set system.gravity = [0, -9.81, 0]
+In[3]:= energy
+Out[3]= 131.92245
+In[4]:= momentum
+Out[4]= [4.35, 4.35, 0]
+In[5]:= get obj0.position
+Out[5]= [0, 1, 0]
+In[6]:= 30 * 6.12
+Out[6]= 183.6
+In[7]:= 30 / 9.81
+Out[7]= 3.058103975535168
+In[8]:= 1 + 30 * 30 / (2 * 9.81)
+Out[8]= 46.87155963302752
+In[9]:= scene create
+Out[9]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[10]:= scene set_time_step 0.02
+Out[10]= scene time step dt = 0.02
+In[11]:= scene translate 90 20
+Out[11]= camera target = [90, 20, 0]
+In[12]:= scene zoom 0.06
+Out[12]= camera distance = 200
+rc=0
+##### dynamic_notebooks/tumbling_body.posim
+In[1]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.01, 3, 0.01] }
+Out[1]= obj0
+In[2]:= get obj0.inertia_tensor
+Out[2]= [[5, 0, 0], [0, 4.25, 0], [0, 0, 1.25]]
+In[3]:= get obj0.angular_velocity
+Out[3]= [0.010000000000000002, 3, 0.010000000000000002]
+In[4]:= angmom
+Out[4]= [0.05, 12.75, 0.0125]
+In[5]:= energy
+Out[5]= 19.1253125
+In[6]:= run 6 steps 3
+Out[6]= t = 6 (405 solver steps, 3 snapshots, |dE/E| = 7.094e-10)
+In[7]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[7]= quat[w=0, x=0.04992925838537569, y=-2.9994134404438055, z=0.04992895040747192]
+In[8]:= run 14 steps 7
+Out[8]= t = 20 (837 solver steps, 7 snapshots, |dE/E| = 3.081e-10)
+In[9]:= [obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+Out[9]= quat[w=-0.00000000000000003899824392453524, x=0.001812721131245463, y=3.0000237049643665, z=-0.001800513610919619]
+In[10]:= obj0.angular_velocity.y
+Out[10]= 3.0000009356600437
+In[11]:= angmom
+Out[11]= [0.05, 12.75, 0.0125]
+In[12]:= energy
+Out[12]= 19.125312480540305
+In[13]:= reset
+Out[13]= system reset
+In[14]:= new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.01, 3, 0.01] }
+Out[14]= obj0
+In[15]:= scene create
+Out[15]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 1 entity; SCENE START begins the evolution — HELP lists all scene commands
+In[16]:= scene set_time_step 0.05
+Out[16]= scene time step dt = 0.05
+rc=0
+##### dynamic_notebooks/tunneling.posim
+In[1]:= def barrier(x) { 2.5 * (x > 0) * (x < 1) }
+Out[1]= function barrier(1 parameter(s)) defined — 1 body line(s)
+In[2]:= barrier(-1)
+Out[2]= 0
+In[3]:= barrier(0.5)
+Out[3]= 2.5
+In[4]:= barrier(2)
+Out[4]= 0
+In[5]:= qm grid -100 100 2000
+Out[5]= grid [-100, 100] with 2000 interior points, h = 0.099950 (potential and psi cleared)
+In[6]:= qm potential barrier
+Out[6]= potential `barrier` sampled at 2000 points, V in [0, 2.5] (psi cleared)
+In[7]:= qm packet -25 2 2
+Out[7]= psi = Gaussian packet at x0 = -25, sigma = 2, k0 = 2, t = 0
+In[8]:= qm energy
+Out[8]= 2.023971780446392
+In[9]:= qm prob -100 0
+Out[9]= 1.000000000000002
+In[10]:= qm run 30 steps 3000
+Out[10]= t = 30 (3000 step(s) of dt = 0.01), <E> = 2.023971780446, norm drift = 6.393e-13
+In[11]:= qm prob 1 100
+Out[11]= 0.327563019391993
+In[12]:= qm prob -100 0
+Out[12]= 0.672436408645741
+In[13]:= qm packet -25 2 2
+Out[13]= psi = Gaussian packet at x0 = -25, sigma = 2, k0 = 2, t = 0
+In[14]:= qm animate "scatter.html" 32 frames 140
+Out[14]= wrote scatter.html — 140 frames over t = 32 (dt = 0.011429, 667 points per frame), worst norm drift 5.790e-13. Open it in a browser.
+In[15]:= qm grid -45 45 1350
+Out[15]= grid [-45, 45] with 1350 interior points, h = 0.066617 (potential and psi cleared)
+In[16]:= qm potential barrier
+Out[16]= potential `barrier` sampled at 1350 points, V in [0, 2.5] (psi cleared)
+In[17]:= qm absorb 15 3
+Out[17]= absorbing edges: width 15, strength 3, power 2. Propagation is NO LONGER unitary — the norm decays, which is the absorber working. QM STATES is unavailable while this is on.
+In[18]:= qm packet -25 2 2
+Out[18]= psi = Gaussian packet at x0 = -25, sigma = 2, k0 = 2, t = 0
+In[19]:= qm run 20 steps 2000
+Out[19]= t = 20 (2000 step(s) of dt = 0.01), <E> = 2.027886352953, norm drift = 1.056e-4
+In[20]:= qm prob 1 30
+Out[20]= 0.327689667523847
+In[21]:= qm norm
+Out[21]= 0.999894441422701
+In[22]:= qm absorb off
+Out[22]= absorbing edges removed — the walls reflect again
+In[23]:= qm grid -100 100 2000
+Out[23]= grid [-100, 100] with 2000 interior points, h = 0.099950 (potential and psi cleared)
+In[24]:= def double(x) { 2.5 * ((x > 0) * (x < 1) + (x > 3) * (x < 4)) }
+Out[24]= function double(1 parameter(s)) defined — 1 body line(s)
+In[25]:= double(0.5)
+Out[25]= 2.5
+In[26]:= double(2)
+Out[26]= 0
+In[27]:= double(3.5)
+Out[27]= 2.5
+In[28]:= qm potential double
+Out[28]= potential `double` sampled at 2000 points, V in [0, 2.5] (psi cleared)
+In[29]:= qm packet -25 2 2
+Out[29]= psi = Gaussian packet at x0 = -25, sigma = 2, k0 = 2, t = 0
+In[30]:= qm run 30 steps 3000
+Out[30]= t = 30 (3000 step(s) of dt = 0.01), <E> = 2.023971780446, norm drift = 6.126e-13
+In[31]:= qm prob 4 100
+Out[31]= 0.271498902830155
+In[32]:= qm prob -100 0
+Out[32]= 0.720114758903630
+rc=0
+##### dynamic_notebooks/two_dumbbells.posim
+In[1]:= set system.g_constant = 0
+In[2]:= def create_dumbell(name, m1 = 1, m2 = 1, m_rod = 0.5, r1 = 0.25, r2 = 0.25, rod_radius = 0.1, length = 1, position = [0, 0, 0], velocity = [0, 0, 0], angular_velocity = [0, 0, 0]) {
+  new dumbbell as name { m1 = m1, m2 = m2, m_rod = m_rod, r1 = r1, r2 = r2, rod_radius = rod_radius, length = length, position = position, velocity = velocity, angular_velocity = angular_velocity }
+}
+Out[2]= function create_dumbell(11 parameter(s)) defined — 1 body line(s)
+In[3]:= create_dumbell("dumbell0", 1, 2, 0.5, 0.25, 0.25, 0.1, 1, [-2, 0.15, 0], [1.5, 0, 0], [0, 0, 0.6])
+Out[3]= obj0 as dumbell0
+In[4]:= create_dumbell("dumbell1", 2, 1, 0.4, 0.3, 0.2, 0.08, 1.2, [2, -0.15, 0], [-1.5, 0, 0], [0.4, 0, 0])
+Out[4]= obj1 as dumbell1
+In[5]:= list
+Out[5]= obj0: dumbbell r1=0.25 r2=0.25 rod_r=0.1 len=1, mass=3.5, charge=0, pos=[-2, 0.15, 0]
+obj1: dumbbell r1=0.3 r2=0.2 rod_r=0.08 len=1.2, mass=3.4, charge=0, pos=[2, -0.15, 0]
+In[6]:= get dumbell0.m1
+Out[6]= 1
+In[7]:= get dumbell1.m_rod
+Out[7]= 0.3999999999999999
+In[8]:= get dumbell0.vx
+Out[8]= 1.5
+In[9]:= energy
+Out[9]= 7.865310611764706
+In[10]:= momentum
+Out[10]= [0.15000000000000036, 0, 0]
+In[11]:= angmom
+Out[11]= [0.4443030588235295, 0, -1.5059999999999998]
+In[12]:= scene create
+Out[12]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0
+##### dynamic_notebooks/unequal_masses.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 3, radius = 0.5, position = [0, 0, 0] }
+Out[3]= obj1
+In[4]:= energy
+Out[4]= 0.5
+In[5]:= momentum
+Out[5]= [1, 0, 0]
+In[6]:= scene create
+Out[6]= scene window created: http://127.0.0.1:<port>/
+(no browser was launched — open that address yourself)
+showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+rc=0

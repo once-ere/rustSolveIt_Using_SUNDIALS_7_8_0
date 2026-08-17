@@ -1,0 +1,111 @@
+# Routh II.Art.150a — the quarter period of the polhode, as an elliptic
+# integral — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 150a: "The time
+# occupied by the instantaneous axis in describing any arc of the polhode has
+# already been found in Art. 139. It is there proved that
+#
+#     lambda*(t - tau) = Integral d(phi) / sqrt(1 - k^2 sin^2 phi)
+#
+# where the limits are 0 to phi."
+#
+# THE TWO LANDMARKS. Routh identifies where the two ends of a quarter arc sit:
+# at phi = 0 the component w2 vanishes, and the axis is where the polhode cuts
+# the plane AOC -- the plane of the GREATEST and LEAST axes. When it reaches
+# the plane AOB, w3 = 0 and phi = pi/2. So
+#
+#     the time from one principal plane to the next is K(k)/lambda
+#
+# "which is one-fourth of the whole time of revolution", K being the complete
+# elliptic integral of the first kind.
+#
+# THE CONSTANTS, FROM THE TWO QUADRICS. With A > B > C and the invariants
+# G^2 and T of Art. 140, the standard reduction of Euler's equations gives
+#
+#     lambda^2 = (A - B)(G^2 - C*T) / (A*B*C)
+#     k^2      = (B - C)(A*T - G^2) / ((A - B)(G^2 - C*T))
+#
+# Both bracketed differences are non-negative for any real motion, since
+# A*T - G^2 = B(A-B)w2^2 + C(A-C)w3^2 and G^2 - C*T = A(A-C)w1^2 + B(B-C)w2^2.
+# And k^2 < 1 exactly when G^2 > B*T, which is the case where the polhode
+# encircles the greatest axis -- the case set up here.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2) gives
+# I = diag(5, 4.25, 1.25). It is started IN the plane AOC, that is with w2 = 0,
+# at w = (2, 0, 1). Then
+#
+#     G^2 = 101.5625      T = 21.25      G^2 - B*T = +11.25   (encircles A)
+#     lambda = 1.4552137502179978
+#     k^2    = 0.25   exactly, so k = 1/2
+#     K(k)   = 1.685750354812596
+#
+#     quarter period K/lambda = 1.1584211285524637
+#
+# and Routh's claim is that the body-frame w3 -- zero nowhere yet -- must vanish
+# at precisely that instant, the axis having crossed from plane AOC to plane AOB.
+#
+# WHAT THE CELLS DO. They run to exactly K/lambda and print the body-frame
+# angular velocity. Its z-component is the number to read: it should be zero.
+# A second run to 2*K/lambda returns the axis to a plane where w2 vanishes
+# instead -- half a revolution of the polhode -- and a third to 4*K/lambda
+# completes it and restores the starting state.
+#
+# SETUP NOTE. system.g_constant = 0. One body only, so gravity would do nothing
+# here, but in any multi-body version leaving G = 1 lets the bodies fall
+# together into the 1/r^2 singularity and ruins a rotational result for a
+# translational reason.
+#
+# WHAT YOU WATCH: a box tumbling steadily. Nothing about the picture announces
+# the quarter period; it is the elliptic integral that knows.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_polhode_quarter_period
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_polhode_quarter_period.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_polhode_quarter_period.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [2, 0, 1] }
+
+get obj0.inertia_tensor
+norm(obj0.angular_momentum)
+energy
+
+# quarter period: K/lambda = 1.1584211285524637. w3 must vanish here.
+run 1.1584211285524637 steps 2
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+
+# half period: another quarter, and now w2 vanishes instead.
+run 1.1584211285524637 steps 2
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+
+# full period: 4*K/lambda from the start -- the axis is home.
+run 2.3168422571049274 steps 4
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+norm(obj0.angular_momentum)
+energy
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [2, 0, 1] }
+
+scene create
+scene set_time_step 0.02

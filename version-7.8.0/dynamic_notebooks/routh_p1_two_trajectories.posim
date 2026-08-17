@@ -1,0 +1,113 @@
+# Routh I.Art.339 — TWO trajectories reach the same point at the same speed
+# — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 339: "To project a particle with a given velocity V from a
+# given point P so that it shall pass through another given point Q."
+#
+# THE CONSTRUCTION. The centre of force S occupies one focus. Energy fixes the
+# major axis and nothing else (Art. 335): V^2 = mu*(2/R - 1/a). The OTHER
+# focus H is then pinned by the focal property SP + PH = 2a, so
+#
+#     |PH| = 2a - r1        and        |QH| = 2a - r2
+#
+# H lies on two circles, about P and about Q. Two circles meet in TWO points,
+# so there are exactly TWO orbits of that speed from P to Q — the flat one and
+# the lofted one. They merge only at maximum range, where the circles touch.
+# This is the same two-solution structure as the projectile directrix
+# construction of Art. 159, and the reason a target is reachable by two paths.
+#
+# THE NUMBERS. mu = 1 (a heavy primary at the origin with G*M_total = 1),
+# P = (1, 0) with r1 = 1, Q = (0, 1.6) with r2 = 1.6, speed V = 1.15. Then
+#
+#     a  = 1 / (2/r1 - V^2/mu) = 1.476014760147601
+#     |PH| = 2a - r1 = 1.952029520295202
+#     |QH| = 2a - r2 = 1.352029520295202
+#     |PQ| = 1.886796226411321        (so the circles genuinely intersect)
+#
+#     H1 = ( 1.3119022576347596,  1.9269499811324258)
+#     H2 = (-0.8687661408803334,  0.5640322320604925)
+#
+# The launch direction at P is the tangent, which by the reflection property
+# bisects the angle between PS and PH: t_hat = normalize(unit(PH) - unit(PS)).
+# That gives, for the two foci and a common counter-clockwise sense,
+#
+#     orbit A:  v = (0.1679448414712004, 1.1376706598234891, 0)
+#     orbit B:  v = (0.8757322020879298, 0.745381184513149,  0)
+#
+# Both have |v| = 1.15 exactly and the same semi-major axis. Orbit A runs
+# DIRECT to Q, arriving at t = 2.16112. Orbit B leaves on a shallower tangent,
+# sweeps most of the way round the primary, and arrives at the same point at
+# t = 8.89752 -- the period being 2*pi*sqrt(a^3/mu) = 11.267197811607677.
+# Two speeds equal, two paths utterly different, one target.
+#
+# HOW THE CELLS CHECK IT. Each orbit is flown ALONE, so nothing perturbs it,
+# and the printed value is its distance from Q at the predicted instant. Both
+# read ~1e-6, which is the resolution of the arrival time quoted above rather
+# than any error in the integration.
+#
+# WHAT YOU WATCH: two particles leave the same point at the same speed. One
+# cuts straight across to the target; the other swings the long way around the
+# primary and arrives at exactly the same place. In the scene the two are given
+# mass 1e-6 and are separated by 0.001 in z -- purely so they are two distinct
+# bodies rather than one singular pair; at that mass their mutual attraction is
+# ~1e-15 of the primary's pull and changes nothing you can see.
+#
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_two_trajectories
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_two_trajectories.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_two_trajectories.posim
+# ---------------------------------------------------------------------------
+
+# ---- orbit A alone: the direct arc, reaching Q at t = 2.16112
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1, position = [1, 0, 0], velocity = [0.1679448414712004, 1.1376706598234891, 0] }
+norm(obj1.velocity)
+run 2.16112 steps 2
+norm(obj1.position - [0, 1.6, 0])
+reset
+
+# ---- orbit B alone: the long way round, reaching Q at t = 8.89752
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1, position = [1, 0, 0], velocity = [0.8757322020879298, 0.745381184513149, 0] }
+norm(obj1.velocity)
+run 8.89752 steps 4
+norm(obj1.position - [0, 1.6, 0])
+reset
+
+# ---- the scene: both arcs together, at t = 0 and Stopped
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [1, 0, 0.0005], velocity = [0.1679448414712004, 1.1376706598234891, 0] }
+new point { mass = 1e-6, position = [1, 0, -0.0005], velocity = [0.8757322020879298, 0.745381184513149, 0] }
+energy
+
+scene create
+scene zoom in
+# 0.02 per tick at ~27 ticks/s -> orbit A reaches Q in about 4 wall-seconds,
+# orbit B in about 16.
+scene set_time_step 0.02

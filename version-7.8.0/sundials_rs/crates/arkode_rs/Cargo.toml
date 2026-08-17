@@ -1,0 +1,147 @@
+[package]
+name = "arkode_rs"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# forwards to sundials_core/host-libm; see that manifest
+host-libm = ["sundials_core/host-libm"]
+
+[dependencies]
+sundials_core = { path = "../sundials_core" }
+
+[[example]]
+name = "ark_KrylovDemo_prec"
+path = "examples/ark_KrylovDemo_prec.rs"
+
+[[example]]
+name = "ark_advection_diffusion_reaction_splitting"
+path = "examples/ark_advection_diffusion_reaction_splitting.rs"
+
+[[example]]
+name = "ark_analytic"
+path = "examples/ark_analytic.rs"
+
+[[example]]
+name = "ark_analytic_lsrk"
+path = "examples/ark_analytic_lsrk.rs"
+
+[[example]]
+name = "ark_analytic_lsrk_domeigest"
+path = "examples/ark_analytic_lsrk_domeigest.rs"
+
+[[example]]
+name = "ark_analytic_lsrk_varjac"
+path = "examples/ark_analytic_lsrk_varjac.rs"
+
+[[example]]
+name = "ark_analytic_mels"
+path = "examples/ark_analytic_mels.rs"
+
+[[example]]
+name = "ark_analytic_nonlin"
+path = "examples/ark_analytic_nonlin.rs"
+
+[[example]]
+name = "ark_analytic_partitioned"
+path = "examples/ark_analytic_partitioned.rs"
+
+[[example]]
+name = "ark_analytic_ssprk"
+path = "examples/ark_analytic_ssprk.rs"
+
+[[example]]
+name = "ark_brusselator"
+path = "examples/ark_brusselator.rs"
+
+[[example]]
+name = "ark_brusselator1D"
+path = "examples/ark_brusselator1D.rs"
+
+[[example]]
+name = "ark_brusselator1D_imexmri"
+path = "examples/ark_brusselator1D_imexmri.rs"
+
+[[example]]
+name = "ark_brusselator_1D_mri"
+path = "examples/ark_brusselator_1D_mri.rs"
+
+[[example]]
+name = "ark_brusselator_fp"
+path = "examples/ark_brusselator_fp.rs"
+
+[[example]]
+name = "ark_brusselator_lsrk_domeigest"
+path = "examples/ark_brusselator_lsrk_domeigest.rs"
+
+[[example]]
+name = "ark_brusselator_lsrk_externaldomeigest"
+path = "examples/ark_brusselator_lsrk_externaldomeigest.rs"
+
+[[example]]
+name = "ark_brusselator_mri"
+path = "examples/ark_brusselator_mri.rs"
+
+[[example]]
+name = "ark_conserved_exp_entropy_ark"
+path = "examples/ark_conserved_exp_entropy_ark.rs"
+
+[[example]]
+name = "ark_conserved_exp_entropy_erk"
+path = "examples/ark_conserved_exp_entropy_erk.rs"
+
+[[example]]
+name = "ark_damped_harmonic_symplectic"
+path = "examples/ark_damped_harmonic_symplectic.rs"
+
+[[example]]
+name = "ark_dissipated_exp_entropy"
+path = "examples/ark_dissipated_exp_entropy.rs"
+
+[[example]]
+name = "ark_harmonic_symplectic"
+path = "examples/ark_harmonic_symplectic.rs"
+
+[[example]]
+name = "ark_heat1D"
+path = "examples/ark_heat1D.rs"
+
+[[example]]
+name = "ark_heat1D_adapt"
+path = "examples/ark_heat1D_adapt.rs"
+
+[[example]]
+name = "ark_kepler"
+path = "examples/ark_kepler.rs"
+
+[[example]]
+name = "ark_kpr_mri"
+path = "examples/ark_kpr_mri.rs"
+
+[[example]]
+name = "ark_lotka_volterra_ASA"
+path = "examples/ark_lotka_volterra_ASA.rs"
+
+[[example]]
+name = "ark_onewaycouple_mri"
+path = "examples/ark_onewaycouple_mri.rs"
+
+[[example]]
+name = "ark_reaction_diffusion_mri"
+path = "examples/ark_reaction_diffusion_mri.rs"
+
+[[example]]
+name = "ark_robertson"
+path = "examples/ark_robertson.rs"
+
+[[example]]
+name = "ark_robertson_constraints"
+path = "examples/ark_robertson_constraints.rs"
+
+[[example]]
+name = "ark_robertson_root"
+path = "examples/ark_robertson_root.rs"
+
+[[example]]
+name = "ark_twowaycouple_mri"
+path = "examples/ark_twowaycouple_mri.rs"

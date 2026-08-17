@@ -1,0 +1,10 @@
+example:  ark_kepler
+source:   examples/arkode/C_serial/ark_kepler.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_kepler
+argv:     --stepper SPRK --step-mode fixed --count-orbits --use-compensated-sums
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_kepler__--stepper_SPRK_--step-mode_fixed_--count-orbits_--use-compensated-sums
+exit:     0 (OK)
+seconds:  0.208
+stdout:   10258 bytes, sha256 7c43e277988416626803a914f126bff569fe6b8929bc38738a36a594ba097086
+stderr:   0 bytes

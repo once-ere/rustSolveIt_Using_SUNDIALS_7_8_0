@@ -1,0 +1,10 @@
+example:  ark_advection_diffusion_reaction
+source:   examples/arkode/CXX_serial/ark_advection_diffusion_reaction.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_advection_diffusion_reaction
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_advection_diffusion_reaction
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1804 bytes, sha256 68a5e4ac21f12b6d522ee649d2a8c0b7dbad2d501b1b2bd82e3772c2f747944f
+stderr:   0 bytes

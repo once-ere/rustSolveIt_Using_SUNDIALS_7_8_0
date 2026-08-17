@@ -1,0 +1,13 @@
+[package]
+name = "physical_object"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Unique union of PointParticle, RigidBody and RigidBody3D — pure Rust, integrated exclusively by sundials_rs"
+
+[dependencies]
+sundials_core = { path = "../sundials_rs/crates/sundials_core" }
+cvode_rs = { path = "../sundials_rs/crates/cvode_rs" }
+arkode_rs = { path = "../sundials_rs/crates/arkode_rs" }
+
+# examples/*.rs are auto-discovered by cargo

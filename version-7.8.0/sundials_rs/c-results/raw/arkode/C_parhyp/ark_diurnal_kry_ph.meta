@@ -1,0 +1,10 @@
+example:  ark_diurnal_kry_ph
+source:   examples/arkode/C_parhyp/ark_diurnal_kry_ph.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_parhyp/ark_diurnal_kry_ph
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_parhyp/ark_diurnal_kry_ph
+exit:     0 (OK)
+seconds:  0.707
+stdout:   2276 bytes, sha256 aa9c979c6dd2e6dcafb21ae441563cd2fee26173d30ad44b9cd134c178e0199b
+stderr:   762 bytes

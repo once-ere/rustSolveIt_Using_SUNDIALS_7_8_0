@@ -1,0 +1,14 @@
+# 10. A bullet at 100 m/s meets a 5 mm plate. In one output interval of
+# 0.01 s it travels 1 m -- two hundred times the plate's thickness. A
+# frame-sampled collision test would miss it completely. Rootfinding
+# does not: the solver caps its own step so the gap function cannot
+# skip a sign change, and catches the crossing.
+set system.g_constant = 0
+collide on
+new cuboid as plate  { mass = 1, half_extents = [5, 0.0025, 5], position = [0, 0, 0], inverse_mass = 0 }
+new sphere as bullet { mass = 0.01, radius = 0.002, position = [0, 2, 0], velocity = [0, -100, 0] }
+run 0.1 steps 10
+get bullet.position.y
+get bullet.velocity.y
+get system.collisions
+contacts

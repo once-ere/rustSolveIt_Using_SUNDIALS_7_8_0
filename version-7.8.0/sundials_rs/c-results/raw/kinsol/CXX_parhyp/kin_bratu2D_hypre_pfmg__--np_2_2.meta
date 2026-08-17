@@ -1,0 +1,10 @@
+example:  kin_bratu2D_hypre_pfmg
+source:   examples/kinsol/CXX_parhyp/kin_bratu2D_hypre_pfmg.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/CXX_parhyp/kin_bratu2D_hypre_pfmg
+argv:     --np 2 2
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/CXX_parhyp/kin_bratu2D_hypre_pfmg__--np_2_2
+exit:     0 (OK)
+seconds:  0.711
+stdout:   866 bytes, sha256 a986564b262bd4d313e6eb4a6eccf669d8d5d8915f1d656c2301ce841646643a
+stderr:   762 bytes

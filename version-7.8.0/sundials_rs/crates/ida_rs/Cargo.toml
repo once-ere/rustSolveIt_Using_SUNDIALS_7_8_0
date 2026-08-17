@@ -1,0 +1,51 @@
+[package]
+name = "ida_rs"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# forwards to sundials_core/host-libm; see that manifest
+host-libm = ["sundials_core/host-libm"]
+
+[dependencies]
+sundials_core = { path = "../sundials_core" }
+
+[[example]]
+name = "idaAnalytic_mels"
+path = "examples/idaAnalytic_mels.rs"
+
+[[example]]
+name = "idaFoodWeb_bnd"
+path = "examples/idaFoodWeb_bnd.rs"
+
+[[example]]
+name = "idaFoodWeb_kry"
+path = "examples/idaFoodWeb_kry.rs"
+
+[[example]]
+name = "idaHeat2D_klu"
+path = "examples/idaHeat2D_klu.rs"
+
+[[example]]
+name = "idaHeat2D_bnd"
+path = "examples/idaHeat2D_bnd.rs"
+
+[[example]]
+name = "idaHeat2D_kry"
+path = "examples/idaHeat2D_kry.rs"
+
+[[example]]
+name = "idaKrylovDemo_ls"
+path = "examples/idaKrylovDemo_ls.rs"
+
+[[example]]
+name = "idaRoberts_klu"
+path = "examples/idaRoberts_klu.rs"
+
+[[example]]
+name = "idaRoberts_dns"
+path = "examples/idaRoberts_dns.rs"
+
+[[example]]
+name = "idaSlCrank_dns"
+path = "examples/idaSlCrank_dns.rs"

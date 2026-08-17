@@ -1,0 +1,73 @@
+# The tennis-racket theorem: unstable intermediate-axis tumbling — dynamic notebook
+#
+# A torque-free cuboid spun about its intermediate principal axis is unstable
+# (Dzhanibekov effect). Half-extents [0.5, 1, 2] at mass 3 give principal
+# moments [5, 4.25, 1.25]; spinning about y (4.25, the middle value) with a
+# 0.01 wobble makes the body turn over, repeatedly — yet L = I.w =
+# [0.05, 12.75, 0.0125] and E = 19.1253125 never move: watch the hud E/P/L stay
+# pinned while the long box tumbles end over end. The Rust example
+# tumbling_body.rs (1e-4 wobble variant), grammar.md Example 4 and userguide
+# Example S11 are this same physics — one notebook covers all of them.
+#
+# READ THE AXIS IN THE BODY, NOT IN SPACE. The angular momentum is fixed in
+# space and the WORLD-frame angular velocity stays close to it, so world-frame
+# w_y sits near +3 for the whole run and never reverses. The turn-over is a
+# statement about the body. The cells below extract
+#
+#     w_body = conj(q) * w_world * q
+#
+# with the quaternion product, and it is the y-component of THAT which flips
+# sign. Measured here at the default tolerances, body-frame w_y reverses at
+# roughly t = 4, 18, 28, 40, 50, 62, 74 — about every 12 to 13 units, seven
+# times before t = 80. The reversals keep coming; the motion is periodic, not
+# a single event.
+#
+# WHAT THE WORLD-FRAME SAMPLES MEAN. grammar.md Example 4 records
+# w = [1.5428, 2.9948, -0.7872] at t = 40 and [0.0207, 3.0000, 0.0133] at
+# t = 80. Those are genuine, but they are two snapshots of the recurring cycle
+# above: t = 40 happens to land mid-reversal, t = 80 happens to land between
+# reversals. The body has not "completed the flip" by t = 80 — it has completed
+# about seven of them.
+#
+# A SUBTLETY WORTH KNOWING. With these particular moments the symmetric
+# disturbance (d, n, d) lands exactly on the separatrix G^2 = B*T of Art. 184:
+#
+#     G^2 - B*T = d^2 * [ A(A-B) + C(C-B) ] = d^2 * [ 5(0.75) + 1.25(-3) ] = 0
+#
+# identically, for every d. The qualitative behaviour — repeated reversals — is
+# robust, but the exact reversal TIMES on the separatrix are set by rounding,
+# so they shift with the tolerances. Disturb asymmetrically, e.g. (0.3, 3, 0.1),
+# to sit clearly off it; see routh_p2_mean_axis_instability for that variant.
+#
+# Launch:   posim_notebook tumbling_body
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/tumbling_body.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.01, 3, 0.01] }
+
+# Baselines before running: the diagonal inertia [5, 4.25, 1.25], the
+# perturbed spin, the conserved L = I.w, and the rotational energy.
+get obj0.inertia_tensor
+get obj0.angular_velocity
+angmom
+energy
+
+# The turn-over, in the body frame. w_y starts at +3; by t = 6 it has reversed
+# to about -3, and by t = 20 it is back near +3.
+run 6 steps 3
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+run 14 steps 7
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+# ... while the world-frame component never reversed at all:
+obj0.angular_velocity.y
+# ... and L and E are untouched by any of it.
+angmom
+energy
+reset
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.01, 3, 0.01] }
+
+scene create
+# 0.05 per tick at ~27 ticks/s -> a reversal about every 9 wall seconds.
+scene set_time_step 0.05

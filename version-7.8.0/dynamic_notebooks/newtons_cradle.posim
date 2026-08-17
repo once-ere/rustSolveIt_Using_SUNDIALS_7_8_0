@@ -1,0 +1,29 @@
+# Newton's cradle: five spheres, one incomer, only the far ball exits — dynamic notebook
+#
+# One incomer (mass 1, v = [1, 0, 0], starting at x = -3) crosses free space
+# and strikes a chain of four touching unit spheres (radius 0.5, centers at
+# x = 0, 1, 2, 3; g = 0, e = 1). At the single detected impact the collision
+# solver's Gauss-Seidel passes walk the impulse down the chain: afterwards
+# v0..v3 ~ 0 and v4 = 1 exactly, with momentum [1, 0, 0] and E = 0.5 conserved.
+# Watch the golden contact arrows fire down the chain; the hud E/P must not move.
+#
+# Launch:   posim_notebook newtons_cradle
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/newtons_cradle.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [0, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [3, 0, 0] }
+
+# Baselines before anything moves: KE = mv²/2 = 0.5, P = [1, 0, 0],
+# the incomer carries v = 1 and the far ball is at rest.
+energy
+momentum
+get obj0.velocity.x
+get obj4.velocity.x
+
+scene create

@@ -1,0 +1,10 @@
+example:  idasRoberts_FSA_klu
+source:   examples/idas/serial/idasRoberts_FSA_klu.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasRoberts_FSA_klu
+argv:     -sensi stg t
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasRoberts_FSA_klu__-sensi_stg_t
+exit:     0 (OK)
+seconds:  0.206
+stdout:   5941 bytes, sha256 88a7e7e9631762ff45ae109c3b2707f50a8d566149ce28cd73e5fd0b938c087a
+stderr:   0 bytes

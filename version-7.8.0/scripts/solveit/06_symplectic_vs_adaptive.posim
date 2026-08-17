@@ -1,0 +1,15 @@
+# 6. Symplectic (SPRK) versus adaptive multistep (Adams) over a long
+# eccentric orbit. Same system, same span; compare |dE/E|.
+set system.g_constant = 1
+new sphere as sun    { mass = 1000, radius = 0.2 }
+new sphere as planet { mass = 0.001, radius = 0.05, position = [4, 0, 0], velocity = [0, 0, 10] }
+method adams
+run 60 steps 60
+energy
+reset
+set system.g_constant = 1
+new sphere as sun    { mass = 1000, radius = 0.2 }
+new sphere as planet { mass = 0.001, radius = 0.05, position = [4, 0, 0], velocity = [0, 0, 10] }
+method sprk mclachlan_4_4 0.001
+run 60 steps 60
+energy

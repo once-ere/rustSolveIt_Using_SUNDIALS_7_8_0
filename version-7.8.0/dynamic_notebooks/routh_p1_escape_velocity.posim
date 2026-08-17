@@ -1,0 +1,112 @@
+# Routh I.Art.312 + 335 — the velocity from infinity, and the three conics
+# — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 312: "The velocity acquired by a particle which travels from
+# rest at an infinite distance from the centre of force to any given position
+# P is called the velocity from infinity."
+#
+# THE THEOREM. Art. 335 gives the size of the orbit from the speed ALONE:
+#
+#     V^2 = mu * (2/R - 1/a)      so      1/a = 2/R - V^2/mu
+#
+# Direction does not appear. The sign of 1/a therefore settles the KIND of
+# conic before any geometry is done, and the boundary is exactly the velocity
+# from infinity:
+#
+#     V^2 < 2*mu/R   ->  1/a > 0   ->  ellipse   (bound, returns)
+#     V^2 = 2*mu/R   ->  1/a = 0   ->  parabola  (the escape case)
+#     V^2 > 2*mu/R   ->  1/a < 0   ->  hyperbola (escapes with speed to spare)
+#
+# THE INVARIANT THE CELLS CHECK. The specific orbital energy
+#
+#     E = (1/2)|v|^2 - mu/r
+#
+# is constant along each path, and E = 0 is precisely the parabolic case. That
+# is the cleanest statement of "velocity from infinity": a particle falling
+# from rest at infinity arrives with E = 0, so it arrives with exactly the
+# escape speed, and one launched at that speed has just enough to reach
+# infinity with nothing left over.
+#
+# THE NUMBERS. mu = 1, R = 1, so the escape speed is sqrt(2) = 1.4142135623730951.
+# Three particles are launched RADIALLY outward from three points of the unit
+# circle (radially, so the demonstration is about speed and nothing else), at
+# 0.9, 1.0 and 1.1 times the escape speed:
+#
+#   particle   V             E = V^2/2 - 1     behaviour
+#   obj1       0.9*sqrt(2)   -0.19             ellipse; turns at r = 1/0.19 = 5.263
+#   obj2       1.0*sqrt(2)    0.00             parabola; escapes, speed -> 0
+#   obj3       1.1*sqrt(2)   +0.21             hyperbola; escapes at sqrt(0.42) = 0.648
+#
+# Each particle holds its E for the whole run. obj2's is exactly zero -- not
+# small, zero -- which is what makes it the boundary case.
+#
+# The test particles are given mass 1e-6 so that mu = G*M is set by the primary
+# alone (to one part in 1e15) and so that they do not perturb one another;
+# their own orbits do not depend on their mass at all.
+#
+# WHAT YOU WATCH: three particles fired straight out at speeds differing by
+# only +/-10%. One arcs out, stops, and falls back. One coasts outward forever,
+# slowing without limit. One drives away and keeps a finite speed.
+#
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_escape_velocity
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_escape_velocity.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_escape_velocity.posim
+# ---------------------------------------------------------------------------
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [ 1, 0, 0], velocity = [ 1.2727922061357855, 0, 0] }
+new point { mass = 1e-6, position = [ 0, 1, 0], velocity = [ 0, 1.4142135623730951, 0] }
+new point { mass = 1e-6, position = [-1, 0, 0], velocity = [-1.5556349186104046, 0, 0] }
+
+# escape speed at r = 1
+sqrt(2)
+
+# specific energies at launch: -0.19, exactly 0, +0.21
+0.5 * dot(obj1.velocity, obj1.velocity) - 1 / norm(obj1.position)
+0.5 * dot(obj2.velocity, obj2.velocity) - 1 / norm(obj2.position)
+0.5 * dot(obj3.velocity, obj3.velocity) - 1 / norm(obj3.position)
+
+run 12 steps 4
+
+# the same three energies after the flight: unchanged
+0.5 * dot(obj1.velocity, obj1.velocity) - 1 / norm(obj1.position)
+0.5 * dot(obj2.velocity, obj2.velocity) - 1 / norm(obj2.position)
+0.5 * dot(obj3.velocity, obj3.velocity) - 1 / norm(obj3.position)
+
+# distances reached
+norm(obj1.position)
+norm(obj2.position)
+norm(obj3.position)
+reset
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [ 1, 0, 0], velocity = [ 1.2727922061357855, 0, 0] }
+new point { mass = 1e-6, position = [ 0, 1, 0], velocity = [ 0, 1.4142135623730951, 0] }
+new point { mass = 1e-6, position = [-1, 0, 0], velocity = [-1.5556349186104046, 0, 0] }
+
+scene create
+scene set_time_step 0.02

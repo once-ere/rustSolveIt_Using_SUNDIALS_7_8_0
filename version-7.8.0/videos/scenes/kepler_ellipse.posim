@@ -1,0 +1,7 @@
+# A single planet on a strongly eccentric Kepler orbit (e = 0.6).
+# The sun is heavy enough that the two-body problem is effectively
+# the one-body Kepler problem, so the analytic ellipse is exact.
+set system.g_constant = 1
+new sphere { mass = 1000, radius = 0.35, position = [0, 0, 0] }
+new sphere { mass = 0.001, radius = 0.09, position = [4, 0, 0], velocity = [0, 0, 10] }
+method adams

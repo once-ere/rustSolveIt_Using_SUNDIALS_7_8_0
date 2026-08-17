@@ -1,0 +1,10 @@
+example:  cvsAnalytic_mels
+source:   examples/cvodes/serial/cvsAnalytic_mels.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsAnalytic_mels
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsAnalytic_mels
+exit:     0 (OK)
+seconds:  0.206
+stdout:   770 bytes, sha256 c13a8a670343e24643bf82b312f50157f40f49aa76530767091aacbeda9f4f2a
+stderr:   0 bytes

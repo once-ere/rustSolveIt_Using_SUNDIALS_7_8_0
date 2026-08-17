@@ -1,0 +1,29 @@
+# Three gravitating bodies with zero total momentum — dynamic notebook
+#
+# Three point masses (1, 4, 256) under gravity g_constant = 0.001, with
+# velocities balanced so P = 1*1 + 4*(-0.25) + 256*0 = [0, 0, 0] exactly;
+# the com (-0.0115, 7.8467, 0) never moves. Watch the hud: P holds [0, 0, 0]
+# while the light body climbs at v = 1 into a flyby of the 256-mass at
+# y = 8. Follow-up surgery (grammar.md §9 Example 5): after watching, type
+# 'del 2' live here, then 'momentum' — conservation applies to what you keep.
+#
+# Launch:   posim_notebook three_bodies
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/three_bodies.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+new point { mass = 1,   position = [1, 0, 0],  velocity = [0, 1, 0] }
+new point { mass = 4,   position = [-1, 0, 0], velocity = [0, -0.25, 0] }
+new point { mass = 256, position = [0, 8, 0],  velocity = [0, 0, 0] }
+set system.g_constant = 0.001
+
+# Baselines before anything moves: momentum exactly [0, 0, 0],
+# com = (-3/261, 2048/261, 0) = (-0.011494..., 7.846743..., 0)
+momentum
+com
+
+scene create
+
+# Center the view between the light pair (y ~ 0) and the heavy body (y = 8);
+# default playback dt = 0.01 puts the flyby about half a minute in.
+scene translate 0 4

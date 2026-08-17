@@ -1,0 +1,21 @@
+# 9. Newton's cradle. One sphere hits four touching ones. The impulse
+# runs down the chain and ONLY the far ball leaves; momentum and energy
+# are both conserved because every ball has restitution 1.
+set system.g_constant = 0
+collide on
+new sphere as b0 { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+new sphere as b1 { mass = 1, radius = 0.5, position = [ 0, 0, 0] }
+new sphere as b2 { mass = 1, radius = 0.5, position = [ 1, 0, 0] }
+new sphere as b3 { mass = 1, radius = 0.5, position = [ 2, 0, 0] }
+new sphere as b4 { mass = 1, radius = 0.5, position = [ 3, 0, 0] }
+energy
+momentum
+run 6 steps 600
+get b0.velocity
+get b1.velocity
+get b2.velocity
+get b3.velocity
+get b4.velocity
+energy
+momentum
+get system.collisions

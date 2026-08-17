@@ -1,0 +1,10 @@
+example:  cvsAdvDiff_ASAp_non_p
+source:   examples/cvodes/parallel/cvsAdvDiff_ASAp_non_p.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsAdvDiff_ASAp_non_p
+argv:     
+launcher: mpirun --oversubscribe -np 2
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsAdvDiff_ASAp_non_p
+exit:     0 (OK)
+seconds:  1.008
+stdout:   504 bytes, sha256 d73a7894f889e85fce3b002d97d242d798a6e8019fe66085ae71b6d9328f40df
+stderr:   762 bytes

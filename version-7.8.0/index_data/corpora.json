@@ -1,0 +1,318 @@
+{
+ "_source": "filesystem enumeration 2026-07-30",
+ "dynamic_notebooks": [
+  {
+   "file": "dynamic_notebooks/billiard_box.posim",
+   "name": "billiard_box"
+  },
+  {
+   "file": "dynamic_notebooks/billiard_break.posim",
+   "name": "billiard_break"
+  },
+  {
+   "file": "dynamic_notebooks/bouncing_ball_restitution.posim",
+   "name": "bouncing_ball_restitution"
+  },
+  {
+   "file": "dynamic_notebooks/box_of_shapes.posim",
+   "name": "box_of_shapes"
+  },
+  {
+   "file": "dynamic_notebooks/box_of_shapes_m32.posim",
+   "name": "box_of_shapes_m32"
+  },
+  {
+   "file": "dynamic_notebooks/charged_in_b_field.posim",
+   "name": "charged_in_b_field"
+  },
+  {
+   "file": "dynamic_notebooks/charged_in_e_field.posim",
+   "name": "charged_in_e_field"
+  },
+  {
+   "file": "dynamic_notebooks/colliding_binary.posim",
+   "name": "colliding_binary"
+  },
+  {
+   "file": "dynamic_notebooks/double_slit.posim",
+   "name": "double_slit"
+  },
+  {
+   "file": "dynamic_notebooks/head_on_exchange.posim",
+   "name": "head_on_exchange"
+  },
+  {
+   "file": "dynamic_notebooks/kepler_orbit.posim",
+   "name": "kepler_orbit"
+  },
+  {
+   "file": "dynamic_notebooks/magnetic_spin_up.posim",
+   "name": "magnetic_spin_up"
+  },
+  {
+   "file": "dynamic_notebooks/newtons_cradle.posim",
+   "name": "newtons_cradle"
+  },
+  {
+   "file": "dynamic_notebooks/outer_solar_system.posim",
+   "name": "outer_solar_system"
+  },
+  {
+   "file": "dynamic_notebooks/restitution_ladder.posim",
+   "name": "restitution_ladder"
+  },
+  {
+   "file": "dynamic_notebooks/spin_up.posim",
+   "name": "spin_up"
+  },
+  {
+   "file": "dynamic_notebooks/spinning_target.posim",
+   "name": "spinning_target"
+  },
+  {
+   "file": "dynamic_notebooks/static_anchor.posim",
+   "name": "static_anchor"
+  },
+  {
+   "file": "dynamic_notebooks/thin_wall_toi.posim",
+   "name": "thin_wall_toi"
+  },
+  {
+   "file": "dynamic_notebooks/three_bodies.posim",
+   "name": "three_bodies"
+  },
+  {
+   "file": "dynamic_notebooks/thrown_ball.posim",
+   "name": "thrown_ball"
+  },
+  {
+   "file": "dynamic_notebooks/tumbling_body.posim",
+   "name": "tumbling_body"
+  },
+  {
+   "file": "dynamic_notebooks/tunneling.posim",
+   "name": "tunneling"
+  },
+  {
+   "file": "dynamic_notebooks/two_dumbbells.posim",
+   "name": "two_dumbbells"
+  },
+  {
+   "file": "dynamic_notebooks/unequal_masses.posim",
+   "name": "unequal_masses"
+  }
+ ],
+ "stage_notebooks": [
+  {
+   "file": "StageNbks/Stage_24.posim",
+   "name": "Stage_24"
+  },
+  {
+   "file": "StageNbks/Stage_2A.posim",
+   "name": "Stage_2A"
+  },
+  {
+   "file": "StageNbks/Stage_2B.posim",
+   "name": "Stage_2B"
+  },
+  {
+   "file": "StageNbks/Stage_2C.posim",
+   "name": "Stage_2C"
+  },
+  {
+   "file": "StageNbks/Stage_2D.posim",
+   "name": "Stage_2D"
+  },
+  {
+   "file": "StageNbks/Stage_2E.posim",
+   "name": "Stage_2E"
+  },
+  {
+   "file": "StageNbks/Stage_2F.posim",
+   "name": "Stage_2F"
+  },
+  {
+   "file": "StageNbks/Stage_2G.posim",
+   "name": "Stage_2G"
+  },
+  {
+   "file": "StageNbks/Stage_2H.posim",
+   "name": "Stage_2H"
+  },
+  {
+   "file": "StageNbks/Stage_2I.posim",
+   "name": "Stage_2I"
+  },
+  {
+   "file": "StageNbks/Stage_2J.posim",
+   "name": "Stage_2J"
+  }
+ ],
+ "collision_scripts": [
+  {
+   "file": "scripts/collisions/01_head_on_exchange.posim",
+   "name": "01_head_on_exchange"
+  },
+  {
+   "file": "scripts/collisions/02_unequal_masses.posim",
+   "name": "02_unequal_masses"
+  },
+  {
+   "file": "scripts/collisions/03_restitution_ladder.posim",
+   "name": "03_restitution_ladder"
+  },
+  {
+   "file": "scripts/collisions/04_newtons_cradle.posim",
+   "name": "04_newtons_cradle"
+  },
+  {
+   "file": "scripts/collisions/05_billiard_break.posim",
+   "name": "05_billiard_break"
+  },
+  {
+   "file": "scripts/collisions/06_spin_up.posim",
+   "name": "06_spin_up"
+  },
+  {
+   "file": "scripts/collisions/07_thin_wall_toi.posim",
+   "name": "07_thin_wall_toi"
+  },
+  {
+   "file": "scripts/collisions/08_colliding_binary.posim",
+   "name": "08_colliding_binary"
+  },
+  {
+   "file": "scripts/collisions/09_spinning_target.posim",
+   "name": "09_spinning_target"
+  },
+  {
+   "file": "scripts/collisions/10_billiard_box.posim",
+   "name": "10_billiard_box"
+  },
+  {
+   "file": "scripts/collisions/11_box_of_shapes.posim",
+   "name": "11_box_of_shapes"
+  },
+  {
+   "file": "scripts/collisions/12_two_dumbbells.posim",
+   "name": "12_two_dumbbells"
+  }
+ ],
+ "rust_examples": [
+  {
+   "file": "physical_object/examples/bouncing_ball_restitution.rs",
+   "crate": "physical_object",
+   "name": "bouncing_ball_restitution"
+  },
+  {
+   "file": "physical_object/examples/charged_in_b_field.rs",
+   "crate": "physical_object",
+   "name": "charged_in_b_field"
+  },
+  {
+   "file": "physical_object/examples/kepler_orbit.rs",
+   "crate": "physical_object",
+   "name": "kepler_orbit"
+  },
+  {
+   "file": "physical_object/examples/newtons_cradle.rs",
+   "crate": "physical_object",
+   "name": "newtons_cradle"
+  },
+  {
+   "file": "physical_object/examples/outer_solar_system.rs",
+   "crate": "physical_object",
+   "name": "outer_solar_system"
+  },
+  {
+   "file": "physical_object/examples/tumbling_body.rs",
+   "crate": "physical_object",
+   "name": "tumbling_body"
+  },
+  {
+   "file": "special_functions/examples/bessel_complex_accuracy.rs",
+   "crate": "special_functions",
+   "name": "bessel_complex_accuracy"
+  },
+  {
+   "file": "special_functions/examples/bessel_nu_accuracy.rs",
+   "crate": "special_functions",
+   "name": "bessel_nu_accuracy"
+  },
+  {
+   "file": "special_functions/examples/bessel_scaled_accuracy.rs",
+   "crate": "special_functions",
+   "name": "bessel_scaled_accuracy"
+  },
+  {
+   "file": "special_functions/examples/hankel_accuracy.rs",
+   "crate": "special_functions",
+   "name": "hankel_accuracy"
+  },
+  {
+   "file": "special_functions/examples/hard_sphere.rs",
+   "crate": "special_functions",
+   "name": "hard_sphere"
+  },
+  {
+   "file": "special_functions/examples/harmonic_oscillator.rs",
+   "crate": "special_functions",
+   "name": "harmonic_oscillator"
+  },
+  {
+   "file": "special_functions/examples/large_order_accuracy.rs",
+   "crate": "special_functions",
+   "name": "large_order_accuracy"
+  },
+  {
+   "file": "special_functions/examples/scatter_1d.rs",
+   "crate": "special_functions",
+   "name": "scatter_1d"
+  },
+  {
+   "file": "quantum/examples/absorber_tuning.rs",
+   "crate": "quantum",
+   "name": "absorber_tuning"
+  },
+  {
+   "file": "quantum/examples/nash_propagator.rs",
+   "crate": "quantum",
+   "name": "nash_propagator"
+  },
+  {
+   "file": "posim/examples/scene_server_reference.rs",
+   "crate": "posim",
+   "name": "scene_server_reference"
+  }
+ ],
+ "shell_tools": [
+  {
+   "file": "scripts/certify_clean.sh"
+  },
+  {
+   "file": "scripts/mutation_probe.sh"
+  }
+ ],
+ "python_tools": [
+  {
+   "file": "scripts/gen_airy_uniform_series.py"
+  },
+  {
+   "file": "jupyter/test_kernel.py"
+  },
+  {
+   "file": "jupyter/test_protocol.py"
+  },
+  {
+   "file": "tools/extract_rust_items.py"
+  }
+ ],
+ "_counts": {
+  "dynamic_notebooks": 25,
+  "stage_notebooks": 11,
+  "collision_scripts": 12,
+  "rust_examples": 17,
+  "shell_tools": 2,
+  "python_tools": 4
+ }
+}

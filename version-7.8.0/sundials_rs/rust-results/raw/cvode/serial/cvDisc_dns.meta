@@ -1,0 +1,10 @@
+example:  cvDisc_dns
+crate:    cvode_rs
+source:   crates/cvode_rs/examples/cvDisc_dns.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvDisc_dns
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvDisc_dns
+exit:     0 (OK)
+seconds:  0.106
+stdout:   3360 bytes, sha256 77b1dd2393e536615e6e4003bd8ed8630623dcd2b7a82dee349f1020ec8eb148
+stderr:   0 bytes

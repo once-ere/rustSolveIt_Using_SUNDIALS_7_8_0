@@ -1,0 +1,103 @@
+# Routh II.Arts.140-142 — the two quadrics whose intersection IS the polhode
+# — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 140 gives the two
+# fundamental equations of a body turning under no forces,
+#
+#     A^2 w1^2 + B^2 w2^2 + C^2 w3^2 = G^2        (angular momentum)
+#     A   w1^2 + B   w2^2 + C   w3^2 = T          (vis viva)
+#
+# and Art. 142 confirms the second is constant because no forces act. Two
+# quadric surfaces in the space of angular velocities; the motion is confined
+# to BOTH, so the instantaneous axis runs along their curve of intersection --
+# the polhode of Art. 149. Everything Poinsot draws is a picture of these two
+# equations.
+#
+# WHAT THIS NOTEBOOK SHOWS. That the two quadrics really are invariant while
+# the thing they constrain is not. A tumbling body is set going and three
+# numbers are printed repeatedly:
+#
+#     G = |L|              must not move
+#     E = T/2              must not move   (posim's energy is half Routh's T)
+#     |w|                  moves a great deal
+#
+# It is easy to assume the angular velocity is "the" conserved thing in a
+# torque-free motion. It is not; neither its direction nor its magnitude is
+# conserved. Only the two quadrics are, and the wandering of w inside them is
+# the entire subject of Chapter IV.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2) gives
+# I = diag(5, 4.25, 1.25). Started with w = (0.3, 3, 0.1),
+#
+#     L   = I w = (1.5, 12.75, 0.125)
+#     G   = |L| = 12.838540610209558
+#     T   = A w1^2 + B w2^2 + C w3^2 = 38.7125     (Routh's T)
+#     E   = T/2 = 19.35625                         (what posim's ENERGY prints)
+#     |w| at t = 0 = 3.0166206257996713            (this one will change)
+#
+# The disturbance is deliberately asymmetric so the motion sits clearly off the
+# separatrix G^2 = B*T of Art. 184 -- here G^2 - B*T = +0.3 -- and the body
+# genuinely tumbles rather than creeping along the separatrix.
+#
+# SETUP NOTE. system.g_constant = 0. Only one body is present so gravity would
+# do nothing anyway, but leaving G = 1 in a multi-body version of this test is
+# how a purely rotational result gets quietly ruined by a translational
+# singularity.
+#
+# WHAT YOU WATCH: a box tumbling irregularly end over end. The hud's E and L
+# do not move at all while it does.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_two_quadrics
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_two_quadrics.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_two_quadrics.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+get obj0.inertia_tensor
+get obj0.angular_momentum
+norm(obj0.angular_momentum)
+energy
+norm(obj0.angular_velocity)
+
+run 3 steps 3
+norm(obj0.angular_momentum)
+energy
+norm(obj0.angular_velocity)
+
+run 3 steps 3
+norm(obj0.angular_momentum)
+energy
+norm(obj0.angular_velocity)
+
+run 3 steps 3
+norm(obj0.angular_momentum)
+energy
+norm(obj0.angular_velocity)
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+scene create
+scene set_time_step 0.03

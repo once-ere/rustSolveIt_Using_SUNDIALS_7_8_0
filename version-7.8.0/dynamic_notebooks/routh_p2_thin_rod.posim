@@ -1,0 +1,96 @@
+# Routh II.Art.144 — a thin rod, whose momental ellipsoid is a circular
+# cylinder — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 144: "When the body is
+# a thin rod free to turn about its centre of gravity O as a fixed point, the
+# momental ellipsoid is a circular cylinder."
+#
+# WHY A CYLINDER. The momental ellipsoid A x^2 + B y^2 + C z^2 = 1 has
+# semi-axes 1/sqrt(A), 1/sqrt(B), 1/sqrt(C). A thin rod has A = B (it is
+# uniaxal) and C -> 0, because there is no matter off the axis to resist a spin
+# ABOUT the axis. So the z semi-axis 1/sqrt(C) runs away to infinity and the
+# ellipsoid degenerates into a circular cylinder about the rod's own direction.
+#
+# THE DYNAMICAL CONSEQUENCE. Spin about the rod's own axis carries almost no
+# angular momentum. Give a rod an enormous axial spin and a modest transverse
+# one, and the transverse part still dominates L completely -- so the invariable
+# line lies practically in the plane perpendicular to the rod, and the rod
+# simply turns about a fixed transverse axis while spinning uselessly about
+# itself. The axial motion is dynamically invisible.
+#
+# THE NUMBERS. A cylinder of mass 3, radius 0.02 and half-height 2 -- a rod 4
+# long and 0.04 thick:
+#
+#     I = diag( m(3r^2 + 4h^2)/12, same, m r^2 / 2 )
+#       = diag( 4.0003, 4.0003, 0.0006 )
+#
+#     C/A = 0.0001499887508436867        -- five thousand to one
+#
+# It is started with a TINY transverse rate and a HUGE axial one,
+# w = (1, 0, 50): fifty times as much spin about the rod as across it. Yet
+#
+#     L = (4.0003, 0, 0.03)
+#
+# and the axial contribution is 0.03 against 4.0003 -- less than one percent.
+# The invariable line sits only arctan(0.03/4.0003) = 0.4296 degrees off the
+# transverse plane, despite the axial spin being fifty times larger.
+#
+# The cells print |L|, the direction of L, and the ratio of the axial to the
+# transverse component of L, before and after a run. Because A = B exactly the
+# motion is a steady precession, and the huge axial spin never turns into
+# anything visible.
+#
+# SETUP NOTE. system.g_constant = 0. The radius is small but NOT zero: a true
+# rod has C = 0 exactly, a singular inertia tensor, which posim would refuse
+# because a body with no moment about an axis cannot be given angular momentum
+# about it. 0.02 is thin enough to make the point and non-singular.
+#
+# WHAT YOU WATCH: a long thin rod turning end over end about a fixed
+# transverse axis, spinning furiously about its own length to no visible effect.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_thin_rod
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_thin_rod.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_thin_rod.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cylinder { mass = 3, radius = 0.02, half_height = 2, angular_velocity = [1, 0, 50] }
+
+get obj0.inertia_tensor
+get obj0.angular_momentum
+norm(obj0.angular_momentum)
+# the axial share of the angular momentum, against the transverse share
+obj0.angular_momentum.z / obj0.angular_momentum.x
+normalize(obj0.angular_momentum)
+
+run 5 steps 5
+norm(obj0.angular_momentum)
+normalize(obj0.angular_momentum)
+norm(obj0.angular_velocity)
+energy
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cylinder { mass = 3, radius = 0.02, half_height = 2, angular_velocity = [1, 0, 50] }
+
+scene create
+scene set_time_step 0.02

@@ -1,0 +1,105 @@
+# Routh II.Art.150b Ex.2 — the ratio of the two periods is independent of the
+# initial conditions — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 150b, Ex. 2: "A body
+# is set rotating with an initial angular velocity n about an axis which very
+# nearly coincides with a principal axis OC at a fixed point O." Projecting the
+# instantaneous axis onto the plane AOB, he finds
+#
+#     x = sqrt(B(B - C)) * L * sin(pnt + M)
+#     y = sqrt(A(A - C)) * L * cos(pnt + M)
+#
+#     where   p^2 = (B - C)(A - C) / (A*B)
+#
+# and L, M are arbitrary constants fixed by the initial values. Routh then draws
+# the conclusion that makes it worth a notebook:
+#
+#   "the instantaneous axis makes a complete revolution in the body in the time
+#    2*pi/pn while the body turns round the axis OC in the time 2*pi/n. The
+#    RATIO of these times is 1/p and is therefore INDEPENDENT OF THE INITIAL
+#    CONDITIONS, and depends only on the moments of inertia."
+#
+# THE POINT. L is the size of the disturbance and it appears in both x and y as
+# a common factor, so it cancels out of the ratio entirely. Kick the body
+# gently or hard: the wobble is bigger or smaller, but it goes round in exactly
+# the same time. That is a statement about the body, not about what was done
+# to it -- and it is testable by doing two different things to the same body.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2) gives
+# I = diag(5, 4.25, 1.25), so with OC the LEAST axis (z, C = 1.25) and A = 5,
+# B = 4.25 the other two:
+#
+#     p^2 = (B-C)(A-C)/(A*B) = 3 * 3.75 / 21.25 = 0.5294117647058824
+#     p   = 0.7276068751089989
+#
+# and with n = 3,
+#
+#     axis revolves in the body in  2*pi/(p*n) = 2.878470742981153
+#     body turns about OC     in    2*pi/n     = 2.0943951023931953
+#     ratio                         1/p        = 1.3743685418725535
+#
+# THE TEST. Two copies of the body are spun about z at the same n = 3, one
+# disturbed by 0.05 and the other by 0.30 -- a factor of six. After exactly
+# 2*pi/(p*n) the body-frame angular velocity of EACH must have returned to its
+# own starting value. The two wobbles have completely different amplitudes and
+# identical periods, which is Routh's independence claim measured directly.
+#
+# Spinning about the LEAST axis is stable (Art. 155), so both stay near their
+# axes and the linearisation Routh used remains valid throughout.
+#
+# SETUP NOTE. system.g_constant = 0 so the two bodies do not attract each other
+# and fall into the 1/r^2 singularity.
+#
+# WHAT YOU WATCH: two boxes spinning at the same rate, one wobbling six times
+# as widely as the other, and both completing a wobble in the same time.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_period_ratio
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_period_ratio.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_period_ratio.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0], angular_velocity = [0.05, 0, 3] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], angular_velocity = [0.30, 0, 3] }
+
+get obj0.inertia_tensor
+# the two disturbances differ by a factor of six
+norm(obj0.angular_momentum)
+norm(obj1.angular_momentum)
+
+# one revolution of the instantaneous axis in the body: 2*pi/(p*n)
+run 2.878470742981153 steps 4
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+
+# a second revolution -- still in step
+run 2.878470742981153 steps 4
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0], angular_velocity = [0.05, 0, 3] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], angular_velocity = [0.30, 0, 3] }
+
+scene create
+scene set_time_step 0.02

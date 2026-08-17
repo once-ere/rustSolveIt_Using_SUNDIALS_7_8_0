@@ -1,0 +1,6 @@
+{
+  "argv": ["python3", "-m", "posim_kernel", "-f", "{connection_file}"],
+  "display_name": "posim (physical_object)",
+  "language": "posim",
+  "interrupt_mode": "message"
+}

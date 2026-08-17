@@ -1,0 +1,58 @@
+{
+ "_source": "posim/src/notebook.rs \u2014 Notebook::magic()",
+ "entries": [
+  {
+   "name": "%history",
+   "syntax": "%history",
+   "line": 62,
+   "meaning": "list every cell with its input and output; failed cells are marked !"
+  },
+  {
+   "name": "%rerun",
+   "syntax": "%rerun <n>",
+   "line": 78,
+   "meaning": "execute cell n's input again as a new cell"
+  },
+  {
+   "name": "%edit",
+   "syntax": "%edit <n> <new text>",
+   "line": 87,
+   "meaning": "replace cell n's input and execute it as the next cell"
+  },
+  {
+   "name": "%save",
+   "syntax": "%save <file>",
+   "line": 104,
+   "meaning": "write all successful non-magic inputs to a replayable script"
+  },
+  {
+   "name": "%load",
+   "syntax": "%load <file>",
+   "line": 122,
+   "meaning": "replay a script file cell by cell; multi-line DEFs replay as ONE cell"
+  },
+  {
+   "name": "%reset",
+   "syntax": "%reset",
+   "line": 158,
+   "meaning": "clear the simulator state (cell history is kept)"
+  },
+  {
+   "name": "%quit",
+   "syntax": "%quit",
+   "line": 61,
+   "meaning": "leave the notebook"
+  },
+  {
+   "name": "%exit",
+   "syntax": "%exit",
+   "line": 61,
+   "meaning": "alias of %quit"
+  }
+ ],
+ "_notes": [
+  "A line whose first character is % never reaches the lexer.",
+  "Magics do NOT consume cell numbers \u2014 only executed commands become numbered cells.",
+  "An unknown magic replies: unknown magic `<name>` \u2014 see HELP"
+ ]
+}

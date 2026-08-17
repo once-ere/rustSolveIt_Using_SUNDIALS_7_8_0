@@ -1,0 +1,15 @@
+[package]
+name = "sundials_core"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# Diagnostic only: route the elementary functions back to the host C library
+# instead of crates/sundials_core/src/sundials_libm.rs. Used by
+# tools/ab_host_libm.sh to prove that a divergence from the C reference is
+# caused by the deliberate libm substitution and by nothing else. Never
+# enable it for a production build -- it reintroduces the host dependence
+# this port exists to remove.
+host-libm = []
+
+[dependencies]

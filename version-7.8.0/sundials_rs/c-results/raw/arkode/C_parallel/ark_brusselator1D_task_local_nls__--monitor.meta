@@ -1,0 +1,10 @@
+example:  ark_brusselator1D_task_local_nls
+source:   examples/arkode/C_parallel/ark_brusselator1D_task_local_nls.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_parallel/ark_brusselator1D_task_local_nls
+argv:     --monitor
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_parallel/ark_brusselator1D_task_local_nls__--monitor
+exit:     0 (OK)
+seconds:  1.006
+stdout:   3062 bytes, sha256 54ecd01207d9bbbb9abfaae8638ea03af78a2097ce6ed9174a6e08cda50bac53
+stderr:   762 bytes

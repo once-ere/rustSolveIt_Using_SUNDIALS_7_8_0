@@ -1,0 +1,10 @@
+example:  cvsKrylovDemo_ls
+crate:    cvodes_rs
+source:   crates/cvodes_rs/examples/cvsKrylovDemo_ls.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsKrylovDemo_ls
+argv:     2
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsKrylovDemo_ls__2
+exit:     0 (OK)
+seconds:  0.105
+stdout:   11712 bytes, sha256 6f0cda0e35d96b827e99a173c5c803f9a81fa99b44ec6fc5445001e16b3a4463
+stderr:   0 bytes

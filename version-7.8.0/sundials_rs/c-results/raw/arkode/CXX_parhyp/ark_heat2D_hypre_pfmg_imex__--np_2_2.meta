@@ -1,0 +1,10 @@
+example:  ark_heat2D_hypre_pfmg_imex
+source:   examples/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg_imex.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg_imex
+argv:     --np 2 2
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg_imex__--np_2_2
+exit:     0 (OK)
+seconds:  1.412
+stdout:   2064 bytes, sha256 4b99bb3b2791117fb1695017af5941953b56d26d0a760d440dacb4b4d3f1bed5
+stderr:   762 bytes

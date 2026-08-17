@@ -1,0 +1,10 @@
+example:  ark_analytic_lsrk
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_analytic_lsrk.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic_lsrk
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic_lsrk
+exit:     0 (OK)
+seconds:  0.106
+stdout:   1143 bytes, sha256 716e59c6afc5c7b866754ce6d7915279ce85971a7222b3ac16a14c0bc62621e5
+stderr:   0 bytes

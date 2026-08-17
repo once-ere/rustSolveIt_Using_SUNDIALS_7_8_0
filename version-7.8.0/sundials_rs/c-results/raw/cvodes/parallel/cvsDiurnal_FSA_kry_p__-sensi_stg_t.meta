@@ -1,0 +1,10 @@
+example:  cvsDiurnal_FSA_kry_p
+source:   examples/cvodes/parallel/cvsDiurnal_FSA_kry_p.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsDiurnal_FSA_kry_p
+argv:     -sensi stg t
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsDiurnal_FSA_kry_p__-sensi_stg_t
+exit:     0 (OK)
+seconds:  0.607
+stdout:   8868 bytes, sha256 6ad2336c3c9610f5d3e798ab837c90fe25d8c15bdb9545f7fbc50686ac92646d
+stderr:   762 bytes

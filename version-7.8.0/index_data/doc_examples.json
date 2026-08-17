@@ -1,0 +1,360 @@
+{
+ "_source": "heading scan of the documentation, re-run 2026-07-30 after the D1/D3-D6 fixes",
+ "grammar_md": [
+  {
+   "file": "grammar.md",
+   "line": 2181,
+   "title": "Example 1 \u2014 an eccentric Kepler orbit and the Runge\u2013Lenz compass"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2216,
+   "title": "Example 2 \u2014 a thrown ball, checked against the textbook formula"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2244,
+   "title": "Example 3 \u2014 cyclotron motion: expressions as arguments"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2272,
+   "title": "Example 4 \u2014 the tennis-racket theorem (Dzhanibekov effect)"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2306,
+   "title": "Example 5 \u2014 three bodies, then surgery with `DEL`"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2347,
+   "title": "Example 6 \u2014 magnetic torque spins a body up (and why ENERGY grows)"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2380,
+   "title": "Example 7 \u2014 fixing a typo in an old cell with `%edit`"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2412,
+   "title": "Example 8 \u2014 checking the simulator against itself with vector algebra"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2436,
+   "title": "Example 9 \u2014 hand-built tensors and a quaternion orientation"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2464,
+   "title": "Example 10 \u2014 reproducibility: `%save`, `%reset`, `%load`"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2519,
+   "title": "Example 11 \u2014 watching a Kepler orbit live, then running it backward"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2574,
+   "title": "Example 12 \u2014 driving the camera from the notebook"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2630,
+   "title": "Example 13 \u2014 the box of shapes: every body type in a rigid, infinitely massive box"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2715,
+   "title": "Example 14 \u2014 two dumbbells from a user-defined function"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2785,
+   "title": "Example 15 \u2014 a particle in a box, solved inside the language"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2860,
+   "title": "Example 16 \u2014 quantum mechanics: bound states, then tunnelling"
+  },
+  {
+   "file": "grammar.md",
+   "line": 2941,
+   "title": "Example 17 \u2014 tunnelling, with the barrier as a user function"
+  },
+  {
+   "file": "grammar.md",
+   "line": 3042,
+   "title": "Example 18 \u2014 the double slit, in two dimensions"
+  }
+ ],
+ "user_guide": [
+  {
+   "file": "physical_object_simulator.md",
+   "line": 425,
+   "title": "Example S1 \u2014 build, run, and read a report (the canonical loop)"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 454,
+   "title": "Example S2 \u2014 reading the orbit's eccentricity off the Laplace vector"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 486,
+   "title": "Example S3 \u2014 retiring the legacy Euler: `integrate()` on one body"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 516,
+   "title": "Example S4 \u2014 a charge in a uniform electric field (linear ODE, exact answer)"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 540,
+   "title": "Example S5 \u2014 static bodies: the `inverse_mass = 0` convention"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 565,
+   "title": "Example S6 \u2014 geometry: signed distances, normals, and frames"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 591,
+   "title": "Example S7 \u2014 the SPRK separability gate as an API"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 616,
+   "title": "Example S8 \u2014 driving the simulator from Python (no Jupyter required)"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 646,
+   "title": "Example S9 \u2014 the same physics from a JupyterLab notebook"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 670,
+   "title": "Example S10 \u2014 choosing an integrator: an honest benchmark"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 706,
+   "title": "Example S11 \u2014 watching a tumbling cuboid in the scene window"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 758,
+   "title": "Example S12 \u2014 driving the scene from JupyterLab (async events)"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 802,
+   "title": "Example S13 \u2014 the box of shapes (every variant in one rigid box)"
+  },
+  {
+   "file": "physical_object_simulator.md",
+   "line": 847,
+   "title": "Example S14 \u2014 two dumbbells: a user-defined function builds them, and E, P **and** L survive the impact"
+  }
+ ],
+ "collision_detection": [
+  {
+   "file": "collision_detection.md",
+   "line": 655,
+   "title": "Example 1 \u2014 `01_head_on_exchange.posim`: the canonical action\u2013reaction pair"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 676,
+   "title": "Example 2 \u2014 `02_unequal_masses.posim`: the light ball bounces back"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 687,
+   "title": "Example 3 \u2014 `03_restitution_ladder.posim`: separation speed = e \u00d7 approach speed"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 701,
+   "title": "Example 4 \u2014 `04_newtons_cradle.posim`: the impulse walks the chain"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 713,
+   "title": "Example 5 \u2014 `05_billiard_break.posim`: every outgoing direction is a normal"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 726,
+   "title": "Example 6 \u2014 `06_spin_up.posim`: linear momentum becomes spin"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 740,
+   "title": "Example 7 \u2014 `07_thin_wall_toi.posim`: the tunneling killer"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 756,
+   "title": "Example 8 \u2014 `08_colliding_binary.posim`: gravity and impacts cooperate"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 768,
+   "title": "Example 9 \u2014 `09_spinning_target.posim`: the surface itself is moving"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 782,
+   "title": "Example 10 \u2014 `10_billiard_box.posim`: seven bounces, zero drift"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 796,
+   "title": "Example 11 \u2014 `11_box_of_shapes.posim`: every shape in the infinitely massive box"
+  },
+  {
+   "file": "collision_detection.md",
+   "line": 851,
+   "title": "Example 12 \u2014 `12_two_dumbbells.posim`: two dumbbells from a user-defined function \u2014 E, P **and** L conserved"
+  }
+ ],
+ "notebooks_md_captures": [
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 28,
+   "title": "Notebook 1 \u2014 `scripts/collisions/11_box_of_shapes.posim`, first capture (superseded)"
+  },
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 93,
+   "title": "Notebook 2 \u2014 `scripts/collisions/11_box_of_shapes.posim`, final capture (canonical)"
+  },
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 127,
+   "title": "Notebook 3 \u2014 interactive box-of-shapes session with the live scene window"
+  },
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 243,
+   "title": "Notebook 4 \u2014 interactive Reset verification session"
+  },
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 300,
+   "title": "Notebook 5 \u2014 `create_dumbell` smoke-test script"
+  },
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 366,
+   "title": "Notebook 6 \u2014 `scripts/collisions/12_two_dumbbells.posim` (canonical demo)"
+  },
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 422,
+   "title": "Notebook 7 \u2014 interactive two-dumbbell session with the live scene window"
+  },
+  {
+   "file": "NOTEBOOKS.md",
+   "line": 483,
+   "title": "Notebook 8 \u2014 machine-mode session (JupyterLab protocol)"
+  }
+ ],
+ "special_functions_md": [
+  {
+   "file": "special_functions.md",
+   "line": 68,
+   "title": "Intermediate example \u2014 check against the closed forms"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 95,
+   "title": "Expert example \u2014 hard-sphere scattering phase shifts"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 230,
+   "title": "Intermediate \u2014 values you can check by hand"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 244,
+   "title": "Expert \u2014 why two families exist"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 278,
+   "title": "Intermediate"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 290,
+   "title": "Expert \u2014 the quantum harmonic oscillator, two independent ways"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 342,
+   "title": "Intermediate"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 350,
+   "title": "Expert \u2014 a spectrum with a known closed form"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 370,
+   "title": "Intermediate"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 381,
+   "title": "Expert \u2014 the honest failure modes"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 410,
+   "title": "Intermediate"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 421,
+   "title": "Expert \u2014 why `norm_sqr` is separate from `abs`"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 453,
+   "title": "Intermediate"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 464,
+   "title": "Expert \u2014 one Crank\u2013Nicolson step, and why unitarity is the test"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 523,
+   "title": "Intermediate"
+  },
+  {
+   "file": "special_functions.md",
+   "line": 537,
+   "title": "Expert \u2014 why downward, and why no coefficient tables"
+  }
+ ],
+ "_counts": {
+  "grammar_md": 18,
+  "user_guide": 14,
+  "collision_detection": 12,
+  "notebooks_md_captures": 8,
+  "special_functions_md": 16
+ }
+}

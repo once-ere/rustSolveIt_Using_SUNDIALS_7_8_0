@@ -1,0 +1,79 @@
+# Third-party notices
+
+Project: SUNDIALS_7_8_Rust_port_for_Linux (crate tree inherited from
+SUNDIALS_7_8_Rust_port_for_AppleSilicon_macos).
+
+This workspace is a derivative work. Two upstream licences apply.
+
+## SUNDIALS — BSD-3-Clause
+
+Everything under `crates/` is a line-by-line translation of SUNDIALS 7.8.0
+(https://github.com/LLNL/sundials), Copyright (c) Lawrence Livermore National
+Security and the SUNDIALS contributors. The full text is in `LICENSE`, copied
+verbatim from the upstream tree.
+
+Structure, names, constants, algorithms, control flow and message text are
+reproduced deliberately — fidelity to the C is the point of the port — so the
+translated sources are covered by the SUNDIALS licence and its attribution
+requirements travel with them.
+
+## ARM optimized-routines `pow` — MIT
+
+`crates/sundials_core/src/sundials_math.rs` contains a pure-Rust port of the
+double-precision `pow` from ARM optimized-routines, taken via musl's
+`src/math/pow.c`, `pow_data.c` and `exp_data.c`:
+
+    Copyright (c) 2018, Arm Limited.
+    SPDX-License-Identifier: MIT
+
+It replaces the platform `f64::powf` because the reference outputs this port is
+verified against were generated against glibc >= 2.28, which uses that same
+algorithm. Platform libm implementations disagree with it by one ulp on rare
+arguments, and inside the step-size heuristics a one-ulp difference forks the
+whole trajectory: substituting this implementation turned three examples from
+failing to byte-identical. See `VERIFICATION.md`.
+
+The attribution and algorithm provenance are also recorded in a block comment
+at the implementation site.
+
+**Scope of this substitution — important.** The ported routine is ordinary
+host-independent Rust; despite the "ARM optimized-routines" provenance it is
+not an Apple-Silicon-specific or arm64-specific routine. On this project's
+target it is not even a substitution for a foreign implementation: that same
+algorithm is what glibc >= 2.28 ships as `sysdeps/ieee754/dbl-64/e_pow.c`,
+and on x86-64 glibc dispatches to `__ieee754_pow_fma`, the same source built
+with `-mfma -mavx2 -ffp-contract=fast`. The Rust routine is measured
+bit-exact against that native `pow` — 0 mismatches over 25.9 million inputs
+(`tools/pow_differential.sh`, `POW_FMA_EXACTNESS.md` §0).
+
+It removes the host libm from the `pow` path **and only from the `pow`
+path**. Every other host-dependent function the library and the examples use
+— `sin`, `cos`, `asin`, `acos`, `atan`, `sinh`, `cosh`, `acosh`, `exp`, `ln`
+— is still `f64`'s method, which Rust `std` documents as having unspecified
+precision and forwards to whatever libm the host provides. On Linux that is
+glibc; on macOS/arm64 it is Apple's libm; on Windows it is the Microsoft CRT,
+and the three disagree in the last ulp. (`sqrt`, `mul_add`, `ceil`, `round`,
+`abs` and `copysign` are IEEE-754 specified and identical everywhere.) That
+residual host dependence, not this MIT-licensed routine, is why the
+byte-identity evidence in `VERIFICATION.md` is scoped to Linux on x86-64
+with glibc — the platform whose libm generated the upstream reference
+outputs. See `README.md` § "Platform scope".
+
+## glibc `rand()` — behaviourally reproduced
+
+`crates/arkode_rs/examples/ark_analytic_lsrk_domeigest.rs`,
+`ark_brusselator_lsrk_domeigest.rs` and
+`ark_brusselator_lsrk_externaldomeigest.rs` each contain a ~40-line Rust
+implementation of the classic BSD/glibc `rand()` TYPE_3 additive-feedback
+generator (DEG 31, SEP 3, Lehmer/Schrage seeding, 310 discarded outputs,
+result = state word >> 1). No glibc source is reproduced — the code is Rust
+written against that algorithm description, and the block comment at each site
+records it.
+
+It exists for the same reason as the `pow` port: those examples feed
+pseudo-random vectors to a dominant-eigenvalue estimator, so the generator's
+sequence is output-observable, and the reference `.out` files were produced
+against glibc's. Like the `pow` port, it is host-independent Rust. It is
+mentioned here so that "only `pow` was taken off the host C library" is read
+as the statement it is — a statement about *libm*, not about the whole C
+runtime.

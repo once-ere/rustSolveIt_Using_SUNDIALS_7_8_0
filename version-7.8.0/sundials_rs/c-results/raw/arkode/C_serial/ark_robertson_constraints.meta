@@ -1,0 +1,10 @@
+example:  ark_robertson_constraints
+source:   examples/arkode/C_serial/ark_robertson_constraints.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_robertson_constraints
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_robertson_constraints
+exit:     0 (OK)
+seconds:  0.207
+stdout:   6297 bytes, sha256 54f1e88dc2d789d70eca21960b6a10fc1ab7991e847a64091f71746c1e98e24c
+stderr:   0 bytes

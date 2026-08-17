@@ -1,0 +1,64 @@
+# The box of shapes with a HEAVY point (mass 32) — dynamic notebook
+#
+# Variant of box_of_shapes.posim: the only mover is a point of mass 32
+# (instead of 1) at v = (100, 200, 100), |v| = sqrt(60000) ~ 244.95.
+# Everything else is identical — one of every body type (tilted torus,
+# point, sphere, ideal zero-thickness disk, cube, tilted cylinder) inside
+# a rigid BOX 4 whose six walls have inverse_mass = 0 (infinitely
+# massive). G = 0 and every restitution is 1 (the default), so all
+# collisions are perfectly elastic and
+#
+#     E = 1/2 * m * |v|^2 = 1/2 * 32 * 60000 = 960000
+#
+# is conserved through every impact, while momentum is NOT conserved:
+# the infinitely massive walls absorb it.
+#     P0 = 32 * (100, 200, 100) = (3200, 6400, 3200).
+#
+# What the extra mass changes: the point now outweighs every other body
+# (torus 1, sphere 2, disk 2/3, cube 5/3, cylinder 2), so it barely
+# deflects when it strikes them — instead it kicks them hard, and those
+# light bodies then ricochet around the box themselves. The collision
+# rate rises about 5.7x versus the mass-1 original (9293 vs 1622
+# collisions over 0 <= t <= 1).
+#
+# VERIFIED (headless, fine output granularity):
+#   run 1 steps 1000  ->  t = 1, 119334 solver steps, |dE/E| = 6.940e-8,
+#                         9293 collision(s), E = 959999.9333768479
+#
+# IMPORTANT — output granularity is physics here, not formatting. The
+# point crosses the box in ~0.016 time units, so ask for snapshots more
+# often than that (interval < 0.016). With coarse intervals several
+# collisions fall inside one solver output chunk and energy collapses:
+# `run 1 steps 8` (interval 0.125) loses 96% of E. Use `steps` >= 100
+# per unit of time, and keep the playback dt at 0.0002.
+#
+# Launch:   posim_notebook box_of_shapes_m32
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/box_of_shapes_m32.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+box 4
+new torus { mass = 1, inner_radius = 1, outer_radius = 2, orientation = [0.888073833977115, -0.325057583671868, 0.325057583671868, 0] }
+new point { mass = 32, position = [1.406590, -0.995859, 0.569601], velocity = [100, 200, 100] }
+new sphere { mass = 2, radius = 1/2, position = [1.424704, 1.367496, -0.493612] }
+new disk { mass = 2/3, radius = 1, position = [-0.677386, -1.041493, -1.091679], orientation = [0.900447102352677, 0.307567078752479, -0.307567078752479, 0] }
+new cuboid { mass = 5/3, half_extents = [0.5, 0.5, 0.5], position = [1.074397, 0.816223, 1.102099] }
+new cylinder { mass = 2, radius = 1/2, height = 3/2, position = [-1.027024, -1.403890, -0.485619], orientation = [0.968912421710645, 0, 0.247403959254523, 0] }
+list
+collide
+
+# Baselines before anything moves: the walls are exactly static
+# (inverse_mass = 0), E0 = 960000 exactly, P0 = [3200, 6400, 3200],
+# and every body is perfectly elastic (restitution = 1).
+get obj0.inverse_mass
+get obj7.restitution
+energy
+momentum
+
+scene create
+# |v| ~ 245: tiny playback step so the point is watchable (and the
+# playback integrator keeps catching the wall/torus/body impacts).
+scene set_time_step 0.0002
+# The whole action lives inside +/-2: pull the camera in a little.
+scene zoom 2

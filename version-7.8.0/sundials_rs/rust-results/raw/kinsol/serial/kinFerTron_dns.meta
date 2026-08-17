@@ -1,0 +1,10 @@
+example:  kinFerTron_dns
+crate:    kinsol_rs
+source:   crates/kinsol_rs/examples/kinFerTron_dns.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinFerTron_dns
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinFerTron_dns
+exit:     0 (OK)
+seconds:  0.107
+stdout:   1503 bytes, sha256 6ac846fe2cdec1d5bc903d32f89a69edd7295ab17a18d2eccc3fceab0d7d9ec6
+stderr:   0 bytes

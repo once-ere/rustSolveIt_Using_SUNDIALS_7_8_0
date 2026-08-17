@@ -1,0 +1,27 @@
+# 7. The intermediate-axis (tennis racket) instability, measured.
+# A cuboid with three unequal moments, spun almost exactly about its
+# MIDDLE axis. Angular momentum is conserved to the bit while the body
+# turns over: the x component of the orientation quaternion swings from
+# near zero to near +/-1 and back as it flips.
+# RUN takes a DURATION: eight runs of 0.5 sample t = 0.5 .. 4.0.
+new cuboid as racket { mass = 1, half_extents = [1.6, 0.9, 0.25], angular_momentum = [0.02, 3, 0.02] }
+angmom
+energy
+run 0.5 steps 5
+get racket.orientation.x
+run 0.5 steps 5
+get racket.orientation.x
+run 0.5 steps 5
+get racket.orientation.x
+run 0.5 steps 5
+get racket.orientation.x
+run 0.5 steps 5
+get racket.orientation.x
+run 0.5 steps 5
+get racket.orientation.x
+run 0.5 steps 5
+get racket.orientation.x
+run 0.5 steps 5
+get racket.orientation.x
+angmom
+energy

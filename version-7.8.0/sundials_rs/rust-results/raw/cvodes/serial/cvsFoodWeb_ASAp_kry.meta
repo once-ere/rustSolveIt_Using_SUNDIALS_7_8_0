@@ -1,0 +1,10 @@
+example:  cvsFoodWeb_ASAp_kry
+crate:    cvodes_rs
+source:   crates/cvodes_rs/examples/cvsFoodWeb_ASAp_kry.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsFoodWeb_ASAp_kry
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsFoodWeb_ASAp_kry
+exit:     0 (OK)
+seconds:  0.906
+stdout:   961 bytes, sha256 ab4dd07a66053a31c6fed4a58b80c9a2b3b962032afec7a8d799e7cf210ad3a7
+stderr:   0 bytes

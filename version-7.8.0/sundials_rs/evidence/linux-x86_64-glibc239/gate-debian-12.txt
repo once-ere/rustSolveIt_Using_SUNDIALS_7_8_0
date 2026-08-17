@@ -1,0 +1,44 @@
+debconf: delaying package configuration, since apt-utils is not installed
+info: downloading installer
+warn: It looks like you have an existing rustup settings file at:
+warn: /root/.rustup/settings.toml
+warn: Rustup will install the default toolchain as specified in the settings file,
+warn: instead of the one inferred from the default host triple.
+info: profile set to minimal
+info: default host triple is x86_64-unknown-linux-gnu
+info: syncing channel updates for stable-x86_64-unknown-linux-gnu
+info: latest update on 2026-07-16 for version 1.97.1 (8bab26f4f 2026-07-14)
+info: downloading 3 components
+info: default toolchain set to stable-x86_64-unknown-linux-gnu
+--- ldd (Debian GLIBC 2.36-9+deb12u14) 2.36 / rustc 1.97.1 (8bab26f4f 2026-07-14) ---
+IDENTICAL: 153
+DIFF:      26
+EXCLUDED:  20
+FAIL:      0
+--- variants reported DIFF here ---
+ark_analytic_partitioned [forcing]
+ark_analytic_partitioned [splitting
+ark_analytic_partitioned [splitting
+ark_analytic_partitioned [splitting
+ark_analytic_partitioned [splitting]
+ark_conserved_exp_entropy_ark [1
+ark_damped_harmonic_symplectic []
+ark_dissipated_exp_entropy [1
+ark_harmonic_symplectic []
+ark_kepler [--stepper
+ark_kepler [--stepper
+ark_kepler [--stepper
+ark_kepler [--stepper
+ark_kepler []
+ark_reaction_diffusion_mri []
+cvPendulum_dns []
+cvRoberts_dnsL []
+cvRoberts_dns_negsol []
+cvsKrylovDemo_ls [0
+cvsKrylovDemo_ls [1]
+cvsKrylovDemo_ls [2]
+cvsKrylovDemo_ls []
+cvsPendulum_dns []
+cvsRoberts_dnsL []
+idasAkzoNob_ASAi_dns []
+kinRoboKin_dns []

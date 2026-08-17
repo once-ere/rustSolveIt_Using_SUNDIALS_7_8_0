@@ -1,0 +1,139 @@
+# Routh II.Arts.192-195 — correlated bodies: confocal ellipsoids of gyration
+# — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 192: "To compare the
+# motions of different bodies acted on by initial couples whose planes are
+# parallel." Art. 195, Ex. 1 names the relation: "If two bodies be so related
+# that their ellipsoids of gyration are CONFOCAL, and be initially so placed
+# that the angles their principal axes make with the invariable line of each
+# are connected by [the given] equations" then their motions correspond. Routh
+# credits the theory to Sylvester's memoir in the Philosophical Transactions
+# for 1866 (Art. 197).
+#
+# WHAT CONFOCAL MEANS HERE. The ellipsoid of gyration has semi-axes going as
+# 1/sqrt(A), 1/sqrt(B), 1/sqrt(C), so two such ellipsoids are confocal exactly
+# when the RECIPROCAL moments differ by one common constant:
+#
+#     1/A - 1/A'  =  1/B - 1/B'  =  1/C - 1/C'  =  k
+#
+# In matrix form that is simply  I'^-1 = I^-1 - k*Identity.
+#
+# THE CONSEQUENCE, EXACTLY. Give the two bodies the SAME angular momentum L.
+# Then their angular velocities are w = I^-1 L and w' = I'^-1 L, so
+#
+#     w - w'  =  k * L
+#
+# The two bodies spin differently, but the DIFFERENCE of their angular
+# velocities is a vector along the invariable line, of constant magnitude k*G.
+# Two bodies of quite different shape, carrying identical angular momentum,
+# differ by nothing but a steady rotation about the one direction that is fixed
+# in space. That is what "correlated" means, and it is why Art. 196 can use it
+# as a clock (see routh_p2_sylvester_time).
+#
+# WHAT THIS NOTEBOOK VERIFIES, AND WHAT IT DOES NOT. The relation
+# w - w' = k*L is an INSTANTANEOUS one, exact whenever the two bodies are in
+# corresponding attitudes. It is verified below to machine precision at the
+# moment of correspondence.
+#
+# It does NOT persist if you simply start both bodies unrotated and let them
+# go, and the notebook measures that too, because the failure is instructive.
+# I'^-1 = I^-1 - k*Id holds in each body's OWN principal frame. Carried into
+# space it becomes R' I^-1 R'^T - k*Id, which equals I_world^-1 - k*Id only
+# while R' = R. The two bodies have different inertias, so they turn
+# differently, their attitudes diverge, and the simple difference lapses:
+# measured here it leaves 1.2838540610209558 and reaches 1.4574566464474867 by
+# t = 3, no longer along L at all.
+#
+# That is exactly what Art. 195's condition is for. Routh does not say "place
+# them alike"; he says place them so that "the angles (a, b, g) (a', b', g')
+# their principal axes make with the invariable line of each are connected by
+# the equations" -- a specific correspondence of ATTITUDES, maintained
+# thereafter as a relative rotation about the invariable line. Constructing and
+# holding that correspondence is beyond what this notebook sets up, so the
+# claim made here is the instantaneous one, which is measured, and not the
+# sustained one, which is not.
+#
+# THE NUMBERS. Body 1 is a cuboid of mass 3, half-extents (0.5, 1, 2):
+#
+#     I  = diag(5, 4.25, 1.25)
+#
+# Body 2 is given the confocal partner with k = 0.1:
+#
+#     I' = diag(10, 7.391304347826088, 1.4285714285714284)
+#
+#     check: 1/5 - 1/10 = 0.1, 1/4.25 - 1/7.3913... = 0.1, 1/1.25 - 1/1.4285... = 0.1
+#
+# Both are given L = (1.5, 12.75, 0.125), so G = 12.838540610209558 for each,
+# and
+#
+#     w  = (0.3,  3,     0.1   )
+#     w' = (0.15, 1.725, 0.0875)
+#     w - w' = (0.15, 1.275, 0.0125) = 0.1 * L      |w - w'| = k*G = 1.2838540610209558
+#
+# SETUP NOTE. Body 2's inertia corresponds to no simple shape, so it is
+# supplied directly with inertia_tensor -- posim keeps a user-supplied tensor
+# rather than recomputing it from the geometry. The drawn box is therefore
+# body 1's shape carrying body 2's inertia, which is honest for a comparison
+# of MOTIONS. g_constant = 0 so the two do not attract each other.
+#
+# WHAT YOU WATCH: two boxes carrying identical angular momentum and tumbling at
+# visibly different rates -- whose difference, invisibly, is a steady spin about
+# one fixed line.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_correlated_bodies
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_correlated_bodies.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_correlated_bodies.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+
+get obj0.inertia_tensor
+get obj1.inertia_tensor
+
+# the same angular momentum in both
+set obj0.angular_momentum = [1.5, 12.75, 0.125]
+set obj1.angular_momentum = [1.5, 12.75, 0.125]
+
+get obj0.angular_velocity
+get obj1.angular_velocity
+# w - w' must be exactly k*L with k = 0.1
+obj0.angular_velocity - obj1.angular_velocity
+norm(obj0.angular_velocity - obj1.angular_velocity)
+
+run 3 steps 3
+obj0.angular_velocity - obj1.angular_velocity
+norm(obj0.angular_velocity - obj1.angular_velocity)
+run 4 steps 4
+obj0.angular_velocity - obj1.angular_velocity
+norm(obj0.angular_velocity - obj1.angular_velocity)
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+set obj0.angular_momentum = [1.5, 12.75, 0.125]
+set obj1.angular_momentum = [1.5, 12.75, 0.125]
+
+scene create
+scene set_time_step 0.03

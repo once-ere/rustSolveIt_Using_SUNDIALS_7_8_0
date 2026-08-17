@@ -1,0 +1,10 @@
+example:  ark_onewaycouple_mri
+source:   examples/arkode/C_serial/ark_onewaycouple_mri.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_onewaycouple_mri
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_onewaycouple_mri
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1077 bytes, sha256 d27f3c1e2e62eb8d2f908750e1e1e7d96cfe5ef9842bb93a76a97b806875d4b9
+stderr:   0 bytes

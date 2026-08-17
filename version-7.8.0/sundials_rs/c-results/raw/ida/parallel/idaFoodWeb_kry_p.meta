@@ -1,0 +1,10 @@
+example:  idaFoodWeb_kry_p
+source:   examples/ida/parallel/idaFoodWeb_kry_p.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/parallel/idaFoodWeb_kry_p
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/parallel/idaFoodWeb_kry_p
+exit:     0 (OK)
+seconds:  0.606
+stdout:   1770 bytes, sha256 6c859a79e184dfd91994d1fe33d8742a34720aef5fa63e9eab8bfd5526beea1e
+stderr:   762 bytes

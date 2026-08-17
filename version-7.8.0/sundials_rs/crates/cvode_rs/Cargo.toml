@@ -1,0 +1,91 @@
+[package]
+name = "cvode_rs"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# forwards to sundials_core/host-libm; see that manifest
+host-libm = ["sundials_core/host-libm"]
+
+[dependencies]
+sundials_core = { path = "../sundials_core" }
+
+[[example]]
+name = "cvAdvDiff_bnd"
+path = "examples/cvAdvDiff_bnd.rs"
+
+[[example]]
+name = "cvAdvDiff_bndL"
+path = "examples/cvAdvDiff_bndL.rs"
+
+[[example]]
+name = "cvAnalytic_mels"
+path = "examples/cvAnalytic_mels.rs"
+
+[[example]]
+name = "cvDirectDemo_ls"
+path = "examples/cvDirectDemo_ls.rs"
+
+[[example]]
+name = "cvDisc_dns"
+path = "examples/cvDisc_dns.rs"
+
+[[example]]
+name = "cvDiurnal_kry"
+path = "examples/cvDiurnal_kry.rs"
+
+[[example]]
+name = "cvDiurnal_kry_bp"
+path = "examples/cvDiurnal_kry_bp.rs"
+
+[[example]]
+name = "cvKrylovDemo_ls"
+path = "examples/cvKrylovDemo_ls.rs"
+
+[[example]]
+name = "cvKrylovDemo_prec"
+path = "examples/cvKrylovDemo_prec.rs"
+
+[[example]]
+name = "cvParticle_dns"
+path = "examples/cvParticle_dns.rs"
+
+[[example]]
+name = "cvPendulum_dns"
+path = "examples/cvPendulum_dns.rs"
+
+[[example]]
+name = "cvRoberts_block_klu"
+path = "examples/cvRoberts_block_klu.rs"
+
+[[example]]
+name = "cvRoberts_klu"
+path = "examples/cvRoberts_klu.rs"
+
+[[example]]
+name = "cvRoberts_dns"
+path = "examples/cvRoberts_dns.rs"
+
+[[example]]
+name = "cvRoberts_dnsL"
+path = "examples/cvRoberts_dnsL.rs"
+
+[[example]]
+name = "cvRoberts_dns_constraints"
+path = "examples/cvRoberts_dns_constraints.rs"
+
+[[example]]
+name = "cvRoberts_dns_negsol"
+path = "examples/cvRoberts_dns_negsol.rs"
+
+[[example]]
+name = "cvRoberts_dns_uw"
+path = "examples/cvRoberts_dns_uw.rs"
+
+[[example]]
+name = "cvRocket_dns"
+path = "examples/cvRocket_dns.rs"
+
+[[example]]
+name = "cvVdp_auto_nls"
+path = "examples/cvVdp_auto_nls.rs"

@@ -1,0 +1,10 @@
+example:  ark_conserved_exp_entropy_ark
+source:   examples/arkode/C_serial/ark_conserved_exp_entropy_ark.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_conserved_exp_entropy_ark
+argv:     1 0
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_conserved_exp_entropy_ark__1_0
+exit:     0 (OK)
+seconds:  0.206
+stdout:   2938 bytes, sha256 96d1778ee80203e403302e6a85230603609f8ec58107c3bafd56c6f310fc7f93
+stderr:   0 bytes

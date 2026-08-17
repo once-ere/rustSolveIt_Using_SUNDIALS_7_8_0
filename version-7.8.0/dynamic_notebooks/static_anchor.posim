@@ -1,0 +1,40 @@
+# inverse_mass = 0: a pinned anchor ignores gravity while a test body falls — dynamic notebook
+#
+# Userguide Example S5: a mass-5 point at [0, 10, 0] made static by set inverse_mass = 0,
+# under uniform_gravity [0, -9.81, 0] with G = 0 — "three seconds of gravity, zero motion".
+# The coupled setters back-compute mass = 0, so the force m*g and the conversion p*m^-1
+# both vanish: the body is pinned at [0, 10, 0] forever.
+# DOCUMENTED ADAPTATION: S5 holds only the anchor; here one free point (mass 1 at [1, 10, 0])
+# stands beside it so the window shows the contrast — anchor pinned, neighbor falling
+# y(t) = 10 - 4.905 t^2: past y = 0 at t ~ 1.428 s, y = -34.145 at S5's t = 3 s.
+# Watch the hud: E stays 98.1 (kinetic and uniform-field potential trade exactly) while
+# P_y = -9.81 t and L_z = -9.81 t grow — gravity is external, so only E is conserved.
+# S5's caveat: mass 0 also stops SOURCING pairwise gravity (forces scale with G*mi*mj) —
+# use static bodies as anchors and test charges, not fixed suns (moot here: G = 0, as in S5).
+#
+# Launch:   posim_notebook static_anchor
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/static_anchor.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+new point { mass = 5, position = [0, 10, 0], velocity = [0, 0, 0] }
+set obj0.inverse_mass = 0
+new point { mass = 1, position = [1, 10, 0], velocity = [0, 0, 0] }
+set system.g_constant = 0
+set system.uniform_gravity = [0, -9.81, 0]
+
+# baselines: the anchor's stored mass back-computed to 0; both bodies at rest at y = 10;
+# E = 98.1 is the falling body's uniform-field potential alone (the anchor contributes 0)
+get obj0.mass
+get obj0.inverse_mass
+get obj0.position
+get obj1.position
+list
+energy
+momentum
+angmom
+
+scene create
+scene set_time_step 0.02
+scene translate 0.5 4 0
+scene zoom 0.8

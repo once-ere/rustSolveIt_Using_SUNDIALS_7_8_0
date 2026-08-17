@@ -1,0 +1,60 @@
+
+2D Heat PDE test problem:
+ ------------------------------------ 
+ kx                = 10
+ ky                = 10
+ forcing           = 1
+ tf                = 1
+ xu                = 1
+ yu                = 1
+ nx                = 64
+ ny                = 64
+ dx                = 0.015873
+ dy                = 0.015873
+ ------------------------------------ 
+ rtol              = 1e-05
+ atol              = 1e-10
+ fixed h           = 0
+ controller        = I
+ method            = 0
+ eigfrequency      = 25
+ stage_max_limit   = 1000
+ eigsafety         = 1.01
+ ------------------------------------ 
+ output            = 1
+ max steps         = 0
+ ------------------------------------ 
+ dee ID            = 1
+ dee num_init_wups = 20
+ dee num_succ_wups = 5
+ dee_max_iters     = 100
+ dee_krylov_dim    = 3
+ dee_reltol        = 0.005
+ ------------------------------------ 
+
+          t                     ||u||_rms                max error      
+ -----------------------------------------------------------------------
+ 0.000000000000000e+00    3.691406250000004e-01    0.000000000000000e+00
+ -----------------------------------------------------------------------
+
+Final integrator statistics:
+Current time                  = 0
+Steps                         = 0
+Step attempts                 = 1
+Stability limited steps       = 0
+Accuracy limited steps        = 0
+Error test fails              = 0
+NLS step fails                = 0
+Inequality constraint fails   = 0
+Initial step size             = 2.87768024842502e-06
+Last step size                = 0
+Current step size             = 2.87768024842502e-06
+RHS fn evals                  = 3
+Number of dom_eig updates     = 1
+Number of fe calls for DEE    = 23
+Number of iterations for DEE  = 0
+Max. num. of stages used      = 0
+Max. num. of stages allowed   = 1000
+Max. spectral radius          = 0
+Min. spectral radius          = 0
+  Max error = 0.000000000000000e+00

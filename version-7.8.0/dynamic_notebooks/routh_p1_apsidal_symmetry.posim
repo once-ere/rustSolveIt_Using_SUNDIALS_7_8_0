@@ -1,0 +1,126 @@
+# Routh I.Arts.419-420 — an apsidal radius divides the orbit symmetrically,
+# and there are only TWO apsidal distances — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 419: "When the law of force is a one-valued function of the
+# distance, every apsidal radius vector must divide the orbit symmetrically."
+# Art. 420: "There can be only two apsidal distances though there may be any
+# number of apses."
+#
+# AN APSE is a point where the radius vector is perpendicular to the tangent
+# (Art. 314) -- where the particle is neither approaching nor receding, so r is
+# stationary.
+#
+# WHY THE SYMMETRY. At an apse the radial velocity vanishes, so the state there
+# is fully described by r and the transverse speed. Reverse the time and you
+# get the same r and the same transverse speed with the sign of the angle
+# flipped -- a configuration the equations cannot distinguish from the
+# original, because a one-valued F(r) has no memory of direction. The motion
+# after the apse is therefore the mirror image of the motion before it: the
+# apsidal radius is an axis of symmetry of the whole orbit.
+#
+# WHY ONLY TWO DISTANCES. Between consecutive apses the orbit is one congruent
+# arc, reflected alternately. Every apse is therefore a copy of one of just two
+# -- a nearest and a farthest -- however many times the particle passes them.
+# An orbit may have infinitely many apses (any precessing orbit does) and still
+# exactly two apsidal DISTANCES.
+#
+# THE TEST. Start the particle AT an apse -- perihelion -- at t = 0. Art. 419
+# then says the orbit is symmetric about that radius, so running forward by tau
+# must give the same radius as running forward by T - tau, T being the period.
+# Every pair below agrees to ~1e-10, which is Art. 419 measured rather than
+# argued.
+#
+# THE NUMBERS. mu = 1, a = 1, e = 0.6, so T = 2*pi and the two apsidal
+# distances are
+#
+#     a(1 - e) = 0.4        (perihelion, the starting point)
+#     a(1 + e) = 1.6        (aphelion, reached at t = pi)
+#
+# and, solving Kepler's equation for the intermediate radii,
+#
+#     r(1)        = 1.0173689060959745  =  r(2*pi - 1)
+#     r(2)        = 1.443915428283383   =  r(2*pi - 2)
+#
+# The equality of each pair is the symmetry; the fact that r never takes a
+# value outside [0.4, 1.6] is Art. 420.
+#
+# SETUP NOTES. A primary of mass 1e9 with G = 1e-9 makes mu = 1 exactly, and
+# the planet is given mass 1e-6 so it neither shifts mu nor matters to its own
+# orbit. softening MUST be 0: with any epsilon the force is no longer a pure
+# inverse square, the orbit precesses (Bertrand, Art. 428), and while Art. 419
+# would still hold -- it needs only a one-valued F(r) -- the apses would no
+# longer return to the same two points in space.
+#
+# WHAT YOU WATCH: the e = 0.6 ellipse, with the long axis lying along the
+# starting radius. Every pass through perihelion repeats the same turn, mirrored.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_apsidal_symmetry
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_apsidal_symmetry.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_apsidal_symmetry.posim
+# ---------------------------------------------------------------------------
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+
+# starting at the nearer apse: r = a(1-e) = 0.4, and the radial velocity is zero
+norm(obj1.position)
+dot(obj1.position, obj1.velocity)
+
+# r at tau = 1 ...
+run 1 steps 1
+norm(obj1.position)
+reset
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+# ... and r at T - tau = 2*pi - 1. Art. 419 says these must agree.
+run 2 * pi - 1 steps 4
+norm(obj1.position)
+reset
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+# the farther apse at t = pi: r = a(1+e) = 1.6, radial velocity zero again
+run pi steps 3
+norm(obj1.position)
+dot(obj1.position, obj1.velocity)
+reset
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+energy
+
+scene create
+scene zoom in
+scene set_time_step 0.01

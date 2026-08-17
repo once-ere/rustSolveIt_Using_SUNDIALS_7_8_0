@@ -1,0 +1,85 @@
+# ---------------------------------------------------------------------
+# The double slit — the canonical 2-D quantum problem.
+#
+# A wide wavepacket is fired at an opaque wall with two gaps in it. Each
+# gap radiates a wave; downstream the two overlap and interfere, and the
+# probability of arrival develops fringes. There is one particle at a
+# time and no force pushing it sideways: the fringes come entirely from
+# the amplitudes adding.
+#
+# Units: hbar = m = 1.
+#
+# The wall is an ordinary user function of TWO arguments, built out of
+# comparisons. `(x > a) * (x < b)` is an indicator for a slab; the two
+# slit windows are subtracted from it. Nothing here is a built-in shape.
+#
+# Run: cargo run -p posim --release -- --notebook dynamic_notebooks/double_slit.posim
+# ---------------------------------------------------------------------
+
+# --- the wall with two slits -----------------------------------------
+# A slab at 0 < x < 0.4, height 60, EXCEPT where y is in one of the two
+# windows [0.5, 1.5] or [-1.5, -0.5].
+def openings(y) { (y > 1.5) * (y < 2.5) + (y > -2.5) * (y < -1.5) }
+def slit(x, y) { 60 * (x > 0) * (x < 0.4) * (1 - openings(y)) }
+
+# Check the geometry before trusting it: solid in the wall, open in the
+# slits, empty everywhere else.
+slit(0.2, 0)        # on the wall, between the slits -> 60
+slit(0.2, 2)        # in the upper slit             -> 0
+slit(0.2, -2)       # in the lower slit             -> 0
+slit(0.2, 6)        # on the wall, outside          -> 60
+slit(-2, 2)         # upstream of the wall          -> 0
+
+# --- the problem -----------------------------------------------------
+# Slit separation d = 4 and wavelength lambda = 2 pi / k = 0.785 put the
+# first interference maximum at sin(theta) = lambda/d = 0.196, about 11
+# degrees — several fringes fit on the screen. With k = 4 the first
+# maximum would be at 52 degrees and only the central lobe would be
+# visible, which is what a first attempt at this notebook showed.
+qm2 grid -12 24 450, -16 16 400
+qm2 potential slit
+
+# Absorbing edges, so nothing reflects off the walls back into the
+# pattern. Without them a quarter of the probability bounces and the
+# fringes are contaminated.
+# Width 4, so the absorber occupies x < -8, x > 20 and |y| > 12. The
+# packet is launched at x = -4.5 with sigma_x = 1.2 — CLEAR of it. A
+# first attempt launched at x = -7 with width 5, i.e. inside the
+# absorber, and 86% of the packet was eaten before it ever reached the
+# slits.
+qm2 absorb 4, 8
+
+# A packet wide in y, so it illuminates BOTH slits, travelling in +x.
+qm2 packet -4.5, 0, 1.2 4, 8 0
+qm2 energy
+qm2 norm
+
+# Nothing has reached the wall yet.
+qm2 prob 0.4 24, -18 18
+
+# --- propagate through the slits -------------------------------------
+qm2 run 2.6 steps 800
+
+# How much got through, and where is it?
+qm2 prob 0.4 24, -18 18
+qm2 centroid
+qm2 norm
+
+# --- the interference pattern ----------------------------------------
+# Count arrivals in horizontal bands on a "screen" downstream (x > 12).
+# Fringes show up as alternating high and low bands. The centre band is
+# the bright central maximum: it is the LARGEST, which is the signature
+# of two-slit interference rather than two independent images of the
+# slits.
+qm2 prob 11 19, -0.5 0.5
+qm2 prob 11 19, 0.5 1.5
+qm2 prob 11 19, 1.5 2.5
+qm2 prob 11 19, 2.5 3.5
+qm2 prob 11 19, 3.5 4.5
+qm2 prob 11 19, 4.5 5.5
+qm2 prob 11 19, 5.5 6.5
+qm2 prob 11 19, 6.5 7.5
+
+# --- the animation ---------------------------------------------------
+qm2 packet -4.5, 0, 1.2 4, 8 0
+qm2 animate "double_slit.html" 3 frames 100

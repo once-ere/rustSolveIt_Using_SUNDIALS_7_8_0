@@ -1,0 +1,51 @@
+[package]
+name = "kinsol_rs"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# forwards to sundials_core/host-libm; see that manifest
+host-libm = ["sundials_core/host-libm"]
+
+[dependencies]
+sundials_core = { path = "../sundials_core" }
+
+[[example]]
+name = "kinAnalytic_fp"
+path = "examples/kinAnalytic_fp.rs"
+
+[[example]]
+name = "kinFerTron_klu"
+path = "examples/kinFerTron_klu.rs"
+
+[[example]]
+name = "kinFerTron_dns"
+path = "examples/kinFerTron_dns.rs"
+
+[[example]]
+name = "kinFoodWeb_kry"
+path = "examples/kinFoodWeb_kry.rs"
+
+[[example]]
+name = "kinKrylovDemo_ls"
+path = "examples/kinKrylovDemo_ls.rs"
+
+[[example]]
+name = "kinLaplace_bnd"
+path = "examples/kinLaplace_bnd.rs"
+
+[[example]]
+name = "kinLaplace_picard_bnd"
+path = "examples/kinLaplace_picard_bnd.rs"
+
+[[example]]
+name = "kinLaplace_picard_kry"
+path = "examples/kinLaplace_picard_kry.rs"
+
+[[example]]
+name = "kinRoberts_fp"
+path = "examples/kinRoberts_fp.rs"
+
+[[example]]
+name = "kinRoboKin_dns"
+path = "examples/kinRoboKin_dns.rs"

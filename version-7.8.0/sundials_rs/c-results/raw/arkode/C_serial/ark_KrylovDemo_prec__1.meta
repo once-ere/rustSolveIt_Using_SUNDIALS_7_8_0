@@ -1,0 +1,10 @@
+example:  ark_KrylovDemo_prec
+source:   examples/arkode/C_serial/ark_KrylovDemo_prec.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_KrylovDemo_prec
+argv:     1
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_KrylovDemo_prec__1
+exit:     0 (OK)
+seconds:  0.306
+stdout:   26804 bytes, sha256 cd1f9ea2edce11f7d1d150a541d943aaa55686fea225fc608ec1130d543465a3
+stderr:   0 bytes

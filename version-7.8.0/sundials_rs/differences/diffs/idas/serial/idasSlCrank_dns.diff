@@ -1,0 +1,7 @@
+--- c-results/raw/idas/serial/idasSlCrank_dns.stdout
++++ rust-results/raw/idas/serial/idasSlCrank_dns.stdout
+@@ -44,3 +44,3 @@
+ --------------------------------------------
+-  G =       3.3366160662909388
++  G =       3.3366160662934146
+ --------------------------------------------

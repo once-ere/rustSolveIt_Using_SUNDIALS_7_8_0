@@ -1,0 +1,32 @@
+VARIANT                                        ARGS                               RS_vs_C    C_vs_REF   RS_vs_REF
+-------------------------------------------------------------------------------------------------------------
+cvPendulum_dns                                                                    same       DIFF       DIFF
+cvsPendulum_dns                                                                   same       DIFF       DIFF
+cvsKrylovDemo_ls                                                                  same       DIFF       DIFF
+cvsKrylovDemo_ls                               1                                  same       DIFF       DIFF
+cvsKrylovDemo_ls                               2                                  same       DIFF       DIFF
+cvsKrylovDemo_ls                               0 1                                same       DIFF       DIFF
+idasAkzoNob_ASAi_dns                                                              same       DIFF       DIFF
+ark_conserved_exp_entropy_ark                  1 1                                same       DIFF       DIFF
+ark_dissipated_exp_entropy                     1 1                                same       DIFF       DIFF
+cvRoberts_dnsL                                                                    NO-C-BINARY (backend disabled in the C build)
+cvsRoberts_dnsL                                                                   NO-C-BINARY (backend disabled in the C build)
+kinRoboKin_dns                                                                    same       DIFF       DIFF
+cvRoberts_dns_negsol                                                              same       DIFF       DIFF
+ark_analytic_partitioned                       forcing                            same       DIFF       DIFF
+ark_analytic_partitioned                       splitting                          same       DIFF       DIFF
+ark_analytic_partitioned                       splitting ARKODE_SPLITTING_BEST_2  same       DIFF       DIFF
+ark_analytic_partitioned                       splitting ARKODE_SPLITTING_RUTH_3  same       DIFF       DIFF
+ark_analytic_partitioned                       splitting ARKODE_SPLITTING_YOSHID  same       DIFF       DIFF
+ark_damped_harmonic_symplectic                                                    same       DIFF       DIFF
+ark_harmonic_symplectic                                                           same       DIFF       DIFF
+ark_reaction_diffusion_mri                                                        same       DIFF       DIFF
+ark_kepler                                                                        same       DIFF       DIFF
+ark_kepler                                     --stepper ERK --step-mode fixed -  same       DIFF       DIFF
+ark_kepler                                     --stepper SPRK --step-mode fixed   same       DIFF       DIFF
+ark_kepler                                     --stepper SPRK --step-mode fixed   same       DIFF       DIFF
+ark_kepler                                     --stepper SPRK --step-mode fixed   same       DIFF       DIFF
+VARIANT                RS_vs_Csub   Csub_vs_REF  RS_vs_REF
+-----------------------------------------------------------------
+cvRoberts_dnsL         same         DIFF         DIFF
+cvsRoberts_dnsL        same         DIFF         DIFF

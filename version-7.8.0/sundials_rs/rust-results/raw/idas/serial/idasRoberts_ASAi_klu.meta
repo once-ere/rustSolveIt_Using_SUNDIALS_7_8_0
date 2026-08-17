@@ -1,0 +1,10 @@
+example:  idasRoberts_ASAi_klu
+crate:    idas_rs
+source:   crates/idas_rs/examples/idasRoberts_ASAi_klu.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasRoberts_ASAi_klu
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasRoberts_ASAi_klu
+exit:     0 (OK)
+seconds:  0.106
+stdout:   1200 bytes, sha256 64b19fd4a7704245fa4f25487e37a0803d91fbbd5c0e476436757bc043c28f10
+stderr:   0 bytes

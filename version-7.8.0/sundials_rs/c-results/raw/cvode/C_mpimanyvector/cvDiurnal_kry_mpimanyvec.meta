@@ -1,0 +1,10 @@
+example:  cvDiurnal_kry_mpimanyvec
+source:   examples/cvode/C_mpimanyvector/cvDiurnal_kry_mpimanyvec.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/C_mpimanyvector/cvDiurnal_kry_mpimanyvec
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/C_mpimanyvector/cvDiurnal_kry_mpimanyvec
+exit:     0 (OK)
+seconds:  0.606
+stdout:   2572 bytes, sha256 7d2e0f70d74a8a6d17a8d25df81a6c608d4d5037f09a676727e62c2d57a775db
+stderr:   762 bytes

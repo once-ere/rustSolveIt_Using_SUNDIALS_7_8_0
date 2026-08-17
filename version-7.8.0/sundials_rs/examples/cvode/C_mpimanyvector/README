@@ -1,0 +1,3 @@
+List of MPIManyVector CVODE examples
+
+  cvDiurnal_kry_mpimanyvec : 2-D 2-species diurnal advection-diffusion

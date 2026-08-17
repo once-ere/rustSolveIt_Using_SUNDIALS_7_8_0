@@ -1,0 +1,10 @@
+example:  idaAnalytic_mels
+source:   examples/ida/serial/idaAnalytic_mels.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/serial/idaAnalytic_mels
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/serial/idaAnalytic_mels
+exit:     0 (OK)
+seconds:  0.206
+stdout:   756 bytes, sha256 bf1750471b1162273b2b25921178834f3a37e4632332e1600ce1aa40f21f9320
+stderr:   0 bytes

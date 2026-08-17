@@ -1,0 +1,123 @@
+# Routh I.Arts.409-412 — the collinear three-body configuration, and its
+# instability — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 409: "Three mutually attracting particles whose masses are M, m',
+# m are placed in a straight line. It is required to determine the conditions
+# that throughout their subsequent motion they may remain in a straight line."
+#
+# This is the second of Art. 408's two arrangements -- the collinear one, found
+# by Euler, alongside Lagrange's equilateral. In general the spacing ratio is
+# the root of an equation of degree 2k+1 (Art. 409), and Art. 410 notes the
+# three cases -- the third mass between the other two, or beyond either -- must
+# be treated separately, because "the analytical expression for the law of the
+# inverse square does not represent the attraction" across a sign change.
+#
+# THE SYMMETRIC CASE, IN FULL. For three EQUAL masses the quintic collapses.
+# By symmetry the middle body sits at the centre, the outer two at +/- d, and
+# the middle one feels equal and opposite pulls -- it is in equilibrium and
+# stays put. An outer body at +d feels
+#
+#     from the middle body (distance d)    :  G m^2 / d^2
+#     from the far body    (distance 2d)   :  G m^2 / (4 d^2)
+#
+# both directed inward, so the total is (1 + 1/4) G m^2 / d^2. Matching that to
+# the centripetal requirement m omega^2 d,
+#
+#     omega^2 = 1.25 * G m / d^3
+#
+# THE NUMBERS. G = 1, m = 1, d = 1:
+#
+#     omega  = sqrt(1.25) = 1.118033988749895
+#     speed of each outer body = omega*d = 1.118033988749895
+#     period = 2*pi/omega = 5.619851784832581
+#
+# The middle body has zero velocity and stays at the origin for ever.
+#
+# ART. 412 -- IT IS UNSTABLE. "Prove that if the force vary as any inverse
+# power of the distance this state of motion is unstable." The second half of
+# this notebook displaces one outer body by a thousandth and runs on: the
+# spacing that was exact to 1e-13 stops being a spacing at all.
+#
+# SETUP NOTES. G = 1 and softening = 0 for the exact inverse square in the
+# unperturbed run; the perturbed run uses the default softening, because the
+# instability drives close approaches and an exact 1/r^2 singularity would end
+# the integration rather than the demonstration.
+#
+# WHAT YOU WATCH: three bodies in a line, turning like a rigid rod about the
+# middle one. Then the same line with one end nudged, which holds briefly and
+# then tears itself apart.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_collinear_three_body
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_collinear_three_body.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_collinear_three_body.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 1
+set system.softening = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new point { mass = 1, position = [-1, 0, 0], velocity = [0, -1.118033988749895, 0] }
+new point { mass = 1, position = [ 0, 0, 0] }
+new point { mass = 1, position = [ 1, 0, 0], velocity = [0,  1.118033988749895, 0] }
+
+# the middle body is in equilibrium; the outer two are symmetric
+momentum
+norm(obj0.position - obj1.position)
+norm(obj2.position - obj1.position)
+
+run 5.619851784832581 steps 8
+
+# one full period: everything home, the middle body never having moved
+norm(obj0.position - [-1, 0, 0])
+norm(obj1.position - [0, 0, 0])
+norm(obj2.position - [ 1, 0, 0])
+reset
+
+# ---- Art. 412: nudge one end by 0.001
+set system.g_constant = 1
+set system.softening = 1e-6
+set system.rtol = 1e-12
+set system.atol = 1e-14
+new point { mass = 1, position = [-1.001, 0, 0], velocity = [0, -1.118033988749895, 0] }
+new point { mass = 1, position = [ 0, 0, 0] }
+new point { mass = 1, position = [ 1, 0, 0], velocity = [0,  1.118033988749895, 0] }
+
+norm(obj0.position - obj1.position)
+norm(obj2.position - obj1.position)
+run 16.859555354497743 steps 12
+# after three periods the two spacings no longer agree
+norm(obj0.position - obj1.position)
+norm(obj2.position - obj1.position)
+run 33.719110708995486 steps 16
+# after nine, the line is gone
+norm(obj0.position - obj1.position)
+norm(obj2.position - obj1.position)
+reset
+
+set system.g_constant = 1
+set system.softening = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new point { mass = 1, position = [-1, 0, 0], velocity = [0, -1.118033988749895, 0] }
+new point { mass = 1, position = [ 0, 0, 0] }
+new point { mass = 1, position = [ 1, 0, 0], velocity = [0,  1.118033988749895, 0] }
+energy
+
+scene create
+scene zoom in
+scene set_time_step 0.02

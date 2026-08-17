@@ -1,0 +1,10 @@
+example:  kinLaplace_picard_kry_f2003
+source:   examples/kinsol/F2003_serial/kinLaplace_picard_kry_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/F2003_serial/kinLaplace_picard_kry_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/F2003_serial/kinLaplace_picard_kry_f2003
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1788 bytes, sha256 2e92f219c0de41781b6cf8d8e360abb3e5d685b0e5559f7aef5d66ece3961302
+stderr:   0 bytes

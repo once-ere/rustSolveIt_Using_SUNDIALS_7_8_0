@@ -1,0 +1,10 @@
+example:  idasFoodWeb_bnd
+source:   examples/idas/serial/idasFoodWeb_bnd.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasFoodWeb_bnd
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasFoodWeb_bnd
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1541 bytes, sha256 f48a0923fb034160393683fa1ce730e9a9a2b6da79370fd950e2b64f37f443fd
+stderr:   0 bytes

@@ -1,0 +1,17 @@
+# The mixed-shape box rattle, exactly as the regression test
+# `mixed_shapes_rattle_in_the_box_conserving_energy`
+# (physical_object/tests/collision.rs) sets it up: a rigid BOX 4 whose
+# six wall slabs have inverse_mass = 0, no gravity, three bodies of
+# different shape thrown across it with no initial spin. Every bounce
+# is a real CVODE rootfinding event; the test asserts |dE|/E < 1e-6.
+# G = 0 -- pure free flight plus collisions, so every outcome is exact
+# (the test's `free_system` does the same; posim's default G is 1, and
+# mutual gravity between bodies that nearly touch is what would pump
+# the energy).
+set system.g_constant = 0
+box 4
+collide on
+new cylinder { mass = 2,       radius = 0.25, height = 1.5, position = [-1, 0.3, 0], velocity = [2, 0.5, -1] }
+new disk     { mass = 0.66666666666666663, radius = 1,      position = [1, -0.8, 0.5], velocity = [-1, 1, 0.6] }
+new cuboid   { mass = 1.6666666666666667, half_extents = [0.5, 0.5, 0.5], position = [0.2, 1.1, -0.9], velocity = [0.5, -2, 1] }
+method adams

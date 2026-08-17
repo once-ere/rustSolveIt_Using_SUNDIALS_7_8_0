@@ -1,0 +1,126 @@
+# Routh II.Arts.196-198 — Sylvester's and Poinsot's measures of the time
+# — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 196: "Sylvester's
+# measure of the time. When a body turns about a fixed point its motion in
+# space is represented by making its momental ellipsoid roll on a fixed plane.
+# This gives NO REPRESENTATION OF THE TIME occupied by the body in passing from
+# [one position to another]."
+#
+# THE GAP POINSOT LEAVES. Art. 143's construction is complete as geometry and
+# silent as chronology. It tells you the path the instantaneous axis takes --
+# the polhode rolling on the herpolhode -- but nothing about how fast. Rolling
+# is a purely kinematic statement; you can traverse the same polhode at any
+# schedule and the picture is unchanged.
+#
+# SYLVESTER'S FIX. Take a second body CORRELATED with the first -- their
+# ellipsoids of gyration confocal, so that
+#
+#     I'^-1 = I^-1 - k*Identity        (Arts. 192-195)
+#
+# and give it the same angular momentum. Its motion differs from the first
+# body's by
+#
+#     w - w'  =  k * L
+#
+# a rotation about the invariable line at the CONSTANT rate k*G. Art. 196 puts
+# it as a rotation "G t (1/A - 1/A') about the invariable line": the second
+# ellipsoid turns uniformly relative to the first. So the angle between the two
+# bodies is proportional to t, and reading it off is reading a clock. Art. 198
+# records Poinsot's variant, a cone rolling on a plane which "turns uniformly
+# round the invariable line" -- the same uniform rotation supplying the same
+# missing quantity.
+#
+# WHY THIS IS THE ONLY UNIFORM THING IN SIGHT. In a torque-free asymmetric
+# motion almost nothing advances at a constant rate: not |w|, not the polhode
+# angle, not the precession. G and T are constant but they are numbers, not
+# clocks -- they do not advance at all. The correlated body's relative rotation
+# is a quantity that grows linearly with t, and it exists only because of the
+# confocal relation.
+#
+# WHAT IS MEASURED HERE, AND WHAT IS NOT. The clock RATE k*G is exact at the
+# instant of correspondence, and is verified below:
+#
+#     |w - w'| = k*G = 1.283854061020956   at t = 0, to machine precision
+#
+# Sustaining that uniform rotation requires the two bodies to be held in the
+# correlated ATTITUDES of Art. 195. Start them merely alike, as here, and their
+# attitudes diverge -- because different inertias turn differently -- and the
+# difference ceases to be k*L: measured, |w - w'| drifts to 1.4574566464474867
+# by t = 3 and 1.4319086423736707 by t = 7, and its direction leaves the
+# invariable line. The cells print that drift rather than hiding it.
+#
+# So this notebook establishes the rate and the mechanism, and shows precisely
+# what Art. 195's attitude condition is doing: without it there is no clock.
+# The two bodies' own |w| are printed alongside, to make the contrast plain --
+# neither of them is uniform either.
+#
+# SETUP NOTE. Body 2's inertia matches no simple shape and is supplied directly
+# with inertia_tensor; posim keeps a user-supplied tensor rather than
+# recomputing it. g_constant = 0 so the two bodies do not attract each other.
+#
+# WHAT YOU WATCH: two boxes with identical angular momentum tumbling at
+# different rates. The angle between them is the clock -- the one thing in the
+# whole motion that advances uniformly.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_sylvester_time
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_sylvester_time.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_sylvester_time.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+set obj0.angular_momentum = [1.5, 12.75, 0.125]
+set obj1.angular_momentum = [1.5, 12.75, 0.125]
+
+# the clock rate k*G, and its direction -- along the invariable line
+norm(obj0.angular_velocity - obj1.angular_velocity)
+normalize(obj0.angular_velocity - obj1.angular_velocity)
+normalize(obj0.angular_momentum)
+
+# neither body's own angular velocity is uniform ...
+norm(obj0.angular_velocity)
+run 3 steps 3
+norm(obj0.angular_velocity)
+# ... and neither is the difference, once the attitudes have diverged
+norm(obj0.angular_velocity - obj1.angular_velocity)
+normalize(obj0.angular_velocity - obj1.angular_velocity)
+# the angle the clock WOULD accumulate by t = 3 at the correspondence rate
+1.2838540610209558 * 3
+
+run 4 steps 4
+norm(obj0.angular_velocity)
+norm(obj0.angular_velocity - obj1.angular_velocity)
+normalize(obj0.angular_velocity - obj1.angular_velocity)
+# and by t = 7 -- valid only while the correlated attitudes are held
+1.2838540610209558 * 7
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-5, 0, 0] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 5, 0, 0], inertia_tensor = [[10, 0, 0], [0, 7.391304347826088, 0], [0, 0, 1.4285714285714284]] }
+set obj0.angular_momentum = [1.5, 12.75, 0.125]
+set obj1.angular_momentum = [1.5, 12.75, 0.125]
+
+scene create
+scene set_time_step 0.03

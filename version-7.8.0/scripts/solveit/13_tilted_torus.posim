@@ -1,0 +1,18 @@
+# 13. Geometry that only a real support function gets right. An
+# axis-aligned torus of outer radius 2 exactly inscribes a BOX 4. Tilt
+# it to the axis (1,1,1)/sqrt(3) and its per-axis extent DROPS to
+# 1.5*sqrt(2/3) + 0.5 = 1.7247448713915889 -- it now clears every wall
+# with room to spare. A bounding-sphere test would say the opposite.
+set system.g_constant = 0
+box 4
+collide on
+new torus as flat { mass = 1, ring_radius = 1.5, tube_radius = 0.5, position = [0, 0, 0] }
+get flat.boundary
+del 6
+# the same torus tilted to (1,1,1)/sqrt(3): quaternion about the axis
+# perpendicular to both z and (1,1,1), by the angle between them
+new torus as tilt { mass = 1, ring_radius = 1.5, tube_radius = 0.5, position = [0, 0, 0], orientation = [0.8880738339771154, -0.32505758367186816, 0.32505758367186816, 0] }
+run 1 steps 10
+get tilt.position
+get system.collisions
+1.5 * sqrt(2 / 3) + 0.5

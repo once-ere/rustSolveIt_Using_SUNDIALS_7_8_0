@@ -1,0 +1,66 @@
+# Example 11 — the box of shapes: every body type inside a rigid,
+# INFINITELY MASSIVE 4R x 4R x 4R bounding box (R = 1, M = 1).
+#
+# Infinite mass is representable EXACTLY because the fundamental data
+# structures and the equations of motion use the INVERSE mass, never the
+# mass: velocity is v = p * m^-1, and the contact impulse divides by
+# n.Kn = m_i^-1 + m_j^-1 + (angular terms). BOX 4 creates six static
+# wall slabs with inverse_mass = 0 (and zero inverse inertia): they
+# contribute nothing to the impulse denominator, receive no state
+# writes, and therefore reflect everything elastically while staying
+# bit-identically at rest. Check it: GET obj0.inverse_mass -> 0.
+#
+# The six bodies (masses per the spec):
+#   torus    M     inner radius R, outer radius 2R (ring 1.5, tube 0.5)
+#   point    M     the only moving body: v(0) = (100, 200, 100)
+#   sphere   2M    radius R/2 (the spec leaves the radius free; R/2 documented)
+#   disk     2M/3  radius R (ideal zero-thickness solid disk)
+#   cube     5M/3  side R (half extents R/2)
+#   cylinder 2M    radius R/2, height 3R/2
+#
+# GEOMETRY: a torus with outer radius 2R EXACTLY inscribes the 4R box
+# when its axis is a coordinate axis (its outer equator touches four
+# walls), so "inside and not touching" forces a tilt: with the axis
+# along the body diagonal (1,1,1)/sqrt(3) the extent per axis is
+# 1.5*sqrt(2/3) + 0.5 ~ 1.7247 < 2 — clearance 0.2753. The torus sits
+# at the center (the only placement that clears all six walls); the
+# orientation quaternion below realizes exactly that tilt.
+#
+# The other five positions are RANDOM: drawn by a documented LCG
+# (x <- 1664525 x + 1013904223 mod 2^32, seed 20260724, uniform in the
+# per-axis wall-clearance range, sequential rejection against already-
+# placed bodies at >= 0.05 separation). Verified: every wall clearance
+# and every pairwise separation is strictly positive at t = 0
+# (worst pair 0.081, worst wall 0.075).
+#
+# PHYSICS EXPECTATIONS (G = 0, all restitutions 1 = elastic):
+#   energy: E0 = 1/2 * M * |v|^2 = 1/2 * 60000 = 30000, conserved
+#           through every wall and body collision (elastic impulses
+#           reverse the contact-normal velocity: dE = 0 exactly);
+#   momentum: NOT conserved — the infinitely massive walls absorb it
+#             (that is what "infinitely massive" means dynamically);
+#   the point particle can thread the torus hole (its separation from
+#   the torus never reaches zero on a through-hole line) and passes
+#   through the IDEAL zero-thickness disk (a measure-zero contact);
+#   every finite-size body bounces off both.
+#
+# Run: cargo run -p posim -- --script scripts/collisions/11_box_of_shapes.posim
+set system.g_constant = 0
+box 4
+new torus { mass = 1, inner_radius = 1, outer_radius = 2, orientation = [0.888073833977115, -0.325057583671868, 0.325057583671868, 0] }
+new point { mass = 1, position = [1.406590, -0.995859, 0.569601], velocity = [100, 200, 100] }
+new sphere { mass = 2, radius = 1/2, position = [1.424704, 1.367496, -0.493612] }
+new disk { mass = 2/3, radius = 1, position = [-0.677386, -1.041493, -1.091679], orientation = [0.900447102352677, 0.307567078752479, -0.307567078752479, 0] }
+new cuboid { mass = 5/3, half_extents = [0.5, 0.5, 0.5], position = [1.074397, 0.816223, 1.102099] }
+new cylinder { mass = 2, radius = 1/2, height = 3/2, position = [-1.027024, -1.403890, -0.485619], orientation = [0.968912421710645, 0, 0.247403959254523, 0] }
+list
+collide
+get obj0.inverse_mass
+get obj6.inertia_tensor
+energy
+momentum
+run 0.1 steps 100
+energy
+momentum
+get system.collisions
+get system.box

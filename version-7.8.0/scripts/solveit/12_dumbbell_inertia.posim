@@ -1,0 +1,22 @@
+# 12. A user-defined constructor, and the inertia tensor it produces.
+# A DUMBBELL is TWO solid spheres plus a rod, treated as ONE rigid body.
+# Its inertia about the COM is the exact composite: 2/5 m r^2 for each
+# sphere, plus m z^2 by the parallel-axis theorem, plus the rod's own
+# cylinder terms about the COM.
+# Note the parameter names: m1, m2, m_rod, r1, r2, rod_radius, length.
+def barbell(m1 = 1, m2 = 1, m_rod = 0.5, r1 = 0.3, r2 = 0.3, rod_r = 0.05, len = 2) {
+  new dumbbell as bar { m1 = m1, m2 = m2, m_rod = m_rod, r1 = r1, r2 = r2, rod_radius = rod_r, length = len }
+}
+funcs
+barbell(2, 2, 0, 0.3, 0.3, 0.05, 2)
+list
+get bar.mass
+get bar.m1
+get bar.m2
+get bar.length
+get bar.inertia_tensor
+# With a massless rod and equal spheres the composite is exact:
+#   Ixx = Iyy = 2*(2/5 m r^2 + m z^2)   with m = 2, r = 0.3, z = 1
+#   Izz = 2*(2/5 m r^2)
+2 * (0.4 * 2 * 0.3 * 0.3 + 2 * 1 * 1)
+2 * (0.4 * 2 * 0.3 * 0.3)

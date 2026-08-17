@@ -1,0 +1,10 @@
+example:  ark_sod_lsrk
+source:   examples/arkode/CXX_manyvector/ark_sod_lsrk.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_manyvector/ark_sod_lsrk
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_manyvector/ark_sod_lsrk
+exit:     0 (OK)
+seconds:  0.407
+stdout:   2047 bytes, sha256 a385d0ca16042b4a892a6e460ba495045af5ef38d7087f4714b358eaa1bd41b8
+stderr:   0 bytes

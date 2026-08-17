@@ -1,0 +1,5 @@
+worst relative difference 2.036e-01 (1807600431283255 ulp)
+  line 44, numeric field 0
+  C    = 8.96616e-13
+  Rust = 7.14095e-13
+lines differing: 12 of 44

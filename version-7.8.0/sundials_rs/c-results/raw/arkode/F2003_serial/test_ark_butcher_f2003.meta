@@ -1,0 +1,10 @@
+example:  test_ark_butcher_f2003
+source:   examples/arkode/F2003_serial/test_ark_butcher_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/test_ark_butcher_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/test_ark_butcher_f2003
+exit:     0 (OK)
+seconds:  0.206
+stdout:   77 bytes, sha256 025c6c2e755e8b62a9c32094817e04e945726bc2f89d091e86450415b6c1789d
+stderr:   0 bytes

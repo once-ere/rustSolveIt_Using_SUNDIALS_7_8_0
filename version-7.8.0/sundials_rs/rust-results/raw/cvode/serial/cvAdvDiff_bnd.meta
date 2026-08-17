@@ -1,0 +1,10 @@
+example:  cvAdvDiff_bnd
+crate:    cvode_rs
+source:   crates/cvode_rs/examples/cvAdvDiff_bnd.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvAdvDiff_bnd
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvAdvDiff_bnd
+exit:     0 (OK)
+seconds:  0.105
+stdout:   848 bytes, sha256 2ea0937bb293ce554cb776838a3159b035e3dd14bd5b927369caf7a1985dcd85
+stderr:   0 bytes

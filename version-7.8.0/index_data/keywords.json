@@ -1,0 +1,415 @@
+[
+ {
+  "variant": "New",
+  "canonical": "NEW",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 78
+ },
+ {
+  "variant": "Set",
+  "canonical": "SET",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 79
+ },
+ {
+  "variant": "Get",
+  "canonical": "GET",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 80
+ },
+ {
+  "variant": "Del",
+  "canonical": "DEL",
+  "aliases": [
+   "DELETE"
+  ],
+  "file": "posim/src/lexer.rs",
+  "line": 81
+ },
+ {
+  "variant": "List",
+  "canonical": "LIST",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 82
+ },
+ {
+  "variant": "Step",
+  "canonical": "STEP",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 83
+ },
+ {
+  "variant": "Run",
+  "canonical": "RUN",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 84
+ },
+ {
+  "variant": "Steps",
+  "canonical": "STEPS",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 85
+ },
+ {
+  "variant": "Method",
+  "canonical": "METHOD",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 86
+ },
+ {
+  "variant": "Adams",
+  "canonical": "ADAMS",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 87
+ },
+ {
+  "variant": "Bdf",
+  "canonical": "BDF",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 88
+ },
+ {
+  "variant": "Sprk",
+  "canonical": "SPRK",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 89
+ },
+ {
+  "variant": "Energy",
+  "canonical": "ENERGY",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 90
+ },
+ {
+  "variant": "Com",
+  "canonical": "COM",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 91
+ },
+ {
+  "variant": "Momentum",
+  "canonical": "MOMENTUM",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 92
+ },
+ {
+  "variant": "Angmom",
+  "canonical": "ANGMOM",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 93
+ },
+ {
+  "variant": "Laplace",
+  "canonical": "LAPLACE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 94
+ },
+ {
+  "variant": "Help",
+  "canonical": "HELP",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 95
+ },
+ {
+  "variant": "Point",
+  "canonical": "POINT",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 96
+ },
+ {
+  "variant": "Sphere",
+  "canonical": "SPHERE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 97
+ },
+ {
+  "variant": "Cuboid",
+  "canonical": "CUBOID",
+  "aliases": [
+   "CUBE"
+  ],
+  "file": "posim/src/lexer.rs",
+  "line": 98
+ },
+ {
+  "variant": "Torus",
+  "canonical": "TORUS",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 99
+ },
+ {
+  "variant": "Disk",
+  "canonical": "DISK",
+  "aliases": [
+   "DISC"
+  ],
+  "file": "posim/src/lexer.rs",
+  "line": 100
+ },
+ {
+  "variant": "Cylinder",
+  "canonical": "CYLINDER",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 101
+ },
+ {
+  "variant": "Box",
+  "canonical": "BOX",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 102
+ },
+ {
+  "variant": "Reset",
+  "canonical": "RESET",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 103
+ },
+ {
+  "variant": "Qm",
+  "canonical": "QM",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 104
+ },
+ {
+  "variant": "Qm2",
+  "canonical": "QM2",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 105
+ },
+ {
+  "variant": "Qm3",
+  "canonical": "QM3",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 106
+ },
+ {
+  "variant": "Scene",
+  "canonical": "SCENE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 107
+ },
+ {
+  "variant": "Create",
+  "canonical": "CREATE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 108
+ },
+ {
+  "variant": "Close",
+  "canonical": "CLOSE",
+  "aliases": [
+   "DESTROY"
+  ],
+  "file": "posim/src/lexer.rs",
+  "line": 109
+ },
+ {
+  "variant": "Translate",
+  "canonical": "TRANSLATE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 110
+ },
+ {
+  "variant": "Rotate",
+  "canonical": "ROTATE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 111
+ },
+ {
+  "variant": "Zoom",
+  "canonical": "ZOOM",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 112
+ },
+ {
+  "variant": "In",
+  "canonical": "IN",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 113
+ },
+ {
+  "variant": "Out",
+  "canonical": "OUT",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 114
+ },
+ {
+  "variant": "Hide",
+  "canonical": "HIDE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 115
+ },
+ {
+  "variant": "Show",
+  "canonical": "SHOW",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 116
+ },
+ {
+  "variant": "Refresh",
+  "canonical": "REFRESH",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 117
+ },
+ {
+  "variant": "Redraw",
+  "canonical": "REDRAW",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 118
+ },
+ {
+  "variant": "Start",
+  "canonical": "START",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 119
+ },
+ {
+  "variant": "Stop",
+  "canonical": "STOP",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 120
+ },
+ {
+  "variant": "Pause",
+  "canonical": "PAUSE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 121
+ },
+ {
+  "variant": "Reverse",
+  "canonical": "REVERSE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 122
+ },
+ {
+  "variant": "SetTimeStep",
+  "canonical": "SET_TIME_STEP",
+  "aliases": [
+   "SETTIMESTEP"
+  ],
+  "file": "posim/src/lexer.rs",
+  "line": 123
+ },
+ {
+  "variant": "Status",
+  "canonical": "STATUS",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 124
+ },
+ {
+  "variant": "Events",
+  "canonical": "EVENTS",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 125
+ },
+ {
+  "variant": "All",
+  "canonical": "ALL",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 126
+ },
+ {
+  "variant": "As",
+  "canonical": "AS",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 127
+ },
+ {
+  "variant": "Let",
+  "canonical": "LET",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 128
+ },
+ {
+  "variant": "Funcs",
+  "canonical": "FUNCS",
+  "aliases": [
+   "FUNCTIONS"
+  ],
+  "file": "posim/src/lexer.rs",
+  "line": 129
+ },
+ {
+  "variant": "Dumbbell",
+  "canonical": "DUMBBELL",
+  "aliases": [
+   "DUMBELL"
+  ],
+  "file": "posim/src/lexer.rs",
+  "line": 130
+ },
+ {
+  "variant": "Collide",
+  "canonical": "COLLIDE",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 131
+ },
+ {
+  "variant": "Contacts",
+  "canonical": "CONTACTS",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 132
+ },
+ {
+  "variant": "On",
+  "canonical": "ON",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 133
+ },
+ {
+  "variant": "Off",
+  "canonical": "OFF",
+  "aliases": [],
+  "file": "posim/src/lexer.rs",
+  "line": 134
+ }
+]

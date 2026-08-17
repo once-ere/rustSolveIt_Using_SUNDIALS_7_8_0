@@ -1,0 +1,10 @@
+example:  ark_heat2D_p
+source:   examples/arkode/CXX_parallel/ark_heat2D_p.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parallel/ark_heat2D_p
+argv:     --np 2 2
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parallel/ark_heat2D_p__--np_2_2
+exit:     0 (OK)
+seconds:  0.607
+stdout:   3081 bytes, sha256 cde035179fe1e6978d0955ced54ca7b0e9b274a20fc12ee15fccbaf4e443357d
+stderr:   762 bytes

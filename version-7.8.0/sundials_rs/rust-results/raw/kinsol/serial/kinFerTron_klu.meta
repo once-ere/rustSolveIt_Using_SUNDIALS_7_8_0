@@ -1,0 +1,10 @@
+example:  kinFerTron_klu
+crate:    kinsol_rs
+source:   crates/kinsol_rs/examples/kinFerTron_klu.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinFerTron_klu
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinFerTron_klu
+exit:     0 (OK)
+seconds:  0.107
+stdout:   1399 bytes, sha256 2cbbde2630ba8259a35cf91d9bdf0d5fd1f85f3c1651d422ed02449ac2afea31
+stderr:   0 bytes

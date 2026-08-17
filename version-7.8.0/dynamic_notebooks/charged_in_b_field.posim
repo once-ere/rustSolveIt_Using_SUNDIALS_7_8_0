@@ -1,0 +1,44 @@
+# Cyclotron motion: a charge circling in a uniform magnetic field — dynamic notebook
+#
+# A sphere (mass 2, radius 0.1, charge -1.5) fired at [3, 0, 0] through
+# B = [0, 0, 4] feels only the Lorentz force q·v×B, which does no work:
+# the speed stays 3 and the path is a circle with gyroradius
+# r = m·v/(|q|·B) = 2·3/(1.5·4) = 1 and period T = 2·pi·2/(1.5·4) = 2.0944
+# (grammar.md §9 Example 3; the self-checking Rust example
+# physical_object/examples/charged_in_b_field.rs runs this exact setup).
+# Watch the hud: E holds at 9 while P swings at constant magnitude 6,
+# and the circle closes on itself once per revolution (~14 wall seconds).
+#
+# Launch:   posim_notebook charged_in_b_field
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/charged_in_b_field.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+# The exact setup of grammar Example 3: v ⟂ B, integrated with BDF —
+# the Lorentz force is velocity-dependent, so the symplectic SPRK path
+# is not allowed here; BDF is the recommended integrator for gyration.
+new sphere { mass = 2, radius = 0.1, charge = -1.5, velocity = [3, 0, 0] }
+set system.b_field = [0, 0, 4]
+method bdf
+
+# Analytic anchors, computed in-notebook:
+#   period      T = 2·pi·m/(|q|·B) = 2.0943951023931953
+#   gyroradius  r = m·v/(|q|·B)    = 1
+2 * pi * 2 / (1.5 * 4)
+2 * 3 / (1.5 * 4)
+
+# Baselines before running: E = ½·2·3² = 9 (kinetic only — the magnetic
+# force does no work), P = m·v = [6, 0, 0], speed 3. All of them must
+# still read the same after any number of full revolutions.
+energy
+momentum
+norm(obj0.velocity)
+
+scene create
+# One period is T = 2.0944; at ~30 playback ticks/second a time step of
+# 0.005 plays a full revolution in about 14 wall seconds.
+scene set_time_step 0.005
+# The orbit is a radius-1 circle about the guiding center [0, 1, 0] —
+# small in the default view, so look at the center and zoom in 2.5×.
+scene translate 0 1
+scene zoom 2.5

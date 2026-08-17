@@ -1,0 +1,10 @@
+example:  kinAnalytic_fp
+source:   examples/kinsol/serial/kinAnalytic_fp.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/serial/kinAnalytic_fp
+argv:     --m_aa 2 --damping_fn
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/serial/kinAnalytic_fp__--m_aa_2_--damping_fn
+exit:     0 (OK)
+seconds:  0.206
+stdout:   711 bytes, sha256 49768800e80847cdb8018d27eca5aaff3b5652e64a5dab83a816b633267a438b
+stderr:   0 bytes

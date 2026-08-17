@@ -1,0 +1,10 @@
+example:  cvPendulum_dns
+source:   examples/cvode/serial/cvPendulum_dns.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvPendulum_dns
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvPendulum_dns
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1900 bytes, sha256 66778152510991e47cfddbb947867a9903f1da56c7357f8f0e4589a30cd83dc6
+stderr:   0 bytes

@@ -1,0 +1,483 @@
+############ scripts/solveit/01_elastic_head_on.posim
+In[1]:= set system.g_constant = 0
+In[2]:= collide on
+Out[2]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[3]:= new sphere as heavy { mass = 3, radius = 0.5, position = [-3, 0, 0], velocity = [2, 0, 0] }
+Out[3]= obj0 as heavy
+In[4]:= new sphere as light { mass = 1, radius = 0.5, position = [ 3, 0, 0], velocity = [-4, 0, 0] }
+Out[4]= obj1 as light
+In[5]:= energy
+Out[5]= 14
+In[6]:= momentum
+Out[6]= [2, 0, 0]
+In[7]:= run 2 steps 200
+Out[7]= t = 2 (53 solver steps, 200 snapshots, |dE/E| = 0.000e0, 1 collision(s) — CONTACTS lists them)
+In[8]:= get heavy.velocity
+Out[8]= [-1, 0, 0]
+In[9]:= get light.velocity
+Out[9]= [5, 0, 0]
+In[10]:= let m1 = 3
+Out[10]= m1 set
+In[11]:= let m2 = 1
+Out[11]= m2 set
+In[12]:= let u1 = 2
+Out[12]= u1 set
+In[13]:= let u2 = -4
+Out[13]= u2 set
+In[14]:= ((m1 - m2) * u1 + 2 * m2 * u2) / (m1 + m2)
+Out[14]= -1
+In[15]:= ((m2 - m1) * u2 + 2 * m1 * u1) / (m1 + m2)
+Out[15]= 5
+In[16]:= energy
+Out[16]= 14
+In[17]:= momentum
+Out[17]= [2, 0, 0]
+rc=0
+############ scripts/solveit/02_keplers_third_law.posim
+In[1]:= set system.g_constant = 1
+In[2]:= new sphere as sun { mass = 1000, radius = 0.2 }
+Out[2]= obj0 as sun
+In[3]:= new sphere as p1  { mass = 0.000001, radius = 0.02, position = [1, 0, 0], velocity = [0, 0, 31.622776601683793] }
+Out[3]= obj1 as p1
+In[4]:= run 0.19869176531592203 steps 200
+Out[4]= t = 0.19869176531592203 (661 solver steps, 200 snapshots, |dE/E| = 1.731e-8)
+In[5]:= get p1.position
+Out[5]= [1.0000000044544244, 0, -0.00000014431704032681625]
+In[6]:= reset
+Out[6]= system reset
+In[7]:= set system.g_constant = 1
+In[8]:= new sphere as sun { mass = 1000, radius = 0.2 }
+Out[8]= obj0 as sun
+In[9]:= new sphere as p2  { mass = 0.000001, radius = 0.02, position = [2, 0, 0], velocity = [0, 0, 22.360679774997898] }
+Out[9]= obj1 as p2
+In[10]:= run 0.5619851784832581 steps 200
+Out[10]= t = 0.5619851784832581 (1306 solver steps, 200 snapshots, |dE/E| = 6.177e-10)
+In[11]:= get p2.position
+Out[11]= [2.000000000309673, 0, 0.000000026045939587396316]
+In[12]:= reset
+Out[12]= system reset
+In[13]:= set system.g_constant = 1
+In[14]:= new sphere as sun { mass = 1000, radius = 0.2 }
+Out[14]= obj0 as sun
+In[15]:= new sphere as p3  { mass = 0.000001, radius = 0.02, position = [3, 0, 0], velocity = [0, 0, 18.257418583505537] }
+Out[15]= obj1 as p3
+In[16]:= run 1.0324326977181857 steps 200
+Out[16]= t = 1.0324326977181857 (1954 solver steps, 200 snapshots, |dE/E| = 5.596e-10)
+In[17]:= get p3.position
+Out[17]= [3.0000000004230944, 0, 0.00000004071881288571222]
+In[18]:= reset
+Out[18]= system reset
+In[19]:= set system.g_constant = 1
+In[20]:= new sphere as sun { mass = 1000, radius = 0.2 }
+Out[20]= obj0 as sun
+In[21]:= new sphere as p4  { mass = 0.000001, radius = 0.02, position = [4, 0, 0], velocity = [0, 0, 15.811388300841896] }
+Out[21]= obj1 as p4
+In[22]:= run 1.5895341225273762 steps 200
+Out[22]= t = 1.5895341225273762 (2601 solver steps, 200 snapshots, |dE/E| = 7.707e-11)
+In[23]:= get p4.position
+Out[23]= [4.000000000077065, 0, 0.00000007248745821777447]
+In[24]:= 0.19869176531592203 * 0.19869176531592203 / 1
+Out[24]= 0.039478417604357434
+In[25]:= 0.5619851784832581 * 0.5619851784832581 / (2 * 2 * 2)
+Out[25]= 0.039478417604357434
+In[26]:= 1.0324326977181857 * 1.0324326977181857 / (3 * 3 * 3)
+Out[26]= 0.039478417604357434
+In[27]:= 1.5895341225273762 * 1.5895341225273762 / (4 * 4 * 4)
+Out[27]= 0.039478417604357434
+rc=0
+############ scripts/solveit/03_three_conics.posim
+In[1]:= set system.g_constant = 1
+In[2]:= new sphere as sun { mass = 1000, radius = 0.2 }
+Out[2]= obj0 as sun
+In[3]:= new sphere as slow { mass = 0.000001, radius = 0.02, position = [4, 0, 0],  velocity = [0, 0, 20] }
+Out[3]= obj1 as slow
+In[4]:= new sphere as esc  { mass = 0.000001, radius = 0.02, position = [4, 0, 10], velocity = [0, 0, 22.360679774997898] }
+Out[4]= obj2 as esc
+In[5]:= new sphere as fast { mass = 0.000001, radius = 0.02, position = [4, 0, 20], velocity = [0, 0, 24] }
+Out[5]= obj3 as fast
+In[6]:= let gm = 1000
+Out[6]= gm set
+In[7]:= 20 * 20 / 2 - gm / 4
+Out[7]= -50
+In[8]:= 22.360679774997898 * 22.360679774997898 / 2 - gm / 4
+Out[8]= 0.00000000000002842170943040401
+In[9]:= 24 * 24 / 2 - gm / 4
+Out[9]= 38
+rc=0
+############ scripts/solveit/04_restitution_ladder.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.uniform_gravity = [0, -10, 0]
+In[3]:= collide on
+Out[3]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[4]:= new cuboid as floor { mass = 1, half_extents = [50, 0.05, 50], position = [0, -0.05, 0], inverse_mass = 0 }
+Out[4]= obj0 as floor
+In[5]:= new sphere as ball  { mass = 1, radius = 0.5, position = [0, 5.5, 0], restitution = 0.7 }
+Out[5]= obj1 as ball
+In[6]:= run 1.7 steps 170
+Out[6]= t = 1.7 (321 solver steps, 170 snapshots, |dE/E| = 4.636e-1, 1 collision(s) — CONTACTS lists them)
+In[7]:= get ball.position.y
+Out[7]= 2.949999999869974
+In[8]:= 5 * 0.7 * 0.7 + 0.5
+Out[8]= 2.9499999999999997
+In[9]:= run 1.19 steps 120
+Out[9]= t = 2.8899999999999997 (164 solver steps, 120 snapshots, |dE/E| = 4.236e-1, 1 collision(s) — CONTACTS lists them)
+In[10]:= get ball.position.y
+Out[10]= 1.7004999998062575
+In[11]:= 5 * 0.7 * 0.7 * 0.7 * 0.7 + 0.5
+Out[11]= 1.7004999999999997
+In[12]:= run 0.833 steps 84
+Out[12]= t = 3.723 (87 solver steps, 84 snapshots, |dE/E| = 3.600e-1, 1 collision(s) — CONTACTS lists them)
+In[13]:= get ball.position.y
+Out[13]= 1.0882449997748824
+In[14]:= 5 * 0.7 * 0.7 * 0.7 * 0.7 * 0.7 * 0.7 + 0.5
+Out[14]= 1.0882449999999997
+In[15]:= get system.collisions
+Out[15]= 3
+rc=0
+############ scripts/solveit/05_cyclotron_bdf.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.b_field = [0, 0, 6]
+In[3]:= new sphere as ion { mass = 2, charge = -3, radius = 0.05, position = [0, 0, 0], velocity = [5, 0, 0] }
+Out[3]= obj0 as ion
+In[4]:= method bdf
+Out[4]= method = CVODE BDF
+In[5]:= run 0.3490658503988659 steps 200
+Out[5]= t = 0.34906585039886584 (178 solver steps, 200 snapshots, |dE/E| = 8.696e-9)
+In[6]:= get ion.position
+Out[6]= [-0.00000000020913167204927863, 1.1111111086955652, 0]
+In[7]:= norm(ion.position)
+Out[7]= 1.1111111086955652
+In[8]:= 2 * (2 * 5 / (3 * 6))
+Out[8]= 1.1111111111111112
+In[9]:= run 0.3490658503988659 steps 200
+Out[9]= t = 0.6981317007977317 (160 solver steps, 200 snapshots, |dE/E| = 1.068e-8)
+In[10]:= get ion.position
+Out[10]= [0.000000000408039691444928, 0.000000005381884658509583, 0]
+In[11]:= get ion.velocity
+Out[11]= [4.999999951563042, 0.0000000036723595761567474, 0]
+In[12]:= norm(ion.velocity)
+Out[12]= 4.999999951563042
+rc=0
+############ scripts/solveit/06_symplectic_vs_adaptive.posim
+In[1]:= set system.g_constant = 1
+In[2]:= new sphere as sun    { mass = 1000, radius = 0.2 }
+Out[2]= obj0 as sun
+In[3]:= new sphere as planet { mass = 0.001, radius = 0.05, position = [4, 0, 0], velocity = [0, 0, 10] }
+Out[3]= obj1 as planet
+In[4]:= method adams
+Out[4]= method = CVODE Adams
+In[5]:= run 60 steps 60
+Out[5]= t = 60 (507075 solver steps, 60 snapshots, |dE/E| = 1.459e-8)
+In[6]:= energy
+Out[6]= -0.20000000291885495
+In[7]:= reset
+Out[7]= system reset
+In[8]:= set system.g_constant = 1
+In[9]:= new sphere as sun    { mass = 1000, radius = 0.2 }
+Out[9]= obj0 as sun
+In[10]:= new sphere as planet { mass = 0.001, radius = 0.05, position = [4, 0, 0], velocity = [0, 0, 10] }
+Out[10]= obj1 as planet
+In[11]:= method sprk mclachlan_4_4 0.001
+Out[11]= method = ARKODE SPRK ARKODE_SPRK_MCLACHLAN_4_4, fixed dt = 0.001
+In[12]:= run 60 steps 60
+Out[12]= t = 60 (60000 solver steps, 60 snapshots, |dE/E| = 8.957e-11)
+In[13]:= energy
+Out[13]= -0.20000000001790574
+rc=0
+############ scripts/solveit/07_dzhanibekov.posim
+In[1]:= new cuboid as racket { mass = 1, half_extents = [1.6, 0.9, 0.25], angular_momentum = [0.02, 3, 0.02] }
+Out[1]= obj0 as racket
+In[2]:= angmom
+Out[2]= [0.02, 3, 0.02]
+In[3]:= energy
+Out[3]= 5.148625491836798
+In[4]:= run 0.5 steps 5
+Out[4]= t = 0.5 (59 solver steps, 5 snapshots, |dE/E| = 1.310e-12)
+In[5]:= get racket.orientation.x
+Out[5]= 0.013359726984815766
+In[6]:= run 0.5 steps 5
+Out[6]= t = 1 (59 solver steps, 5 snapshots, |dE/E| = 9.019e-12)
+In[7]:= get racket.orientation.x
+Out[7]= 0.009214316848229325
+In[8]:= run 0.5 steps 5
+Out[8]= t = 1.5 (50 solver steps, 5 snapshots, |dE/E| = 7.744e-11)
+In[9]:= get racket.orientation.x
+Out[9]= -0.06928171314906612
+In[10]:= run 0.5 steps 5
+Out[10]= t = 2 (70 solver steps, 5 snapshots, |dE/E| = 3.793e-10)
+In[11]:= get racket.orientation.x
+Out[11]= -0.32837233114496406
+In[12]:= run 0.5 steps 5
+Out[12]= t = 2.5 (76 solver steps, 5 snapshots, |dE/E| = 1.187e-9)
+In[13]:= get racket.orientation.x
+Out[13]= -0.4991829732950659
+In[14]:= run 0.5 steps 5
+Out[14]= t = 3 (58 solver steps, 5 snapshots, |dE/E| = 1.927e-10)
+In[15]:= get racket.orientation.x
+Out[15]= 0.1093367245470612
+In[16]:= run 0.5 steps 5
+Out[16]= t = 3.5 (46 solver steps, 5 snapshots, |dE/E| = 7.359e-11)
+In[17]:= get racket.orientation.x
+Out[17]= 0.8230403847701171
+In[18]:= run 0.5 steps 5
+Out[18]= t = 4 (45 solver steps, 5 snapshots, |dE/E| = 8.451e-12)
+In[19]:= get racket.orientation.x
+Out[19]= 0.9661018228588313
+In[20]:= angmom
+Out[20]= [0.02, 3, 0.02]
+In[21]:= energy
+Out[21]= 5.148625488700016
+rc=0
+############ scripts/solveit/08_magnetic_torque.posim
+In[1]:= set system.g_constant = 0
+In[2]:= set system.b_field = [0, 0, 2]
+In[3]:= new cuboid as rotor { mass = 1, half_extents = [1, 0.4, 0.4], magnetic_moment_tensor = [[0, 0, 0.5], [0, 0, 0], [-0.5, 0, 0]] }
+Out[3]= obj0 as rotor
+In[4]:= energy
+Out[4]= 0
+In[5]:= angmom
+Out[5]= [0, 0, 0]
+In[6]:= run 3 steps 30
+Out[6]= t = 3 (550 solver steps, 30 snapshots, |dE/E| = 9.928e-1)
+In[7]:= energy
+Out[7]= 0.9928369509454675
+In[8]:= angmom
+Out[8]= [0.46022300703213415, 0, 0]
+In[9]:= get rotor.angular_momentum
+Out[9]= [0.46022300703213415, 0, 0]
+rc=0
+############ scripts/solveit/09_newtons_cradle.posim
+In[1]:= set system.g_constant = 0
+In[2]:= collide on
+Out[2]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[3]:= new sphere as b0 { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+Out[3]= obj0 as b0
+In[4]:= new sphere as b1 { mass = 1, radius = 0.5, position = [ 0, 0, 0] }
+Out[4]= obj1 as b1
+In[5]:= new sphere as b2 { mass = 1, radius = 0.5, position = [ 1, 0, 0] }
+Out[5]= obj2 as b2
+In[6]:= new sphere as b3 { mass = 1, radius = 0.5, position = [ 2, 0, 0] }
+Out[6]= obj3 as b3
+In[7]:= new sphere as b4 { mass = 1, radius = 0.5, position = [ 3, 0, 0] }
+Out[7]= obj4 as b4
+In[8]:= energy
+Out[8]= 0.5
+In[9]:= momentum
+Out[9]= [1, 0, 0]
+In[10]:= run 6 steps 600
+Out[10]= t = 6 (30 solver steps, 600 snapshots, |dE/E| = 0.000e0, 4 collision(s) — CONTACTS lists them)
+In[11]:= get b0.velocity
+Out[11]= [0, 0, 0]
+In[12]:= get b1.velocity
+Out[12]= [0, 0, 0]
+In[13]:= get b2.velocity
+Out[13]= [0, 0, 0]
+In[14]:= get b3.velocity
+Out[14]= [0, 0, 0]
+In[15]:= get b4.velocity
+Out[15]= [1, 0, 0]
+In[16]:= energy
+Out[16]= 0.5
+In[17]:= momentum
+Out[17]= [1, 0, 0]
+In[18]:= get system.collisions
+Out[18]= 4
+rc=0
+############ scripts/solveit/10_no_tunnelling.posim
+In[1]:= set system.g_constant = 0
+In[2]:= collide on
+Out[2]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[3]:= new cuboid as plate  { mass = 1, half_extents = [5, 0.0025, 5], position = [0, 0, 0], inverse_mass = 0 }
+Out[3]= obj0 as plate
+In[4]:= new sphere as bullet { mass = 0.01, radius = 0.002, position = [0, 2, 0], velocity = [0, -100, 0] }
+Out[4]= obj1 as bullet
+In[5]:= run 0.1 steps 10
+Out[5]= t = 0.1 (10003 solver steps, 10 snapshots, |dE/E| = 0.000e0, 1 collision(s) — CONTACTS lists them)
+In[6]:= get bullet.position.y
+Out[6]= 8.009000000001455
+In[7]:= get bullet.velocity.y
+Out[7]= 100
+In[8]:= get system.collisions
+Out[8]= 1
+In[9]:= contacts
+Out[9]= contact0: obj0 <-> obj1 at t = 0.01995500000000067
+  point  = [0, 0.0025, 0]
+  normal = [-0, 1, -0]  (from obj0 toward obj1)
+  depth = 0.00000000000002214157676649897, approach speed = 100, impulse = 2
+rc=0
+############ scripts/solveit/11_lagrange_l4.posim
+In[1]:= set system.g_constant = 1
+In[2]:= new sphere as a { mass = 1, radius = 0.01, position = [0.5773502691896258, 0, 0],                    velocity = [0, 0, 1] }
+Out[2]= obj0 as a
+In[3]:= new sphere as b { mass = 1, radius = 0.01, position = [-0.2886751345948129, 0, 0.5],                 velocity = [-0.8660254037844387, 0, -0.5] }
+Out[3]= obj1 as b
+In[4]:= new sphere as c { mass = 1, radius = 0.01, position = [-0.2886751345948129, 0, -0.5],                velocity = [0.8660254037844387, 0, -0.5] }
+Out[4]= obj2 as c
+In[5]:= com
+Out[5]= [0, 0, 0]
+In[6]:= energy
+Out[6]= -1.4999999999984994
+In[7]:= run 3.6275987284684357 steps 400
+Out[7]= t = 3.6275987284684357 (1289 solver steps, 400 snapshots, |dE/E| = 4.689e-10)
+In[8]:= get a.position
+Out[8]= [0.5773502692574497, 0, -0.0000000025627822854319693]
+In[9]:= get b.position
+Out[9]= [-0.2886751324104037, 0, 0.5000000013400956]
+In[10]:= get c.position
+Out[10]= [-0.28867513684704826, 0, -0.49999999877731977]
+In[11]:= com
+Out[11]= [-0.0000000000000007586524001605236, 0, -0.000000000000002146431180941969]
+In[12]:= norm(a.position - b.position)
+Out[12]= 1.0000000001184224
+rc=0
+############ scripts/solveit/12_dumbbell_inertia.posim
+In[1]:= def barbell(m1 = 1, m2 = 1, m_rod = 0.5, r1 = 0.3, r2 = 0.3, rod_r = 0.05, len = 2) {
+  new dumbbell as bar { m1 = m1, m2 = m2, m_rod = m_rod, r1 = r1, r2 = r2, rod_radius = rod_r, length = len }
+}
+Out[1]= function barbell(7 parameter(s)) defined — 1 body line(s)
+In[2]:= funcs
+Out[2]= barbell(m1 = 1, m2 = 1, m_rod = 0.5, r1 = 0.3, r2 = 0.3, rod_r = 0.05, len = 2) — 1 body line(s); SHOW barbell prints it
+In[3]:= barbell(2, 2, 0, 0.3, 0.3, 0.05, 2)
+Out[3]= obj0 as bar
+In[4]:= list
+Out[4]= obj0: dumbbell r1=0.3 r2=0.3 rod_r=0.05 len=2, mass=4, charge=0, pos=[0, 0, 0]
+In[5]:= get bar.mass
+Out[5]= 4
+In[6]:= get bar.m1
+Out[6]= 2
+In[7]:= get bar.m2
+Out[7]= 2
+In[8]:= get bar.length
+Out[8]= 2
+In[9]:= get bar.inertia_tensor
+Out[9]= [[4.144, 0, 0], [0, 4.144, 0], [0, 0, 0.144]]
+In[10]:= 2 * (0.4 * 2 * 0.3 * 0.3 + 2 * 1 * 1)
+Out[10]= 4.144
+In[11]:= 2 * (0.4 * 2 * 0.3 * 0.3)
+Out[11]= 0.144
+rc=0
+############ scripts/solveit/13_tilted_torus.posim
+In[1]:= set system.g_constant = 0
+In[2]:= box 4
+Out[2]= box: inner size 4 x 4 x 4 — six static walls obj0, obj1, obj2, obj3, obj4, obj5 with inverse_mass = 0 (infinitely massive); objects collide elastically off the inside faces
+In[3]:= collide on
+Out[3]= collisions ON (0 collidable pair(s); 0 impulse(s) so far)
+In[4]:= new torus as flat { mass = 1, ring_radius = 1.5, tube_radius = 0.5, position = [0, 0, 0] }
+Out[4]= obj6 as flat
+In[5]:= get flat.boundary
+Out[5]= Torus { ring_radius: 1.5, tube_radius: 0.5 }
+In[6]:= del 6
+Out[6]= deleted obj6; 6 object(s) remain (indices renumbered)
+In[7]:= new torus as tilt { mass = 1, ring_radius = 1.5, tube_radius = 0.5, position = [0, 0, 0], orientation = [0.8880738339771154, -0.32505758367186816, 0.32505758367186816, 0] }
+Out[7]= obj6 as tilt
+In[8]:= run 1 steps 10
+Out[8]= t = 1 (4 solver steps, 10 snapshots, |dE/E| = 0.000e0)
+In[9]:= get tilt.position
+Out[9]= [0, 0, 0]
+In[10]:= get system.collisions
+Out[10]= 0
+In[11]:= 1.5 * sqrt(2 / 3) + 0.5
+Out[11]= 1.724744871391589
+rc=0
+############ scripts/solveit/14_particle_in_a_box.posim
+In[1]:= qm grid 0 1 800
+Out[1]= grid [0, 1] with 800 interior points, h = 0.001248 (potential and psi cleared)
+In[2]:= qm potential zero
+Out[2]= potential `zero` sampled at 800 points, V in [0, 0] (psi cleared)
+In[3]:= qm mass 1
+Out[3]= mass = 1
+In[4]:= qm hbar 1
+Out[4]= hbar = 1
+In[5]:= qm states 4
+Out[5]= 4 lowest bound state(s):
+  E[0] = 4.934795874467
+  E[1] = 19.739107587630
+  E[2] = 44.412707408131
+  E[3] = 78.955215788088
+In[6]:= pi * pi / 2
+Out[6]= 4.934802200544679
+In[7]:= 4 * pi * pi / 2
+Out[7]= 19.739208802178716
+In[8]:= 9 * pi * pi / 2
+Out[8]= 44.41321980490211
+In[9]:= 16 * pi * pi / 2
+Out[9]= 78.95683520871486
+In[10]:= qm state 1
+Out[10]= psi = bound state 1, E = 19.739107587630, t reset to 0
+In[11]:= qm norm
+Out[11]= 1.000000000000345
+In[12]:= qm position
+Out[12]= 0.500000000001550
+In[13]:= qm energy
+Out[13]= 19.739107587777767
+In[14]:= qm prob 0 0.5
+Out[14]= 0.499999999998032
+rc=0
+############ scripts/solveit/15_tunnelling.posim
+In[1]:= qm mass 1
+Out[1]= mass = 1
+In[2]:= qm hbar 1
+Out[2]= hbar = 1
+In[3]:= let v0 = 4
+Out[3]= v0 set
+In[4]:= let e = 2
+Out[4]= e set
+In[5]:= let kappa = sqrt(2 * (v0 - e))
+Out[5]= kappa set
+In[6]:= let s = (exp(kappa) - exp(-kappa)) / 2
+Out[6]= s set
+In[7]:= 1 / (1 + v0 * v0 * s * s / (4 * e * (v0 - e)))
+Out[7]= 0.07065082485316446
+In[8]:= qm grid -30 30 4000
+Out[8]= grid [-30, 30] with 4000 interior points, h = 0.014996 (potential and psi cleared)
+In[9]:= qm potential barrier 4, 0, 1
+Out[9]= potential `barrier 4 on [0, 1]` sampled at 4000 points, V in [0, 4] (psi cleared)
+In[10]:= qm transmission 2
+Out[10]= E = 2: T = 0.069368404960, R = 0.930631595040, T + R = 1.000000000000
+In[11]:= qm grid -30 30 16000
+Out[11]= grid [-30, 30] with 16000 interior points, h = 0.003750 (potential and psi cleared)
+In[12]:= qm potential barrier 4, 0, 1
+Out[12]= potential `barrier 4 on [0, 1]` sampled at 16000 points, V in [0, 4] (psi cleared)
+In[13]:= qm transmission 2
+Out[13]= E = 2: T = 0.070328037206, R = 0.929671962794, T + R = 1.000000000000
+In[14]:= qm grid -30 30 64000
+Out[14]= grid [-30, 30] with 64000 interior points, h = 0.000937 (potential and psi cleared)
+In[15]:= qm potential barrier 4, 0, 1
+Out[15]= potential `barrier 4 on [0, 1]` sampled at 64000 points, V in [0, 4] (psi cleared)
+In[16]:= qm transmission 2
+Out[16]= E = 2: T = 0.070569990790, R = 0.929430009210, T + R = 1.000000000000
+In[17]:= qm grid -30 30 16000
+Out[17]= grid [-30, 30] with 16000 interior points, h = 0.003750 (potential and psi cleared)
+In[18]:= qm potential barrier 4, 0, 1
+Out[18]= potential `barrier 4 on [0, 1]` sampled at 16000 points, V in [0, 4] (psi cleared)
+In[19]:= qm scan 4.1 20 200
+Out[19]= 200 energies in [4.1, 20] (0 refused), T from 3.535e-1 to 1.000e0
+  1 resonance(s), strongest first:
+    E = 8.893969849   T = 0.999992036
+rc=0
+############ scripts/solveit/16_special_functions.posim
+In[1]:= bessel_j(0, 2.404825557695773)
+Out[1]= 0
+In[2]:= bessel_j_nu(1, 3) * bessel_y_nu(0, 3) - bessel_j_nu(0, 3) * bessel_y_nu(1, 3)
+Out[2]= 0.21220659078919374 + 0i
+In[3]:= 2 / (pi * 3)
+Out[3]= 0.2122065907891938
+In[4]:= legendre_p(5, 1)
+Out[4]= 1
+In[5]:= legendre_p(5, 0.906179845938664)
+Out[5]= -0.00000000000000017763568394002506
+In[6]:= gamma_z(0.5) * gamma_z(0.5)
+Out[6]= 3.1415926535898397 + 0i
+In[7]:= pi
+Out[7]= 3.141592653589793
+In[8]:= sph_harm_real(1, 0, 0, 0)
+Out[8]= 0.48860251190291987
+In[9]:= sqrt(3 / (4 * pi))
+Out[9]= 0.4886025119029199
+In[10]:= clebsch_gordan(0.5, 0.5, 0.5, -0.5, 1, 0)
+Out[10]= 0.7071067811865475
+In[11]:= sqrt(0.5)
+Out[11]= 0.7071067811865476
+In[12]:= gauss_legendre(4)
+Out[12]= [[-0.8611363115940526, -0.3399810435848563, 0.3399810435848563, 0.8611363115940526], [0.34785484513745374, 0.6521451548625461, 0.6521451548625461, 0.34785484513745374]]
+rc=0

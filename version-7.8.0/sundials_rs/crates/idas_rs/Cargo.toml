@@ -1,0 +1,75 @@
+[package]
+name = "idas_rs"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# forwards to sundials_core/host-libm; see that manifest
+host-libm = ["sundials_core/host-libm"]
+
+[dependencies]
+sundials_core = { path = "../sundials_core" }
+
+[[example]]
+name = "idasAkzoNob_ASAi_dns"
+path = "examples/idasAkzoNob_ASAi_dns.rs"
+
+[[example]]
+name = "idasAkzoNob_dns"
+path = "examples/idasAkzoNob_dns.rs"
+
+[[example]]
+name = "idasAnalytic_mels"
+path = "examples/idasAnalytic_mels.rs"
+
+[[example]]
+name = "idasFoodWeb_bnd"
+path = "examples/idasFoodWeb_bnd.rs"
+
+[[example]]
+name = "idasHeat2D_bnd"
+path = "examples/idasHeat2D_bnd.rs"
+
+[[example]]
+name = "idasHeat2D_kry"
+path = "examples/idasHeat2D_kry.rs"
+
+[[example]]
+name = "idasHessian_ASA_FSA"
+path = "examples/idasHessian_ASA_FSA.rs"
+
+[[example]]
+name = "idasKrylovDemo_ls"
+path = "examples/idasKrylovDemo_ls.rs"
+
+[[example]]
+name = "idasRoberts_ASAi_klu"
+path = "examples/idasRoberts_ASAi_klu.rs"
+
+[[example]]
+name = "idasRoberts_ASAi_dns"
+path = "examples/idasRoberts_ASAi_dns.rs"
+
+[[example]]
+name = "idasRoberts_FSA_klu"
+path = "examples/idasRoberts_FSA_klu.rs"
+
+[[example]]
+name = "idasRoberts_FSA_dns"
+path = "examples/idasRoberts_FSA_dns.rs"
+
+[[example]]
+name = "idasRoberts_klu"
+path = "examples/idasRoberts_klu.rs"
+
+[[example]]
+name = "idasRoberts_dns"
+path = "examples/idasRoberts_dns.rs"
+
+[[example]]
+name = "idasSlCrank_FSA_dns"
+path = "examples/idasSlCrank_FSA_dns.rs"
+
+[[example]]
+name = "idasSlCrank_dns"
+path = "examples/idasSlCrank_dns.rs"

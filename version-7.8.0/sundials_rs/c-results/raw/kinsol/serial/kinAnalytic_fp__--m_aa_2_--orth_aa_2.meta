@@ -1,0 +1,10 @@
+example:  kinAnalytic_fp
+source:   examples/kinsol/serial/kinAnalytic_fp.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/serial/kinAnalytic_fp
+argv:     --m_aa 2 --orth_aa 2
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/serial/kinAnalytic_fp__--m_aa_2_--orth_aa_2
+exit:     0 (OK)
+seconds:  0.206
+stdout:   707 bytes, sha256 ede30554c343b27ff1c6b6fa59dca03eafb381691044147c42f49154dea2b35e
+stderr:   0 bytes

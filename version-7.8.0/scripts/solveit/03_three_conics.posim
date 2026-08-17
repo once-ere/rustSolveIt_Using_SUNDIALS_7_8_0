@@ -1,0 +1,13 @@
+# 3. Bound, parabolic and hyperbolic, decided by the sign of E.
+# Escape speed at r is sqrt(2 G M / r). With G = 1, M = 1000, r = 4
+# that is sqrt(500) = 22.360679774997898.
+set system.g_constant = 1
+new sphere as sun { mass = 1000, radius = 0.2 }
+new sphere as slow { mass = 0.000001, radius = 0.02, position = [4, 0, 0],  velocity = [0, 0, 20] }
+new sphere as esc  { mass = 0.000001, radius = 0.02, position = [4, 0, 10], velocity = [0, 0, 22.360679774997898] }
+new sphere as fast { mass = 0.000001, radius = 0.02, position = [4, 0, 20], velocity = [0, 0, 24] }
+# Specific orbital energy v^2/2 - GM/r for each, computed in-language
+let gm = 1000
+20 * 20 / 2 - gm / 4
+22.360679774997898 * 22.360679774997898 / 2 - gm / 4
+24 * 24 / 2 - gm / 4

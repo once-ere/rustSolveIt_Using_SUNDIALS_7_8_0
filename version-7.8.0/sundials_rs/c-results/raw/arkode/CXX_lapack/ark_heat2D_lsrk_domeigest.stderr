@@ -1,0 +1,5 @@
+[ERROR][rank 0][/home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/upstream-c/src/arkode/arkode_lsrkstep.c:2898][lsrkStep_ComputeNewDomEig] SUNDomEigEstimator_Estimate failed
+[ERROR][rank 0][/home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/upstream-c/src/arkode/arkode.c:2996][arkHandleFailure] ARKODE encountered an unrecognized error. Please report this to the Sundials developers at sundials-users@llnl.gov
+
+ERROR: ARKodeEvolve returned with flag = -99
+

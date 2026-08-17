@@ -1,0 +1,10 @@
+example:  ark_twowaycouple_mri
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_twowaycouple_mri.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_twowaycouple_mri
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_twowaycouple_mri
+exit:     0 (OK)
+seconds:  0.106
+stdout:   1415 bytes, sha256 062e79cfb31387c6c465329b8ead6f9699b447fc8ad494ebe15558bf3c746a6b
+stderr:   0 bytes

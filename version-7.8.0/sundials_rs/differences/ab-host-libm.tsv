@@ -1,0 +1,191 @@
+dir	example	argv	variant	default_class	host_libm_class
+cvode/serial	cvAdvDiff_bnd		cvAdvDiff_bnd	IDENTICAL	IDENTICAL
+cvode/serial	cvAnalytic_mels		cvAnalytic_mels	IDENTICAL	IDENTICAL
+cvode/serial	cvDirectDemo_ls		cvDirectDemo_ls	IDENTICAL	IDENTICAL
+cvode/serial	cvDisc_dns		cvDisc_dns	IDENTICAL	IDENTICAL
+cvode/serial	cvDiurnal_kry_bp		cvDiurnal_kry_bp	IDENTICAL	IDENTICAL
+cvode/serial	cvDiurnal_kry		cvDiurnal_kry	IDENTICAL	IDENTICAL
+cvode/serial	cvKrylovDemo_ls		cvKrylovDemo_ls	IDENTICAL	IDENTICAL
+cvode/serial	cvKrylovDemo_ls	1	cvKrylovDemo_ls__1	IDENTICAL	IDENTICAL
+cvode/serial	cvKrylovDemo_ls	2	cvKrylovDemo_ls__2	IDENTICAL	IDENTICAL
+cvode/serial	cvKrylovDemo_prec		cvKrylovDemo_prec	IDENTICAL	IDENTICAL
+cvode/serial	cvParticle_dns		cvParticle_dns	IDENTICAL	IDENTICAL
+cvode/serial	cvPendulum_dns		cvPendulum_dns	IDENTICAL	IDENTICAL
+cvode/serial	cvRoberts_dns		cvRoberts_dns	IDENTICAL	IDENTICAL
+cvode/serial	cvRoberts_dns_constraints		cvRoberts_dns_constraints	IDENTICAL	IDENTICAL
+cvode/serial	cvRoberts_dns_negsol		cvRoberts_dns_negsol	IDENTICAL	IDENTICAL
+cvode/serial	cvRoberts_dns_uw		cvRoberts_dns_uw	IDENTICAL	IDENTICAL
+cvode/serial	cvRocket_dns		cvRocket_dns	IDENTICAL	IDENTICAL
+cvode/serial	cvVdp_auto_nls		cvVdp_auto_nls	IDENTICAL	IDENTICAL
+cvode/serial	cvKrylovDemo_ls	0 1	cvKrylovDemo_ls__0_1	IDENTICAL	IDENTICAL
+cvode/serial	cvAdvDiff_bndL		cvAdvDiff_bndL	IDENTICAL	IDENTICAL
+cvode/serial	cvRoberts_dnsL		cvRoberts_dnsL	IDENTICAL	IDENTICAL
+cvode/serial	cvRoberts_block_klu		cvRoberts_block_klu	NUMERIC	DIFFERS
+cvode/serial	cvRoberts_klu		cvRoberts_klu	NUMERIC	DIFFERS
+cvodes/serial	cvsAdvDiff_ASAi_bnd		cvsAdvDiff_ASAi_bnd	IDENTICAL	IDENTICAL
+cvodes/serial	cvsAdvDiff_FSA_non	-sensi sim t	cvsAdvDiff_FSA_non__-sensi_sim_t	IDENTICAL	IDENTICAL
+cvodes/serial	cvsAdvDiff_FSA_non	-sensi stg t	cvsAdvDiff_FSA_non__-sensi_stg_t	IDENTICAL	IDENTICAL
+cvodes/serial	cvsAdvDiff_bnd		cvsAdvDiff_bnd	IDENTICAL	IDENTICAL
+cvodes/serial	cvsAnalytic_mels		cvsAnalytic_mels	IDENTICAL	IDENTICAL
+cvodes/serial	cvsAnalytic_mels	cvodes.max_order 3	cvsAnalytic_mels__cvodes.max_order_3	IDENTICAL	IDENTICAL
+cvodes/serial	cvsDirectDemo_ls		cvsDirectDemo_ls	IDENTICAL	IDENTICAL
+cvodes/serial	cvsDiurnal_FSA_kry	-sensi sim t	cvsDiurnal_FSA_kry__-sensi_sim_t	NUMERIC	IDENTICAL
+cvodes/serial	cvsDiurnal_FSA_kry	-sensi stg t	cvsDiurnal_FSA_kry__-sensi_stg_t	IDENTICAL	IDENTICAL
+cvodes/serial	cvsDiurnal_kry		cvsDiurnal_kry	IDENTICAL	IDENTICAL
+cvodes/serial	cvsDiurnal_kry_bp		cvsDiurnal_kry_bp	IDENTICAL	IDENTICAL
+cvodes/serial	cvsFoodWeb_ASAi_kry		cvsFoodWeb_ASAi_kry	IDENTICAL	IDENTICAL
+cvodes/serial	cvsFoodWeb_ASAp_kry		cvsFoodWeb_ASAp_kry	IDENTICAL	IDENTICAL
+cvodes/serial	cvsHessian_ASA_FSA		cvsHessian_ASA_FSA	IDENTICAL	IDENTICAL
+cvodes/serial	cvsKrylovDemo_ls		cvsKrylovDemo_ls	IDENTICAL	IDENTICAL
+cvodes/serial	cvsKrylovDemo_ls	1	cvsKrylovDemo_ls__1	IDENTICAL	IDENTICAL
+cvodes/serial	cvsKrylovDemo_ls	2	cvsKrylovDemo_ls__2	IDENTICAL	IDENTICAL
+cvodes/serial	cvsKrylovDemo_prec		cvsKrylovDemo_prec	IDENTICAL	IDENTICAL
+cvodes/serial	cvsLotkaVolterra_ASA		cvsLotkaVolterra_ASA	IDENTICAL	IDENTICAL
+cvodes/serial	cvsParticle_dns		cvsParticle_dns	IDENTICAL	IDENTICAL
+cvodes/serial	cvsPendulum_dns		cvsPendulum_dns	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_ASAi_dns		cvsRoberts_ASAi_dns	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_ASAi_dns_constraints		cvsRoberts_ASAi_dns_constraints	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_FSA_dns	-sensi sim t	cvsRoberts_FSA_dns__-sensi_sim_t	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_FSA_dns	-sensi stg1 t	cvsRoberts_FSA_dns__-sensi_stg1_t	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_FSA_dns_Switch		cvsRoberts_FSA_dns_Switch	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_FSA_dns_constraints	-sensi stg1 t	cvsRoberts_FSA_dns_constraints__-sensi_stg1_t	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_dns		cvsRoberts_dns	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_dns_constraints		cvsRoberts_dns_constraints	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_dns_uw		cvsRoberts_dns_uw	IDENTICAL	IDENTICAL
+cvodes/serial	cvsKrylovDemo_ls	0 1	cvsKrylovDemo_ls__0_1	IDENTICAL	IDENTICAL
+cvodes/serial	cvsAdvDiff_bndL		cvsAdvDiff_bndL	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_dnsL		cvsRoberts_dnsL	IDENTICAL	IDENTICAL
+cvodes/serial	cvsRoberts_ASAi_klu		cvsRoberts_ASAi_klu	NUMERIC	DIFFERS
+cvodes/serial	cvsRoberts_FSA_klu	-sensi stg1 t	cvsRoberts_FSA_klu__-sensi_stg1_t	NUMERIC	DIFFERS
+cvodes/serial	cvsRoberts_klu		cvsRoberts_klu	NUMERIC	DIFFERS
+kinsol/serial	kinAnalytic_fp		kinAnalytic_fp	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--damping_fp 0.5	kinAnalytic_fp__--damping_fp_0.5	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--damping_fn	kinAnalytic_fp__--damping_fn	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 2	kinAnalytic_fp__--m_aa_2	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --delay_aa 2	kinAnalytic_fp__--m_aa_2_--delay_aa_2	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --damping_aa 0.5	kinAnalytic_fp__--m_aa_2_--damping_aa_0.5	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --damping_fn	kinAnalytic_fp__--m_aa_2_--damping_fn	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 3 --depth_fn	kinAnalytic_fp__--m_aa_3_--depth_fn	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --orth_aa 1	kinAnalytic_fp__--m_aa_2_--orth_aa_1	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --orth_aa 2	kinAnalytic_fp__--m_aa_2_--orth_aa_2	IDENTICAL	IDENTICAL
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --orth_aa 3	kinAnalytic_fp__--m_aa_2_--orth_aa_3	IDENTICAL	IDENTICAL
+kinsol/serial	kinFerTron_dns		kinFerTron_dns	IDENTICAL	IDENTICAL
+kinsol/serial	kinFoodWeb_kry		kinFoodWeb_kry	IDENTICAL	IDENTICAL
+kinsol/serial	kinKrylovDemo_ls		kinKrylovDemo_ls	IDENTICAL	IDENTICAL
+kinsol/serial	kinLaplace_bnd		kinLaplace_bnd	IDENTICAL	IDENTICAL
+kinsol/serial	kinLaplace_picard_bnd		kinLaplace_picard_bnd	IDENTICAL	IDENTICAL
+kinsol/serial	kinLaplace_picard_kry		kinLaplace_picard_kry	IDENTICAL	IDENTICAL
+kinsol/serial	kinRoberts_fp		kinRoberts_fp	IDENTICAL	IDENTICAL
+kinsol/serial	kinRoberts_fp	kinsol.m_aa 1	kinRoberts_fp__kinsol.m_aa_1	IDENTICAL	IDENTICAL
+kinsol/serial	kinRoboKin_dns		kinRoboKin_dns	IDENTICAL	IDENTICAL
+kinsol/serial	kinFerTron_klu		kinFerTron_klu	IDENTICAL	IDENTICAL
+ida/serial	idaAnalytic_mels		idaAnalytic_mels	IDENTICAL	IDENTICAL
+ida/serial	idaAnalytic_mels	ida.scalar_tolerances 1e-3 1e-8	idaAnalytic_mels__ida.scalar_tolerances_1e-3_1e-8	IDENTICAL	IDENTICAL
+ida/serial	idaFoodWeb_bnd		idaFoodWeb_bnd	IDENTICAL	IDENTICAL
+ida/serial	idaFoodWeb_kry		idaFoodWeb_kry	IDENTICAL	IDENTICAL
+ida/serial	idaHeat2D_bnd		idaHeat2D_bnd	IDENTICAL	IDENTICAL
+ida/serial	idaHeat2D_kry		idaHeat2D_kry	IDENTICAL	IDENTICAL
+ida/serial	idaKrylovDemo_ls		idaKrylovDemo_ls	IDENTICAL	IDENTICAL
+ida/serial	idaKrylovDemo_ls	1	idaKrylovDemo_ls__1	IDENTICAL	IDENTICAL
+ida/serial	idaKrylovDemo_ls	2	idaKrylovDemo_ls__2	IDENTICAL	IDENTICAL
+ida/serial	idaRoberts_dns		idaRoberts_dns	IDENTICAL	IDENTICAL
+ida/serial	idaSlCrank_dns		idaSlCrank_dns	IDENTICAL	IDENTICAL
+ida/serial	idaHeat2D_klu		idaHeat2D_klu	IDENTICAL	IDENTICAL
+ida/serial	idaRoberts_klu		idaRoberts_klu	IDENTICAL	IDENTICAL
+idas/serial	idasAkzoNob_ASAi_dns		idasAkzoNob_ASAi_dns	IDENTICAL	IDENTICAL
+idas/serial	idasAkzoNob_dns		idasAkzoNob_dns	IDENTICAL	IDENTICAL
+idas/serial	idasAnalytic_mels		idasAnalytic_mels	IDENTICAL	IDENTICAL
+idas/serial	idasAnalytic_mels	idas.init_step 1e-5	idasAnalytic_mels__idas.init_step_1e-5	IDENTICAL	IDENTICAL
+idas/serial	idasFoodWeb_bnd		idasFoodWeb_bnd	IDENTICAL	IDENTICAL
+idas/serial	idasHeat2D_bnd		idasHeat2D_bnd	IDENTICAL	IDENTICAL
+idas/serial	idasHeat2D_kry		idasHeat2D_kry	IDENTICAL	IDENTICAL
+idas/serial	idasHessian_ASA_FSA		idasHessian_ASA_FSA	IDENTICAL	IDENTICAL
+idas/serial	idasKrylovDemo_ls		idasKrylovDemo_ls	IDENTICAL	IDENTICAL
+idas/serial	idasKrylovDemo_ls	1	idasKrylovDemo_ls__1	IDENTICAL	IDENTICAL
+idas/serial	idasKrylovDemo_ls	2	idasKrylovDemo_ls__2	IDENTICAL	IDENTICAL
+idas/serial	idasRoberts_ASAi_dns		idasRoberts_ASAi_dns	IDENTICAL	IDENTICAL
+idas/serial	idasRoberts_FSA_dns	-sensi stg t	idasRoberts_FSA_dns__-sensi_stg_t	IDENTICAL	IDENTICAL
+idas/serial	idasRoberts_dns		idasRoberts_dns	IDENTICAL	IDENTICAL
+idas/serial	idasSlCrank_dns		idasSlCrank_dns	NUMERIC	IDENTICAL
+idas/serial	idasSlCrank_FSA_dns		idasSlCrank_FSA_dns	NUMERIC	IDENTICAL
+idas/serial	idasRoberts_ASAi_klu		idasRoberts_ASAi_klu	NUMERIC	DIFFERS
+idas/serial	idasRoberts_FSA_klu	-sensi stg t	idasRoberts_FSA_klu__-sensi_stg_t	NUMERIC	DIFFERS
+idas/serial	idasRoberts_klu		idasRoberts_klu	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic		ark_analytic	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic	arkode.scalar_tolerances 1e-6 1e-8 arkode.table_names ARKODE_ESDIRK547L2SA_7_4_5 ARKODE_ERK_NONE	ark_analytic__arkode.scalar_tolerances_1e-6_1e-8_arkode.table_names_ARKODE_ESDIRK547L2SA_7_4_5_ARKODE_ERK_NONE	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_advection_diffusion_reaction_splitting		ark_advection_diffusion_reaction_splitting	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_lsrk		ark_analytic_lsrk	NUMERIC	IDENTICAL
+arkode/C_serial	ark_analytic_lsrk_varjac		ark_analytic_lsrk_varjac	NUMERIC	IDENTICAL
+arkode/C_serial	ark_analytic_lsrk_domeigest		ark_analytic_lsrk_domeigest	NUMERIC	IDENTICAL
+arkode/C_serial	ark_analytic_lsrk_domeigest	arkid.dom_eig_est_init_preprocess_iters 1 sundomeigestimator.max_iters 1	ark_analytic_lsrk_domeigest__arkid.dom_eig_est_init_preprocess_iters_1_sundomeigestimator.max_iters_1	NUMERIC	IDENTICAL
+arkode/C_serial	ark_analytic_mels		ark_analytic_mels	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_nonlin		ark_analytic_nonlin	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_partitioned	forcing	ark_analytic_partitioned__forcing	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_partitioned	splitting	ark_analytic_partitioned__splitting	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_partitioned	splitting ARKODE_SPLITTING_BEST_2_2_2	ark_analytic_partitioned__splitting_ARKODE_SPLITTING_BEST_2_2_2	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_partitioned	splitting ARKODE_SPLITTING_RUTH_3_3_2	ark_analytic_partitioned__splitting_ARKODE_SPLITTING_RUTH_3_3_2	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_partitioned	splitting ARKODE_SPLITTING_YOSHIDA_8_6_2	ark_analytic_partitioned__splitting_ARKODE_SPLITTING_YOSHIDA_8_6_2	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_analytic_ssprk		ark_analytic_ssprk	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator_1D_mri		ark_brusselator_1D_mri	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator_fp		ark_brusselator_fp	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator_lsrk_domeigest		ark_brusselator_lsrk_domeigest	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator_lsrk_externaldomeigest		ark_brusselator_lsrk_externaldomeigest	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator_mri		ark_brusselator_mri	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator		ark_brusselator	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D_imexmri	0 0.001	ark_brusselator1D_imexmri__0_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D_imexmri	2 0.001	ark_brusselator1D_imexmri__2_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D_imexmri	3 0.001	ark_brusselator1D_imexmri__3_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D_imexmri	4 0.001	ark_brusselator1D_imexmri__4_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D_imexmri	5 0.001	ark_brusselator1D_imexmri__5_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D_imexmri	6 0.001	ark_brusselator1D_imexmri__6_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D_imexmri	7 0.001	ark_brusselator1D_imexmri__7_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator1D		ark_brusselator1D	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_conserved_exp_entropy_ark	1 0	ark_conserved_exp_entropy_ark__1_0	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_conserved_exp_entropy_ark	1 1	ark_conserved_exp_entropy_ark__1_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_conserved_exp_entropy_erk	1	ark_conserved_exp_entropy_erk__1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_damped_harmonic_symplectic		ark_damped_harmonic_symplectic	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_dissipated_exp_entropy	1 0	ark_dissipated_exp_entropy__1_0	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_dissipated_exp_entropy	1 1	ark_dissipated_exp_entropy__1_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_harmonic_symplectic		ark_harmonic_symplectic	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_heat1D_adapt		ark_heat1D_adapt	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_heat1D		ark_heat1D	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper ERK --step-mode adapt	ark_kepler__--stepper_ERK_--step-mode_adapt	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper ERK --step-mode fixed --count-orbits	ark_kepler__--stepper_ERK_--step-mode_fixed_--count-orbits	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --count-orbits --use-compensated-sums	ark_kepler__--stepper_SPRK_--step-mode_fixed_--count-orbits_--use-compensated-sums	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_EULER_1_1 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_EULER_1_1_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_LEAPFROG_2_2 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_LEAPFROG_2_2_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_2_2 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_2_2_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_3_3 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_3_3_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_4_4 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_4_4_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_5_6 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_5_6_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_PSEUDO_LEAPFROG_2_2 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_PSEUDO_LEAPFROG_2_2_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_RUTH_3_3 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_RUTH_3_3_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_YOSHIDA_6_8 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_YOSHIDA_6_8_--tf_50_--check-order_--nout_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kepler		ark_kepler	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	0 1 0.005	ark_kpr_mri__0_1_0.005	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	1 0 0.01	ark_kpr_mri__1_0_0.01	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	1 1 0.002	ark_kpr_mri__1_1_0.002	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	2 4 0.002	ark_kpr_mri__2_4_0.002	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	3 2 0.001	ark_kpr_mri__3_2_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	4 3 0.001	ark_kpr_mri__4_3_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	5 4 0.001	ark_kpr_mri__5_4_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	6 5 0.001	ark_kpr_mri__6_5_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	7 2 0.002	ark_kpr_mri__7_2_0.002	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	8 3 0.001 -100 100 0.5 1	ark_kpr_mri__8_3_0.001_-100_100_0.5_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	9 3 0.001 -100 100 0.5 1	ark_kpr_mri__9_3_0.001_-100_100_0.5_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	10 4 0.001 -100 100 0.5 1	ark_kpr_mri__10_4_0.001_-100_100_0.5_1	NUMERIC	IDENTICAL
+arkode/C_serial	ark_kpr_mri	11 2 0.001	ark_kpr_mri__11_2_0.001	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	12 3 0.005	ark_kpr_mri__12_3_0.005	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_kpr_mri	13 4 0.01	ark_kpr_mri__13_4_0.01	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_KrylovDemo_prec		ark_KrylovDemo_prec	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_KrylovDemo_prec	1	ark_KrylovDemo_prec__1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_KrylovDemo_prec	2	ark_KrylovDemo_prec__2	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_lotka_volterra_ASA	--check-freq 1	ark_lotka_volterra_ASA__--check-freq_1	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_lotka_volterra_ASA	--check-freq 5	ark_lotka_volterra_ASA__--check-freq_5	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_onewaycouple_mri		ark_onewaycouple_mri	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_reaction_diffusion_mri		ark_reaction_diffusion_mri	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_robertson_constraints		ark_robertson_constraints	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_robertson_root		ark_robertson_root	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_robertson		ark_robertson	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_twowaycouple_mri		ark_twowaycouple_mri	IDENTICAL	IDENTICAL
+arkode/C_serial	ark_brusselator_fp	1	ark_brusselator_fp__1	IDENTICAL	IDENTICAL

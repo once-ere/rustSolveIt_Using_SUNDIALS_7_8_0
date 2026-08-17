@@ -1,0 +1,10 @@
+example:  kinLaplace_bnd
+crate:    kinsol_rs
+source:   crates/kinsol_rs/examples/kinLaplace_bnd.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinLaplace_bnd
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinLaplace_bnd
+exit:     0 (OK)
+seconds:  0.105
+stdout:   1816 bytes, sha256 54c7e2398c7384e898aac38c24c86e5cae6b32d5ccc6fd56cb8440ab23fa0d7e
+stderr:   0 bytes

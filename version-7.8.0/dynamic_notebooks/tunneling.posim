@@ -1,0 +1,97 @@
+# ---------------------------------------------------------------------
+# Quantum tunnelling through a barrier — the canonical 1-D problem.
+#
+# Units: hbar = m = 1, so E = k^2 / 2.
+#
+# The point of this notebook is that the potential is written as an
+# ORDINARY USER FUNCTION. Comparison operators return 1 for true and 0
+# for false, so `(x > a) * (x < b)` is an indicator function for the
+# interval [a, b] — multiply by a height and you have a barrier, add two
+# of them and you have a resonant tunnelling structure. No special
+# syntax, no built-in shape: just arithmetic on 0 and 1.
+#
+# Run:  cargo run -p posim --release -- --notebook dynamic_notebooks/tunneling.posim
+# ---------------------------------------------------------------------
+
+# --- the barrier, as an indicator function ---------------------------
+# 2.5 * (indicator of the interval [0, 1]).
+def barrier(x) { 2.5 * (x > 0) * (x < 1) }
+
+# Sanity: 0 outside, 2.5 inside, and the edges behave.
+barrier(-1)
+barrier(0.5)
+barrier(2)
+
+# --- the problem -----------------------------------------------------
+# A domain 200 wide so the reflected packet never reaches a wall: the
+# walls are infinite and REFLECT, which would corrupt the answer.
+qm grid -100 100 2000
+qm potential barrier
+
+# A Gaussian packet of central wavenumber k0 = 2, so E0 = 2 — BELOW the
+# barrier height of 2.5. Classically nothing gets through.
+qm packet -25 2 2
+qm energy
+
+# All of the probability starts on the left.
+qm prob -100 0
+
+# --- propagate -------------------------------------------------------
+qm run 30 steps 3000
+
+# --- the result ------------------------------------------------------
+# Transmitted (past the barrier) and reflected (back to the left).
+qm prob 1 100
+qm prob -100 0
+
+# --- a browser animation of the scattering ---------------------------
+# Writes a self-contained HTML page: |psi|^2 against x, frame by frame,
+# with the potential drawn over it and a live norm/transmitted readout.
+# Open it in any browser; nothing is fetched from the network.
+qm packet -25 2 2
+qm animate "scatter.html" 32 frames 140
+
+# --- absorbing edges: the same answer on half the domain -------------
+# The walls REFLECT, which is why the domain above is 200 wide. A
+# complex absorbing potential drains probability at the edges instead,
+# so a much shorter domain gives the same physics. Propagation stops
+# being unitary — the norm decays on purpose.
+qm grid -45 45 1350
+qm potential barrier
+qm absorb 15 3
+qm packet -25 2 2
+qm run 20 steps 2000
+qm prob 1 30
+qm norm
+
+# --- the interesting variant: a DOUBLE barrier -----------------------
+# Two barriers with a gap between them form a resonant cavity. Written
+# as the SUM of two indicator functions — only expressible because
+# comparisons are ordinary arithmetic.
+#
+# Restore the wide reflecting domain first: the absorber above was for
+# that experiment, and leaving it on would drain the packet here.
+qm absorb off
+qm grid -100 100 2000
+
+def double(x) { 2.5 * ((x > 0) * (x < 1) + (x > 3) * (x < 4)) }
+
+double(0.5)
+double(2)
+double(3.5)
+
+qm potential double
+qm packet -25 2 2
+qm run 30 steps 3000
+qm prob 4 100
+qm prob -100 0
+
+# MEASURED RESULT, which is not the textbook headline: at this energy
+# the double barrier transmits 0.2715 — LESS than the single barrier's
+# 0.3276 — and about 0.8% of the probability is left sitting in the gap
+# between the barriers. That trapped fraction IS the resonant cavity;
+# but resonant ENHANCEMENT only happens at the cavity's quasi-bound
+# energies, and those peaks are narrow. This packet has sigma = 2, so
+# its momentum spread is dk = 0.25, which averages straight over them.
+# Seeing a resonance needs a much narrower packet in k — meaning a much
+# wider one in x, a longer domain, and a longer run.

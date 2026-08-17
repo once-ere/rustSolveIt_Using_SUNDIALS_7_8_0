@@ -1,0 +1,22 @@
+# Example 10 — the long game: an elastic (e = 1) ball ping-pongs
+# between two static walls. Many collisions later the energy is STILL
+# conserved — every impulse is exactly elastic and every wall is an
+# infinite-mass momentum sink that never moves.
+#
+# This is also the scene demo: run it interactively (cargo run, then
+# paste these lines) and type SCENE CREATE + SCENE START to watch the
+# golden contact-normal arrows flash at each wall strike
+# (toggle them with the Contacts button or the C key).
+set system.g_constant = 0
+new cuboid { mass = 1, position = [-3, 0, 0], half_extents = [0.2, 2, 2] }
+set obj0.inverse_mass = 0
+set obj0.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+new cuboid { mass = 1, position = [3, 0, 0], half_extents = [0.2, 2, 2] }
+set obj1.inverse_mass = 0
+set obj1.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+new sphere { mass = 1, radius = 0.3, position = [0, 0, 0], velocity = [1.7, 0, 0] }
+energy
+run 20 steps 10
+get system.collisions
+energy
+get obj2.velocity.x

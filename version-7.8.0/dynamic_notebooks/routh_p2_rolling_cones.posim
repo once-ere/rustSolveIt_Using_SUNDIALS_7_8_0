@@ -1,0 +1,97 @@
+# Routh II.Arts.157-159 — the invariable and instantaneous cones, rolling on
+# one another — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Arts. 157-159. Art. 158
+# names the two straight lines whose motion matters: "These are the invariable
+# line and the instantaneous axis. The first of these is fixed in space, but as
+# the body moves the invariable line [describes a cone in the body]."
+#
+# THE TWO CONES. Each line sweeps a cone, and the motion is one cone rolling on
+# the other:
+#
+#   the SPACE cone  -- swept by the instantaneous axis about the invariable
+#                      line, which is fixed in space. Half-angle = angle(w, L).
+#   the BODY cone   -- swept by the instantaneous axis about the body's own
+#                      figure axis. Half-angle = angle(w, figure axis).
+#
+# The body cone rolls on the space cone without slipping, their common
+# generator at each instant being the instantaneous axis itself -- which is
+# exactly why it is instantaneously at rest.
+#
+# WHEN THE CONES ARE CIRCULAR. For a general asymmetric body neither cone is
+# circular and neither half-angle is constant. For a UNIAXAL body (A = B) both
+# are exactly circular and both half-angles are rigorously constant, which is
+# what makes the rolling picture literal rather than approximate. This notebook
+# therefore uses a uniaxal body, and prints both half-angles.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (1, 1, 2) gives
+# I = diag(5, 5, 2), so A = B = 5, C = 2, figure axis z. Started at
+# w = (0.6, 0, 3):
+#
+#     L = (3, 0, 6)                    G = 6.708203932499369
+#     |w| = 3.059411708155671          (constant, because A = B)
+#
+#     space cone:  cos(angle(w, L))      = 0.9647638212377322   (15.29 deg)
+#     body cone:   cos(angle(w, figure)) = 3 / |w| = 0.9805806756909202  (11.32 deg)
+#
+# Both are printed repeatedly below and neither moves. The body-cone angle is
+# read from the body-frame angular velocity, whose z-component stays at exactly
+# 3 while its transverse part rotates -- that is the cone.
+#
+# SETUP NOTE. system.g_constant = 0 so nothing else acts.
+#
+# WHAT YOU WATCH: a square-section box in steady precession. Two cones are
+# rolling on each other inside that motion, one fixed in space and one fixed in
+# the body, touching along the axis the body is momentarily turning about.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_rolling_cones
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_rolling_cones.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_rolling_cones.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [1, 1, 2], angular_velocity = [0.6, 0, 3] }
+
+get obj0.inertia_tensor
+norm(obj0.angular_momentum)
+norm(obj0.angular_velocity)
+# space-cone half-angle: cos(angle between w and the invariable line)
+dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+# body-frame w -- its z-component over |w| is the body-cone half-angle
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+
+run 1.2 steps 2
+dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+norm(obj0.angular_velocity)
+
+run 1.2 steps 2
+dot(obj0.angular_velocity, obj0.angular_momentum) / (norm(obj0.angular_velocity) * norm(obj0.angular_momentum))
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+norm(obj0.angular_velocity)
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [1, 1, 2], angular_velocity = [0.6, 0, 3] }
+
+scene create
+scene set_time_step 0.02

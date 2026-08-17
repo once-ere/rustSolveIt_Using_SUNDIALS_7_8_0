@@ -1,0 +1,15 @@
+[package]
+name = "posim"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "physical_object simulator: lexer + stack machine + notebook REPL + Jupyter machine mode"
+
+[dependencies]
+physical_object = { path = "../physical_object" }
+special_functions = { path = "../special_functions" }
+quantum = { path = "../quantum" }
+
+[[bin]]
+name = "posim"
+path = "src/main.rs"

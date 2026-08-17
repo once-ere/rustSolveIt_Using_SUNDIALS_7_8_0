@@ -1,0 +1,10 @@
+example:  idaKrylovDemo_ls
+source:   examples/ida/serial/idaKrylovDemo_ls.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/serial/idaKrylovDemo_ls
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/serial/idaKrylovDemo_ls
+exit:     0 (OK)
+seconds:  0.206
+stdout:   4763 bytes, sha256 dcae85140f5954b1654920a742673cc5d936c5db110f5d341c30163cc57e0db1
+stderr:   0 bytes

@@ -1,0 +1,10 @@
+example:  ark_heat1D
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_heat1D.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_heat1D
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_heat1D
+exit:     0 (OK)
+seconds:  0.106
+stdout:   867 bytes, sha256 44015a6f7329b04ac7d690f685b9ddc7cc9961aeac20e6ec4b71298b238d7cec
+stderr:   0 bytes

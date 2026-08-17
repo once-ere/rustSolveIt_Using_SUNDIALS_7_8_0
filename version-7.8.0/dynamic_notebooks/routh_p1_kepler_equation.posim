@@ -1,0 +1,114 @@
+# Routh I.Arts.342-346 — Kepler's equation and the equation of the centre
+# — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Arts. 342-346. To find the time of describing an arc of an elliptic
+# orbit Routh introduces three angles, all measured from perihelion:
+#
+#     the TRUE anomaly      v   -- the actual polar angle of the particle
+#     the ECCENTRIC anomaly u   -- the angle at the centre of the auxiliary circle
+#     the MEAN anomaly      m   -- n*t, the angle a FICTITIOUS particle would
+#                                  have if it went round uniformly in the same period
+#
+# and connects them by KEPLER'S EQUATION (Art. 342):
+#
+#     u - e*sin(u) = m
+#
+# together with the geometric relations r = a(1 - e*cos u) and
+# tan(v/2) = sqrt((1+e)/(1-e)) * tan(u/2)  (Art. 343).
+#
+# THE EQUATION OF THE CENTRE. Routh names v - m the equation of the centre: how
+# far ahead of the uniform fiction the real particle runs. It is zero at
+# perihelion and aphelion and largest in between -- the whole content of "fast
+# at perihelion, slow at aphelion", reduced to one number.
+#
+# THE HARD PART. Kepler's equation is transcendental: given m you cannot write
+# u in closed form. Art. 346 solves it by Newton's rule, and records that
+# starting from u0 = m + e makes the error of the first iterate of order e^3 --
+# an excellent guess, and the one used to produce the numbers below.
+#
+# THE NUMBERS. mu = 1, a = 1, e = 0.6, so the mean motion n = sqrt(mu/a^3) = 1
+# and the mean anomaly is simply m = t when the particle starts at perihelion.
+# Perihelion is at r = a(1-e) = 0.4 with speed sqrt(mu(1+e)/(a(1-e))) = 2.
+# Solving u - 0.6 sin u = m and forming r = 1 - 0.6 cos u:
+#
+#     t = m       u                     r = a(1 - e cos u)     v - m
+#     1     1.5997485482275295    1.0173689060959745     1.2372603507869133
+#     2     2.403657147257398     1.443915428283383      0.7596292339913795
+#     3     3.053053883001497     1.5976498017220984     0.0973015681180569
+#
+# Note the equation of the centre falling towards zero as t approaches half the
+# period (pi ~ 3.1416), i.e. as the particle reaches aphelion -- exactly as
+# Routh says it must.
+#
+# WHAT THE CELLS CHECK. The integrator is run to each of t = 1, 2, 3 and the
+# radius it produces is compared with the r predicted by Kepler's equation.
+# Agreement is to ~1e-11. Nothing about the simulation knows what an anomaly
+# is; it integrates Newton's law, and the Victorian angle machinery predicts
+# where it will be.
+#
+# SETUP NOTES. A primary of mass 1e9 with G = 1e-9 makes mu = 1 exactly; the
+# planet is given mass 1e-6 so it neither shifts mu nor matters to its own
+# orbit. softening MUST be 0: any epsilon breaks the exact 1/r^2 law and
+# Kepler's equation stops applying.
+#
+# WHAT YOU WATCH: the e = 0.6 ellipse -- a fast, tight swing through perihelion
+# on the +x side and a long slow crawl out to aphelion at r = 1.6.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_kepler_equation
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_kepler_equation.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_kepler_equation.posim
+# ---------------------------------------------------------------------------
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+
+# perihelion distance a(1-e) = 0.4 and perihelion speed 2
+norm(obj1.position)
+norm(obj1.velocity)
+
+run 1 steps 1
+# Kepler predicts r = 1.0173689060959745
+norm(obj1.position)
+norm(obj1.position) - 1.0173689060959745
+
+run 1 steps 1
+# Kepler predicts r = 1.443915428283383
+norm(obj1.position)
+norm(obj1.position) - 1.443915428283383
+
+run 1 steps 1
+# Kepler predicts r = 1.5976498017220984, close to aphelion a(1+e) = 1.6
+norm(obj1.position)
+norm(obj1.position) - 1.5976498017220984
+reset
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+energy
+
+scene create
+scene zoom in
+scene set_time_step 0.01

@@ -1,0 +1,10 @@
+example:  cvAdvDiff_diag_p
+source:   examples/cvode/parallel/cvAdvDiff_diag_p.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/parallel/cvAdvDiff_diag_p
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/parallel/cvAdvDiff_diag_p
+exit:     0 (OK)
+seconds:  0.606
+stdout:   783 bytes, sha256 a5b1f5740051c8c541d0c8c40f064ca359cd5de77b30b31e2c1573af46357dc8
+stderr:   762 bytes

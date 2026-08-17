@@ -1,0 +1,10 @@
+example:  kinDiagon_kry_f2003
+source:   examples/kinsol/F2003_serial/kinDiagon_kry_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/F2003_serial/kinDiagon_kry_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/F2003_serial/kinDiagon_kry_f2003
+exit:     0 (OK)
+seconds:  0.207
+stdout:   1938 bytes, sha256 1da22f65bd13e7904e757b1ad69b109f092db044f980f09fbb837deda4cd72c7
+stderr:   0 bytes

@@ -1,0 +1,14 @@
+# 8. A magnetised body in a field. The torque is tau = (R M R^T) B, so
+# the tensor's THIRD column is what a B along z can grip. M's third
+# column here is (0.5, 0, 0), giving an initial torque (1, 0, 0).
+# The field is an outside agent: ENERGY grows and L is NOT conserved,
+# and both of those are correct.
+set system.g_constant = 0
+set system.b_field = [0, 0, 2]
+new cuboid as rotor { mass = 1, half_extents = [1, 0.4, 0.4], magnetic_moment_tensor = [[0, 0, 0.5], [0, 0, 0], [-0.5, 0, 0]] }
+energy
+angmom
+run 3 steps 30
+energy
+angmom
+get rotor.angular_momentum

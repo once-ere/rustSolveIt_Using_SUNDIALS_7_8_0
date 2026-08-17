@@ -1,0 +1,16 @@
+# Example 7 — the precision differentiator: a small fast bullet
+# (radius 0.01, speed 100) meets a THIN static plate (half-thickness
+# 0.005) inside one big output step. A fixed-step engine would tunnel
+# straight through; SUNDIALS event rootfinding lands on the analytic
+# time of impact t = (2 - 0.005 - 0.01)/100 = 0.01985 to ~1e-12 and
+# reflects the bullet exactly.
+set system.g_constant = 0
+new cuboid { mass = 1, position = [0, 0, 0], half_extents = [0.005, 5, 5] }
+set obj0.inverse_mass = 0
+set obj0.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+new sphere { mass = 1, radius = 0.01, position = [-2, 0, 0], velocity = [100, 0, 0] }
+step 0.05
+contacts
+get contact0.t
+get obj1.velocity.x
+get obj1.position.x

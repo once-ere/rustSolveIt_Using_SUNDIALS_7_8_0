@@ -1,0 +1,29 @@
+# Hitting a tumbling target: the contact point itself is moving — dynamic notebook
+#
+# A cuboid (m = 2, half-extents 0.6) spins at omega_z = 2; a sphere (m = 1,
+# r = 0.3) flies in at [2, 0, 0], aimed above center (y = 0.4). The surface
+# point it meets is itself moving (omega x r) — the K-matrix's angular terms
+# handle it: the approach speed at contact is 2.40, not 2. The t ~ 0.97 impact
+# trades spin for rebound (cuboid L_z 0.96 -> 0.31) yet the hud totals stay
+# pinned: E = 2.96, P = [2, 0, 0], L = [0, 0, 0.16]. Press C for contact arrows.
+#
+# Launch:   posim_notebook spinning_target
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/spinning_target.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.6, 0.6, 0.6], angular_velocity = [0, 0, 2] }
+new sphere { mass = 1, radius = 0.3, position = [-3, 0.4, 0], velocity = [2, 0, 0] }
+
+# Baselines before running: the cuboid's own spin (I_z = (2/3)*(0.36+0.36)
+# = 0.48, so L_z = 0.96), the conserved totals L = [0, 0, 0.16] and
+# E = 0.96 + 2 = 2.96, and P = [2, 0, 0] — all held through the impact.
+get obj0.angular_momentum
+angmom
+momentum
+energy
+
+scene create
+# Default 0.01 per tick at ~30 ticks/s: the t ~ 0.97 impact lands about
+# 3 wall seconds after Start.

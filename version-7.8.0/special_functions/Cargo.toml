@@ -1,0 +1,9 @@
+[package]
+name = "special_functions"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Special functions for rustSimulate, cited to the NIST DLMF: a vendored Cephes translation for the classical chapters plus native implementations of the families it lacks"
+
+[dependencies]
+spec_math = { path = "../vendor/spec_math" }

@@ -1,0 +1,4 @@
+example:  idasRoberts_ASAi_sps
+crate:    idas_rs
+argv:     
+status:   NOT_PORTED (no release binary at /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasRoberts_ASAi_sps)

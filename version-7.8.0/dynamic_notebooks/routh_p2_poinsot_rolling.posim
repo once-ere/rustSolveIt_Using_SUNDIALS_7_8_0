@@ -1,0 +1,96 @@
+# Routh II.Art.143 — Poinsot's construction: the momental ellipsoid rolls on a
+# fixed plane — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 143: "To explain
+# Poinsot's representation of the motion by means of the momental ellipsoid."
+#
+# THE CONSTRUCTION. Build the momental ellipsoid at the fixed point and extend
+# the instantaneous axis to meet it. Routh shows that the tangent plane there is
+#
+#   * PARALLEL to the invariable plane, and
+#   * at a CONSTANT distance from the centre
+#
+# so the ellipsoid rolls, without slipping, on a plane fixed in space -- and the
+# angular velocity is proportional to the radius vector to the point of contact.
+# The whole of torque-free rotation is that one picture.
+#
+# THE INVARIANT THAT MAKES IT TESTABLE. The constant distance is, up to the
+# ellipsoid's scaling, the projection of the angular velocity onto the
+# invariable line:
+#
+#     w . Lhat  =  (w . L) / |L|  =  2E / G
+#
+# because w . L is exactly twice the kinetic energy. Both E and G are constants
+# of a torque-free motion (Arts. 140-142), so their ratio is one too -- and it
+# is the constancy of THIS number, not of w itself, that makes the rolling
+# contact possible. The angular velocity may swing about as much as it likes,
+# but its shadow on the invariable line never moves.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2) gives
+# I = diag(5, 4.25, 1.25). Started tumbling at w = (0.3, 3, 0.1):
+#
+#     G = |L| = 12.838540610209558
+#     E       = 19.35625
+#     w . Lhat = 2E/G = 3.0153349337240685      <- the rolling height
+#
+# The cells print that projection repeatedly, beside |w| itself. The projection
+# does not move; |w| does.
+#
+# SETUP NOTE. system.g_constant = 0 -- one body only here, but in any
+# multi-body version pairwise gravity at the default G = 1 lets the bodies fall
+# into the 1/r^2 singularity and ruins a rotational result for a translational
+# reason.
+#
+# WHAT YOU WATCH: a box tumbling irregularly. Invisibly, a plane is fixed in
+# space and the body's momental ellipsoid is rolling on it without slipping.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_poinsot_rolling
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_poinsot_rolling.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_poinsot_rolling.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+get obj0.inertia_tensor
+norm(obj0.angular_momentum)
+energy
+# the rolling height 2E/G, and the angular velocity's own magnitude
+dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+norm(obj0.angular_velocity)
+
+run 2 steps 2
+dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+norm(obj0.angular_velocity)
+run 2 steps 2
+dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+norm(obj0.angular_velocity)
+run 3 steps 3
+dot(obj0.angular_velocity, obj0.angular_momentum) / norm(obj0.angular_momentum)
+norm(obj0.angular_velocity)
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+scene create
+scene set_time_step 0.03

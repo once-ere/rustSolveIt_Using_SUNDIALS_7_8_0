@@ -1,0 +1,134 @@
+# Routh II.Arts.184-185 — the separatrix G^2 = B*T, and which axis the polhode
+# encircles — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Arts. 184-185 treat the
+# case G^2 = B*T. It is the boundary that organises the whole phase portrait of
+# torque-free rotation.
+#
+# THE ALGEBRA. The motion lies on both quadrics of Art. 140,
+#
+#     A^2 w1^2 + B^2 w2^2 + C^2 w3^2 = G^2        A w1^2 + B w2^2 + C w3^2 = T
+#
+# Multiply the second by B and subtract; the w2 terms cancel exactly, leaving
+#
+#     G^2 - B*T  =  A(A - B) w1^2  +  C(C - B) w3^2
+#
+# With A > B > C the first coefficient is positive and the second negative, so
+# the sign of G^2 - B*T decides which term wins -- and that decides the shape
+# of the polhode:
+#
+#     G^2 > B*T  ->  w1 can never vanish  ->  the polhode encircles the
+#                    GREATEST axis, and the body-frame w1 keeps its sign forever
+#     G^2 < B*T  ->  w3 can never vanish  ->  the polhode encircles the
+#                    LEAST axis, and the body-frame w3 keeps its sign forever
+#     G^2 = B*T  ->  the separatrix itself, the two great curves that cross at
+#                    the mean axis
+#
+# THE TEST. Three copies of one cuboid, I = diag(5, 4.25, 1.25), started with
+# three disturbances that put them on the three sides of the boundary:
+#
+#     obj0  w = (0.3,  3, 0.1)   G^2 - B*T = +0.3      encircles A
+#     obj1  w = (0.01, 3, 0.01)  G^2 - B*T =  0        ON the separatrix
+#     obj2  w = (0.01, 3, 0.3)   G^2 - B*T = -0.337    encircles C
+#
+# The cells print each body's angular velocity IN THE BODY, sampled repeatedly.
+# Watch which component refuses to change sign: obj0's x-component and obj2's
+# z-component are the ones pinned by the inequality above.
+#
+# THE SEPARATRIX IS A TRAP FOR THE UNWARY. obj1's disturbance is symmetric,
+# (d, n, d), and for THESE moments that is exactly the boundary:
+#
+#     G^2 - B*T = d^2[A(A-B) + C(C-B)] = d^2[5(0.75) + 1.25(-3)] = 0
+#
+# identically, for every d -- so the "small symmetric wobble" that looks like
+# the obvious way to perturb a spin is the one case whose long-term behaviour
+# is governed by rounding rather than by the equations. Any real study of the
+# tennis-racket effect should perturb asymmetrically.
+#
+# MEASURED (this notebook, rtol 1e-12, body-frame components at t = 2..10):
+#
+#   obj0  w_x = 2.303, 0.313, 2.197, 0.330, 2.075   -- never changes sign
+#         w_z = 2.286, -0.134, -2.179, 0.169, 2.056 -- freely changes sign
+#   obj2  w_z = 2.466, 0.310, 2.330, 0.336, 2.107   -- never changes sign
+#         w_x = 2.447, -0.078, -2.311, 0.151, 2.086 -- freely changes sign
+#
+# so the component the inequality pins is pinned, and the other one is not.
+#
+#   obj1  w_x = 0.364, 1.608, 0.050, 0.0014, 0.000037   -> 0
+#         w_y = 2.967, -2.280, -2.999, -3.0000, -3.0000
+#
+# On the separatrix the disturbance DECAYS and the axis creeps asymptotically
+# onto the (reversed) mean axis, which is what a heteroclinic orbit does. At
+# looser tolerances the same initial condition instead reverses over and over.
+# Both are "correct"; that is the point of not sitting on the boundary.
+#
+# SETUP NOTE. system.g_constant = 0, so the three bodies do not attract one
+# another and fall into the 1/r^2 singularity.
+#
+# WHAT YOU WATCH: three identical boxes, disturbed by comparable amounts, on
+# the three sides of one inequality -- tumbling in three visibly different ways.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_separatrix
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_separatrix.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_separatrix.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-12
+set system.atol = 1e-14
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.01, 3, 0.01] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 3, 0.3] }
+
+get obj0.inertia_tensor
+
+# body-frame angular velocities of all three, sampled five times.
+# obj0 (G^2 > B*T): its x-component must never change sign.
+# obj2 (G^2 < B*T): its z-component must never change sign.
+# obj1 sits exactly on the separatrix between them.
+run 2 steps 2
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+[obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+run 2 steps 2
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+[obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+run 2 steps 2
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+[obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+run 2 steps 2
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+[obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+run 2 steps 2
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+[obj2.orientation.w, 0 - obj2.orientation.x, 0 - obj2.orientation.y, 0 - obj2.orientation.z] * [0, obj2.angular_velocity.x, obj2.angular_velocity.y, obj2.angular_velocity.z] * obj2.orientation
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-12
+set system.atol = 1e-14
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.01, 3, 0.01] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 3, 0.3] }
+
+scene create
+scene set_time_step 0.03

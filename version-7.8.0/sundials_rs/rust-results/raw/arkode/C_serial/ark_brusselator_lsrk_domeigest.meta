@@ -1,0 +1,10 @@
+example:  ark_brusselator_lsrk_domeigest
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_brusselator_lsrk_domeigest.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_brusselator_lsrk_domeigest
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_brusselator_lsrk_domeigest
+exit:     0 (OK)
+seconds:  0.109
+stdout:   1641 bytes, sha256 1df50afaace183d374d8c12471719686d1ace3ee848d455eea39a90aa57f2e15
+stderr:   0 bytes

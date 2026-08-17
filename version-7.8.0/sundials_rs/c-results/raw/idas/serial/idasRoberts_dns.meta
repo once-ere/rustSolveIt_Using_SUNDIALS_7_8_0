@@ -1,0 +1,10 @@
+example:  idasRoberts_dns
+source:   examples/idas/serial/idasRoberts_dns.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasRoberts_dns
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasRoberts_dns
+exit:     0 (OK)
+seconds:  0.207
+stdout:   2692 bytes, sha256 74a2ad3da56b9a0caba7ef7aefb82f7f79bfb811b858ee2daff3768977eedd6b
+stderr:   0 bytes

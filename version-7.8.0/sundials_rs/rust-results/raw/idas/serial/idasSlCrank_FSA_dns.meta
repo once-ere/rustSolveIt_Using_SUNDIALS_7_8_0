@@ -1,0 +1,10 @@
+example:  idasSlCrank_FSA_dns
+crate:    idas_rs
+source:   crates/idas_rs/examples/idasSlCrank_FSA_dns.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasSlCrank_FSA_dns
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasSlCrank_FSA_dns
+exit:     0 (OK)
+seconds:  0.105
+stdout:   1027 bytes, sha256 b331e2f65e6ffffe70cb17692b46423ec518ca6af262991962a0dc8236b7f610
+stderr:   0 bytes

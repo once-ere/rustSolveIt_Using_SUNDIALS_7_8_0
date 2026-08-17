@@ -1,0 +1,10 @@
+example:  cvRocket_dns
+crate:    cvode_rs
+source:   crates/cvode_rs/examples/cvRocket_dns.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvRocket_dns
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvRocket_dns
+exit:     0 (OK)
+seconds:  0.106
+stdout:   4212 bytes, sha256 2887cbbe9072a4654b03eafbbfc1cc775975d7b5abfd8609826eabbc7e2aac6d
+stderr:   0 bytes

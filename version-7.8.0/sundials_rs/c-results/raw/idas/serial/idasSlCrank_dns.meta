@@ -1,0 +1,10 @@
+example:  idasSlCrank_dns
+source:   examples/idas/serial/idasSlCrank_dns.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasSlCrank_dns
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasSlCrank_dns
+exit:     0 (OK)
+seconds:  0.206
+stdout:   2546 bytes, sha256 90c92504aa8887bcfe7d8da0b9fe9457f915d801e50fe0ad94fda256d85f262e
+stderr:   0 bytes

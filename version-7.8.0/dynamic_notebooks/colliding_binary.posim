@@ -1,0 +1,27 @@
+# Gravity + collisions: a bound binary that bounces at pericenter (e_rest = 0.6) — dynamic notebook
+#
+# G = 1 and two spheres (m = 1, r = 0.3) start at (+-1, 0, 0) with
+# tangential velocities v_y = -+0.316227766 = sqrt(0.1): a bound ellipse
+# with a = 1.25, e_orbit = 0.6, apocenter 2 (the start) and pericenter 0.5.
+# Pericenter 0.5 < touch distance 0.6 (= r + r), so gravity itself drives
+# the impact; each e_rest = 0.6 bounce robs kinetic energy and the orbit
+# shrinks, but momentum stays exactly [0, 0, 0] throughout. Watch the hud:
+# E starts at 0.1 - 0.5 = -0.4 (bound) and drops at every bounce while P
+# holds [0,0,0]; press C to see the golden contact arrows fire at pericenter.
+#
+# Launch:   posim_notebook colliding_binary
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/colliding_binary.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 1
+new sphere { mass = 1, radius = 0.3, position = [-1, 0, 0], velocity = [0, -0.316227766, 0], restitution = 0.6 }
+new sphere { mass = 1, radius = 0.3, position = [1, 0, 0], velocity = [0, 0.316227766, 0], restitution = 0.6 }
+
+# Baselines before anything moves: E = 2*(1/2 * 0.1) - 1*1*1/2 = -0.4
+# (negative: bound), P = [0, 0, 0] — P must survive every bounce untouched.
+energy
+momentum
+
+scene create
+scene zoom 3

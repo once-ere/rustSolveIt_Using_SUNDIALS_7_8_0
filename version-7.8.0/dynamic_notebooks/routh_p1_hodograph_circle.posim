@@ -1,0 +1,103 @@
+# Routh I.Art.394-398 — the hodograph of a Kepler orbit is a CIRCLE
+# — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Arts. 394-398. The hodograph is the curve traced by the tip of the
+# velocity vector drawn from a fixed origin (Art. 394, after Hamilton): draw
+# OQ parallel to the motion with |OQ| proportional to the speed, and the locus
+# of Q is the hodograph. Its arc-rate ds'/dt is the acceleration itself.
+#
+# THE THEOREM. For a central force Routh finds it more convenient to draw OQ
+# PERPENDICULAR to the tangent, because v = h/OY with OY the perpendicular
+# from the centre onto the tangent (Art. 395) — which makes the hodograph the
+# POLAR RECIPROCAL of the orbit. For the inverse square the reciprocal of an
+# ellipse about a focus is a circle, so:
+#
+#     the hodograph of every Kepler orbit -- ellipse, parabola or hyperbola --
+#     is a circle, or an arc of one.
+#
+# WHY IT IS NOT OBVIOUS. The orbit is an ellipse traversed at wildly varying
+# speed: at perihelion the particle is fast and close, at aphelion slow and
+# far. Yet the velocity vector, replotted from a common origin, moves on a
+# perfect circle at constant... nothing. The speed is not constant and the
+# angular rate is not constant; only the LOCUS is circular.
+#
+# THE ALGEBRA. With the apse along x and h the angular momentum per unit mass,
+#
+#     v = (mu/h) * ( -sin(theta),  e + cos(theta) )
+#
+# so  v - (0, mu*e/h)  has constant length mu/h. The hodograph is therefore a
+# circle of radius mu/h centred at (0, mu*e/h) -- offset from the origin by
+# exactly e times the radius. e < 1 puts the origin inside the circle (closed
+# orbit), e = 1 on it, e > 1 outside.
+#
+# THE NUMBERS. mu = 1, e = 0.6, a = 1, so the perihelion distance is
+# a(1-e) = 0.4 and the perihelion speed is sqrt(mu(1+e)/(a(1-e))) = 2. Then
+#
+#     h        = 0.4 * 2 = 0.8
+#     radius   = mu/h     = 1.25
+#     centre   = (0, mu*e/h) = (0, 0.75)
+#
+# The cells below sample norm(velocity - [0, 0.75, 0]) at four points spread
+# around one orbit. Every sample must read 1.25.
+#
+# WHAT YOU WATCH: an e = 0.6 ellipse — fast sweep through perihelion on the
+# +x side, slow crawl at aphelion. The invariant being demonstrated is in the
+# printed numbers: whatever the speed, the velocity tip never leaves its circle.
+#
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_hodograph_circle
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_hodograph_circle.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_hodograph_circle.posim
+# ---------------------------------------------------------------------------
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+
+# Baselines: speed at perihelion is 2, the hodograph radius is mu/h = 1.25,
+# and the centre sits at (0, 0.75).
+norm(obj1.velocity)
+norm(obj1.velocity - [0, 0.75, 0])
+
+# Four samples spread around one orbit (period 2*pi). Every one reads 1.25
+# even though the speed itself ranges from 2 down to 0.5.
+run pi / 2 steps 2
+norm(obj1.velocity)
+norm(obj1.velocity - [0, 0.75, 0])
+run pi / 2 steps 2
+norm(obj1.velocity)
+norm(obj1.velocity - [0, 0.75, 0])
+run pi steps 2
+norm(obj1.velocity)
+norm(obj1.velocity - [0, 0.75, 0])
+reset
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+energy
+laplace 1
+
+scene create
+scene zoom in
+scene set_time_step 0.01

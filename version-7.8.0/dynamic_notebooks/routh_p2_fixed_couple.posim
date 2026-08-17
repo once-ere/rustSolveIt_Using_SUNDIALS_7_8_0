@@ -1,0 +1,101 @@
+# Routh II.Art.148 — a couple whose axis is fixed in space — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 148: "A body, at rest,
+# free to move about a fixed point O, is acted on by a couple Q whose axis is
+# fixed in space. Find the motion."
+#
+# THE ONE EXACT STATEMENT. Whatever the body does, the angular momentum obeys
+#
+#     dL/dt = Q        so       L(t) = Q * t
+#
+# in the FIXED frame, because the couple's axis does not move. The angular
+# momentum therefore grows linearly along one straight line in space, for all
+# time, exactly. That is true no matter how complicated the rotation becomes,
+# and it is the whole content of the article: the hard part of the motion is
+# the orientation, not the momentum.
+#
+# WHY THE MOTION IS NOT SIMPLE. The angular VELOCITY is w = R I^-1 R^T L. If
+# the couple's axis happened to lie along a principal axis of the body, then
+# w would stay parallel to L and the body would simply spin up about it. Here
+# the body is deliberately started TILTED -- rotated 40 degrees about x, so
+# that the fixed couple axis (world z) is not a principal direction -- and then
+# w is not parallel to L, the body turns, R changes, and w wanders. The body
+# tumbles while its angular momentum marches straight.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2) has
+# I = diag(5, 4.25, 1.25). It starts AT REST, tilted by the quaternion
+#
+#     q = (cos 20, sin 20, 0, 0) = (0.9396926207859084, 0.3420201433256687, 0, 0)
+#
+# (w-first, a 40-degree rotation about x), and carries a constant torque
+# (0, 0, 2) applied in the fixed frame. Predicted, exactly:
+#
+#     L(t) = (0, 0, 2t)      so   L(5) = (0, 0, 10)   and   L(10) = (0, 0, 20)
+#
+# The cells print L at both instants. The x and y components stay at zero to
+# machine precision while the z component tracks 2t; meanwhile |w| climbs and
+# the body's orientation becomes complicated.
+#
+# ENERGY IS NOT CONSERVED HERE, and should not be: a couple does work at the
+# rate dE/dt = w . Q. Rising energy in this notebook is physics, not solver
+# error.
+#
+# SETUP NOTE. posim applies obj.torque as a CONSTANT torque in the world frame,
+# which is exactly Routh's "couple whose axis is fixed in space". Gravity is
+# switched off so nothing else acts.
+#
+# WHAT YOU WATCH: a box, starting from dead rest at an awkward angle, winding
+# itself up into an ever faster and increasingly complicated tumble -- while
+# the quantity that actually obeys a simple law, the angular momentum, is
+# invisible and perfectly straight.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_fixed_couple
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_fixed_couple.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_fixed_couple.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], orientation = [0.9396926207859084, 0.3420201433256687, 0, 0], torque = [0, 0, 2] }
+
+get obj0.inertia_tensor
+get obj0.angular_momentum
+get obj0.angular_velocity
+energy
+
+run 5 steps 5
+# L(5) must be exactly (0, 0, 10)
+get obj0.angular_momentum
+norm(obj0.angular_velocity)
+energy
+
+run 5 steps 5
+# L(10) must be exactly (0, 0, 20)
+get obj0.angular_momentum
+norm(obj0.angular_velocity)
+energy
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], orientation = [0.9396926207859084, 0.3420201433256687, 0, 0], torque = [0, 0, 2] }
+
+scene create
+scene set_time_step 0.02

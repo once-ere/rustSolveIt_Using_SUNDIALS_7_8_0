@@ -1,0 +1,46 @@
+# The manager's box of shapes: every body type in a rigid BOX 4 — dynamic notebook
+#
+# The finale scene (script 11 / grammar Example 13 / user guide S13): one of
+# every body type — tilted torus, point, sphere, ideal zero-thickness disk,
+# cube, tilted cylinder — inside a rigid BOX 4 whose six walls have
+# inverse_mass = 0 (infinitely massive: GET obj0.inverse_mass -> 0). G = 0 and
+# every restitution is 1, so the only mover, the point at v = (100, 200, 100)
+# (|v| = sqrt(60000) ~ 244.95), keeps E = 1/2*|v|^2 = 30000 EXACTLY through
+# every elastic impact — while momentum is NOT conserved: the walls absorb it.
+# Positions are from a documented LCG (seed 20260724); the torus axis is tilted
+# to (1,1,1)/sqrt(3) so its per-axis extent 1.5*sqrt(2/3) + 0.5 ~ 1.7247 clears
+# every wall. Watch the hud: E pinned at 30000 while P wanders with each wall
+# hit; toggle the golden contact arrows (C key); the point threads the torus
+# hole and passes through the zero-thickness disk, but bounces off everything
+# else. Playback dt = 0.0002 because the point crosses the whole box in ~0.016
+# time units — the 0.1-unit demo span plays out in about 17 wall seconds.
+#
+# Launch:   posim_notebook box_of_shapes
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/box_of_shapes.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+box 4
+new torus { mass = 1, inner_radius = 1, outer_radius = 2, orientation = [0.888073833977115, -0.325057583671868, 0.325057583671868, 0] }
+new point { mass = 1, position = [1.406590, -0.995859, 0.569601], velocity = [100, 200, 100] }
+new sphere { mass = 2, radius = 1/2, position = [1.424704, 1.367496, -0.493612] }
+new disk { mass = 2/3, radius = 1, position = [-0.677386, -1.041493, -1.091679], orientation = [0.900447102352677, 0.307567078752479, -0.307567078752479, 0] }
+new cuboid { mass = 5/3, half_extents = [0.5, 0.5, 0.5], position = [1.074397, 0.816223, 1.102099] }
+new cylinder { mass = 2, radius = 1/2, height = 3/2, position = [-1.027024, -1.403890, -0.485619], orientation = [0.968912421710645, 0, 0.247403959254523, 0] }
+list
+collide
+
+# Baselines before anything moves: the walls are exactly static
+# (inverse_mass = 0), E0 = 30000 exactly, P0 = [100, 200, 100].
+get obj0.inverse_mass
+get obj6.inertia_tensor
+energy
+momentum
+
+scene create
+# |v| ~ 245: tiny playback step so the point is watchable (and the
+# playback integrator keeps catching the wall/torus/body impacts).
+scene set_time_step 0.0002
+# The whole action lives inside +/-2: pull the camera in a little.
+scene zoom 2

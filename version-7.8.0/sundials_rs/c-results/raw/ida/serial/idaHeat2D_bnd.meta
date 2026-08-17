@@ -1,0 +1,10 @@
+example:  idaHeat2D_bnd
+source:   examples/ida/serial/idaHeat2D_bnd.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/serial/idaHeat2D_bnd
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/serial/idaHeat2D_bnd
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1465 bytes, sha256 81d7aa7ac1c072d75624c08f69c37fbbfaa947e024be016889894392b01ffa35
+stderr:   0 bytes

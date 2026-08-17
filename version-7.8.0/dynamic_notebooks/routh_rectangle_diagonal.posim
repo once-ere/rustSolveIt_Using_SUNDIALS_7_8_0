@@ -1,0 +1,110 @@
+# Routh II.Art.150b Ex.1 — a rectangle spun about one diagonal ends up spinning
+# about the OTHER diagonal — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 150b, Ex. 1
+# [Coll. Exam. 1903]:
+#
+#   "A rectangle is set rotating about a diagonal with angular velocity O, prove
+#    that it will be rotating about the other diagonal after a time
+#        (2 / (O*sqrt(cos 2a))) * Integral_0^{pi/2} dphi / sqrt(1 - sin^2 a sin^2 phi)
+#    where tan a is the ratio of the smaller to the longer side."
+#
+# THE BODY. A 2 x 1 rectangular lamina, so tan a = 1/2 and a = 26.565 deg. Its
+# principal moments at the centre are I = m*diag(b^2, a^2, a^2+b^2)/3; with
+# mass 3, half-sides 1 and 0.5 that is exactly diag(0.25, 1, 1.25). The plate is
+# given a small but non-zero thickness (0.02) purely so the scene can draw it —
+# the inertia_tensor is supplied explicitly, so the physics is the exact
+# zero-thickness lamina.
+#
+# THE PREDICTION. This is Art. 150a's quarter-period result used twice: from a
+# diagonal to a principal plane is a quarter of the polhode period, so diagonal
+# to diagonal is a HALF period. With k = sin a (k^2 = 0.2), cos 2a = 0.6 and the
+# complete elliptic integral K(k) = 1.6596235986105279,
+#
+#     T = 2*K/(O*sqrt(cos 2a)) = 4.285129705594264       (O = 1)
+#
+# WHY IT IS NOT OBVIOUS. The angular momentum is NOT along the diagonal:
+# L is proportional to (I_x cos a, I_y sin a, 0) ~ (sin a, cos a, 0), i.e. the
+# diagonal reflected in the 45-degree line. And Euler's third equation gives
+# I_z*dw_z/dt = (I_x - I_y)*w_x*w_y, which is non-zero, so w_z leaves the plane
+# immediately and the axis traces a genuine three-dimensional polhode. That it
+# comes back down into the plane, on the other diagonal, at a computable time is
+# the whole content of the theorem.
+#
+# THE CHECK BELOW. Routh's claim is about the axis IN THE BODY, so the notebook
+# reads it as w_body = conj(q) * w_world * q using the quaternion product. At
+# t = T the y-component has flipped sign and x is unchanged (error ~1e-12); at
+# t = 2T it is back on the original diagonal. The CONTROL at T/2 is NOT a
+# diagonal but w_y = 0 — the principal plane of the greatest and least axes,
+# exactly as Art. 150a requires — where the invariants force w = (1, 0, sqrt(0.12)).
+# Note |w| = sqrt(1.12) there: the angular velocity's MAGNITUDE is not conserved
+# (only T and G are), so this is real polhode motion, not a fixed rotation.
+#
+# WHAT YOU WATCH: the plate tumbling torque-free, with the hud's E and L pinned
+# while the spin axis migrates. At 0.02 per tick and ~30 ticks/s the half period
+# T = 4.285 arrives after about 8 wall-seconds, and the plate is then spinning
+# about its other diagonal.
+#
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_rectangle_diagonal
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_rectangle_diagonal.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_rectangle_diagonal.posim
+# ---------------------------------------------------------------------------
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+# The lamina, spun about diagonal 1 = (cos a, sin a, 0) with O = 1.
+new cuboid { mass = 3, half_extents = [1, 0.5, 0.02], inertia_tensor = [[0.25, 0, 0], [0, 1, 0], [0, 0, 1.25]], angular_velocity = [0.8944271909999159, 0.4472135954999579, 0] }
+
+# ---- t = T : Routh says the axis is now the OTHER diagonal, (cos a, -sin a, 0)
+run 4.285129705594264 steps 1
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+
+# ---- t = 2T : another half period, so back to the ORIGINAL diagonal
+run 4.285129705594264 steps 1
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+reset
+
+# ---- CONTROL at T/2 : a QUARTER of the polhode period. Art. 150a says this
+#      must land on the principal plane of the greatest and least axes, i.e.
+#      w_y = 0 — and the invariants then force w = (1, 0, -sqrt(0.12)).
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [1, 0.5, 0.02], inertia_tensor = [[0.25, 0, 0], [0, 1, 0], [0, 0, 1.25]], angular_velocity = [0.8944271909999159, 0.4472135954999579, 0] }
+run 2.142564852797132 steps 1
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_velocity.x, obj0.angular_velocity.y, obj0.angular_velocity.z] * obj0.orientation
+sqrt(0.12)
+reset
+
+# ---- the scene: the same lamina, rebuilt at t = 0 and left Stopped
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [1, 0.5, 0.02], inertia_tensor = [[0.25, 0, 0], [0, 1, 0], [0, 0, 1.25]], angular_velocity = [0.8944271909999159, 0.4472135954999579, 0] }
+
+# Baselines before anything moves: the exact lamina inertia, the conserved
+# L = I.w (Routh's G) and the rotational energy (his T), and the half period.
+get obj0.inertia_tensor
+angmom
+energy
+4.285129705594264
+
+scene create
+scene zoom in
+scene zoom in
+# 0.02 per tick at ~27 ticks/s -> the half period T = 4.2851 in about 8 wall-seconds.
+scene set_time_step 0.02

@@ -1,0 +1,19 @@
+# 11. Lagrange's equilateral solution. Three EQUAL masses at the
+# corners of an equilateral triangle, each given the circular speed for
+# the configuration, rotate rigidly forever. With G = 1, m = 1 and side
+# a, the angular rate is omega = sqrt(3 G m / a^3); at a = 1 that is
+# sqrt(3) = 1.7320508075688772, so the period is 2 pi / sqrt(3) =
+# 3.6275987284684357. After one period every body must be home.
+# Circumradius R = a/sqrt(3) = 0.5773502691896258, speed = omega R = 1.
+set system.g_constant = 1
+new sphere as a { mass = 1, radius = 0.01, position = [0.5773502691896258, 0, 0],                    velocity = [0, 0, 1] }
+new sphere as b { mass = 1, radius = 0.01, position = [-0.2886751345948129, 0, 0.5],                 velocity = [-0.8660254037844387, 0, -0.5] }
+new sphere as c { mass = 1, radius = 0.01, position = [-0.2886751345948129, 0, -0.5],                velocity = [0.8660254037844387, 0, -0.5] }
+com
+energy
+run 3.6275987284684357 steps 400
+get a.position
+get b.position
+get c.position
+com
+norm(a.position - b.position)

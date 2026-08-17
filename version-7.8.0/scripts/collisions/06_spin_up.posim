@@ -1,0 +1,15 @@
+# Example 6 — linear momentum becomes spin: a sphere strikes a free
+# cuboid ABOVE its center. The off-center impulse J n applied at the
+# contact point r gives the box angular momentum L = r x (J n) — read
+# the contact and check it yourself. The box was not spinning before.
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.25, position = [-2, 0.5, 0], velocity = [4, 0, 0] }
+new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.5, 1, 1] }
+get obj1.angular_momentum
+step 1
+contacts
+get contact0.point
+get contact0.impulse
+get obj1.angular_momentum
+get obj1.angular_velocity
+angmom

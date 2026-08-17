@@ -1,0 +1,111 @@
+# Routh I.Art.335 — the SPEED alone fixes the orbit's size, so four differently
+# shaped orbits share one period — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 335. The vis viva equation for the inverse square is
+#
+#     V^2 = mu * (2/R - 1/a)
+#
+# The direction of projection does not appear. Launch from the same distance R
+# at the same speed V and you get the same semi-major axis a, however you aim.
+# By Kepler's third law the period depends on a alone,
+#
+#     T = 2*pi*sqrt(a^3/mu)
+#
+# so four particles launched at one speed but four different angles must all
+# return to their starting points at the SAME instant -- having travelled four
+# visibly different orbits to get there.
+#
+# WHAT DOES change with direction is the SHAPE. The angular momentum
+# h = R*V*sin(phi) depends on the launch angle phi to the radius vector, and
+# through l = h^2/mu and l = a(1-e^2) it fixes the eccentricity. Energy sets
+# the size; angular momentum sets the shape; they are independent.
+#
+# THE NUMBERS. mu = 1, R = 1, V = 1.1, so
+#
+#     a = 1/(2 - 1.21) = 1.2658227848101269
+#     T = 2*pi*sqrt(a^3) = 8.948273124536605
+#
+# Four particles start on the unit circle, each aimed at a different angle phi
+# to its own radius vector:
+#
+#   particle  start        phi     h        e         apoapsis a(1+e)
+#   obj1      ( 1, 0,0)     30    0.550    0.87237    2.370
+#   obj2      ( 0, 1,0)     60    0.9526   0.53205    1.939
+#   obj3      (-1, 0,0)     90    1.100    0.21000    1.532
+#   obj4      ( 0,-1,0)    120    0.9526   0.53205    1.939
+#
+# Four different eccentricities -- obj1's orbit is a long thin ellipse, obj3's
+# is nearly circular -- yet one common period. The cells run for exactly T and
+# print each particle's distance from where it started: all four ~1e-9.
+#
+# SETUP NOTES. A primary of mass 1e9 with G = 1e-9 makes mu = 1 exactly. The
+# test particles are given mass 1e-6 so they neither perturb each other nor
+# shift mu; their own orbits do not depend on their mass. softening is 0
+# because any epsilon breaks the exact 1/r^2 law, and with it Kepler's third.
+#
+# WHAT YOU WATCH: four orbits of obviously different shape -- one long and
+# thin, one nearly a circle -- all sweeping back to their starting points
+# together, again and again.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_equal_periods
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_equal_periods.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_equal_periods.posim
+# ---------------------------------------------------------------------------
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [ 1,  0, 0], velocity = [ 0.9526279441628827, 0.55, 0] }
+new point { mass = 1e-6, position = [ 0,  1, 0], velocity = [-0.9526279441628827, 0.55, 0] }
+new point { mass = 1e-6, position = [-1,  0, 0], velocity = [ 0, -1.1, 0] }
+new point { mass = 1e-6, position = [ 0, -1, 0], velocity = [ 0.9526279441628826, 0.55, 0] }
+
+# all four launch speeds are 1.1, so all four have a = 1.2658227848101269
+norm(obj1.velocity)
+norm(obj2.velocity)
+norm(obj3.velocity)
+norm(obj4.velocity)
+
+# ... but the orbits differ in shape: distances at a quarter period
+run 2.23706828113415 steps 2
+norm(obj1.position)
+norm(obj3.position)
+
+# one full period from the start: every particle is home again
+run 6.711204843402455 steps 6
+norm(obj1.position - [ 1,  0, 0])
+norm(obj2.position - [ 0,  1, 0])
+norm(obj3.position - [-1,  0, 0])
+norm(obj4.position - [ 0, -1, 0])
+reset
+
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [ 1,  0, 0], velocity = [ 0.9526279441628827, 0.55, 0] }
+new point { mass = 1e-6, position = [ 0,  1, 0], velocity = [-0.9526279441628827, 0.55, 0] }
+new point { mass = 1e-6, position = [-1,  0, 0], velocity = [ 0, -1.1, 0] }
+new point { mass = 1e-6, position = [ 0, -1, 0], velocity = [ 0.9526279441628826, 0.55, 0] }
+
+scene create
+scene zoom in
+scene set_time_step 0.02

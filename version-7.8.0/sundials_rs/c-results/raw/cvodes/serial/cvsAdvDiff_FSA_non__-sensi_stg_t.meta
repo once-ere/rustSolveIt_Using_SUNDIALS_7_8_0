@@ -1,0 +1,10 @@
+example:  cvsAdvDiff_FSA_non
+source:   examples/cvodes/serial/cvsAdvDiff_FSA_non.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsAdvDiff_FSA_non
+argv:     -sensi stg t
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsAdvDiff_FSA_non__-sensi_stg_t
+exit:     0 (OK)
+seconds:  0.206
+stdout:   3259 bytes, sha256 aba1080724c2adf5b61f56196694336be4cd816f605d867c507e814e3238af4e
+stderr:   0 bytes

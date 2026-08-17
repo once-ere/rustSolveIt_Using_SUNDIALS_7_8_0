@@ -1,0 +1,102 @@
+# Routh II.Art.141 — the invariable line is absolutely fixed in space, and the
+# instantaneous axis is not — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 141: the plane of the
+# impulsive couple that would set the body moving "is the Invariable plane and
+# the normal to it the Invariable line. This line is absolutely fixed in space".
+#
+# THE TWO LINES. A torque-free body has two natural axes and they are easy to
+# confuse:
+#
+#   the INVARIABLE LINE     -- the direction of the angular momentum. Fixed in
+#                              space, because with no couple dL/dt = 0. It is
+#                              NOT fixed in the body: it wanders through the
+#                              body as the body turns, tracing the invariable
+#                              cone of Art. 159.
+#   the INSTANTANEOUS AXIS  -- the direction of the angular velocity. Fixed in
+#                              NEITHER frame in general. It traces the polhode
+#                              in the body and the herpolhode in space.
+#
+# Art. 141 also records the direction cosines of the invariable line in the
+# body as A*w1/G, B*w2/G, C*w3/G -- explicitly functions of the w's, hence
+# explicitly moving in the body, even though the line itself has not stirred.
+#
+# WHAT THE CELLS SHOW. A cuboid is set tumbling and two unit vectors are
+# printed side by side, repeatedly:
+#
+#     normalize(angular_momentum)   -- the invariable line, in space
+#     normalize(angular_velocity)   -- the instantaneous axis, in space
+#
+# The first does not move at all. The second moves a great deal. It is worth
+# seeing them printed together, because "the axis of rotation" is the phrase
+# most likely to be applied loosely to whichever of them the reader had in mind.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2) gives
+# I = diag(5, 4.25, 1.25). Started with w = (0.3, 3, 0.1):
+#
+#     L = I w = (1.5, 12.75, 0.125)      |L| = 12.838540610209558
+#     invariable line = normalize(L) = (0.11683..., 0.99310..., 0.00973...)
+#
+# and that unit vector is reproduced to the last digit at every sample below,
+# while normalize(w) swings visibly.
+#
+# The disturbance is asymmetric so the motion sits clearly off the separatrix
+# G^2 = B*T of Art. 184 (here G^2 - B*T = +0.3) and the body genuinely tumbles.
+#
+# SETUP NOTE. system.g_constant = 0. Only one body is present, so gravity would
+# do nothing here -- but in any multi-body version of this test, leaving G = 1
+# lets the bodies fall together into the 1/r^2 singularity and ruins a purely
+# rotational result for an entirely translational reason.
+#
+# WHAT YOU WATCH: a box tumbling in a complicated way about an axis that never
+# stops moving, while the direction that actually matters never moves at all.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_invariable_line
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_invariable_line.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_invariable_line.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+get obj0.angular_momentum
+normalize(obj0.angular_momentum)
+normalize(obj0.angular_velocity)
+
+run 2 steps 2
+normalize(obj0.angular_momentum)
+normalize(obj0.angular_velocity)
+
+run 2 steps 2
+normalize(obj0.angular_momentum)
+normalize(obj0.angular_velocity)
+
+run 3 steps 3
+normalize(obj0.angular_momentum)
+normalize(obj0.angular_velocity)
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+scene create
+scene set_time_step 0.03

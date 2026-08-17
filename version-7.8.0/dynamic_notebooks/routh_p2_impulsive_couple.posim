@@ -1,0 +1,106 @@
+# Routh II.Art.146 — an impulsive couple, and what it does to the invariable
+# line — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 146: "Let the body
+# while in motion be acted on by an impulsive couple whose moment is I and
+# whose plane is perpendicular to the resultant axis of angular momentum. To
+# find the change in the motion."
+#
+# WHAT AN IMPULSIVE COUPLE DOES. It adds its whole moment to the angular
+# momentum instantaneously and changes nothing else -- not the orientation, not
+# the position. So L -> L + I, and everything about the new motion follows from
+# the new L: the new invariable line, the new G, the new polhode.
+#
+# THE TWO CASES WORTH SEPARATING.
+#
+#   couple ALONG L (its plane perpendicular to L, Routh's case): the invariable
+#       LINE is unchanged in direction. Only G changes. The body keeps the same
+#       fixed axis in space and simply carries more angular momentum about it.
+#
+#   couple ACROSS L: the invariable line TILTS, through the angle
+#       arctan(|I| / G), and the whole subsequent motion is referred to a new
+#       fixed direction in space.
+#
+# This notebook does the second, because it is the one with a number to check,
+# and states the first alongside it.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2), I = diag(5,
+# 4.25, 1.25), tumbling at w = (0.3, 3, 0.1):
+#
+#     L = (1.5, 12.75, 0.125)        G = 12.838540610209558
+#
+# An impulsive couple of moment 5 is applied perpendicular to L, along
+# L x zhat normalised:
+#
+#     J     = (4.965753021614381, -0.584206237836986, 0)
+#     new L = (6.465753021614381, 12.165793762163014, 0.125)
+#     |L'|  = 13.777812779973459   =  sqrt(G^2 + 25)   as it must be
+#     tilt  = 21.278543789162757 degrees = arctan(5 / G)
+#
+# HOW IT IS APPLIED. posim has no impulse command, and does not need one: an
+# impulsive couple IS an instantaneous change of angular momentum, so writing
+# the new value straight into obj0.angular_momentum is exactly Routh's
+# operation, not an approximation of it. The angular velocity that posim
+# reports afterwards is recomputed from the new L through w = R I^-1 R^T L,
+# which is the "change in the motion" the article asks for.
+#
+# SETUP NOTE. system.g_constant = 0 so nothing else acts.
+#
+# WHAT YOU WATCH: a box tumbling about one fixed direction in space, then --
+# at the moment the notebook rewrites its angular momentum -- tumbling about a
+# different one, twenty-one degrees away.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_impulsive_couple
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_impulsive_couple.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_impulsive_couple.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+get obj0.angular_momentum
+norm(obj0.angular_momentum)
+normalize(obj0.angular_momentum)
+energy
+
+# the impulsive couple: L -> L + J, with J perpendicular to L and |J| = 5
+set obj0.angular_momentum = [6.465753021614381, 12.165793762163014, 0.125]
+
+norm(obj0.angular_momentum)
+normalize(obj0.angular_momentum)
+# cosine of the tilt against the old invariable line: cos(21.2785 deg) = 0.9318...
+dot(normalize(obj0.angular_momentum), normalize([1.5, 12.75, 0.125]))
+# the angular velocity has been recomputed from the new L
+get obj0.angular_velocity
+energy
+
+# and the new invariable line is fixed in space just as the old one was
+run 4 steps 4
+normalize(obj0.angular_momentum)
+norm(obj0.angular_momentum)
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+scene create
+scene set_time_step 0.03

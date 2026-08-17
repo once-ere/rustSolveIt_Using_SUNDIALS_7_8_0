@@ -1,0 +1,134 @@
+# Routh II.Art.155 — the three principal axes do NOT possess equal degrees of
+# stability — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 155: "If a body be set
+# in rotation about any principal axis at a fixed point, it will continue to
+# rotate about that axis as a permanent axis. But the three principal axes at
+# the fixed point do not possess equal degrees of stability."
+#
+# Art. 155a gives the geometry: about the greatest or least axis "the
+# neighbouring polhodes are ellipses" -- closed curves, so a disturbed axis
+# stays near. About the MEAN axis they are not, and the instantaneous axis
+# "will travel far".
+#
+# THE LINEARISED PROOF. Order the principal moments A > B > C. Spin about the
+# mean axis B at rate n and let the other two components be small. Euler's
+# equations (Art. 137) give, to first order,
+#
+#     A*d(e_A)/dt = (B - C)*n*e_C          C*d(e_C)/dt = (A - B)*n*e_A
+#
+# so   d^2(e_A)/dt^2 = [ (B - C)(A - B) / (A*C) ] * n^2 * e_A
+#
+# With A > B > C both brackets are POSITIVE, so the coefficient is positive and
+# the solution is exponential: e^(kt). Repeat about the greatest axis and the
+# bracket becomes (B - A)(C - A)/(B*C) -- a product of two negatives over a
+# positive, hence negative -- and the solution is trigonometric. Same for the
+# least axis. Exponential growth versus bounded oscillation: that is the whole
+# difference, and it comes from one sign.
+#
+# THIS BODY. A cuboid of mass 3 with half-extents (0.5, 1, 2) has
+#
+#     I = diag(5, 4.25, 1.25)      so   A = 5 (x),  B = 4.25 (y),  C = 1.25 (z)
+#
+# Spun about y at n = 3, the growth rate is
+#
+#     k = n*sqrt((B-C)(A-B)/(A*C)) = 3*sqrt(3*0.75/6.25) = 3*0.6 = 1.8
+#
+# an e-folding time of 0.56 -- so a disturbance of a few percent reaches order
+# unity within about three time units, and the body turns over.
+#
+# READ THE AXIS IN THE BODY, NOT IN SPACE. This is the trap. The angular
+# momentum is fixed in space and the world-frame angular velocity stays close
+# to it, so watching world-frame omega_y shows NOTHING -- it sits near +3
+# forever. Routh's reversal is a statement about the body. The cells therefore
+# extract w_body = conj(q) * w_world * q with the quaternion product, and it is
+# the y-component of THAT which reverses.
+#
+# MEASURED BEHAVIOUR (this notebook, gravity off, rtol 1e-12):
+#
+#   spun about y (MEAN):     body w_y = -1.15, -3.00, +1.43, +3.00, -1.67, ...
+#                            at t = 2, 4, 6, 8, 10 -- a full reversal cycle
+#                            about every 8 units, forever
+#   spun about x (GREATEST): |w - (3,0,0)| stays below 0.018 for 40 units
+#   spun about z (LEAST):    |w - (0,0,3)| stays below 0.090 for 40 units
+#
+# A NOTE ON THE PERTURBATION. The disturbance here is (0.3, 3, 0.1), chosen to
+# sit clearly OFF the separatrix G^2 = B*T of Art. 184. A symmetric disturbance
+# such as (d, n, d) is a trap with these particular moments: then
+# G^2 - B*T = A*d^2*(A-B) + C*d^2*(C-B) = d^2*(5*0.75 + 1.25*(-3)) = 0
+# identically, putting the motion exactly ON the separatrix, where the reversal
+# time is governed by rounding rather than by physics. Here G^2 - B*T = +0.3,
+# comfortably away from it.
+#
+# SETUP NOTE. system.g_constant is set to 0. The three bodies must not attract
+# one another: pairwise gravity is on by default with G = 1, and although
+# gravity applies no torque, letting the bodies fall together drives the
+# separation towards the 1/r^2 singularity and wrecks the integration.
+#
+# WHAT YOU WATCH: three identical boxes, spun at the same rate about their
+# three different principal axes. Two of them turn steadily and quietly. The
+# middle one tumbles end over end, again and again -- while its energy and
+# angular momentum never change by a part in 1e10.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_mean_axis_instability
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_mean_axis_instability.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_mean_axis_instability.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-12
+set system.atol = 1e-14
+
+# obj0 spun about x (GREATEST, A = 5); obj1 about y (MEAN, B = 4.25);
+# obj2 about z (LEAST, C = 1.25). Same body, same rate, same disturbance size.
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [3, 0.01, 0.01] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 0.01, 3] }
+
+get obj0.inertia_tensor
+angmom
+energy
+
+# --- the mean-axis body, read IN THE BODY: w_y reverses again and again
+run 2 steps 1
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+run 2 steps 1
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+run 2 steps 1
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+run 2 steps 1
+[obj1.orientation.w, 0 - obj1.orientation.x, 0 - obj1.orientation.y, 0 - obj1.orientation.z] * [0, obj1.angular_velocity.x, obj1.angular_velocity.y, obj1.angular_velocity.z] * obj1.orientation
+
+# --- meanwhile the other two have barely moved off their axes
+norm(obj0.angular_velocity - [3, 0, 0])
+norm(obj2.angular_velocity - [0, 0, 3])
+
+# --- and nothing has been lost doing it
+angmom
+energy
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-12
+set system.atol = 1e-14
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [-6, 0, 0], angular_velocity = [3, 0.01, 0.01] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 0, 0, 0], angular_velocity = [0.3, 3, 0.1] }
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], position = [ 6, 0, 0], angular_velocity = [0.01, 0.01, 3] }
+
+scene create
+# 0.03 per tick at ~27 ticks/s -> a reversal cycle every ~10 wall-seconds.
+scene set_time_step 0.03

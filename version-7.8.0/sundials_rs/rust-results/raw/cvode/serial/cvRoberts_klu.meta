@@ -1,0 +1,10 @@
+example:  cvRoberts_klu
+crate:    cvode_rs
+source:   crates/cvode_rs/examples/cvRoberts_klu.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvRoberts_klu
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvRoberts_klu
+exit:     0 (OK)
+seconds:  0.105
+stdout:   1245 bytes, sha256 e2319ee837288d96311b62fade32252bb5180196e73b08b8a2ed5d2fed72fded
+stderr:   0 bytes

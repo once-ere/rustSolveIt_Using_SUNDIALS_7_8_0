@@ -1,0 +1,10 @@
+example:  ark_kepler
+source:   examples/arkode/C_serial/ark_kepler.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_kepler
+argv:     --stepper SPRK --step-mode fixed --method ARKODE_SPRK_YOSHIDA_6_8 --tf 50 --check-order --nout 1
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_YOSHIDA_6_8_--tf_50_--check-order_--nout_1
+exit:     0 (OK)
+seconds:  0.306
+stdout:   8203 bytes, sha256 93e302e956a2cc1211672459a641e4f67b1aa23671e3735ffb9545c3f12c36ba
+stderr:   0 bytes

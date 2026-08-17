@@ -1,0 +1,10 @@
+example:  cvsAdvDiff_bndL
+source:   examples/cvodes/serial/cvsAdvDiff_bndL.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsAdvDiff_bndL
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsAdvDiff_bndL
+exit:     0 (OK)
+seconds:  0.207
+stdout:   863 bytes, sha256 6b6ec3b83bbcaeb22fbc7f48545d5e7f7b778d2a125ac3d2376cd62f5bcbe484
+stderr:   0 bytes

@@ -1,0 +1,23 @@
+== host ==
+Linux 6.6.87.2-microsoft-standard-WSL2 x86_64
+ldd (Ubuntu GLIBC 2.39-0ubuntu8.7) 2.39
+cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+cpu fma: yes
+
+building oracle ...
+generating domain corpus (5,900,000) ...
+generating random corpus (20,000,000) ...
+running differential ...
+   Compiling sundials_core v7.8.0 (/home/nsh/sdl/port/crates/sundials_core)
+    Finished `release` profile [optimized] target(s) in 2.11s
+     Running unittests src/lib.rs (target/release/deps/sundials_core-b7b10d7b3a7d5b99)
+
+running 2 tests
+pow domain differential: 5900000 inputs, 0 mismatches
+test sundials_math::tests::pow_glibc_vs_native_oracle_domain ... ok
+pow random differential: 20000000 inputs, 0 mismatches
+test sundials_math::tests::pow_glibc_vs_native_oracle_random ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.35s
+
+exit: 0

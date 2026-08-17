@@ -1,0 +1,9 @@
+# This port targets Linux. Shell scripts and C sources must keep LF
+# endings even when the repository is checked out on Windows, or
+# /usr/bin/env cannot resolve the interpreter in a shebang line.
+* text=auto eol=lf
+*.sh text eol=lf
+*.c  text eol=lf
+*.rs text eol=lf
+*.md text eol=lf
+*.toml text eol=lf

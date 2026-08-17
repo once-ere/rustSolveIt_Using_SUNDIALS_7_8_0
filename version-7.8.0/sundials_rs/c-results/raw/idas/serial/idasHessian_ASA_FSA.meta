@@ -1,0 +1,10 @@
+example:  idasHessian_ASA_FSA
+source:   examples/idas/serial/idasHessian_ASA_FSA.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasHessian_ASA_FSA
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasHessian_ASA_FSA
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1258 bytes, sha256 e91863a731e78eb0859f09051a0d83c8d074e76387c980326bb78f11b6a40322
+stderr:   0 bytes

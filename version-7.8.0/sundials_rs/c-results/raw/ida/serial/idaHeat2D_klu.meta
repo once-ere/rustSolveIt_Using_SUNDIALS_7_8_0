@@ -1,0 +1,10 @@
+example:  idaHeat2D_klu
+source:   examples/ida/serial/idaHeat2D_klu.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/serial/idaHeat2D_klu
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/serial/idaHeat2D_klu
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1355 bytes, sha256 54f0d048c6173673c7a2df6cfa7051e094ddf75700f79f3a316c5760b436b3de
+stderr:   0 bytes

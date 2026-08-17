@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# posim_notebook — launch a dynamic notebook by bare name.
+#
+#   posim_notebook kepler_orbit
+#   posim_notebook routh_rectangle_diagonal
+#   posim_notebook --list
+#
+# Resolves <name> against dynamic_notebooks/<name>.posim in this repository and
+# hands it to posim's --notebook mode, which loads every cell, opens the scene
+# window, and leaves you at an interactive In[] prompt. Press Start in the
+# window (or type `scene start`) to run the simulation.
+#
+# Works from any working directory: the repository root is derived from this
+# script's own location, not from $PWD.
+#
+# Extra arguments are passed through to posim. Environment variables are
+# inherited as usual, so the headless form is:
+#
+#   POSIM_NO_BROWSER=1 posim_notebook kepler_orbit
+#
+# Install (optional) — put it on your PATH under its bare name:
+#
+#   ln -s "$PWD/tools/posim_notebook" /usr/local/bin/posim_notebook
+#
+set -euo pipefail
+
+# --- locate the repository root through any symlinks on the script path
+src="${BASH_SOURCE[0]}"
+while [ -L "$src" ]; do
+  dir="$(cd -P "$(dirname "$src")" && pwd)"
+  src="$(readlink "$src")"
+  [[ "$src" != /* ]] && src="$dir/$src"
+done
+TOOLS_DIR="$(cd -P "$(dirname "$src")" && pwd)"
+ROOT="$(cd -P "$TOOLS_DIR/.." && pwd)"
+NB_DIR="$ROOT/dynamic_notebooks"
+
+list_notebooks () {
+  if [ -d "$NB_DIR" ]; then
+    for f in "$NB_DIR"/*.posim; do
+      [ -e "$f" ] || continue
+      b="$(basename "$f")"
+      printf '  %s\n' "${b%.posim}"
+    done
+  fi
+}
+
+usage () {
+  cat <<USAGE
+usage: posim_notebook <name> [extra posim args...]
+       posim_notebook --list
+
+Launches dynamic_notebooks/<name>.posim in posim's interactive notebook mode.
+<name> may also be given as "<name>.posim" or as a path to any .posim file.
+
+Available notebooks:
+$(list_notebooks)
+USAGE
+}
+
+case "${1-}" in
+  ""|-h|--help)  usage; [ -z "${1-}" ] && exit 2 || exit 0 ;;
+  -l|--list)     list_notebooks; exit 0 ;;
+esac
+
+arg="$1"; shift
+
+# --- resolve the notebook: a real path, a bare name, or name.posim
+if [ -f "$arg" ]; then
+  nb="$arg"
+else
+  nb="$NB_DIR/${arg%.posim}.posim"
+fi
+
+if [ ! -f "$nb" ]; then
+  printf 'posim_notebook: no such notebook: %s\n' "$arg" >&2
+  printf '  looked for: %s\n\n' "$nb" >&2
+  printf 'Available notebooks:\n' >&2
+  list_notebooks >&2
+  exit 1
+fi
+
+# --- run it. cargo is used (not a prebuilt binary) so a stale target/ cannot
+#     silently shadow current sources; --release matches the documented form.
+cd "$ROOT"
+exec cargo run -p posim --release -- --notebook "$nb" "$@"

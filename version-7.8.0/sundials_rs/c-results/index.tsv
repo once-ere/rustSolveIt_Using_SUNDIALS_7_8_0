@@ -1,0 +1,338 @@
+dir	example	argv	variant	status	exit	seconds	stdout_bytes	stdout_sha256
+arkode/C_klu	ark_brusselator1D_klu		ark_brusselator1D_klu	OK	0	0.206	1214	365c8bc73c2f86b2
+arkode/C_manyvector	ark_brusselator1D_manyvec		ark_brusselator1D_manyvec	OK	0	0.206	5707	24aee5c1f3d93589
+arkode/C_openmp	ark_brusselator1D_omp	4	ark_brusselator1D_omp__4	OK	0	0.306	5685	417d59500345a7ed
+arkode/C_openmp	ark_heat1D_omp	4	ark_heat1D_omp__4	OK	0	0.407	864	a74d6184e56f40da
+arkode/C_parallel	ark_brusselator1D_task_local_nls	--monitor	ark_brusselator1D_task_local_nls__--monitor	OK	0	1.006	3062	54ecd01207d9bbbb
+arkode/C_parallel	ark_brusselator1D_task_local_nls	--monitor --global-nls	ark_brusselator1D_task_local_nls__--monitor_--global-nls	OK	0	0.607	3243	0d324d69afe7d0fa
+arkode/C_parallel	ark_brusselator1D_task_local_nls	--monitor --explicit --tf 3	ark_brusselator1D_task_local_nls__--monitor_--explicit_--tf_3	OK	0	1.108	2993	5c5cb08492f484af
+arkode/C_parallel	ark_diurnal_kry_bbd_p		ark_diurnal_kry_bbd_p	OK	0	0.606	5074	c618c8972bb0edcf
+arkode/C_parallel	ark_diurnal_kry_p		ark_diurnal_kry_p	OK	0	0.606	2276	6caa5dd885906906
+arkode/C_parhyp	ark_diurnal_kry_ph		ark_diurnal_kry_ph	OK	0	0.707	2276	aa9c979c6dd2e6dc
+arkode/C_serial	ark_advection_diffusion_reaction_splitting		ark_advection_diffusion_reaction_splitting	OK	0	0.206	3288	a7201d99d2ef8191
+arkode/C_serial	ark_analytic		ark_analytic	OK	0	0.206	2021	797551566bda7fc1
+arkode/C_serial	ark_analytic	arkode.scalar_tolerances 1e-6 1e-8 arkode.table_names ARKODE_ESDIRK547L2SA_7_4_5 ARKODE_ERK_NONE	ark_analytic__arkode.scalar_tolerances_1e-6_1e-8_arkode.table_names_ARKODE_ESDIRK547L2SA_7_4_5_ARKODE_ERK_NONE	OK	0	0.206	2021	1b87b7662db00102
+arkode/C_serial	ark_analytic_lsrk		ark_analytic_lsrk	OK	0	0.206	1143	36e22a81ef15ab89
+arkode/C_serial	ark_analytic_lsrk_domeigest		ark_analytic_lsrk_domeigest	OK	0	0.207	1384	b46ff126d0c634b6
+arkode/C_serial	ark_analytic_lsrk_domeigest	arkid.dom_eig_est_init_preprocess_iters 1 sundomeigestimator.max_iters 1	ark_analytic_lsrk_domeigest__arkid.dom_eig_est_init_preprocess_iters_1_sundomeigestimator.max_iters_1	OK	0	0.206	1373	37196c8ab48d1169
+arkode/C_serial	ark_analytic_lsrk_varjac		ark_analytic_lsrk_varjac	OK	0	0.206	1302	868672563561b9a7
+arkode/C_serial	ark_analytic_mels		ark_analytic_mels	OK	0	0.205	801	f509501a8a065347
+arkode/C_serial	ark_analytic_nonlin		ark_analytic_nonlin	OK	0	0.206	886	209ca7f82f9e0980
+arkode/C_serial	ark_analytic_partitioned	forcing	ark_analytic_partitioned__forcing	OK	0	0.206	1673	7988580f398e9252
+arkode/C_serial	ark_analytic_partitioned	splitting	ark_analytic_partitioned__splitting	OK	0	0.206	1673	c391ec1ac3886eba
+arkode/C_serial	ark_analytic_partitioned	splitting ARKODE_SPLITTING_BEST_2_2_2	ark_analytic_partitioned__splitting_ARKODE_SPLITTING_BEST_2_2_2	OK	0	0.206	1750	4d239765e8cc1481
+arkode/C_serial	ark_analytic_partitioned	splitting ARKODE_SPLITTING_RUTH_3_3_2	ark_analytic_partitioned__splitting_ARKODE_SPLITTING_RUTH_3_3_2	OK	0	0.206	1754	94a46ae122f59f3d
+arkode/C_serial	ark_analytic_partitioned	splitting ARKODE_SPLITTING_YOSHIDA_8_6_2	ark_analytic_partitioned__splitting_ARKODE_SPLITTING_YOSHIDA_8_6_2	OK	0	0.206	1759	f37ce593b0b93457
+arkode/C_serial	ark_analytic_ssprk		ark_analytic_ssprk	OK	0	0.206	990	e71b9e4dbe82dc51
+arkode/C_serial	ark_brusselator		ark_brusselator	OK	0	0.206	1320	9d8fac6203f417e3
+arkode/C_serial	ark_brusselator1D		ark_brusselator1D	OK	0	0.206	5665	403a2dfeb4cf80d4
+arkode/C_serial	ark_brusselator1D_imexmri	0 0.001	ark_brusselator1D_imexmri__0_0.001	OK	0	2.508	1299	f183b726edb2d41a
+arkode/C_serial	ark_brusselator1D_imexmri	2 0.001	ark_brusselator1D_imexmri__2_0.001	OK	0	0.806	1328	1c205aa5eed96632
+arkode/C_serial	ark_brusselator1D_imexmri	3 0.001	ark_brusselator1D_imexmri__3_0.001	OK	0	2.608	1423	10f894648e4f1ac4
+arkode/C_serial	ark_brusselator1D_imexmri	4 0.001	ark_brusselator1D_imexmri__4_0.001	OK	0	0.806	1334	026ad2f80798c9f8
+arkode/C_serial	ark_brusselator1D_imexmri	5 0.001	ark_brusselator1D_imexmri__5_0.001	OK	0	3.410	1430	d6aac9dd28ed1935
+arkode/C_serial	ark_brusselator1D_imexmri	6 0.001	ark_brusselator1D_imexmri__6_0.001	OK	0	1.007	1336	27d896e2c9687e8f
+arkode/C_serial	ark_brusselator1D_imexmri	7 0.001	ark_brusselator1D_imexmri__7_0.001	OK	0	5.912	1440	e6313b9fb9740773
+arkode/C_serial	ark_brusselator_1D_mri		ark_brusselator_1D_mri	OK	0	0.406	5681	9394fb3de3a8b800
+arkode/C_serial	ark_brusselator_fp		ark_brusselator_fp	OK	0	0.206	1107	aa3549a18920c9a2
+arkode/C_serial	ark_brusselator_fp	1	ark_brusselator_fp__1	OK	0	0.206	1107	aa3549a18920c9a2
+arkode/C_serial	ark_brusselator_lsrk_domeigest		ark_brusselator_lsrk_domeigest	OK	0	0.206	1641	1df50afaace183d3
+arkode/C_serial	ark_brusselator_lsrk_externaldomeigest		ark_brusselator_lsrk_externaldomeigest	OK	0	0.206	1570	c0090f25971d0f6a
+arkode/C_serial	ark_brusselator_mri		ark_brusselator_mri	OK	0	0.206	1443	922387ecfc682c5c
+arkode/C_serial	ark_conserved_exp_entropy_ark	1 0	ark_conserved_exp_entropy_ark__1_0	OK	0	0.206	2938	96d1778ee80203e4
+arkode/C_serial	ark_conserved_exp_entropy_ark	1 1	ark_conserved_exp_entropy_ark__1_1	OK	0	0.207	2209	94a28cd0e9dad9dd
+arkode/C_serial	ark_conserved_exp_entropy_erk	1	ark_conserved_exp_entropy_erk__1	OK	0	0.206	2762	74e035658e515798
+arkode/C_serial	ark_damped_harmonic_symplectic		ark_damped_harmonic_symplectic	OK	0	0.208	969	539892ab15d3dfc6
+arkode/C_serial	ark_dissipated_exp_entropy	1 0	ark_dissipated_exp_entropy__1_0	OK	0	0.206	4236	ea014390bfd504ef
+arkode/C_serial	ark_dissipated_exp_entropy	1 1	ark_dissipated_exp_entropy__1_1	OK	0	0.206	2938	e23448fe1d1f71b4
+arkode/C_serial	ark_harmonic_symplectic		ark_harmonic_symplectic	OK	0	0.208	1258	f8f516d087bd0060
+arkode/C_serial	ark_heat1D		ark_heat1D	OK	0	0.206	867	44015a6f7329b04a
+arkode/C_serial	ark_heat1D_adapt		ark_heat1D_adapt	OK	0	0.206	6365	3079e9727002e30d
+arkode/C_serial	ark_kepler	--stepper ERK --step-mode adapt	ark_kepler__--stepper_ERK_--step-mode_adapt	OK	0	0.206	5243	656a02715a941608
+arkode/C_serial	ark_kepler	--stepper ERK --step-mode fixed --count-orbits	ark_kepler__--stepper_ERK_--step-mode_fixed_--count-orbits	OK	0	0.206	10534	83c82c7c1997a531
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --count-orbits --use-compensated-sums	ark_kepler__--stepper_SPRK_--step-mode_fixed_--count-orbits_--use-compensated-sums	OK	0	0.208	10258	7c43e27798841662
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_EULER_1_1 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_EULER_1_1_--tf_50_--check-order_--nout_1	OK	0	0.907	8313	77482d66e06c1896
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_LEAPFROG_2_2 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_LEAPFROG_2_2_--tf_50_--check-order_--nout_1	OK	0	1.007	8312	30cc487f0b0205b5
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_2_2 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_2_2_--tf_50_--check-order_--nout_1	OK	0	1.307	8312	1a2e715629bf8310
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_3_3 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_3_3_--tf_50_--check-order_--nout_1	OK	0	0.207	8196	a3b418c681b80e72
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_4_4 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_4_4_--tf_50_--check-order_--nout_1	OK	0	0.238	8205	a0bb513df758cb4a
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_5_6 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_MCLACHLAN_5_6_--tf_50_--check-order_--nout_1	OK	0	0.206	8198	4f797b5be52be13f
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_PSEUDO_LEAPFROG_2_2 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_PSEUDO_LEAPFROG_2_2_--tf_50_--check-order_--nout_1	OK	0	1.307	8309	66811757a44a5671
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_RUTH_3_3 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_RUTH_3_3_--tf_50_--check-order_--nout_1	OK	0	0.205	8200	494e5a4cc7aaec57
+arkode/C_serial	ark_kepler	--stepper SPRK --step-mode fixed --method ARKODE_SPRK_YOSHIDA_6_8 --tf 50 --check-order --nout 1	ark_kepler__--stepper_SPRK_--step-mode_fixed_--method_ARKODE_SPRK_YOSHIDA_6_8_--tf_50_--check-order_--nout_1	OK	0	0.306	8203	93e302e956a2cc12
+arkode/C_serial	ark_kepler		ark_kepler	OK	0	0.205	5036	e524ae31f2839470
+arkode/C_serial	ark_kpr_mri	0 1 0.005	ark_kpr_mri__0_1_0.005	OK	0	0.206	3586	7e9c0b1d9fbb2e55
+arkode/C_serial	ark_kpr_mri	1 0 0.01	ark_kpr_mri__1_0_0.01	OK	0	0.206	3459	4927daebc4c37644
+arkode/C_serial	ark_kpr_mri	1 1 0.002	ark_kpr_mri__1_1_0.002	OK	0	0.306	3596	c7f247fb227f4771
+arkode/C_serial	ark_kpr_mri	2 4 0.002	ark_kpr_mri__2_4_0.002	OK	0	0.306	3474	9855a099fa1ad12e
+arkode/C_serial	ark_kpr_mri	3 2 0.001	ark_kpr_mri__3_2_0.001	OK	0	0.306	3481	5f8a21c9a555cb19
+arkode/C_serial	ark_kpr_mri	4 3 0.001	ark_kpr_mri__4_3_0.001	OK	0	0.406	3466	2c5ab50e08ab0b0c
+arkode/C_serial	ark_kpr_mri	5 4 0.001	ark_kpr_mri__5_4_0.001	OK	0	0.506	3466	8b64e56310278f2e
+arkode/C_serial	ark_kpr_mri	6 5 0.001	ark_kpr_mri__6_5_0.001	OK	0	0.807	3486	4aec934e6f934551
+arkode/C_serial	ark_kpr_mri	7 2 0.002	ark_kpr_mri__7_2_0.002	OK	0	0.206	3619	132e4972c1f8c5bc
+arkode/C_serial	ark_kpr_mri	8 3 0.001 -100 100 0.5 1	ark_kpr_mri__8_3_0.001_-100_100_0.5_1	OK	0	0.306	3609	7a6794fce12bc4ea
+arkode/C_serial	ark_kpr_mri	9 3 0.001 -100 100 0.5 1	ark_kpr_mri__9_3_0.001_-100_100_0.5_1	OK	0	0.306	3620	837353a4222b7797
+arkode/C_serial	ark_kpr_mri	10 4 0.001 -100 100 0.5 1	ark_kpr_mri__10_4_0.001_-100_100_0.5_1	OK	0	0.307	3619	a70adcb61b585bc9
+arkode/C_serial	ark_kpr_mri	11 2 0.001	ark_kpr_mri__11_2_0.001	OK	0	0.306	3634	019178989e8f6a7d
+arkode/C_serial	ark_kpr_mri	12 3 0.005	ark_kpr_mri__12_3_0.005	OK	0	0.306	3615	ebc75d15a21555dc
+arkode/C_serial	ark_kpr_mri	13 4 0.01	ark_kpr_mri__13_4_0.01	OK	0	0.206	3612	54c75c8dcfb1bc1f
+arkode/C_serial	ark_KrylovDemo_prec		ark_KrylovDemo_prec	OK	0	0.306	26804	cd1f9ea2edce11f7
+arkode/C_serial	ark_KrylovDemo_prec	1	ark_KrylovDemo_prec__1	OK	0	0.306	26804	cd1f9ea2edce11f7
+arkode/C_serial	ark_KrylovDemo_prec	2	ark_KrylovDemo_prec__2	OK	0	0.406	26804	cd1f9ea2edce11f7
+arkode/C_serial	ark_lotka_volterra_ASA	--check-freq 1	ark_lotka_volterra_ASA__--check-freq_1	OK	0	0.206	1203	1dedca0c7c36cdce
+arkode/C_serial	ark_lotka_volterra_ASA	--check-freq 5	ark_lotka_volterra_ASA__--check-freq_5	OK	0	0.906	1206	dc5041cb38992948
+arkode/C_serial	ark_onewaycouple_mri		ark_onewaycouple_mri	OK	0	0.206	1077	d27f3c1e2e62eb8d
+arkode/C_serial	ark_reaction_diffusion_mri		ark_reaction_diffusion_mri	OK	0	2.809	2276	5bbc474d4b832528
+arkode/C_serial	ark_robertson		ark_robertson	OK	0	0.207	6855	992654598dd4f394
+arkode/C_serial	ark_robertson_constraints		ark_robertson_constraints	OK	0	0.207	6297	54f1e88dc2d789d7
+arkode/C_serial	ark_robertson_root		ark_robertson_root	OK	0	0.206	1558	68bb728c141a33ff
+arkode/C_serial	ark_twowaycouple_mri		ark_twowaycouple_mri	OK	0	0.206	1415	062e79cfb31387c6
+arkode/CXX_lapack	ark_heat2D_lsrk_domeigest		ark_heat2D_lsrk_domeigest	OK	0	0.206	1907	ed9da6e2c4abd3de
+arkode/CXX_manyvector	ark_sod_lsrk		ark_sod_lsrk	OK	0	0.407	2047	a385d0ca16042b4a
+arkode/CXX_parallel	ark_diffusion_reaction_p	--np 2 2 --imex	ark_diffusion_reaction_p__--np_2_2_--imex	OK	0	1.107	2763	ec910d1bdb6186e3
+arkode/CXX_parallel	ark_diffusion_reaction_p	--np 2 2 --mri-arkstep	ark_diffusion_reaction_p__--np_2_2_--mri-arkstep	OK	0	0.706	2902	ad3d77228b52e7f5
+arkode/CXX_parallel	ark_diffusion_reaction_p	--np 2 2 --mri-cvode-global	ark_diffusion_reaction_p__--np_2_2_--mri-cvode-global	OK	0	0.808	2930	e1d7a14f718e3dba
+arkode/CXX_parallel	ark_diffusion_reaction_p	--np 2 2 --mri-cvode-local	ark_diffusion_reaction_p__--np_2_2_--mri-cvode-local	OK	0	0.806	2930	1a86fcb31fb891ef
+arkode/CXX_parallel	ark_heat2D_lsrk_p	--np 2 2	ark_heat2D_lsrk_p__--np_2_2	OK	0	0.807	3252	d89fa4bfa753b1bf
+arkode/CXX_parallel	ark_heat2D_p	--np 2 2	ark_heat2D_p__--np_2_2	OK	0	0.607	3081	cde035179fe1e697
+arkode/CXX_parhyp	ark_heat2D_hypre_ls	--np 2 2	ark_heat2D_hypre_ls__--np_2_2	OK	0	0.940	3030	2aa37197538045a9
+arkode/CXX_parhyp	ark_heat2D_hypre_pfmg	--np 2 2	ark_heat2D_hypre_pfmg__--np_2_2	OK	0	0.915	3172	9165b8c29bfbeedf
+arkode/CXX_parhyp	ark_heat2D_hypre_pfmg_imex	--np 2 2	ark_heat2D_hypre_pfmg_imex__--np_2_2	OK	0	1.412	2064	4b99bb3b2791117f
+arkode/CXX_parhyp	ark_heat2D_hypre_pfmg_mri	--np 2 2	ark_heat2D_hypre_pfmg_mri__--np_2_2	OK	0	2.111	2488	df22bda6bba73b11
+arkode/CXX_serial	ark_advection_diffusion_reaction		ark_advection_diffusion_reaction	OK	0	0.206	1804	68a5e4ac21f12b6d
+arkode/CXX_serial	ark_analytic_sys		ark_analytic_sys	OK	0	0.205	1008	01f25efecf5dbe6b
+arkode/CXX_serial	ark_heat2D		ark_heat2D	OK	0	0.305	2941	98a0a9eb006602e3
+arkode/CXX_serial	ark_heat2D_lsrk		ark_heat2D_lsrk	OK	0	1.007	3109	d5bab6870c3807c2
+arkode/CXX_serial	ark_kpr_Mt	0 5	ark_kpr_Mt__0_5	OK	0	0.206	6710	44e4bd398c2c9fe5
+arkode/CXX_serial	ark_kpr_Mt	1 4	ark_kpr_Mt__1_4	OK	0	0.208	6705	9b3e06bdb7811161
+arkode/CXX_serial	ark_kpr_Mt	2 8 0 -10	ark_kpr_Mt__2_8_0_-10	OK	0	0.207	6492	a1b683c76b5bccd9
+arkode/CXX_serial	ark_kpr_Mt	0 4 1	ark_kpr_Mt__0_4_1	OK	0	0.207	6718	507f7b3d54feceb9
+arkode/CXX_serial	ark_kpr_Mt	0 -4	ark_kpr_Mt__0_-4	OK	0	0.207	832	35eaf43899900c64
+arkode/CXX_serial	ark_kpr_Mt	1 -5	ark_kpr_Mt__1_-5	OK	0	0.206	834	d477d66a2109cf72
+arkode/CXX_serial	ark_kpr_Mt	2 -5 0 -10	ark_kpr_Mt__2_-5_0_-10	OK	0	0.207	805	18701ec1dbf77234
+arkode/CXX_serial	ark_kpr_Mt	1 -3 0 -10 0	ark_kpr_Mt__1_-3_0_-10_0	OK	0	0.207	823	e482de5e030d6cf6
+arkode/CXX_serial	ark_kpr_Mt	0 3 0 -10 0	ark_kpr_Mt__0_3_0_-10_0	OK	0	0.206	6695	0180f20e8000413f
+arkode/CXX_serial	ark_kpr_Mt	2 4 0 -10 0	ark_kpr_Mt__2_4_0_-10_0	OK	0	0.206	6480	bd11e7ce41312630
+arkode/CXX_serial	ark_kpr_Mt	0 4 0 -10 1 10 1	ark_kpr_Mt__0_4_0_-10_1_10_1	OK	0	0.206	6704	36eb126f54c0012e
+arkode/CXX_serial	ark_kpr_Mt	0 4 0 -10 0 10 1	ark_kpr_Mt__0_4_0_-10_0_10_1	OK	0	0.207	6689	4406fbaeac9c436e
+arkode/CXX_serial	ark_kpr_nestedmri		ark_kpr_nestedmri	OK	0	0.307	2850	b4619e4567b47ebc
+arkode/CXX_serial	ark_pendulum		ark_pendulum	OK	0	0.206	1846	5e82c7e1d1ef5b0c
+arkode/F2003_custom	ark_analytic_complex_f2003		ark_analytic_complex_f2003	OK	0	0.206	913	eba9134b251a3439
+arkode/F2003_custom	ark_brusselator1D_f2003		ark_brusselator1D_f2003	OK	0	0.306	5827	ebb0a916769c5d0a
+arkode/F2003_custom	test_fnvector_complex_mod		test_fnvector_complex_mod	OK	0	0.206	1553	eea846667b20e314
+arkode/F2003_custom	test_fnvector_fortran_mod		test_fnvector_fortran_mod	OK	0	0.206	1516	0be3dfe650f99326
+arkode/F2003_custom	test_fsunlinsol_fortran_mod		test_fsunlinsol_fortran_mod	OK	0	0.206	178	335d2d1bc69ba55b
+arkode/F2003_custom	test_fsunmatrix_fortran_mod		test_fsunmatrix_fortran_mod	OK	0	0.306	275	1af700d72c74512b
+arkode/F2003_parallel	ark_brusselator1D_task_local_nls_f2003	--monitor	ark_brusselator1D_task_local_nls_f2003__--monitor	OK	0	0.606	3332	3aa380114ee6ee92
+arkode/F2003_parallel	ark_brusselator1D_task_local_nls_f2003	--monitor --global-nls	ark_brusselator1D_task_local_nls_f2003__--monitor_--global-nls	OK	0	0.607	3434	a1bdc90321200b74
+arkode/F2003_parallel	ark_brusselator1D_task_local_nls_f2003	--monitor --explicit --tf 3	ark_brusselator1D_task_local_nls_f2003__--monitor_--explicit_--tf_3	OK	0	1.108	3274	04cbeb3376b6e0ce
+arkode/F2003_parallel	ark_diag_kry_bbd_f2003		ark_diag_kry_bbd_f2003	OK	0	1.408	3196	90368a08f9c43b07
+arkode/F2003_parallel	ark_diag_non_f2003		ark_diag_non_f2003	OK	0	0.506	895	6ff9126c2c2fb407
+arkode/F2003_parallel	ark_heat2D_f2003		ark_heat2D_f2003	OK	0	0.606	1222	d1b93ba7de361757
+arkode/F2003_serial	ark_analytic_f2003		ark_analytic_f2003	OK	0	0.206	961	8a58c322c6037209
+arkode/F2003_serial	ark_bruss1D_FEM_klu_f2003		ark_bruss1D_FEM_klu_f2003	OK	0	0.206	2678	0f5834f83e34c421
+arkode/F2003_serial	ark_bruss_f2003		ark_bruss_f2003	OK	0	0.207	1439	6e0a0e1f9f31c5a2
+arkode/F2003_serial	ark_diurnal_kry_bp_f2003		ark_diurnal_kry_bp_f2003	OK	0	0.206	3133	218e0ed424638af1
+arkode/F2003_serial	ark_kpr_mri_f2003		ark_kpr_mri_f2003	OK	0	0.206	3660	a2915e0b5f132ffe
+arkode/F2003_serial	ark_kpr_mri_f2003	0 0.002	ark_kpr_mri_f2003__0_0.002	OK	0	0.205	3660	d73c513e4a66c4a9
+arkode/F2003_serial	ark_kpr_mri_f2003	1 0.002	ark_kpr_mri_f2003__1_0.002	OK	0	0.206	3669	6a1396ad8c8d4edc
+arkode/F2003_serial	ark_kpr_mri_f2003	2 0.005	ark_kpr_mri_f2003__2_0.005	OK	0	0.206	3812	dcefded3e5a35fee
+arkode/F2003_serial	ark_kpr_mri_f2003	3 0.01	ark_kpr_mri_f2003__3_0.01	OK	0	0.206	3669	baf2dc3ac87da841
+arkode/F2003_serial	ark_kpr_mri_f2003	4 0.002	ark_kpr_mri_f2003__4_0.002	OK	0	0.206	3812	a9a5c85623553a56
+arkode/F2003_serial	ark_kpr_mri_f2003	5 0.002	ark_kpr_mri_f2003__5_0.002	OK	0	0.306	3673	ca4057b152b9b692
+arkode/F2003_serial	ark_kpr_mri_f2003	6 0.005	ark_kpr_mri_f2003__6_0.005	OK	0	0.206	3673	596bbe25ad3c99de
+arkode/F2003_serial	ark_kpr_mri_f2003	7 0.001	ark_kpr_mri_f2003__7_0.001	OK	0	0.307	3842	149567d36e01e596
+arkode/F2003_serial	ark_kpr_mri_f2003	8 0.001	ark_kpr_mri_f2003__8_0.001	OK	0	0.306	3850	68619b22d7452814
+arkode/F2003_serial	ark_kpr_mri_f2003	9 0.001	ark_kpr_mri_f2003__9_0.001	OK	0	0.306	3851	9a90736626211ef9
+arkode/F2003_serial	ark_kpr_nestedmri_f2003		ark_kpr_nestedmri_f2003	OK	0	0.206	5808	de54208f2c000227
+arkode/F2003_serial	ark_roberts_dns_f2003		ark_roberts_dns_f2003	OK	0	0.206	2441	347170d66a2b5486
+arkode/F2003_serial	ark_roberts_dnsL_f2003		ark_roberts_dnsL_f2003	OK	0	0.206	2449	72fbf2371cdffe28
+arkode/F2003_serial	test_ark_butcher_f2003		test_ark_butcher_f2003	OK	0	0.206	77	025c6c2e755e8b62
+cvode/C_mpimanyvector	cvDiurnal_kry_mpimanyvec		cvDiurnal_kry_mpimanyvec	OK	0	0.606	2572	7d2e0f70d74a8a6d
+cvode/C_openmp	cvAdvDiff_bnd_omp	4	cvAdvDiff_bnd_omp__4	OK	0	0.205	865	1c57b85092cd7557
+cvode/CXX_parallel	cv_heat2D_p	--np 2 2	cv_heat2D_p__--np_2_2	OK	0	0.606	2963	c4ece767dbaf01ee
+cvode/CXX_parhyp	cv_heat2D_hypre_ls	--np 2 2	cv_heat2D_hypre_ls__--np_2_2	OK	0	0.712	2911	58824cae8539340f
+cvode/CXX_parhyp	cv_heat2D_hypre_pfmg	--np 2 2	cv_heat2D_hypre_pfmg__--np_2_2	OK	0	0.712	3049	7b01c83961d83e2c
+cvode/CXX_serial	cv_heat2D		cv_heat2D	OK	0	0.206	2667	667403339bb3e0c6
+cvode/CXX_serial	cv_kpr		cv_kpr	OK	0	0.207	2824	ee4dc9e13f93d98e
+cvode/CXX_serial	cv_kpr	cvode.init_step 0.01	cv_kpr__cvode.init_step_0.01	OK	0	0.207	2808	efb42ed75bd64031
+cvode/F2003_parallel	cv_diag_kry_bbd_f2003		cv_diag_kry_bbd_f2003	OK	0	0.506	2596	52c24670531bc0dd
+cvode/F2003_parallel	cv_diag_kry_f2003		cv_diag_kry_f2003	OK	0	0.507	2403	9d87e23735a97e87
+cvode/F2003_parallel	cv_diag_non_p_f2003		cv_diag_non_p_f2003	OK	0	0.606	790	04f989cfa1404b36
+cvode/F2003_serial	cv_advdiff_bnd_f2003		cv_advdiff_bnd_f2003	OK	0	0.206	924	147d94f261573b2c
+cvode/F2003_serial	cv_analytic_fp_f2003		cv_analytic_fp_f2003	OK	0	0.207	970	95ba367312a4b982
+cvode/F2003_serial	cv_analytic_sys_dns_f2003		cv_analytic_sys_dns_f2003	OK	0	0.205	1350	0ddbea2d97e2fc1c
+cvode/F2003_serial	cv_analytic_sys_dns_jac_f2003		cv_analytic_sys_dns_jac_f2003	OK	0	0.206	1350	6879140a40a96a86
+cvode/F2003_serial	cv_analytic_sys_klu_f2003		cv_analytic_sys_klu_f2003	OK	0	0.206	1350	6879140a40a96a86
+cvode/F2003_serial	cv_brusselator_dns_f2003		cv_brusselator_dns_f2003	OK	0	0.206	1326	5807a9b0afc87966
+cvode/F2003_serial	cv_diurnal_kry_bp_f2003		cv_diurnal_kry_bp_f2003	OK	0	0.206	2947	3fdb13fafbba5a68
+cvode/F2003_serial	cv_diurnal_kry_f2003		cv_diurnal_kry_f2003	OK	0	0.206	2829	ddc4c76d468e7ab9
+cvode/F2003_serial	cv_roberts_dns_constraints_f2003		cv_roberts_dns_constraints_f2003	OK	0	0.206	1887	32ad6076ee34ca18
+cvode/F2003_serial	cv_roberts_dns_f2003		cv_roberts_dns_f2003	OK	0	0.206	1858	927f50748878c664
+cvode/F2003_serial	cv_roberts_dnsL_f2003		cv_roberts_dnsL_f2003	OK	0	0.206	1849	ae03f0d3d5f10001
+cvode/F2003_serial	cv_roberts_klu_f2003		cv_roberts_klu_f2003	OK	0	0.206	1858	c9e4155f9bc28705
+cvode/parallel	cvAdvDiff_diag_p		cvAdvDiff_diag_p	OK	0	0.606	783	a5b1f5740051c8c5
+cvode/parallel	cvAdvDiff_non_p		cvAdvDiff_non_p	OK	0	0.506	749	2bac12dc849ae48e
+cvode/parallel	cvDiurnal_kry_bbd_p		cvDiurnal_kry_bbd_p	OK	0	0.607	5324	d5b3a9cdec055c4c
+cvode/parallel	cvDiurnal_kry_p		cvDiurnal_kry_p	OK	0	0.607	2402	f18a3e7d3f49a4f7
+cvode/parhyp	cvAdvDiff_non_ph		cvAdvDiff_non_ph	OK	0	0.609	749	2bac12dc849ae48e
+cvodes/C_openmp	cvsAdvDiff_bnd_omp	4	cvsAdvDiff_bnd_omp__4	OK	0	0.205	865	1c57b85092cd7557
+cvode/serial	cvAdvDiff_bnd		cvAdvDiff_bnd	OK	0	0.206	848	2ea0937bb293ce55
+cvode/serial	cvAdvDiff_bndL		cvAdvDiff_bndL	OK	0	0.206	848	2ea0937bb293ce55
+cvode/serial	cvAnalytic_mels		cvAnalytic_mels	OK	0	0.207	770	c13a8a670343e246
+cvode/serial	cvDirectDemo_ls		cvDirectDemo_ls	OK	0	0.206	17673	a19abd5087bb90d0
+cvode/serial	cvDisc_dns		cvDisc_dns	OK	0	0.206	3360	77b1dd2393e53661
+cvode/serial	cvDiurnal_kry		cvDiurnal_kry	OK	0	0.206	2860	3d5bdd944af9101c
+cvode/serial	cvDiurnal_kry_bp		cvDiurnal_kry_bp	OK	0	0.207	6047	0651440486243145
+cvode/serial	cvKrylovDemo_ls		cvKrylovDemo_ls	OK	0	0.206	11712	24cbfc892a79f788
+cvode/serial	cvKrylovDemo_ls	1	cvKrylovDemo_ls__1	OK	0	0.206	11712	24cbfc892a79f788
+cvode/serial	cvKrylovDemo_ls	2	cvKrylovDemo_ls__2	OK	0	0.206	11712	24cbfc892a79f788
+cvode/serial	cvKrylovDemo_ls	0 1	cvKrylovDemo_ls__0_1	OK	0	0.206	2472	3b2b30835739bd73
+cvode/serial	cvKrylovDemo_prec		cvKrylovDemo_prec	OK	0	0.207	26471	b1cf95a1d917a850
+cvode/serial	cvParticle_dns		cvParticle_dns	OK	0	0.206	885	fa77abe19cddd1f7
+cvode/serial	cvPendulum_dns		cvPendulum_dns	OK	0	0.206	1900	66778152510991e4
+cvode/serial	cvRoberts_block_klu		cvRoberts_block_klu	OK	0	0.206	1198	2f6ca3f9647cf9c9
+cvode/serial	cvRoberts_dns		cvRoberts_dns	OK	0	0.206	2217	c23a663fee1d66b7
+cvode/serial	cvRoberts_dns_constraints		cvRoberts_dns_constraints	OK	0	0.206	1261	106ba20145b7ce7c
+cvode/serial	cvRoberts_dnsL		cvRoberts_dnsL	OK	0	0.206	1261	abf33560958e0f9f
+cvode/serial	cvRoberts_dns_negsol		cvRoberts_dns_negsol	OK	0	0.206	2409	911bb744d63c8c33
+cvode/serial	cvRoberts_dns_uw		cvRoberts_dns_uw	OK	0	0.206	1261	abf33560958e0f9f
+cvode/serial	cvRoberts_klu		cvRoberts_klu	OK	0	0.206	1245	de88e6bc45119b34
+cvode/serial	cvRocket_dns		cvRocket_dns	OK	0	0.206	4212	2887cbbe9072a465
+cvode/serial	cvVdp_auto_nls		cvVdp_auto_nls	OK	0	0.206	2403	2046a2142816e67a
+cvodes/F2003_serial	cvsAdvDiff_FSA_non_f2003	-sensi stg t	cvsAdvDiff_FSA_non_f2003__-sensi_stg_t	OK	0	0.206	3376	78acfc2df955b99e
+cvodes/F2003_serial	cvsAdvDiff_FSA_non_f2003	-sensi sim t	cvsAdvDiff_FSA_non_f2003__-sensi_sim_t	OK	0	0.206	3379	e009109462f6cc17
+cvodes/F2003_serial	cvs_analytic_fp_f2003		cvs_analytic_fp_f2003	OK	0	0.206	970	95ba367312a4b982
+cvodes/parallel	cvsAdvDiff_ASAp_non_p		cvsAdvDiff_ASAp_non_p	OK	0	1.008	504	d73a7894f889e85f
+cvodes/parallel	cvsAdvDiff_FSA_non_p	-sensi stg t	cvsAdvDiff_FSA_non_p__-sensi_stg_t	OK	0	0.607	3282	00d325058f7832c0
+cvodes/parallel	cvsAdvDiff_FSA_non_p	-sensi sim t	cvsAdvDiff_FSA_non_p__-sensi_sim_t	OK	0	0.607	3285	5fdb39e0b6fcbb5c
+cvodes/parallel	cvsAdvDiff_non_p		cvsAdvDiff_non_p	OK	0	0.506	749	2bac12dc849ae48e
+cvodes/parallel	cvsAtmDisp_ASAi_kry_bbd_p		cvsAtmDisp_ASAi_kry_bbd_p	OK	0	0.606	1006	01f9a9ca21a435bf
+cvodes/parallel	cvsDiurnal_FSA_kry_p	-sensi stg t	cvsDiurnal_FSA_kry_p__-sensi_stg_t	OK	0	0.607	8868	6ad2336c3c9610f5
+cvodes/parallel	cvsDiurnal_FSA_kry_p	-sensi sim t	cvsDiurnal_FSA_kry_p__-sensi_sim_t	OK	0	0.606	8871	d0a2535518958e17
+cvodes/parallel	cvsDiurnal_kry_bbd_p		cvsDiurnal_kry_bbd_p	OK	0	0.607	5324	78a4328ae4ed2bf8
+cvodes/parallel	cvsDiurnal_kry_p		cvsDiurnal_kry_p	OK	0	0.506	2402	baeb942ce05cb60e
+cvodes/serial	cvsAdvDiff_ASAi_bnd		cvsAdvDiff_ASAi_bnd	OK	0	0.206	273	85d580b503344228
+cvodes/serial	cvsAdvDiff_bnd		cvsAdvDiff_bnd	OK	0	0.206	850	24b74965dc903776
+cvodes/serial	cvsAdvDiff_bndL		cvsAdvDiff_bndL	OK	0	0.207	863	6b6ec3b83bbcaeb2
+cvodes/serial	cvsAdvDiff_FSA_non	-sensi sim t	cvsAdvDiff_FSA_non__-sensi_sim_t	OK	0	0.207	3262	7e6b817908a5df5d
+cvodes/serial	cvsAdvDiff_FSA_non	-sensi stg t	cvsAdvDiff_FSA_non__-sensi_stg_t	OK	0	0.206	3259	aba1080724c2adf5
+cvodes/serial	cvsAnalytic_mels		cvsAnalytic_mels	OK	0	0.206	770	c13a8a670343e246
+cvodes/serial	cvsAnalytic_mels	cvodes.max_order 3	cvsAnalytic_mels__cvodes.max_order_3	OK	0	0.206	771	8b5710623edaecaf
+cvodes/serial	cvsDirectDemo_ls		cvsDirectDemo_ls	OK	0	0.206	17713	7537f64339279cdf
+cvodes/serial	cvsDiurnal_FSA_kry	-sensi sim t	cvsDiurnal_FSA_kry__-sensi_sim_t	OK	0	0.306	8944	f021beeff79601c6
+cvodes/serial	cvsDiurnal_FSA_kry	-sensi stg t	cvsDiurnal_FSA_kry__-sensi_stg_t	OK	0	0.206	8941	5bbde57fae6067b2
+cvodes/serial	cvsDiurnal_kry		cvsDiurnal_kry	OK	0	0.206	2860	175cd73d3f78930b
+cvodes/serial	cvsDiurnal_kry_bp		cvsDiurnal_kry_bp	OK	0	0.207	6047	ff9fe30eabbd17ba
+cvodes/serial	cvsFoodWeb_ASAi_kry		cvsFoodWeb_ASAi_kry	OK	0	0.507	991	dbb0f31483d7b0b9
+cvodes/serial	cvsFoodWeb_ASAp_kry		cvsFoodWeb_ASAp_kry	OK	0	0.707	961	ab4dd07a66053a31
+cvodes/serial	cvsHessian_ASA_FSA		cvsHessian_ASA_FSA	OK	0	0.206	2307	b3079e8ddf9f5528
+cvodes/serial	cvsKrylovDemo_ls		cvsKrylovDemo_ls	OK	0	0.206	11712	6f0cda0e35d96b82
+cvodes/serial	cvsKrylovDemo_ls	1	cvsKrylovDemo_ls__1	OK	0	0.206	11712	6f0cda0e35d96b82
+cvodes/serial	cvsKrylovDemo_ls	2	cvsKrylovDemo_ls__2	OK	0	0.206	11712	6f0cda0e35d96b82
+cvodes/serial	cvsKrylovDemo_ls	0 1	cvsKrylovDemo_ls__0_1	OK	0	0.206	11712	6f0cda0e35d96b82
+cvodes/serial	cvsKrylovDemo_prec		cvsKrylovDemo_prec	OK	0	0.206	26472	8e4b506a75e1c2f0
+cvodes/serial	cvsLotkaVolterra_ASA		cvsLotkaVolterra_ASA	OK	0	0.205	405	44d47a6d5cd349cc
+cvodes/serial	cvsParticle_dns		cvsParticle_dns	OK	0	0.206	885	fa77abe19cddd1f7
+cvodes/serial	cvsPendulum_dns		cvsPendulum_dns	OK	0	0.206	1900	66778152510991e4
+cvodes/serial	cvsRoberts_ASAi_dns		cvsRoberts_ASAi_dns	OK	0	0.206	5336	9e3b3a9e1e06b09e
+cvodes/serial	cvsRoberts_ASAi_dns_constraints		cvsRoberts_ASAi_dns_constraints	OK	0	0.206	1879	45a5a45c32e992f9
+cvodes/serial	cvsRoberts_ASAi_klu		cvsRoberts_ASAi_klu	OK	0	0.206	1879	03d3bcf1662eae90
+cvodes/serial	cvsRoberts_dns		cvsRoberts_dns	OK	0	0.206	2217	c23a663fee1d66b7
+cvodes/serial	cvsRoberts_dns_constraints		cvsRoberts_dns_constraints	OK	0	0.205	1261	106ba20145b7ce7c
+cvodes/serial	cvsRoberts_dnsL		cvsRoberts_dnsL	OK	0	0.206	1261	abf33560958e0f9f
+cvodes/serial	cvsRoberts_dns_uw		cvsRoberts_dns_uw	OK	0	0.206	1261	abf33560958e0f9f
+cvodes/serial	cvsRoberts_FSA_dns	-sensi sim t	cvsRoberts_FSA_dns__-sensi_sim_t	OK	0	0.206	6280	bd0b1b6688422332
+cvodes/serial	cvsRoberts_FSA_dns	-sensi stg1 t	cvsRoberts_FSA_dns__-sensi_stg1_t	OK	0	0.206	6513	928aa78347d646e0
+cvodes/serial	cvsRoberts_FSA_dns_constraints	-sensi stg1 t	cvsRoberts_FSA_dns_constraints__-sensi_stg1_t	OK	0	0.206	5277	3f2c9e3dcea16dc4
+cvodes/serial	cvsRoberts_FSA_dns_Switch		cvsRoberts_FSA_dns_Switch	OK	0	0.206	1849	2e523db061c19214
+cvodes/serial	cvsRoberts_FSA_klu	-sensi stg1 t	cvsRoberts_FSA_klu__-sensi_stg1_t	OK	0	0.206	5262	b92ee0b442c99fef
+cvodes/serial	cvsRoberts_klu		cvsRoberts_klu	OK	0	0.206	1245	de88e6bc45119b34
+ida/C_openmp	idaFoodWeb_bnd_omp	4	idaFoodWeb_bnd_omp__4	OK	0	6.413	1525	a25c49228d8e2bd9
+ida/C_openmp	idaFoodWeb_kry_omp	4	idaFoodWeb_kry_omp__4	OK	0	1.807	1547	c442bf86bb490f8c
+ida/F2003_openmp	idaHeat2D_kry_omp_f2003	4	idaHeat2D_kry_omp_f2003__4	OK	0	0.406	2763	065abe4c8ed120d3
+ida/F2003_openmp	idaHeat2D_kry_omp_f2003	8	idaHeat2D_kry_omp_f2003__8	OK	0	0.507	2763	bb29af62c9ee87b0
+ida/F2003_parallel	ida_heat2D_kry_bbd_f2003		ida_heat2D_kry_bbd_f2003	OK	0	1.207	3560	bca8387b6b78c623
+ida/F2003_serial	idaHeat2D_kry_f2003		idaHeat2D_kry_f2003	OK	0	0.206	2637	822e2b7ea00cfd63
+ida/F2003_serial	idaRoberts_dns_f2003		idaRoberts_dns_f2003	OK	0	0.206	2082	08d31c6065ffe533
+ida/parallel	idaFoodWeb_kry_bbd_p		idaFoodWeb_kry_bbd_p	OK	0	0.607	1859	9b35032c9577d89c
+ida/parallel	idaFoodWeb_kry_p		idaFoodWeb_kry_p	OK	0	0.606	1770	6c859a79e184dfd9
+ida/parallel	idaHeat2D_kry_bbd_p		idaHeat2D_kry_bbd_p	OK	0	0.506	3025	499065e90124aaa8
+ida/parallel	idaHeat2D_kry_p		idaHeat2D_kry_p	OK	0	0.506	1725	6568dc21b6e972dc
+idas/C_openmp	idasFoodWeb_bnd_omp	4	idasFoodWeb_bnd_omp__4	OK	0	6.212	1527	f9e0e0f0ece4a374
+idas/C_openmp	idasFoodWeb_kry_omp	4	idasFoodWeb_kry_omp__4	OK	0	1.908	1549	ea6fd99e127bf917
+ida/serial	idaAnalytic_mels		idaAnalytic_mels	OK	0	0.206	756	bf1750471b116227
+ida/serial	idaAnalytic_mels	ida.scalar_tolerances 1e-3 1e-8	idaAnalytic_mels__ida.scalar_tolerances_1e-3_1e-8	OK	0	0.206	751	a52123c7523ee23a
+ida/serial	idaFoodWeb_bnd		idaFoodWeb_bnd	OK	0	0.206	1540	7a7b7e86364360d0
+ida/serial	idaFoodWeb_kry		idaFoodWeb_kry	OK	0	0.207	1516	94053386b480102c
+ida/serial	idaHeat2D_bnd		idaHeat2D_bnd	OK	0	0.206	1465	81d7aa7ac1c072d7
+ida/serial	idaHeat2D_klu		idaHeat2D_klu	OK	0	0.206	1355	54f0d048c6173673
+ida/serial	idaHeat2D_kry		idaHeat2D_kry	OK	0	0.206	2646	f7e8058dc419f94e
+ida/serial	idaKrylovDemo_ls		idaKrylovDemo_ls	OK	0	0.206	4763	dcae85140f5954b1
+ida/serial	idaKrylovDemo_ls	1	idaKrylovDemo_ls__1	OK	0	0.206	4763	dcae85140f5954b1
+ida/serial	idaKrylovDemo_ls	2	idaKrylovDemo_ls__2	OK	0	0.206	4763	dcae85140f5954b1
+ida/serial	idaRoberts_dns		idaRoberts_dns	OK	0	0.206	2684	f6ce9a7b6597543c
+ida/serial	idaRoberts_klu		idaRoberts_klu	OK	0	0.206	1925	0e0dd050cf3b590c
+ida/serial	idaSlCrank_dns		idaSlCrank_dns	OK	0	0.206	3551	a05c948cf9456ba7
+idas/F2003_serial	idasAkzoNob_ASAi_dns_f2003		idasAkzoNob_ASAi_dns_f2003	OK	0	0.207	683	29af4427f0450543
+idas/F2003_serial	idasHeat2D_kry_f2003		idasHeat2D_kry_f2003	OK	0	0.206	2638	d87cc8a46fdcba80
+idas/parallel	idasBruss_ASAp_kry_bbd_p		idasBruss_ASAp_kry_bbd_p	OK	0	0.606	1724	57860b97fb9ab56f
+idas/parallel	idasBruss_FSA_kry_bbd_p		idasBruss_FSA_kry_bbd_p	OK	0	0.707	1958	4324da8d04235591
+idas/parallel	idasBruss_kry_bbd_p		idasBruss_kry_bbd_p	OK	0	0.607	1842	97a8fb2c15a2e01c
+idas/parallel	idasFoodWeb_kry_bbd_p		idasFoodWeb_kry_bbd_p	OK	0	0.607	1860	ea2118b3666904f0
+idas/parallel	idasFoodWeb_kry_p		idasFoodWeb_kry_p	OK	0	0.606	1771	dc1f5606206c05a8
+idas/parallel	idasHeat2D_FSA_kry_bbd_p	-sensi stg t	idasHeat2D_FSA_kry_bbd_p__-sensi_stg_t	OK	0	0.606	2425	f194e045201229b5
+idas/parallel	idasHeat2D_kry_bbd_p		idasHeat2D_kry_bbd_p	OK	0	1.408	3029	b5ca5fac4ed202f9
+idas/parallel	idasHeat2D_kry_p		idasHeat2D_kry_p	OK	0	0.507	1734	f80c386dc4a87127
+idas/serial	idasAkzoNob_ASAi_dns		idasAkzoNob_ASAi_dns	OK	0	0.206	567	323408d02fe4d304
+idas/serial	idasAkzoNob_dns		idasAkzoNob_dns	OK	0	0.206	3036	dd69bfec8d242eca
+idas/serial	idasAnalytic_mels		idasAnalytic_mels	OK	0	0.206	842	e67c6d65051515df
+idas/serial	idasAnalytic_mels	idas.init_step 1e-5	idasAnalytic_mels__idas.init_step_1e-5	OK	0	0.206	842	85c169b7a9d39601
+idas/serial	idasFoodWeb_bnd		idasFoodWeb_bnd	OK	0	0.206	1541	f48a0923fb034160
+idas/serial	idasHeat2D_bnd		idasHeat2D_bnd	OK	0	0.206	1478	3dc0d5ea6d93ec20
+idas/serial	idasHeat2D_kry		idasHeat2D_kry	OK	0	0.207	2665	0d9772e8099f0f4a
+idas/serial	idasHessian_ASA_FSA		idasHessian_ASA_FSA	OK	0	0.206	1258	e91863a731e78eb0
+idas/serial	idasKrylovDemo_ls		idasKrylovDemo_ls	OK	0	0.206	4820	4dc9af3533dc886f
+idas/serial	idasKrylovDemo_ls	1	idasKrylovDemo_ls__1	OK	0	0.206	4820	4dc9af3533dc886f
+idas/serial	idasKrylovDemo_ls	2	idasKrylovDemo_ls__2	OK	0	0.206	4820	4dc9af3533dc886f
+idas/serial	idasRoberts_ASAi_dns		idasRoberts_ASAi_dns	OK	0	0.206	4644	6393797cd4df94a3
+idas/serial	idasRoberts_ASAi_klu		idasRoberts_ASAi_klu	OK	0	0.206	1200	b8341a525814af6d
+idas/serial	idasRoberts_dns		idasRoberts_dns	OK	0	0.207	2692	74a2ad3da56b9a0c
+idas/serial	idasRoberts_FSA_dns	-sensi stg t	idasRoberts_FSA_dns__-sensi_stg_t	OK	0	0.206	7142	803d81f721357fff
+idas/serial	idasRoberts_FSA_klu	-sensi stg t	idasRoberts_FSA_klu__-sensi_stg_t	OK	0	0.206	5941	88a7e7e9631762ff
+idas/serial	idasRoberts_klu		idasRoberts_klu	OK	0	0.206	1926	9fe77db586be1d71
+idas/serial	idasSlCrank_dns		idasSlCrank_dns	OK	0	0.206	2546	90c92504aa8887bc
+idas/serial	idasSlCrank_FSA_dns		idasSlCrank_FSA_dns	OK	0	0.206	1027	11789b1dd0462931
+kinsol/C_openmp	kinFoodWeb_kry_omp	4	kinFoodWeb_kry_omp__4	OK	0	1.007	809	67f6ee387f148db4
+kinsol/CXX_parallel	kin_em_p		kin_em_p	OK	0	0.607	778	53f4f755dc082680
+kinsol/CXX_parallel	kin_heat2D_nonlin_p	--np 2 2	kin_heat2D_nonlin_p__--np_2_2	OK	0	0.506	814	b5074c0ff816fb8c
+kinsol/CXX_parhyp	kin_bratu2D_hypre_pfmg	--np 2 2	kin_bratu2D_hypre_pfmg__--np_2_2	OK	0	0.711	866	a986564b262bd4d3
+kinsol/CXX_parhyp	kin_heat2D_nonlin_hypre_pfmg	--np 2 2	kin_heat2D_nonlin_hypre_pfmg__--np_2_2	OK	0	0.625	965	d06042cc6a3ece9d
+kinsol/F2003_parallel	kin_diagon_kry_f2003		kin_diagon_kry_f2003	OK	0	0.507	1965	ef3ae565e3dc8941
+kinsol/F2003_serial	kinDiagon_kry_f2003		kinDiagon_kry_f2003	OK	0	0.207	1938	1da22f65bd13e790
+kinsol/F2003_serial	kinLaplace_bnd_f2003		kinLaplace_bnd_f2003	OK	0	0.207	1874	5d423d471ff7c301
+kinsol/F2003_serial	kinLaplace_picard_kry_f2003		kinLaplace_picard_kry_f2003	OK	0	0.206	1788	2e92f219c0de4178
+kinsol/F2003_serial	kinRoboKin_dns_f2003		kinRoboKin_dns_f2003	OK	0	0.206	979	2bb5e7c8154a5ecb
+kinsol/parallel	kinFoodWeb_kry_bbd_p		kinFoodWeb_kry_bbd_p	OK	0	0.607	917	a7569794ca25b508
+kinsol/parallel	kinFoodWeb_kry_p		kinFoodWeb_kry_p	OK	0	0.606	789	abd51ab2dd40a36a
+kinsol/serial	kinAnalytic_fp		kinAnalytic_fp	OK	0	0.207	708	98998bade74550e6
+kinsol/serial	kinAnalytic_fp	--damping_fp 0.5	kinAnalytic_fp__--damping_fp_0.5	OK	0	0.206	717	f2262e780b477be1
+kinsol/serial	kinAnalytic_fp	--damping_fn	kinAnalytic_fp__--damping_fn	OK	0	0.206	714	7afe99c8ef1e0b37
+kinsol/serial	kinAnalytic_fp	--m_aa 2	kinAnalytic_fp__--m_aa_2	OK	0	0.206	707	1835ebe4be87f8ee
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --delay_aa 2	kinAnalytic_fp__--m_aa_2_--delay_aa_2	OK	0	0.207	708	370eaba2106470f6
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --damping_aa 0.5	kinAnalytic_fp__--m_aa_2_--damping_aa_0.5	OK	0	0.207	722	6696251d2c61eb86
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --damping_fn	kinAnalytic_fp__--m_aa_2_--damping_fn	OK	0	0.206	711	49768800e80847cd
+kinsol/serial	kinAnalytic_fp	--m_aa 3 --depth_fn	kinAnalytic_fp__--m_aa_3_--depth_fn	OK	0	0.206	707	21f45b4b3887b860
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --orth_aa 1	kinAnalytic_fp__--m_aa_2_--orth_aa_1	OK	0	0.206	707	5e6bc473ab82cbc0
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --orth_aa 2	kinAnalytic_fp__--m_aa_2_--orth_aa_2	OK	0	0.206	707	ede30554c343b27f
+kinsol/serial	kinAnalytic_fp	--m_aa 2 --orth_aa 3	kinAnalytic_fp__--m_aa_2_--orth_aa_3	OK	0	0.206	707	b07bc414f32f23a3
+kinsol/serial	kinFerTron_dns		kinFerTron_dns	OK	0	0.206	1503	6ac846fe2cdec1d5
+kinsol/serial	kinFerTron_klu		kinFerTron_klu	OK	0	0.206	1399	2cbbde2630ba8259
+kinsol/serial	kinFoodWeb_kry		kinFoodWeb_kry	OK	0	0.207	789	931d25d83cba3c00
+kinsol/serial	kinKrylovDemo_ls		kinKrylovDemo_ls	OK	0	0.206	3420	27535204b5a07f97
+kinsol/serial	kinLaplace_bnd		kinLaplace_bnd	OK	0	0.206	1816	54c7e2398c7384e8
+kinsol/serial	kinLaplace_picard_bnd		kinLaplace_picard_bnd	OK	0	0.206	1762	73402c23fd8ab615
+kinsol/serial	kinLaplace_picard_kry		kinLaplace_picard_kry	OK	0	0.206	1761	02de672f876b0057
+kinsol/serial	kinRoberts_fp		kinRoberts_fp	OK	0	0.206	546	aad4d127168471e7
+kinsol/serial	kinRoberts_fp	kinsol.m_aa 1	kinRoberts_fp__kinsol.m_aa_1	OK	0	0.206	546	fb18d2ee22ddf344
+kinsol/serial	kinRoboKin_dns		kinRoboKin_dns	OK	0	0.206	1483	f73ec9e6acefec29

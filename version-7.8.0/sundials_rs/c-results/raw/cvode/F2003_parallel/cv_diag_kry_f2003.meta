@@ -1,0 +1,10 @@
+example:  cv_diag_kry_f2003
+source:   examples/cvode/F2003_parallel/cv_diag_kry_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/F2003_parallel/cv_diag_kry_f2003
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/F2003_parallel/cv_diag_kry_f2003
+exit:     0 (OK)
+seconds:  0.507
+stdout:   2403 bytes, sha256 9d87e23735a97e87b7d1cec7794ab880e6d7c646b70eec8a791a4c3dbdd5af3d
+stderr:   762 bytes

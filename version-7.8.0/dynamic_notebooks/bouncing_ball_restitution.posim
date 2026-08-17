@@ -1,0 +1,43 @@
+# A bouncing ball with e = 0.8: apex = e^2 h — dynamic notebook
+#
+# A ball (r = 0.5, m = 1) falls from rest at y = 5 onto a static floor
+# slab under uniform gravity g = 10. The center drops h = 4.5 to its
+# rest height 0.5, so the first impact lands at t = sqrt(2h/g) =
+# sqrt(0.9) ~ 0.9487. With restitution e = 0.8 the rebound speed is 0.8
+# of the impact speed, so the next apex is 0.5 + e^2 * 4.5 = 3.38 —
+# watch the ball climb to just below 3.4, then geometrically lower each
+# bounce. In the hud, E starts at 50 (pure potential, m*g*y) and drops
+# at every impact; press C (or the Contacts button) to see the golden
+# action-reaction arrows flash at each touch of the floor.
+#
+# Launch:   posim_notebook bouncing_ball_restitution
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/bouncing_ball_restitution.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+set system.gravity = [0, -10, 0]
+
+# The floor: an ordinary cuboid made static after the fact — the
+# example's exact recipe: inverse_mass = 0, zero inverse inertia tensor.
+new cuboid { mass = 1, half_extents = [5, 0.5, 5], position = [0, -0.5, 0] }
+set obj0.inverse_mass = 0
+set obj0.inverse_inertia_tensor = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+
+# The ball: r = 0.5, dropped from rest at y = 5; restitution set AFTER NEW.
+new sphere { mass = 1, radius = 0.5, position = [0, 5, 0] }
+set obj1.restitution = 0.8
+collide
+
+# Baselines before running: E = m*g*y = 50 (all potential — the static
+# floor has mass 0 and contributes nothing), P = 0, e = 0.8, and the
+# analytic anchors: impact time sqrt(0.9), rebound apex 0.64*4.5 + 0.5.
+energy
+momentum
+get obj1.restitution
+sqrt(2 * 4.5 / 10)
+0.64 * 4.5 + 0.5
+
+scene create
+# Center the view on the bounce column (the action spans y = -1 .. 5.5).
+scene translate 0 2

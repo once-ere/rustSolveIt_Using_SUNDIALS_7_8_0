@@ -1,0 +1,10 @@
+example:  ark_diffusion_reaction_p
+source:   examples/arkode/CXX_parallel/ark_diffusion_reaction_p.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parallel/ark_diffusion_reaction_p
+argv:     --np 2 2 --mri-cvode-global
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parallel/ark_diffusion_reaction_p__--np_2_2_--mri-cvode-global
+exit:     0 (OK)
+seconds:  0.808
+stdout:   2930 bytes, sha256 e1d7a14f718e3dbad6f053fb114e4ffb3ef6f7db0e0384e99eeb8de164cbede9
+stderr:   762 bytes

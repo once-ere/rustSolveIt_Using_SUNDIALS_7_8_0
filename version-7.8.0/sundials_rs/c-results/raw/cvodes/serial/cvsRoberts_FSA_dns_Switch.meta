@@ -1,0 +1,10 @@
+example:  cvsRoberts_FSA_dns_Switch
+source:   examples/cvodes/serial/cvsRoberts_FSA_dns_Switch.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_FSA_dns_Switch
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_FSA_dns_Switch
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1849 bytes, sha256 2e523db061c19214848169bca07f5f3f7cd3f89c01b8120d909c56a3894e530e
+stderr:   0 bytes

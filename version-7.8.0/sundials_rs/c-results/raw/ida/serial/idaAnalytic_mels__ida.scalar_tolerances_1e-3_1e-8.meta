@@ -1,0 +1,10 @@
+example:  idaAnalytic_mels
+source:   examples/ida/serial/idaAnalytic_mels.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/serial/idaAnalytic_mels
+argv:     ida.scalar_tolerances 1e-3 1e-8
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/serial/idaAnalytic_mels__ida.scalar_tolerances_1e-3_1e-8
+exit:     0 (OK)
+seconds:  0.206
+stdout:   751 bytes, sha256 a52123c7523ee23abb864ace6ec0703ecee6c654ec7749dcb66d685179ca416c
+stderr:   0 bytes

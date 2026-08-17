@@ -1,0 +1,106 @@
+# Routh II.Arts.176-179 — the principal axes referred to the invariable line
+# — dynamic notebook
+#
+# E. J. Routh, "The Advanced Part of a Treatise on the Dynamics of a System of
+# Rigid Bodies", Part II (Macmillan, 6th ed. 1905), Art. 176: "To find the
+# angular motions in space of the principal axes. Since the invariable line OZ
+# is fixed in space it will be convenient to refer the motion to this straight
+# line as axis of Z."
+#
+# THE DIRECTION COSINES. Art. 177 records, from Art. 140, the angles a, b, g
+# that the three principal axes make with the invariable line:
+#
+#     cos a = A*w1 / G       cos b = B*w2 / G       cos g = C*w3 / G
+#
+# These are just the body-frame components of the unit vector along L, since
+# L = I w has body components (A w1, B w2, C w3). But writing them this way
+# makes the point of the whole chapter visible: the invariable line is FIXED
+# IN SPACE and MOVING IN THE BODY, and these three cosines are how it moves.
+# They are functions of the w's, and the w's are exactly what Euler's equations
+# make vary.
+#
+# THE TWO THINGS PRINTED SIDE BY SIDE. For the same body at the same instants:
+#
+#     normalize(L) in the WORLD frame  -- the invariable line, which never moves
+#     normalize(L) in the BODY frame   -- the same line, sweeping the invariable
+#                                         cone of Art. 159 through the body
+#
+# The first is constant to the last digit. The second is not, and its three
+# components ARE Routh's cos a, cos b, cos g. Their squares sum to one at every
+# instant, which is the only constraint they obey.
+#
+# Art. 178 adds the reason the motion is bounded: "Since the left-hand side of
+# equation (5) is necessarily real, we see that the values of cos^2 a are
+# restricted to lie between certain limits" -- the invariable line cannot point
+# just anywhere in the body, only within the band the two quadrics allow.
+#
+# THE NUMBERS. A cuboid of mass 3 with half-extents (0.5, 1, 2) gives
+# I = diag(5, 4.25, 1.25). Started tumbling at w = (0.3, 3, 0.1):
+#
+#     L = (1.5, 12.75, 0.125)        G = 12.838540610209558
+#     invariable line in space = (0.11683570941132974,
+#                                 0.9931035299963029,
+#                                 0.009736309117610812)
+#
+# and in the body its components start at the same values -- the body begins
+# unrotated -- and then move, while the space direction does not.
+#
+# SETUP NOTE. system.g_constant = 0 so nothing else acts. The disturbance is
+# asymmetric so the motion sits off the separatrix of Art. 184 and the
+# invariable line genuinely sweeps rather than creeping.
+#
+# WHAT YOU WATCH: a tumbling box. The line that is nailed to space is, from the
+# box's own point of view, swinging around inside it.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p2_principal_axes_in_space
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_principal_axes_in_space.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p2_principal_axes_in_space.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+get obj0.inertia_tensor
+norm(obj0.angular_momentum)
+
+# the invariable line in SPACE (fixed) and in the BODY (moving).
+# The body-frame components are Routh's cos a, cos b, cos g.
+normalize(obj0.angular_momentum)
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+
+run 2 steps 2
+normalize(obj0.angular_momentum)
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+
+run 2 steps 2
+normalize(obj0.angular_momentum)
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+
+run 3 steps 3
+normalize(obj0.angular_momentum)
+[obj0.orientation.w, 0 - obj0.orientation.x, 0 - obj0.orientation.y, 0 - obj0.orientation.z] * [0, obj0.angular_momentum.x, obj0.angular_momentum.y, obj0.angular_momentum.z] * obj0.orientation
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new cuboid { mass = 3, half_extents = [0.5, 1, 2], angular_velocity = [0.3, 3, 0.1] }
+
+scene create
+scene set_time_step 0.03

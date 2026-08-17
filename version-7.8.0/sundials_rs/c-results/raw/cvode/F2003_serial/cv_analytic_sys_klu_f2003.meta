@@ -1,0 +1,10 @@
+example:  cv_analytic_sys_klu_f2003
+source:   examples/cvode/F2003_serial/cv_analytic_sys_klu_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/F2003_serial/cv_analytic_sys_klu_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/F2003_serial/cv_analytic_sys_klu_f2003
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1350 bytes, sha256 6879140a40a96a8616f3b6ff35cfd6e71d9bb5fb7b1aa8bba9be185724ff31ad
+stderr:   0 bytes

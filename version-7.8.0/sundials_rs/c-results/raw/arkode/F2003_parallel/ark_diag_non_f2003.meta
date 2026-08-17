@@ -1,0 +1,10 @@
+example:  ark_diag_non_f2003
+source:   examples/arkode/F2003_parallel/ark_diag_non_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_parallel/ark_diag_non_f2003
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_parallel/ark_diag_non_f2003
+exit:     0 (OK)
+seconds:  0.506
+stdout:   895 bytes, sha256 6ff9126c2c2fb40744a98e1eb3c4271f2bfea3c9e07b000d662f84eebe77d218
+stderr:   762 bytes

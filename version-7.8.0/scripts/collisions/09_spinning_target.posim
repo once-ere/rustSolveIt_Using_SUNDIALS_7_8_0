@@ -1,0 +1,16 @@
+# Example 9 — hitting a TUMBLING target: the cuboid spins at
+# omega_z = 2, so the surface point the sphere meets is itself moving
+# (contact-point velocity includes omega x r). The K-matrix's angular
+# terms handle it: the impulse depends on where and how fast the
+# surface is moving, not just on the body's center velocity.
+set system.g_constant = 0
+new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.6, 0.6, 0.6], angular_velocity = [0, 0, 2] }
+new sphere { mass = 1, radius = 0.3, position = [-3, 0.4, 0], velocity = [2, 0, 0] }
+angmom
+energy
+step 2
+contacts
+get obj0.angular_momentum
+get obj1.velocity
+angmom
+energy

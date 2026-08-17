@@ -1,0 +1,36 @@
+# Two dumbbells from a user-defined function: E, P and L all survive the impact — dynamic notebook
+#
+# One DEF (create_dumbell, 11 parameters) builds a named rigid dumbbell —
+# two solid spheres joined by a solid rod — and is called twice to launch
+# a tumbling, asymmetric pair at each other, off-center and spinning
+# (G = 0, restitution 1, no walls). Baselines: E = 7.865310611764706,
+# P = [0.15000000000000036, 0, 0], L = [0.4443030588235295, 0, -1.5059999999999998];
+# the pair collides twice by t = 3 (first impact near t = 1, ~3 s of playback)
+# and every conserved quantity survives the real CVODE events: |dE/E| ~ 9.5e-11,
+# P bit-identical, L to ~1e-13 per component — the action-reaction impulse
+# pair acts at ONE shared contact point, so the net torque is zero.
+# Watch the hud 'conserved quantities' readout: E, P and L (components and
+# magnitudes) must read the same before and after each impact; press C for
+# the golden contact-normal arrows. The entity labels show the registered
+# names dumbell0/dumbell1. Documented as scripts/collisions/12_two_dumbbells.posim,
+# grammar.md Example 14 and the user guide's Example S14.
+#
+# Launch:   posim_notebook two_dumbbells
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/two_dumbbells.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+def create_dumbell(name, m1 = 1, m2 = 1, m_rod = 0.5, r1 = 0.25, r2 = 0.25, rod_radius = 0.1, length = 1, position = [0, 0, 0], velocity = [0, 0, 0], angular_velocity = [0, 0, 0]) {
+  new dumbbell as name { m1 = m1, m2 = m2, m_rod = m_rod, r1 = r1, r2 = r2, rod_radius = rod_radius, length = length, position = position, velocity = velocity, angular_velocity = angular_velocity }
+}
+create_dumbell("dumbell0", 1, 2, 0.5, 0.25, 0.25, 0.1, 1, [-2, 0.15, 0], [1.5, 0, 0], [0, 0, 0.6])
+create_dumbell("dumbell1", 2, 1, 0.4, 0.3, 0.2, 0.08, 1.2, [2, -0.15, 0], [-1.5, 0, 0], [0.4, 0, 0])
+list
+get dumbell0.m1
+get dumbell1.m_rod
+get dumbell0.vx
+energy
+momentum
+angmom
+scene create

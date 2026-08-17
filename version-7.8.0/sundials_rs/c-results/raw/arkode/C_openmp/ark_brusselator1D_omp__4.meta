@@ -1,0 +1,10 @@
+example:  ark_brusselator1D_omp
+source:   examples/arkode/C_openmp/ark_brusselator1D_omp.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_openmp/ark_brusselator1D_omp
+argv:     4
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_openmp/ark_brusselator1D_omp__4
+exit:     0 (OK)
+seconds:  0.306
+stdout:   5685 bytes, sha256 417d59500345a7ede2e7d99532a016711b504991a58fb2cd5e4eb16cef42f53e
+stderr:   0 bytes

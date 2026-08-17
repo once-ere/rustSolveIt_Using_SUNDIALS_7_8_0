@@ -1,0 +1,10 @@
+example:  ark_heat2D
+source:   examples/arkode/CXX_serial/ark_heat2D.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_heat2D
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_heat2D
+exit:     0 (OK)
+seconds:  0.305
+stdout:   2941 bytes, sha256 98a0a9eb006602e3ff11cfc5974ef97df9ac42fe3ac423fbdcf7f93140f42dbf
+stderr:   0 bytes

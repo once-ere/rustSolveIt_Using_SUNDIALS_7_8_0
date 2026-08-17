@@ -1,0 +1,10 @@
+example:  kinFerTron_klu
+source:   examples/kinsol/serial/kinFerTron_klu.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/serial/kinFerTron_klu
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/serial/kinFerTron_klu
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1399 bytes, sha256 2cbbde2630ba8259a35cf91d9bdf0d5fd1f85f3c1651d422ed02449ac2afea31
+stderr:   0 bytes

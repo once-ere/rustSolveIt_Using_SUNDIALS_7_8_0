@@ -1,0 +1,25 @@
+# 4. A ball with restitution e reaches e^(2n) of its drop height on
+# bounce n. The CENTRE starts at 5.5 with radius 0.5, so it falls 5.0
+# to the floor's top face; g = 10, e = 0.7.
+#   bounce 1 at t = 1.0,   rebound speed 7.00, apex at t = 1.7
+#   bounce 2 at t = 2.4,   rebound speed 4.90, apex at t = 2.89
+#   bounce 3 at t = 3.38,  rebound speed 3.43, apex at t = 3.723
+# Apex heights above the floor must be 5*e^2, 5*e^4, 5*e^6; the ball's
+# CENTRE sits one radius higher.
+# NOTE: RUN takes a DURATION, not an absolute time -- the three RUNs
+# below are 1.7, then 1.19, then 0.833.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -10, 0]
+collide on
+new cuboid as floor { mass = 1, half_extents = [50, 0.05, 50], position = [0, -0.05, 0], inverse_mass = 0 }
+new sphere as ball  { mass = 1, radius = 0.5, position = [0, 5.5, 0], restitution = 0.7 }
+run 1.7 steps 170
+get ball.position.y
+5 * 0.7 * 0.7 + 0.5
+run 1.19 steps 120
+get ball.position.y
+5 * 0.7 * 0.7 * 0.7 * 0.7 + 0.5
+run 0.833 steps 84
+get ball.position.y
+5 * 0.7 * 0.7 * 0.7 * 0.7 * 0.7 * 0.7 + 0.5
+get system.collisions

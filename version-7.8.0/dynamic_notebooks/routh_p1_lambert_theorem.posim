@@ -1,0 +1,115 @@
+# Routh I.Arts.350-355 — Lambert's theorem: the time depends only on the chord,
+# the sum of the radii, and the axis — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Arts. 350-355 give Euler's theorem for the parabola and LAMBERT'S for
+# the ellipse. Lambert's statement is the striking one: the time to travel from
+# one point of an elliptic orbit to another depends on just three things --
+#
+#     the semi-major axis a,   the sum of the two radii r1 + r2,
+#     and the chord c joining the two points
+#
+# and on nothing else. Not on the eccentricity, not on where the points sit
+# relative to the apse line, not on the orientation of the orbit in space. In
+# the standard form, with s = (r1 + r2 + c)/2,
+#
+#     t = sqrt(a^3/mu) * [ (alpha - sin alpha) - (beta - sin beta) ]
+#     sin(alpha/2) = sqrt(s/(2a)),      sin(beta/2) = sqrt((s-c)/(2a))
+#
+# -- and every symbol on the right is one of the three permitted quantities.
+#
+# WHY IT DESERVES A TEST. It is easy to believe a formula and hard to believe
+# this claim, because two orbits of the same a can look nothing like each other.
+# So this notebook builds a genuine counter-intuitive pair: two ellipses of the
+# SAME a but DIFFERENT eccentricity, with two points chosen on each so that
+# r1 + r2 and c agree. Lambert says the transits must take equal times.
+#
+# THE PAIR. Both have a = 1, mu = 1. Solving for the second orbit's endpoints
+# numerically (two equations, two unknowns) gives
+#
+#   orbit 1   e = 0.6    r1 = 0.5819759743917008   r2 = 1.3531006703532076
+#   orbit 2   e = 0.35   r1 = 0.7437260742718752   r2 = 1.1913505704730332
+#
+#   both:     r1 + r2 = 1.9350766447449084     c = 1.2872743894793441
+#
+# The individual radii are quite different -- orbit 1 starts much closer in and
+# ends much further out -- and only the SUM matches. Lambert's formula then
+# gives, for both,
+#
+#     t = 1.3453158122479596
+#
+# agreeing to the last digit between the two.
+#
+# THE TEST. Each orbit is flown alone from its own starting point for exactly
+# that time, and the arrival is compared with its own predicted endpoint:
+#
+#   orbit 1: start (0.09670670934716541, 0.5738848727196183, 0)
+#            end   (-1.188501117255346,  0.6467971230556722, 0)
+#   orbit 2: start (0.382211216366071,   0.6379992630370535, 0)
+#            end   (-0.896715915637238,  0.784357538632282,  0)
+#
+# SETUP NOTES. A primary of mass 1e9 with G = 1e-9 makes mu = 1 exactly; each
+# planet is given mass 1e-6 so it neither shifts mu nor perturbs anything.
+# softening MUST be 0 -- Lambert's theorem is a property of the exact inverse
+# square and of nothing else.
+#
+# WHAT YOU WATCH: two ellipses of the same size but different shape, each
+# carrying a particle across an arc. The arcs look nothing alike. They take the
+# same time.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_lambert_theorem
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_lambert_theorem.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_lambert_theorem.posim
+# ---------------------------------------------------------------------------
+
+# ---- orbit 1 (e = 0.6) flown alone
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.09670670934716541, 0.5738848727196183, 0], velocity = [-1.2326214869081589, 0.9577119881285612, 0] }
+norm(obj1.position)
+run 1.3453158122479596 steps 3
+norm(obj1.position)
+norm(obj1.position - [-1.188501117255346, 0.6467971230556722, 0])
+reset
+
+# ---- orbit 2 (e = 0.35) flown alone, for exactly the same time
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.382211216366071, 0.6379992630370535, 0], velocity = [-0.9157640844146201, 0.9222463226977163, 0] }
+norm(obj1.position)
+run 1.3453158122479596 steps 3
+norm(obj1.position)
+norm(obj1.position - [-0.896715915637238, 0.784357538632282, 0])
+reset
+
+# ---- the scene: both orbits together
+set system.rtol = 1e-13
+set system.atol = 1e-15
+set system.softening = 0
+set system.g_constant = 1e-9
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1e-6, position = [0.09670670934716541, 0.5738848727196183, 0], velocity = [-1.2326214869081589, 0.9577119881285612, 0] }
+new point { mass = 1e-6, position = [0.382211216366071, 0.6379992630370535, 0], velocity = [-0.9157640844146201, 0.9222463226977163, 0] }
+
+scene create
+scene zoom in
+scene set_time_step 0.01

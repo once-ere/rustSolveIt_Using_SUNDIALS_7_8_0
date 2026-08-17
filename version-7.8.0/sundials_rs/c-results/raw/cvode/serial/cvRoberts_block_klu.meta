@@ -1,0 +1,10 @@
+example:  cvRoberts_block_klu
+source:   examples/cvode/serial/cvRoberts_block_klu.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvRoberts_block_klu
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvRoberts_block_klu
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1198 bytes, sha256 2f6ca3f9647cf9c981cdb3b59ce811a7a5e4ce541f209218eb9213c0da9c7ca3
+stderr:   0 bytes

@@ -1,0 +1,98 @@
+# Routh I.Art.167 Ex.1 — equal speeds in all directions give an expanding
+# SPHERE — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 167, Ex. 1: "Particles are projected from a given point O at
+# the same instant with equal velocities in different directions; prove that
+# the locus at any time is a sphere."
+#
+# THE PROOF. Again Art. 154's independence principle. Each particle obeys
+#
+#     r_i(t) = O + V*n_i*t + (1/2)*g*t^2
+#
+# where n_i is its own unit direction and V the common speed. Subtract the
+# part that does not depend on i:
+#
+#     r_i(t) - [ O + (1/2)*g*t^2 ]  =  V*t*n_i
+#
+# The left side has length V*t for EVERY particle, whatever n_i is. So at each
+# instant the swarm lies exactly on a sphere of radius V*t, centred not at O
+# but at the point O + (1/2)*g*t^2 -- the position of a particle dropped from
+# rest at O. The sphere expands linearly in time while its centre falls.
+#
+# WHY IT IS PRETTY. The individual paths are parabolas of every shape: some
+# almost vertical, some flat, some thrown downwards. Nothing about one path
+# suggests a sphere. The sphere is a statement about the whole family at one
+# instant, and it exists only because gravity adds the same vector to all of
+# them.
+#
+# THE NUMBERS. V = 5, gravity (0, -9.81, 0), O the origin, six particles fired
+# along +x, -x, +y, -y, +z, -z. The free-fall centre is at
+#
+#     C(t) = (0, -4.905*t^2, 0)
+#
+# so at t = 1 the sphere has centre (0, -4.905, 0) and radius 5, and at t = 2
+# centre (0, -19.62, 0) and radius 10. The cells print each particle's distance
+# from that centre: six identical numbers at each instant, including for the
+# particle thrown straight down, which is moving fastest of all.
+#
+# SETUP NOTE. system.g_constant = 0 so the particles do not attract each other;
+# the uniform field is the only force, which is exactly Routh's problem.
+#
+# WHAT YOU WATCH: a shell of particles blowing outward at constant rate while
+# the whole shell falls -- a sphere whose centre is in free fall.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_expanding_sphere
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_expanding_sphere.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_expanding_sphere.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new point { mass = 1, position = [0,0,0], velocity = [ 5, 0, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [-5, 0, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0, 5, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0,-5, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0, 0, 5] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0, 0,-5] }
+
+run 1 steps 1
+# radius 5 about the free-fall centre (0, -4.905, 0), for every particle
+norm(obj0.position - [0, -4.905, 0])
+norm(obj3.position - [0, -4.905, 0])
+norm(obj4.position - [0, -4.905, 0])
+
+run 1 steps 1
+# radius 10 about (0, -19.62, 0)
+norm(obj0.position - [0, -19.62, 0])
+norm(obj3.position - [0, -19.62, 0])
+norm(obj4.position - [0, -19.62, 0])
+reset
+
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+new point { mass = 1, position = [0,0,0], velocity = [ 5, 0, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [-5, 0, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0, 5, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0,-5, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0, 0, 5] }
+new point { mass = 1, position = [0,0,0], velocity = [ 0, 0,-5] }
+
+scene create
+scene set_time_step 0.02

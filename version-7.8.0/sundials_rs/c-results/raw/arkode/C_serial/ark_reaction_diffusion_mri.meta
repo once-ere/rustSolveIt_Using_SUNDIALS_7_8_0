@@ -1,0 +1,10 @@
+example:  ark_reaction_diffusion_mri
+source:   examples/arkode/C_serial/ark_reaction_diffusion_mri.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_reaction_diffusion_mri
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_reaction_diffusion_mri
+exit:     0 (OK)
+seconds:  2.809
+stdout:   2276 bytes, sha256 5bbc474d4b832528bf63554cab96bac9f592df0e2a244bebe43a6074efba07ac
+stderr:   0 bytes

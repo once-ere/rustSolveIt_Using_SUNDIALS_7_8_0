@@ -1,0 +1,93 @@
+# Routh I.Art.158 Ex.1 — three projectiles stay in a plane parallel to itself
+# — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 158, Ex. 1: "If three heavy particles be projected
+# simultaneously from the same point in any directions with any velocities,
+# prove that the plane passing through them will always remain parallel to
+# itself."  [Math. T. 1847.]
+#
+# THE PROOF, IN ONE LINE. Art. 154 is the whole chapter: gravity is fixed in
+# direction and magnitude and independent of position, so every particle obeys
+#
+#     r_i(t) = P + V_i*t + (1/2)*g*t^2
+#
+# with the SAME (1/2)*g*t^2 for all of them. Subtract any two:
+#
+#     r_i - r_j = (V_i - V_j)*t
+#
+# and the gravity term cancels identically. The two edge vectors of the
+# triangle are therefore (V1-V2)*t and (V1-V3)*t, so their cross product is
+#
+#     t^2 * (V1-V2) x (V1-V3)
+#
+# -- a FIXED direction. The plane's normal never turns, so the plane merely
+# translates. The same cancellation also shows the triangle stays similar to
+# itself, since both edges scale by the same factor t.
+#
+# THE NUMBERS. All three start at the origin under gravity (0, -9.81, 0), with
+#
+#     V0 = ( 3, 8,  1)      V1 = (-2, 6,  4)      V2 = ( 1, 9, -3)
+#
+# so V0-V1 = (5, 2, -3) and V0-V2 = (2, -1, 4), whose cross product is
+# (5, -26, -9). Normalised, the plane's unit normal is
+#
+#     (0.17879963496303788, -0.929758101807797, -0.3218393429334682)
+#
+# for all t > 0. The cells print that normal at t = 1, 2 and 4: three identical
+# vectors, while the triangle itself has grown fourfold and fallen 78 units.
+#
+# SETUP NOTE. system.g_constant is set to 0 so the particles do NOT attract one
+# another -- posim's pairwise gravity is on by default with G = 1, and Routh's
+# problem is about a uniform field only. With no pairwise term the three may
+# share a starting point with no singularity. At t = 0 the triangle has zero
+# area and its normal is undefined, so the first sample is taken at t = 1.
+#
+# WHAT YOU WATCH: three particles fired on wildly different paths, falling
+# together. The triangle they span swells steadily but never tilts.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_three_projectiles
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_three_projectiles.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_three_projectiles.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+set system.rtol = 1e-13
+set system.atol = 1e-15
+
+new point { mass = 1, position = [0, 0, 0], velocity = [ 3, 8,  1] }
+new point { mass = 1, position = [0, 0, 0], velocity = [-2, 6,  4] }
+new point { mass = 1, position = [0, 0, 0], velocity = [ 1, 9, -3] }
+
+run 1 steps 1
+normalize(cross(obj1.position - obj0.position, obj2.position - obj0.position))
+run 1 steps 1
+normalize(cross(obj1.position - obj0.position, obj2.position - obj0.position))
+run 2 steps 2
+normalize(cross(obj1.position - obj0.position, obj2.position - obj0.position))
+# the triangle has grown but not turned: one edge length at t = 4
+norm(obj1.position - obj0.position)
+reset
+
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+new point { mass = 1, position = [0, 0, 0], velocity = [ 3, 8,  1] }
+new point { mass = 1, position = [0, 0, 0], velocity = [-2, 6,  4] }
+new point { mass = 1, position = [0, 0, 0], velocity = [ 1, 9, -3] }
+
+scene create
+scene set_time_step 0.02

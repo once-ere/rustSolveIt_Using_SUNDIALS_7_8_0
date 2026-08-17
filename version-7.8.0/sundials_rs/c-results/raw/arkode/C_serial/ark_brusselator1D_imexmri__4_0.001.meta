@@ -1,0 +1,10 @@
+example:  ark_brusselator1D_imexmri
+source:   examples/arkode/C_serial/ark_brusselator1D_imexmri.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_brusselator1D_imexmri
+argv:     4 0.001
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_brusselator1D_imexmri__4_0.001
+exit:     0 (OK)
+seconds:  0.806
+stdout:   1334 bytes, sha256 026ad2f80798c9f88dfa23ebe772a809d519bd5c8366b8d3e923f347c3ff0651
+stderr:   0 bytes

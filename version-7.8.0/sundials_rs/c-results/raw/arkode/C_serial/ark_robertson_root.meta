@@ -1,0 +1,10 @@
+example:  ark_robertson_root
+source:   examples/arkode/C_serial/ark_robertson_root.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_robertson_root
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_robertson_root
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1558 bytes, sha256 68bb728c141a33ffd8b72481330a378fbc3099d3d62f0156e141761ad90bb6e0
+stderr:   0 bytes

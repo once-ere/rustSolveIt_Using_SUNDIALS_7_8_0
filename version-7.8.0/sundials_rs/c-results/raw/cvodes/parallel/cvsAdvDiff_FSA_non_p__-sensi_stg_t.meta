@@ -1,0 +1,10 @@
+example:  cvsAdvDiff_FSA_non_p
+source:   examples/cvodes/parallel/cvsAdvDiff_FSA_non_p.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsAdvDiff_FSA_non_p
+argv:     -sensi stg t
+launcher: mpirun --oversubscribe -np 2
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsAdvDiff_FSA_non_p__-sensi_stg_t
+exit:     0 (OK)
+seconds:  0.607
+stdout:   3282 bytes, sha256 00d325058f7832c05f1207645e913a3f609342b7768512543034e3f1fcdd4b86
+stderr:   762 bytes

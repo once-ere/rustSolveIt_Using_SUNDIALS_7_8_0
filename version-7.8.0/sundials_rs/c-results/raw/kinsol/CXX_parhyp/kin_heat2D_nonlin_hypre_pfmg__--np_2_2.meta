@@ -1,0 +1,10 @@
+example:  kin_heat2D_nonlin_hypre_pfmg
+source:   examples/kinsol/CXX_parhyp/kin_heat2D_nonlin_hypre_pfmg.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/CXX_parhyp/kin_heat2D_nonlin_hypre_pfmg
+argv:     --np 2 2
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/CXX_parhyp/kin_heat2D_nonlin_hypre_pfmg__--np_2_2
+exit:     0 (OK)
+seconds:  0.625
+stdout:   965 bytes, sha256 d06042cc6a3ece9df4b5d50ebccbaf2af7dc7f8dcd2f851dc5beed4ecbeca883
+stderr:   762 bytes

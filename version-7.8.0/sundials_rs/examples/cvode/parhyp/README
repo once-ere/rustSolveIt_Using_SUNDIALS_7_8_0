@@ -1,0 +1,3 @@
+List of parhyp CVODE examples
+
+  cvAdvDiff_non_ph      : 1-D advection-diffusion (nonstiff)

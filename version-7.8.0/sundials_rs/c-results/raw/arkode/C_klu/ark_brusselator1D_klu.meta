@@ -1,0 +1,10 @@
+example:  ark_brusselator1D_klu
+source:   examples/arkode/C_klu/ark_brusselator1D_klu.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_klu/ark_brusselator1D_klu
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_klu/ark_brusselator1D_klu
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1214 bytes, sha256 365c8bc73c2f86b226e1a3d45f63d06b71814e262ee65dace4b001d9763a9634
+stderr:   0 bytes

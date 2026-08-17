@@ -1,0 +1,116 @@
+# Routh I.Art.88 — masses in geometric progression give velocities in
+# geometric progression — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 88: "A series of perfectly elastic balls are arranged in the
+# same straight line, one of them impinges directly on the next and so on;
+# prove that if their masses form a geometrical progression of which the
+# common ratio is 2, their velocities after impact will form a geometrical
+# progression."
+#
+# THE DERIVATION, IN FULL. For a direct elastic impact of m (speed u) on m'
+# at rest, the impact equations of Arts. 83-84 give the struck ball
+#
+#     v' = 2*m*u / (m + m')
+#
+# Put m' = r*m, a geometric progression of masses with common ratio r:
+#
+#     v' = 2*m*u / (m*(1 + r)) = u * 2/(1 + r)
+#
+# The mass m has cancelled. Every ball therefore leaves at the SAME fraction
+# 2/(1+r) of the speed of the ball that struck it, so the sequence of speeds
+# is itself a geometric progression -- with common ratio 2/(1+r), not r. For
+# Routh's r = 2 that ratio is 2/3.
+#
+# THE REBOUNDS DO IT TOO. The striking ball is left with
+# v = u*(m - m')/(m + m') = u*(1 - r)/(1 + r), which for r = 2 is -u/3. Since
+# each incoming u is 2/3 of the last, the rebound speeds form a geometric
+# progression of ratio 2/3 as well -- running backwards down the line.
+#
+# THE NUMBERS. Four balls, masses 1, 2, 4, 8 (ratio 2), all perfectly elastic
+# (restitution 1), the first arriving at unit speed. Predicted:
+#
+#   struck-ball speeds   1,  2/3,  4/9,  8/27      = 1, 0.6667, 0.4444, 0.2963
+#   rebound speeds          -1/3, -2/9, -4/27      = -0.3333, -0.2222, -0.1481
+#
+# so the final state is
+#
+#   obj0.vx = -1/3  = -0.3333333333333333
+#   obj1.vx = -2/9  = -0.2222222222222222
+#   obj2.vx = -4/27 = -0.14814814814814814
+#   obj3.vx =  8/27 =  0.2962962962962963
+#
+# Two independent checks the cells print: total momentum is
+# 1(-1/3) + 2(-2/9) + 4(-4/27) + 8(8/27) = 27/27 = 1, exactly the initial
+# momentum; and because every impact is perfectly elastic the run reports
+# |dE/E| = 0 -- no vis viva is lost anywhere (contrast Art. 90, where any
+# e < 1 loses some).
+#
+# SETUP NOTES. Gravity is off (g_constant = 0) -- posim's pairwise gravity is
+# on by default with G = 1 and would curve the line. Balls of radius 0.4 touch
+# at 0.8 centre separation, and they sit at x = 0, 2, 4, 6, so each gap takes
+# 1.2 units of travel. The cascade completes by t = 5.7 and the run goes to 8.
+# Exactly three collisions occur: after each impact the striking ball recoils
+# more slowly than the ball behind it recoils, so no pair ever meets twice.
+#
+# WHAT YOU WATCH: a pulse walking down a line of growing balls, each one
+# leaving at two thirds of the speed of the last, while the struck balls drift
+# backwards in the same fixed ratio.
+#
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_geometric_progression
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_geometric_progression.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_geometric_progression.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+collide on
+
+new sphere { mass = 1, radius = 0.4, position = [0, 0, 0], velocity = [1, 0, 0], restitution = 1 }
+new sphere { mass = 2, radius = 0.4, position = [2, 0, 0], restitution = 1 }
+new sphere { mass = 4, radius = 0.4, position = [4, 0, 0], restitution = 1 }
+new sphere { mass = 8, radius = 0.4, position = [6, 0, 0], restitution = 1 }
+
+momentum
+energy
+
+run 8 steps 8
+
+# the four final velocities: -1/3, -2/9, -4/27, +8/27
+obj0.vx
+obj1.vx
+obj2.vx
+obj3.vx
+# each struck ball left at 2/3 of the previous one's arrival speed:
+obj3.vx / 0.2962962962962963
+system.collisions
+momentum
+energy
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+collide on
+new sphere { mass = 1, radius = 0.4, position = [0, 0, 0], velocity = [1, 0, 0], restitution = 1 }
+new sphere { mass = 2, radius = 0.4, position = [2, 0, 0], restitution = 1 }
+new sphere { mass = 4, radius = 0.4, position = [4, 0, 0], restitution = 1 }
+new sphere { mass = 8, radius = 0.4, position = [6, 0, 0], restitution = 1 }
+
+scene create
+scene set_time_step 0.02

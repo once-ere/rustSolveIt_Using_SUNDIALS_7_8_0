@@ -1,0 +1,955 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Index of Functions — rustSimulate</title>
+<style>
+:root{
+  --bg:#fdfdfc; --panel:#f6f5f2; --text:#1c1c1a; --muted:#6a6a63;
+  --rule:#e3e2dd; --accent:#5d84a8; --accent-soft:#eaf0f6;
+  --code-bg:#f4f3ef; --ok:#3f7d50; --warn:#9a6b1e; --stub:#8a5a2b;
+  --serif:ui-serif,Georgia,"Iowan Old Style",Palatino,serif;
+  --sans:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#16171a; --panel:#1d1f23; --text:#e6e5e0; --muted:#9a9a92;
+        --rule:#2c2e33; --accent:#7ea7cc; --accent-soft:#1f2a35;
+        --code-bg:#1b1d21; --ok:#7db98d; --warn:#d0a55a; --stub:#c99a68;}
+}
+:root[data-theme="light"]{
+  --bg:#fdfdfc; --panel:#f6f5f2; --text:#1c1c1a; --muted:#6a6a63;
+  --rule:#e3e2dd; --accent:#5d84a8; --accent-soft:#eaf0f6;
+  --code-bg:#f4f3ef; --ok:#3f7d50; --warn:#9a6b1e; --stub:#8a5a2b;
+}
+:root[data-theme="dark"]{
+  --bg:#16171a; --panel:#1d1f23; --text:#e6e5e0; --muted:#9a9a92;
+  --rule:#2c2e33; --accent:#7ea7cc; --accent-soft:#1f2a35;
+  --code-bg:#1b1d21; --ok:#7db98d; --warn:#d0a55a; --stub:#c99a68;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);
+     font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+
+/* ---- chrome ---- */
+header{position:sticky;top:0;z-index:20;background:var(--bg);
+       border-bottom:1px solid var(--rule)}
+.bar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;
+     max-width:78rem;margin:0 auto;padding:.55rem .9rem}
+.brand{font-family:var(--serif);font-weight:600;font-size:1.05rem;
+       letter-spacing:.01em;margin-right:.4rem;white-space:nowrap}
+.brand span{color:var(--accent)}
+button,.btn{font:inherit;font-size:.86rem;color:var(--text);background:var(--panel);
+     border:1px solid var(--rule);border-radius:6px;padding:.3rem .6rem;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--accent)}
+button:disabled{opacity:.38;cursor:default}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+#q{flex:1 1 12rem;min-width:8rem;font:inherit;font-size:.9rem;padding:.34rem .6rem;
+   background:var(--panel);color:var(--text);border:1px solid var(--rule);border-radius:6px}
+main{max-width:78rem;margin:0 auto;padding:1.2rem .9rem 5rem}
+.prose{max-width:72ch}
+
+/* ---- home ---- */
+h1{font-family:var(--serif);font-weight:600;font-size:1.7rem;margin:.2rem 0 .3rem}
+.lede{color:var(--muted);max-width:60ch;margin:0 0 1.3rem}
+.buckets{display:grid;gap:.45rem;
+  grid-template-columns:repeat(auto-fill,minmax(4.1rem,1fr));margin-bottom:1.6rem}
+.bucket{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:.5rem .2rem;background:var(--panel);border:1px solid var(--rule);
+  border-radius:8px;cursor:pointer;text-align:center}
+.bucket:hover,.bucket.sel{border-color:var(--accent);background:var(--accent-soft)}
+.bucket .ch{font-family:var(--serif);font-size:1.3rem;line-height:1.1}
+.bucket .n{font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.bucket.empty{opacity:.32;cursor:default}
+.bucket.empty:hover{border-color:var(--rule);background:var(--panel)}
+.kinds{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 1.4rem}
+.chip{font-size:.78rem;padding:.22rem .58rem;border-radius:99px;
+  border:1px solid var(--rule);background:var(--panel);cursor:pointer;color:var(--muted)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ---- lists ---- */
+.grouphead{font-family:var(--serif);font-size:.78rem;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--muted);margin:1.5rem 0 .4rem;
+  border-bottom:1px solid var(--rule);padding-bottom:.22rem}
+.row{display:flex;gap:.6rem;align-items:baseline;padding:.32rem .5rem;
+  border-radius:6px;cursor:pointer;border:1px solid transparent}
+.row:hover{background:var(--panel)}
+.row.cur{background:var(--accent-soft);border-color:var(--accent)}
+.row .nm{font-family:var(--mono);font-size:.9rem;white-space:nowrap}
+.row .sm{color:var(--muted);font-size:.84rem;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;flex:1}
+.row.alias .nm{color:var(--muted);font-style:italic}
+
+/* ---- entry ---- */
+.badges{display:flex;gap:.4rem;flex-wrap:wrap;margin:.1rem 0 .7rem}
+.badge{font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;
+  padding:.16rem .45rem;border-radius:4px;background:var(--panel);
+  border:1px solid var(--rule);color:var(--muted)}
+.badge.k{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.badge.stub{background:transparent;border-color:var(--stub);color:var(--stub)}
+.badge.ok{border-color:var(--ok);color:var(--ok)}
+.badge.warn{border-color:var(--warn);color:var(--warn)}
+h2.entry{font-family:var(--mono);font-size:1.55rem;font-weight:600;margin:.1rem 0 .2rem;
+  overflow-wrap:anywhere}
+h3{font-family:var(--serif);font-size:.8rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--muted);margin:1.5rem 0 .45rem}
+.summary{font-family:var(--serif);font-size:1.08rem;color:var(--text);margin:0 0 .2rem}
+.defn p{margin:.55rem 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);
+  padding:.08em .3em;border-radius:3px}
+pre{margin:0;overflow-x:auto;background:var(--code-bg);border:1px solid var(--rule);
+  border-radius:8px;padding:.7rem .85rem}
+pre code{background:none;padding:0;font-size:.84rem;line-height:1.55}
+.syntax pre{background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px}
+th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid var(--rule);
+  vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.76rem;text-transform:uppercase;
+  letter-spacing:.06em}
+tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+ul.plain{margin:.3rem 0;padding-left:1.1rem}
+ul.plain li{margin:.25rem 0}
+
+/* ---- examples ---- */
+.eg{border:1px solid var(--rule);border-radius:9px;margin:.7rem 0;overflow:hidden}
+.eg.cur{border-color:var(--accent)}
+.eghead{display:flex;align-items:center;gap:.5rem;padding:.4rem .7rem;
+  background:var(--panel);border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.eglvl{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.egn{font-family:var(--mono);font-size:.74rem;color:var(--accent);
+  border:1px solid var(--accent);border-radius:4px;padding:0 .3rem}
+.eghead .sp{flex:1}
+.eg pre{border:none;border-radius:0}
+.egout{border-top:1px dashed var(--rule)}
+.egout pre{background:transparent;color:var(--muted)}
+.egout .lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);padding:.35rem .85rem 0}
+.locs code{font-size:.8rem}
+.seealso{display:flex;flex-wrap:wrap;gap:.35rem}
+.ref{font-family:var(--mono);font-size:.78rem;padding:.2rem .5rem;border-radius:99px;
+  border:1px solid var(--rule);background:var(--panel);cursor:pointer}
+.ref:hover{border-color:var(--accent);color:var(--accent)}
+.note{border-left:3px solid var(--warn);background:var(--panel);padding:.5rem .8rem;
+  border-radius:0 6px 6px 0;font-size:.9rem;margin:.7rem 0}
+.note.stub{border-left-color:var(--stub)}
+
+/* ---- forms / modal ---- */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;
+  align-items:flex-start;justify-content:center;padding:2rem 1rem;z-index:50;overflow-y:auto}
+.card{background:var(--bg);border:1px solid var(--rule);border-radius:12px;
+  width:min(46rem,100%);padding:1.1rem 1.2rem}
+.card h3{margin-top:0}
+label{display:block;font-size:.78rem;color:var(--muted);margin:.7rem 0 .2rem;
+  text-transform:uppercase;letter-spacing:.06em}
+input[type=text],textarea,select{width:100%;font:inherit;font-size:.88rem;
+  background:var(--panel);color:var(--text);border:1px solid var(--rule);
+  border-radius:6px;padding:.35rem .55rem}
+textarea{font-family:var(--mono);font-size:.82rem;min-height:5rem;resize:vertical}
+.actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem;flex-wrap:wrap}
+kbd{font-family:var(--mono);font-size:.76rem;background:var(--panel);
+  border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:.05em .35em}
+.muted{color:var(--muted)}
+.big{font-family:var(--serif);font-size:1.9rem;font-variant-numeric:tabular-nums}
+.stats{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fill,minmax(9rem,1fr));
+  margin:.6rem 0 1.4rem}
+.stat{background:var(--panel);border:1px solid var(--rule);border-radius:9px;padding:.6rem .8rem}
+.stat .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.empty-msg{color:var(--muted);font-style:italic;padding:1rem 0}
+@media (max-width:520px){
+  .bar{gap:.35rem;padding:.5rem .6rem}
+  .brand{font-size:.95rem;width:100%}
+  main{padding:1rem .6rem 4rem}
+  h2.entry{font-size:1.25rem}
+}
+</style>
+<header>
+  <div class="bar">
+    <div class="brand">Index of <span>Functions</span></div>
+    <button id="b-back"    title="Back (Backspace or [)">&larr; Back</button>
+    <button id="b-fwd"     title="Forward (])">Forward &rarr;</button>
+    <button id="b-home"    title="Home (h)">Home</button>
+    <input id="q" type="text" placeholder="Search entities…  ( / )"
+           autocomplete="off" spellcheck="false" aria-label="Search entities">
+    <button id="b-new"     title="Add a new entry (n)">+ New</button>
+    <button id="b-status"  title="Status page">Status</button>
+    <button id="b-help"    title="Keyboard help (?)">?</button>
+    <button id="b-theme"   title="Toggle light / dark">◐</button>
+  </div>
+</header>
+<main id="view" tabindex="-1"></main>
+<script type="application/json" id="catalog-data">/*__CATALOG__*/</script>
+<script>
+"use strict";
+/* ===================================================================
+   Index of Functions — rustSimulate
+   Self-contained: no network, no build step, no dependencies.
+   =================================================================== */
+
+const RAW = JSON.parse(document.getElementById("catalog-data").textContent);
+const META = RAW.find(e => e._meta) || {};
+const BASE = RAW.filter(e => !e._meta);
+
+/* ---------- overlay: edits / additions / hidden ------------------- */
+const OKEY = "rustsim.index.overlay.v1";
+let OV = {edits:{}, added:[], hidden:[]};
+try {
+  const s = localStorage.getItem(OKEY);
+  if (s) { const p = JSON.parse(s);
+           OV = {edits:p.edits||{}, added:p.added||[], hidden:p.hidden||[]}; }
+} catch (e) { console.warn("overlay unreadable, starting clean", e); }
+
+function saveOverlay(){
+  try { localStorage.setItem(OKEY, JSON.stringify(OV)); }
+  catch (e) { alert("Could not save: " + e.message); }
+}
+
+/* The effective catalog: base + additions, with edits merged over and
+   hidden ids removed. The generated catalog is never mutated. */
+let ALL = [], BY_ID = new Map();
+function rebuild(){
+  const hid = new Set(OV.hidden);
+  ALL = BASE.concat(OV.added)
+    .map(e => OV.edits[e.id] ? Object.assign({}, e, OV.edits[e.id], {_edited:true}) : e)
+    .filter(e => !hid.has(e.id));
+  BY_ID = new Map(ALL.map(e => [e.id, e]));
+}
+function everything(){       /* including hidden — for the status page */
+  const add = new Set(OV.added.map(e => e.id));
+  return BASE.concat(OV.added).map(e => Object.assign({}, e,
+    OV.edits[e.id]||{}, {_edited:!!OV.edits[e.id], _user:add.has(e.id),
+                         _hidden:OV.hidden.includes(e.id)}));
+}
+rebuild();
+
+/* ---------- Tier C: a second script, loaded on demand -------------
+   Injected as a <script>, not fetched: a file:// page cannot fetch a
+   sibling file (Chrome gives every local file its own opaque origin and
+   blocks it), but it can always load one as a script. The payload
+   assigns window.__TIER_C__ and calls window.__onTierC. */
+const TC = META.tierC || null;
+let TC_STATE = "idle";           /* idle | loading | ready | failed */
+let TC_WAIT = [];
+
+function tierCLoaded(){ return TC_STATE === "ready"; }
+function tierCTotal(){ return TC ? TC.entries : 0; }
+
+function loadTierC(then){
+  if (TC_STATE === "ready")   { if (then) then(); return; }
+  if (!TC)                    { if (then) then(); return; }
+  if (then) TC_WAIT.push(then);
+  if (TC_STATE === "loading") return;
+  TC_STATE = "loading"; render();
+  window.__onTierC = function(){
+    try {
+      BASE.push.apply(BASE, window.__TIER_C__);
+      TC_STATE = "ready";
+    } catch (e) { TC_STATE = "failed"; }
+    rebuild();
+    const q = TC_WAIT; TC_WAIT = [];
+    render(); q.forEach(f => { try { f(); } catch (e) {} });
+  };
+  const el = document.createElement("script");
+  el.src = TC.file;
+  el.onerror = function(){
+    TC_STATE = "failed"; TC_WAIT = [];
+    render();
+  };
+  document.head.appendChild(el);
+}
+
+/* ---------- small helpers ---------------------------------------- */
+const $ = s => document.querySelector(s);
+const view = $("#view");
+function esc(s){ return String(s==null?"":s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;"); }
+/* the entry text uses `code` and **bold** only — a deliberately tiny subset */
+function md(s){ return esc(s)
+  .replace(/`([^`]+)`/g, (m,a)=>"<code>"+a+"</code>")
+  .replace(/\*\*([^*]+)\*\*/g, (m,a)=>"<strong>"+a+"</strong>"); }
+const KINDS = ["command","builtin","property","keyword","notebook","type","magic",
+               "example","function"];
+
+function bucketOf(e){ return (e.indexKeys && e.indexKeys[0]) || "Σ"; }
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const DIGITS  = "0123456789".split("");
+function specialBuckets(){
+  const s = new Set();
+  ALL.forEach(e => (e.indexKeys||[]).forEach(k => {
+    if (!LETTERS.includes(k) && !DIGITS.includes(k)) s.add(k); }));
+  if (TC) Object.keys(TC.buckets).forEach(k => {
+    if (!LETTERS.includes(k) && !DIGITS.includes(k)) s.add(k); });
+  return [...s].sort();
+}
+function counts(){
+  const m = new Map();
+  ALL.forEach(e => (e.indexKeys||[]).forEach(k => m.set(k,(m.get(k)||0)+1)));
+  /* add Tier C from the precomputed tally so the home screen shows the true
+     total immediately: a count that jumps when a second script arrives is a
+     count nobody can trust. */
+  if (TC && !tierCLoaded())
+    for (const k in TC.buckets) m.set(k, (m.get(k)||0) + TC.buckets[k]);
+  return m;
+}
+
+/* ---------- history: an explicit stack, mirrored to the browser --- */
+const SKEY = "rustsim.index.stack.v1";
+let STACK = [{v:"home"}], CUR = 0;
+try {
+  const s = sessionStorage.getItem(SKEY);
+  if (s) { const p = JSON.parse(s);
+           if (Array.isArray(p.stack) && p.stack.length) {
+             STACK = p.stack; CUR = Math.min(p.cur|0, p.stack.length-1); } }
+} catch (e) { /* fresh stack */ }
+
+function persist(){
+  try { sessionStorage.setItem(SKEY, JSON.stringify({stack:STACK, cur:CUR})); }
+  catch (e) {}
+}
+function go(state, replace){
+  if (replace) STACK[CUR] = state;
+  else { STACK = STACK.slice(0, CUR+1); STACK.push(state); CUR = STACK.length-1; }
+  persist();
+  try { history.pushState({cur:CUR}, "", location.pathname + "#" + hashOf(state)); }
+  catch (e) {}
+  render();
+}
+function back(){ if (CUR > 0) { CUR--; persist(); render(); } }
+function fwd(){ if (CUR < STACK.length-1) { CUR++; persist(); render(); } }
+function hashOf(s){
+  if (s.v === "entry")  return "e/" + s.id;
+  if (s.v === "bucket") return "b/" + encodeURIComponent(s.key);
+  if (s.v === "search") return "s/" + encodeURIComponent(s.q||"");
+  return s.v;
+}
+window.addEventListener("popstate", ev => {
+  /* keep the in-app stack authoritative; the browser buttons just move it */
+  if (ev.state && typeof ev.state.cur === "number"
+      && ev.state.cur >= 0 && ev.state.cur < STACK.length) {
+    CUR = ev.state.cur; persist(); render();
+  }
+});
+
+/* ---------- search ----------------------------------------------- */
+let KINDFILTER = new Set();
+function search(q){
+  const t = q.trim().toLowerCase();
+  if (!t) return [];
+  const hit = [];
+  for (const e of ALL) {
+    if (KINDFILTER.size && !KINDFILTER.has(e.kind)) continue;
+    const nm = e.name.toLowerCase();
+    const al = (e.aliases||[]).map(a => a.toLowerCase());
+    let score = -1;
+    if (nm === t) score = 0;
+    else if (al.includes(t)) score = 1;
+    else if (nm.startsWith(t)) score = 2;
+    else if (al.some(a => a.startsWith(t))) score = 3;
+    else if (nm.includes(t)) score = 4;
+    else if (al.some(a => a.includes(t))) score = 5;
+    else if ((e.summary||"").toLowerCase().includes(t)) score = 6;
+    else if ((e.definition||"").toLowerCase().includes(t)) score = 7;
+    if (score >= 0) hit.push([score, e]);
+  }
+  hit.sort((a,b) => a[0]-b[0] || a[1].name.localeCompare(b[1].name));
+  return hit.map(h => h[1]);
+}
+</script>
+<script>
+"use strict";
+/* ---------- rendering -------------------------------------------- */
+let ROWS = [], SEL = -1;   /* keyboard row selection on list views */
+
+function render(){
+  const s = STACK[CUR];
+  ROWS = []; SEL = -1;
+  $("#b-back").disabled = CUR === 0;
+  $("#b-fwd").disabled  = CUR >= STACK.length-1;
+  /* a bucket, a search or an unknown id may live in Tier C — pull it in
+     first rather than reporting "not found" for something that exists */
+  if (TC && !tierCLoaded() && TC_STATE !== "loading" && TC_STATE !== "failed"
+      && (s.v === "bucket" || s.v === "search"
+          || (s.v === "entry" && !BY_ID.has(s.id)))) {
+    loadTierC();
+  }
+  if      (s.v === "entry")  renderEntry(s.id);
+  else if (s.v === "bucket") renderBucket(s.key);
+  else if (s.v === "search") renderSearch(s.q);
+  else if (s.v === "status") renderStatus();
+  else                       renderHome();
+  view.scrollTop = 0; window.scrollTo(0,0);
+  $("#q").value = s.v === "search" ? (s.q||"") : "";
+}
+
+function rowsHTML(list){
+  const byKind = new Map();
+  list.forEach(e => { if(!byKind.has(e.kind)) byKind.set(e.kind, []); byKind.get(e.kind).push(e); });
+  let h = "", i = 0;
+  for (const k of KINDS) {
+    const g = byKind.get(k); if (!g) continue;
+    g.sort((a,b) => a.name.localeCompare(b.name, undefined, {numeric:true}));
+    h += '<div class="grouphead">' + esc(k) + " &middot; " + g.length + "</div>";
+    for (const e of g) {
+      ROWS.push(e.id);
+      h += '<div class="row" data-i="' + (i++) + '" data-id="' + esc(e.id) + '" tabindex="0">'
+         +   '<span class="nm">' + esc(e.name) + "</span>"
+         +   '<span class="sm">' + md(e.summary||"") + "</span>"
+         +   (e._edited ? '<span class="badge">edited</span>' : "")
+         +   (e.status === "stub" ? '<span class="badge stub">stub</span>' : "")
+         + "</div>";
+      for (const a of (e.aliases||[])) {
+        h += '<div class="row alias" data-id="' + esc(e.id) + '" tabindex="0">'
+           +   '<span class="nm">' + esc(a) + "</span>"
+           +   '<span class="sm">&rarr; ' + esc(e.name) + "</span></div>";
+      }
+    }
+  }
+  return h || '<p class="empty-msg">Nothing here.</p>';
+}
+
+function renderHome(){
+  const c = counts(), sp = specialBuckets();
+  const cell = k => {
+    const n = c.get(k)||0;
+    return '<div class="bucket' + (n?"":" empty") + '"' + (n?' data-bucket="'+esc(k)+'" tabindex="0"':"")
+         + '><span class="ch">' + esc(k) + '</span><span class="n">' + n + "</span></div>";
+  };
+  view.innerHTML =
+    '<h1>Index of Functions</h1>'
+  + '<p class="lede">Every named entity in rustSimulate — commands, keywords, fields, '
+  + 'builtins, types, notebooks and worked examples — with its definition, where it is '
+  + 'defined, its full syntax, and examples you can paste into a notebook and run. '
+  + '<a href="#" data-goto="status">' + (META.verified_pass||0) + " of "
+  + (META.verified_total||0) + ' examples verified by running them.</a></p>'
+  + tierCBanner()
+  + '<h3>Letters</h3><div class="buckets">' + LETTERS.map(cell).join("") + "</div>"
+  + '<h3>Digits</h3><div class="buckets">' + DIGITS.map(cell).join("") + "</div>"
+  + (sp.length ? '<h3>Special characters</h3><div class="buckets">'
+                 + sp.map(cell).join("") + "</div>" : "")
+  + '<h3>Filter by kind</h3><div class="kinds">'
+  + KINDS.filter(k => ALL.some(e => e.kind===k)).map(k =>
+      '<span class="chip' + (KINDFILTER.has(k)?" on":"") + '" data-kind="' + k + '" tabindex="0">'
+      + k + " " + ALL.filter(e=>e.kind===k).length + "</span>").join("")
+  + "</div>"
+  + '<p class="muted" style="font-size:.85rem">Keyboard: <kbd>/</kbd> search &middot; '
+  + '<kbd>A</kbd>–<kbd>Z</kbd> jump to a bucket &middot; <kbd>?</kbd> all shortcuts</p>';
+}
+
+function tierCBanner(){
+  if (!TC || tierCLoaded()) return "";
+  if (TC_STATE === "loading")
+    return '<div class="note">Loading Tier C — ' + TC.entries
+         + ' sundials_rs entries from <code>' + esc(TC.file) + '</code>…</div>';
+  if (TC_STATE === "failed")
+    return '<div class="note"><strong>Tier C could not be loaded.</strong> '
+         + '<code>' + esc(TC.file) + '</code> must sit beside this page; '
+         + TC.entries + ' sundials_rs entries are missing from the counts below. '
+         + '<button data-act="loadc">Try again</button></div>';
+  return '<div class="note">Tier C (' + TC.entries + ' sundials_rs entries) '
+       + 'is not loaded yet. <button data-act="loadc">Load it</button></div>';
+}
+
+function renderBucket(key){
+  const list = ALL.filter(e => (e.indexKeys||[]).includes(key)
+                            && (!KINDFILTER.size || KINDFILTER.has(e.kind)));
+  view.innerHTML = tierCBanner() + '<h1>' + esc(key) + '</h1><p class="lede">'
+    + list.length + ' entit' + (list.length===1?"y":"ies")
+    + (KINDFILTER.size ? " (filtered to " + [...KINDFILTER].join(", ") + ")" : "")
+    + '</p>' + rowsHTML(list);
+}
+
+function renderSearch(q){
+  const list = search(q||"");
+  view.innerHTML = tierCBanner() + '<h1>Search</h1><p class="lede">' + list.length
+    + ' match' + (list.length===1?"":"es") + ' for <code>' + esc(q) + "</code></p>"
+    + rowsHTML(list);
+}
+
+function exampleHTML(x, i){
+  /* Say precisely what was checked. "not batch-verified" is right for a
+     fragment the verifier could have run and did not — it is wrong for a
+     shell command, which is a pointer to a program that is verified
+     elsewhere (byte-for-byte, in sundials_rs/VERIFICATION.md) or that stays
+     interactive by design and so can never exit. */
+  const badge = x.verified
+      ? '<span class="badge ok" title="Checked on ' + esc(x.verified) + '">'
+        + (x.medium === "rust" ? "compiles " : "verified ") + esc(x.verified) + "</span>"
+      : x.medium === "shell"
+      ? '<span class="badge" title="A command to run, not a fragment this page '
+        + 'executed">run this yourself</span>'
+      : '<span class="badge warn" title="Not executed by the verifier">'
+        + "not batch-verified</span>";
+  let h = '<div class="eg" data-eg="' + i + '">'
+        + '<div class="eghead"><span class="egn">' + (i+1) + "</span>"
+        + '<span class="eglvl">' + esc(x.level) + "</span>"
+        + '<span class="eglvl muted">' + esc(x.medium) + "</span>"
+        + '<span class="sp"></span>' + badge
+        + '<button class="copy" data-copy="' + i + '">Copy</button></div>'
+        + "<pre><code>" + esc(x.code) + "</code></pre>";
+  if (x.expected) {
+    /* say which it was: a posim fragment is EXECUTED and its output captured,
+       a Rust snippet is COMPILED. Calling a compile "a real run" would be a
+       small lie in a page whose whole claim is that its examples work. */
+    const lbl = x.medium === "rust"
+      ? "checked by compiling it" : "output, captured from a real run";
+    h += '<div class="egout"><div class="lbl">' + lbl + "</div>"
+       + "<pre><code>" + esc(x.expected) + "</code></pre></div>";
+  }
+  return h + "</div>";
+}
+
+function renderEntry(id){
+  const e = BY_ID.get(id);
+  if (!e) {
+    if (TC && !tierCLoaded() && TC_STATE !== "failed") {
+      view.innerHTML = tierCBanner()
+        + '<h1>Loading…</h1><p class="lede">Looking for <code>' + esc(id)
+        + '</code> in Tier C.</p>';
+      return;
+    }
+    view.innerHTML = '<h1>Not found</h1><p class="lede">No entry <code>'
+      + esc(id) + '</code>. It may be hidden — see the '
+      + '<a href="#" data-goto="status">status page</a>.</p>';
+    return;
+  }
+  let h = '<div class="prose">';
+  h += '<h2 class="entry">' + esc(e.name) + "</h2>";
+  h += '<div class="badges"><span class="badge k">' + esc(e.kind) + "</span>"
+     + '<span class="badge">tier ' + esc(e.tier) + "</span>"
+     + (e.status==="stub" ? '<span class="badge stub">stub</span>' : "")
+     + (e._edited ? '<span class="badge">edited locally</span>' : "")
+     + (e.origin==="user" ? '<span class="badge">user entry</span>' : "")
+     + (e.aliases&&e.aliases.length
+        ? '<span class="badge">alias: ' + e.aliases.map(esc).join(", ") + "</span>" : "")
+     + "</div>";
+  h += '<p class="summary">' + md(e.summary||"") + "</p>";
+  if (e.status === "stub")
+    h += '<div class="note stub"><strong>Stub.</strong> This entry is catalogued with its '
+       + 'definition and location, but its examples have not been written yet. '
+       + 'The <a href="#" data-goto="status">status page</a> lists every stub.</div>';
+  if (e.syntax && e.syntax.length)
+    h += "<h3>Syntax</h3><div class=\"syntax\"><pre><code>"
+       + e.syntax.map(esc).join("\n") + "</code></pre></div>";
+  if (e.definition) h += '<h3>Definition</h3><div class="defn"><p>'
+       + md(e.definition) + "</p></div>";
+  if (e.parameters && e.parameters.length) {
+    const cols = [...new Set(e.parameters.flatMap(p => Object.keys(p)))];
+    h += "<h3>Parameters</h3><div class=\"tablewrap\"><table><tr>"
+       + cols.map(c => "<th>" + esc(c) + "</th>").join("") + "</tr>"
+       + e.parameters.map(p => "<tr>" + cols.map(c =>
+           "<td>" + (p[c]==null ? "" : md(String(p[c]))) + "</td>").join("") + "</tr>").join("")
+       + "</table></div>";
+  }
+  if (e.returns) h += "<h3>Returns</h3><p>" + md(e.returns) + "</p>";
+  if (e.errors && e.errors.length)
+    h += "<h3>Errors</h3><ul class=\"plain\">"
+       + e.errors.map(x => "<li><code>" + esc(x) + "</code></li>").join("") + "</ul>";
+  if (e.examples && e.examples.length) {
+    h += "<h3>Examples &middot; increasing complexity</h3>";
+    h += e.examples.map(exampleHTML).join("");
+  } else {
+    h += '<h3>Examples</h3><p class="muted">None yet.</p>';
+  }
+  if (e.invariants && e.invariants.length)
+    h += "<h3>Invariants</h3><ul class=\"plain\">"
+       + e.invariants.map(x => "<li>" + md(x) + "</li>").join("") + "</ul>";
+  if (e.locations && e.locations.length)
+    h += '<h3>Defined in</h3><ul class="plain locs">'
+       + e.locations.map(l => "<li><code>" + esc(l.file) + ":" + l.line + "</code> "
+           + '<span class="muted">' + esc(l.role||"") + "</span></li>").join("") + "</ul>";
+  if (e.seeAlso && e.seeAlso.length) {
+    const live = e.seeAlso.filter(r => BY_ID.has(r));
+    if (live.length) h += '<h3>See also</h3><div class="seealso">'
+       + live.map(r => '<span class="ref" data-ref="' + esc(r) + '" tabindex="0">'
+                       + esc(BY_ID.get(r).name) + "</span>").join("") + "</div>";
+  }
+  h += '<h3>This entry</h3><div class="seealso">'
+     + '<button data-act="edit">Edit (e)</button>'
+     + '<button data-act="hide">Hide (x)</button>'
+     + (e._edited ? '<button data-act="revert">Revert to generated</button>' : "")
+     + '<code class="muted" style="align-self:center">' + esc(e.id) + "</code></div>";
+  view.innerHTML = h + "</div>";
+}
+</script>
+<script>
+"use strict";
+/* ---------- status page ------------------------------------------ */
+function renderStatus(){
+  const all = everything();
+  const shown = ALL.length;
+  const byKind = {}, byStatus = {};
+  all.forEach(e => { byKind[e.kind]=(byKind[e.kind]||0)+1;
+                     byStatus[e.status]=(byStatus[e.status]||0)+1; });
+  const stubs  = all.filter(e => e.status==="stub");
+  const hidden = all.filter(e => e._hidden);
+  const edited = all.filter(e => e._edited);
+  const user   = all.filter(e => e._user);
+  const stat = (l,v) => '<div class="stat"><div class="lbl">'+l+'</div><div class="big">'+v+"</div></div>";
+  let h = '<div class="prose"><h1>Status</h1>'
+    + '<p class="lede">What this index actually contains, and what it does not. '
+    + 'Every number here is counted from the catalog, not asserted.</p>'
+    + '<div class="stats">'
+    + stat("entries", all.length + (TC && !tierCLoaded() ? TC.entries : 0))
+    + stat("visible", shown)
+    + stat("examples", all.reduce((n,e)=>n+(e.examples||[]).length,0))
+    + stat("verified", META.verified_pass||0)
+    + stat("stubs", stubs.length) + stat("hidden", hidden.length)
+    + stat("edited", edited.length) + stat("added", user.length)
+    + "</div>";
+
+  h += "<h3>Tier C — the vendored sundials_rs workspace</h3>";
+  if (!TC) h += '<p class="muted">No Tier C payload is declared.</p>';
+  else {
+    h += "<p>" + TC.entries + " entries, in <code>" + esc(TC.file) + "</code>, loaded "
+       + (tierCLoaded() ? "<strong>and merged in above</strong>"
+          : TC_STATE === "loading" ? "<strong>right now…</strong>"
+          : TC_STATE === "failed" ? "<strong>— FAILED. The counts above exclude them.</strong>"
+          : "on demand — the counts above exclude them until you open a bucket or search")
+       + ". The bucket totals on the home screen include them either way, from a "
+       + "precomputed tally, so no number jumps when the second script arrives.</p>"
+       + "<p>" + md(TC.why_no_snippets) + "</p>";
+    if (!tierCLoaded())
+      h += '<div class="seealso"><button data-act="loadc">Load Tier C now</button></div>';
+  }
+
+  h += "<h3>Verification</h3><p>"
+     + (META.examples_verified
+        ? "<strong>" + (META.verified_pass||0) + " of " + (META.verified_total||0)
+          + "</strong> notebook fragments were executed on " + esc(META.verified_date||"?")
+          + " and their output captured. A fragment that fails carries no "
+          + "<code>verified</code> date and is badged <em>not batch-verified</em> rather "
+          + "than shown as working."
+        : "Examples have <strong>not</strong> been verified.") + "</p>";
+  if (META.failure_rules)
+    h += "<p class=\"muted\">A run counts as a failure when:</p><ul class=\"plain\">"
+       + META.failure_rules.map(r => "<li>" + md(r) + "</li>").join("") + "</ul>";
+  if (META.shell_examples)
+    h += "<h3>Not batch-verifiable (" + META.shell_examples.count + ")</h3><ul class=\"plain\">"
+       + META.shell_examples.why.map(w => "<li>" + md(w) + "</li>").join("") + "</ul>";
+
+  h += "<h3>By kind</h3><div class=\"tablewrap\"><table><tr><th>kind</th><th>entries</th></tr>"
+     + Object.keys(byKind).sort().map(k => "<tr><td>" + esc(k) + "</td><td>"
+         + byKind[k] + "</td></tr>").join("") + "</table></div>";
+
+  h += "<h3>Stubs (" + stubs.length + ")</h3>"
+     + '<p class="muted">Catalogued with a definition and a location, but no examples yet. '
+     + "Listed rather than hidden.</p>"
+     + '<ul class="plain">' + stubs.slice(0,200).map(e =>
+         '<li><span class="ref" data-ref="'+esc(e.id)+'" tabindex="0">'+esc(e.name)
+         +"</span> <span class=\"muted\">"+esc(e.kind)+"</span></li>").join("")
+     + (stubs.length>200 ? "<li class=\"muted\">… and "+(stubs.length-200)+" more</li>" : "")
+     + "</ul>";
+
+  h += "<h3>Hidden (" + hidden.length + ")</h3>";
+  h += hidden.length
+     ? '<ul class="plain">' + hidden.map(e => "<li><code>"+esc(e.name)+"</code> "
+         + '<button data-unhide="'+esc(e.id)+'">Unhide</button></li>').join("") + "</ul>"
+     : '<p class="muted">Nothing hidden.</p>';
+
+  h += "<h3>Your changes</h3><p class=\"muted\">The generated catalog is immutable. Edits, "
+     + "additions and hides live in a local overlay you can export and re-import — that is "
+     + "the only way to move them between machines, and the path by which a good edit gets "
+     + "folded back into the source data.</p><div class=\"seealso\">"
+     + '<button data-act="export">Export overlay (JSON)</button>'
+     + '<button data-act="import">Import overlay…</button>'
+     + '<button data-act="clear">Discard all local changes</button></div>';
+  view.innerHTML = h + "</div>";
+}
+
+/* ---------- edit / add / hide ------------------------------------ */
+function closeModal(){ const m = $(".modal"); if (m) m.remove(); }
+
+function editForm(e, isNew){
+  const f = (l,k,v,ta) => '<label>'+l+'</label>' + (ta
+      ? '<textarea data-f="'+k+'">'+esc(v||"")+"</textarea>"
+      : '<input type="text" data-f="'+k+'" value="'+esc(v||"")+'">');
+  const exText = (e.examples||[]).map(x => x.level+" | "+x.medium+"\n"+x.code).join("\n---\n");
+  const d = document.createElement("div");
+  d.className = "modal";
+  d.innerHTML = '<div class="card"><h3>' + (isNew?"New entry":"Edit "+esc(e.name)) + "</h3>"
+    + (isNew ? f("Name","name","") + '<label>Kind</label><select data-f="kind">'
+               + KINDS.map(k=>'<option>'+k+"</option>").join("") + "</select>" : "")
+    + f("Summary (one line)","summary",e.summary)
+    + f("Definition","definition",e.definition,true)
+    + f("Syntax (one per line)","syntax",(e.syntax||[]).join("\n"),true)
+    + f("Errors (one per line)","errors",(e.errors||[]).join("\n"),true)
+    + f("Invariants (one per line)","invariants",(e.invariants||[]).join("\n"),true)
+    + '<label>Examples — <code>level | medium</code> then the code, separated by <code>---</code></label>'
+    + '<textarea data-f="examples">'+esc(exText)+"</textarea>"
+    + '<p class="muted" style="font-size:.8rem">Edited examples lose their verified date: '
+    + "they have not been run. Re-run <code>tools/verify_index_examples.py</code> to earn it back.</p>"
+    + '<div class="actions"><button data-x="cancel">Cancel</button>'
+    + '<button class="primary" data-x="save">Save</button></div></div>';
+  document.body.appendChild(d);
+  const first = d.querySelector("input,textarea"); if (first) first.focus();
+
+  d.addEventListener("click", ev => {
+    if (ev.target === d || ev.target.dataset.x === "cancel") { closeModal(); return; }
+    if (ev.target.dataset.x !== "save") return;
+    const get = k => { const el = d.querySelector('[data-f="'+k+'"]'); return el ? el.value : ""; };
+    const lines = k => get(k).split("\n").map(s=>s.trim()).filter(Boolean);
+    const patch = {summary:get("summary").trim(), definition:get("definition").trim(),
+                   syntax:lines("syntax"), errors:lines("errors"),
+                   invariants:lines("invariants")};
+    const raw = get("examples").trim();
+    if (raw) {
+      patch.examples = raw.split(/\n---\n/).map(block => {
+        const nl = block.indexOf("\n");
+        const head = (nl<0?block:block.slice(0,nl)).split("|");
+        return {level:(head[0]||"trivial").trim(), medium:(head[1]||"posim").trim(),
+                code:(nl<0?"":block.slice(nl+1)).trim(),
+                expected:null, verified:null, runner:"posim --script"};
+      });
+    } else patch.examples = [];
+
+    if (isNew) {
+      const name = get("name").trim(), kind = get("kind");
+      if (!name) { alert("A name is required."); return; }
+      const id = kind.slice(0,4) + "." + name.toLowerCase().replace(/[^a-z0-9]+/g,"_");
+      if (BY_ID.has(id) || OV.added.some(a=>a.id===id)) {
+        alert("The id " + id + " already exists. Pick another name."); return; }
+      const ent = Object.assign({id, name, kind, tier:"A", aliases:[],
+        indexKeys:[(name[0]||"Σ").toUpperCase()], parameters:[], returns:null,
+        locations:[{file:"(user entry)", line:0, role:"added in the browser"}],
+        seeAlso:[], status:"complete", origin:"user"}, patch);
+      OV.added.push(ent); saveOverlay(); rebuild(); closeModal(); go({v:"entry", id});
+    } else {
+      OV.edits[e.id] = Object.assign({}, OV.edits[e.id], patch);
+      saveOverlay(); rebuild(); closeModal(); render();
+    }
+  });
+}
+
+function helpModal(){
+  const rows = [["/","focus search"],["A–Z, 0–9","jump to that bucket"],
+    ["↑ ↓","move the selection"],["Enter","open the selected row"],
+    ["Esc","up one level (entry → bucket → home)"],
+    ["Backspace or [","back"],["]","forward"],["h","home"],["?","this help"],
+    ["e","edit the current entry"],["n","new entry"],["x","hide the current entry"],
+    ["1–4","jump to example 1–4"],["c","copy the focused example"],["t","toggle theme"]];
+  const d = document.createElement("div");
+  d.className = "modal";
+  d.innerHTML = '<div class="card"><h3>Keyboard</h3><div class="tablewrap"><table>'
+    + rows.map(r => "<tr><td><kbd>"+r[0]+"</kbd></td><td>"+r[1]+"</td></tr>").join("")
+    + '</table></div><p class="muted" style="font-size:.85rem">Every screen is reachable '
+    + 'without a mouse. <kbd>Tab</kbd> moves through the same targets in reading order.</p>'
+    + '<div class="actions"><button data-x="cancel" class="primary">Close</button></div></div>';
+  document.body.appendChild(d);
+  d.querySelector("button").focus();
+  d.addEventListener("click", ev => {
+    if (ev.target === d || ev.target.dataset.x === "cancel") closeModal(); });
+}
+</script>
+<script>
+"use strict";
+/* ---------- events: mouse ---------------------------------------- */
+document.addEventListener("click", ev => {
+  const t = ev.target;
+  const hit = sel => t.closest(sel);
+
+  if (t.closest("#b-back"))   return back();
+  if (t.closest("#b-fwd"))    return fwd();
+  if (t.closest("#b-home"))   return go({v:"home"});
+  if (t.closest("#b-status")) return go({v:"status"});
+  if (t.closest("#b-help"))   return helpModal();
+  if (t.closest("#b-new"))    return editForm({}, true);
+  if (t.closest("#b-theme"))  return toggleTheme();
+
+  const b = hit("[data-bucket]");   if (b) return go({v:"bucket", key:b.dataset.bucket});
+  const g = hit("[data-goto]");     if (g) { ev.preventDefault(); return go({v:g.dataset.goto}); }
+  const r = hit("[data-ref]");      if (r) return go({v:"entry", id:r.dataset.ref});
+  const u = hit("[data-unhide]");   if (u) {
+    OV.hidden = OV.hidden.filter(x => x !== u.dataset.unhide);
+    saveOverlay(); rebuild(); return render();
+  }
+  const k = hit("[data-kind]");     if (k) {
+    const kk = k.dataset.kind;
+    KINDFILTER.has(kk) ? KINDFILTER.delete(kk) : KINDFILTER.add(kk);
+    return render();
+  }
+  const cp = hit("[data-copy]");    if (cp) return copyExample(+cp.dataset.copy, cp);
+  const row = hit(".row");          if (row) return go({v:"entry", id:row.dataset.id});
+
+  const act = hit("[data-act]");
+  if (act) {
+    if (act.dataset.act === "loadc") { TC_STATE = "idle"; return loadTierC(); }
+    const e = BY_ID.get(STACK[CUR].id);
+    switch (act.dataset.act) {
+      case "edit":   if (e) editForm(e, false); return;
+      case "hide":   if (e) hideEntry(e.id);    return;
+      case "revert": if (e) { delete OV.edits[e.id]; saveOverlay(); rebuild(); render(); } return;
+      case "loadc":  TC_STATE = "idle"; return loadTierC();
+      case "export": return exportOverlay();
+      case "import": return importOverlay();
+      case "clear":
+        if (confirm("Discard every local edit, addition and hide? This cannot be undone.")) {
+          OV = {edits:{}, added:[], hidden:[]}; saveOverlay(); rebuild(); render(); }
+        return;
+    }
+  }
+});
+
+function hideEntry(id){
+  if (!OV.hidden.includes(id)) OV.hidden.push(id);
+  saveOverlay(); rebuild();
+  /* the entry we were on is gone — step back to somewhere that still exists */
+  back(); if (STACK[CUR].v === "entry" && !BY_ID.has(STACK[CUR].id)) go({v:"home"}, true);
+  else render();
+}
+
+function copyExample(i, btn){
+  const e = BY_ID.get(STACK[CUR].id); if (!e || !e.examples[i]) return;
+  const code = e.examples[i].code;          /* the fragment ALONE: no prompts, no output */
+  const done = ok => { btn.textContent = ok ? "Copied" : "Select & copy";
+                       setTimeout(() => btn.textContent = "Copy", 1400); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(code).then(()=>done(true), ()=>fallback());
+  } else fallback();
+  function fallback(){
+    /* file:// has no clipboard API in some browsers — select the text instead */
+    const pre = document.querySelector('.eg[data-eg="'+i+'"] pre');
+    if (pre) { const r = document.createRange(); r.selectNodeContents(pre);
+               const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    let ok = false; try { ok = document.execCommand("copy"); } catch (err) {}
+    done(ok);
+  }
+}
+
+function exportOverlay(){
+  const blob = new Blob([JSON.stringify(OV, null, 1)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "index-overlay.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function importOverlay(){
+  const inp = document.createElement("input");
+  inp.type = "file"; inp.accept = "application/json,.json";
+  inp.onchange = () => {
+    const f = inp.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        const p = JSON.parse(rd.result);
+        OV = {edits:p.edits||{}, added:p.added||[], hidden:p.hidden||[]};
+        saveOverlay(); rebuild(); render();
+        alert("Imported " + Object.keys(OV.edits).length + " edit(s), "
+              + OV.added.length + " addition(s), " + OV.hidden.length + " hide(s).");
+      } catch (e) { alert("Not a valid overlay file: " + e.message); }
+    };
+    rd.readAsText(f);
+  };
+  inp.click();
+}
+
+/* ---------- theme ------------------------------------------------ */
+const TKEY = "rustsim.index.theme";
+function applyTheme(t){
+  if (t) document.documentElement.setAttribute("data-theme", t);
+  else   document.documentElement.removeAttribute("data-theme");
+}
+function toggleTheme(){
+  /* A plain two-state flip. An earlier version cycled through "follow the
+     system" as a third state, which on a dark OS meant the toggle never
+     reached an explicit dark and the button appeared to do nothing every
+     other press. Predictable beats clever. */
+  const cur = document.documentElement.getAttribute("data-theme");
+  const effective = cur || (matchMedia("(prefers-color-scheme: dark)").matches
+                            ? "dark" : "light");
+  const next = effective === "dark" ? "light" : "dark";
+  localStorage.setItem(TKEY, next);
+  applyTheme(next);
+}
+applyTheme(localStorage.getItem(TKEY));
+
+/* ---------- events: keyboard ------------------------------------- */
+function selectRow(n){
+  const rows = [...document.querySelectorAll(".row:not(.alias)")];
+  if (!rows.length) return;
+  SEL = Math.max(0, Math.min(rows.length-1, n));
+  rows.forEach(r => r.classList.remove("cur"));
+  const r = rows[SEL]; r.classList.add("cur");
+  r.scrollIntoView({block:"nearest"});
+}
+
+document.addEventListener("keydown", ev => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  const modal  = !!$(".modal");
+
+  if (ev.key === "Escape") {
+    if (modal) { closeModal(); return; }
+    if (typing) { document.activeElement.blur(); return; }
+    const s = STACK[CUR];
+    if (s.v === "entry")  return go({v:"bucket", key:bucketOf(BY_ID.get(s.id)||{})});
+    if (s.v !== "home")   return go({v:"home"});
+    return;
+  }
+  if (modal) return;
+
+  if (typing) {
+    if (ev.key === "Enter" && document.activeElement.id === "q") {
+      const q = $("#q").value.trim();
+      if (q) { const r = search(q);
+               if (r.length === 1) go({v:"entry", id:r[0].id}); else go({v:"search", q}); }
+      document.activeElement.blur();
+    }
+    return;
+  }
+  if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+
+  switch (ev.key) {
+    case "/": ev.preventDefault(); $("#q").focus(); return;
+    case "?": ev.preventDefault(); helpModal(); return;
+    case "h": return go({v:"home"});
+    case "t": return toggleTheme();
+    case "[": case "Backspace": ev.preventDefault(); return back();
+    case "]": return fwd();
+    case "ArrowDown": ev.preventDefault(); return selectRow(SEL+1);
+    case "ArrowUp":   ev.preventDefault(); return selectRow(SEL<=0?0:SEL-1);
+    case "Enter": {
+      const r = document.querySelector(".row.cur");
+      if (r) go({v:"entry", id:r.dataset.id});
+      return;
+    }
+  }
+  const s = STACK[CUR];
+  if (s.v === "entry") {
+    const e = BY_ID.get(s.id);
+    if (ev.key === "e" && e) return editForm(e, false);
+    if (ev.key === "x" && e) return hideEntry(e.id);
+    if (ev.key === "n")      return editForm({}, true);
+    if (/^[1-4]$/.test(ev.key)) {
+      const i = +ev.key - 1, el = document.querySelector('.eg[data-eg="'+i+'"]');
+      if (el) { document.querySelectorAll(".eg").forEach(x=>x.classList.remove("cur"));
+                el.classList.add("cur"); el.scrollIntoView({block:"center"}); }
+      return;
+    }
+    if (ev.key === "c") {
+      const el = document.querySelector(".eg.cur") || document.querySelector(".eg");
+      if (el) copyExample(+el.dataset.eg, el.querySelector(".copy"));
+      return;
+    }
+  }
+  if (ev.key === "n") return editForm({}, true);
+  if (/^[a-zA-Z0-9]$/.test(ev.key)) {
+    const key = ev.key.toUpperCase();
+    if (counts().get(key)) go({v:"bucket", key});
+  }
+});
+
+$("#q").addEventListener("input", () => {
+  const q = $("#q").value.trim();
+  if (q.length >= 2) {
+    if (STACK[CUR].v === "search") go({v:"search", q}, true);
+    else go({v:"search", q});
+    $("#q").focus(); $("#q").value = q;
+  }
+});
+
+render();
+</script>

@@ -1,0 +1,403 @@
+{
+ "_source": "posim/src/vm.rs (core builtins + constants) and posim/src/special.rs (registered special functions)",
+ "core": [
+  {
+   "name": "dot",
+   "syntax": "dot(a, b)",
+   "returns": "number",
+   "meaning": "scalar product of two vec3",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "cross",
+   "syntax": "cross(a, b)",
+   "returns": "vec3",
+   "meaning": "vector product of two vec3",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "norm",
+   "syntax": "norm(v)",
+   "returns": "number",
+   "meaning": "length; also works on quaternions and numbers",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "normalize",
+   "syntax": "normalize(v)",
+   "returns": "vec3",
+   "meaning": "unit vector in the same direction",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "sqrt",
+   "syntax": "sqrt(x)",
+   "returns": "number",
+   "meaning": "square root (real only)",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "abs",
+   "syntax": "abs(x)",
+   "returns": "number",
+   "meaning": "absolute value; of a complex value, its modulus",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "sin",
+   "syntax": "sin(x)",
+   "returns": "number",
+   "meaning": "sine (radians)",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "cos",
+   "syntax": "cos(x)",
+   "returns": "number",
+   "meaning": "cosine (radians)",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "exp",
+   "syntax": "exp(x)",
+   "returns": "number",
+   "meaning": "e^x",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "log",
+   "syntax": "log(x)",
+   "returns": "number",
+   "meaning": "natural logarithm",
+   "file": "posim/src/vm.rs"
+  }
+ ],
+ "constants": [
+  {
+   "name": "pi",
+   "syntax": "pi",
+   "returns": "number",
+   "meaning": "3.14159265358979\u2026",
+   "file": "posim/src/vm.rs"
+  },
+  {
+   "name": "tau",
+   "syntax": "tau",
+   "returns": "number",
+   "meaning": "2*pi",
+   "file": "posim/src/vm.rs"
+  }
+ ],
+ "special": [
+  {
+   "name": "rel_err",
+   "file": "posim/src/special.rs",
+   "line": 215
+  },
+  {
+   "name": "sph_j",
+   "file": "posim/src/special.rs",
+   "line": 216
+  },
+  {
+   "name": "assoc_legendre_p",
+   "file": "posim/src/special.rs",
+   "line": 219
+  },
+  {
+   "name": "sph_harm",
+   "file": "posim/src/special.rs",
+   "line": 220
+  },
+  {
+   "name": "gauss_legendre",
+   "file": "posim/src/special.rs",
+   "line": 221
+  },
+  {
+   "name": "wigner_3j",
+   "file": "posim/src/special.rs",
+   "line": 224
+  },
+  {
+   "name": "wigner_9j",
+   "file": "posim/src/special.rs",
+   "line": 225
+  },
+  {
+   "name": "eigenvalues",
+   "file": "posim/src/special.rs",
+   "line": 226
+  },
+  {
+   "name": "solve_tridiag",
+   "file": "posim/src/special.rs",
+   "line": 227
+  },
+  {
+   "name": "bessel_j_z",
+   "file": "posim/src/special.rs",
+   "line": 231
+  },
+  {
+   "name": "bessel_j_nu",
+   "file": "posim/src/special.rs",
+   "line": 232
+  },
+  {
+   "name": "gamma_z",
+   "file": "posim/src/special.rs",
+   "line": 233
+  },
+  {
+   "name": "airy_z",
+   "file": "posim/src/special.rs",
+   "line": 234
+  },
+  {
+   "name": "hankel_h1_z",
+   "file": "posim/src/special.rs",
+   "line": 235
+  },
+  {
+   "name": "hankel_h1_prime_z",
+   "file": "posim/src/special.rs",
+   "line": 236
+  },
+  {
+   "name": "hankel_h1_prime_nu",
+   "file": "posim/src/special.rs",
+   "line": 237
+  },
+  {
+   "name": "sph_hankel_h1",
+   "file": "posim/src/special.rs",
+   "line": 238
+  },
+  {
+   "name": "sph_hankel_h1_prime",
+   "file": "posim/src/special.rs",
+   "line": 239
+  },
+  {
+   "name": "bessel_j_scaled",
+   "file": "posim/src/special.rs",
+   "line": 240
+  },
+  {
+   "name": "hankel_h1_scaled",
+   "file": "posim/src/special.rs",
+   "line": 241
+  },
+  {
+   "name": "solve_cyclic_tridiag_c",
+   "file": "posim/src/special.rs",
+   "line": 242
+  },
+  {
+   "name": "sph_y",
+   "file": "posim/src/special.rs",
+   "line": 270
+  },
+  {
+   "name": "sph_j_prime",
+   "file": "posim/src/special.rs",
+   "line": 271
+  },
+  {
+   "name": "sph_y_prime",
+   "file": "posim/src/special.rs",
+   "line": 272
+  },
+  {
+   "name": "legendre_p",
+   "file": "posim/src/special.rs",
+   "line": 275
+  },
+  {
+   "name": "legendre_p_prime",
+   "file": "posim/src/special.rs",
+   "line": 276
+  },
+  {
+   "name": "norm_assoc_legendre_p",
+   "file": "posim/src/special.rs",
+   "line": 278
+  },
+  {
+   "name": "sph_harm_real",
+   "file": "posim/src/special.rs",
+   "line": 279
+  },
+  {
+   "name": "hermite_h",
+   "file": "posim/src/special.rs",
+   "line": 298
+  },
+  {
+   "name": "hermite_he",
+   "file": "posim/src/special.rs",
+   "line": 299
+  },
+  {
+   "name": "laguerre_l",
+   "file": "posim/src/special.rs",
+   "line": 300
+  },
+  {
+   "name": "chebyshev_t",
+   "file": "posim/src/special.rs",
+   "line": 301
+  },
+  {
+   "name": "chebyshev_u",
+   "file": "posim/src/special.rs",
+   "line": 302
+  },
+  {
+   "name": "laguerre_l_assoc",
+   "file": "posim/src/special.rs",
+   "line": 303
+  },
+  {
+   "name": "gegenbauer_c",
+   "file": "posim/src/special.rs",
+   "line": 308
+  },
+  {
+   "name": "jacobi_p",
+   "file": "posim/src/special.rs",
+   "line": 313
+  },
+  {
+   "name": "bessel_j",
+   "file": "posim/src/special.rs",
+   "line": 321
+  },
+  {
+   "name": "bessel_j_array",
+   "file": "posim/src/special.rs",
+   "line": 322
+  },
+  {
+   "name": "bessel_i_z",
+   "file": "posim/src/special.rs",
+   "line": 332
+  },
+  {
+   "name": "bessel_y_z",
+   "file": "posim/src/special.rs",
+   "line": 336
+  },
+  {
+   "name": "bessel_k_z",
+   "file": "posim/src/special.rs",
+   "line": 340
+  },
+  {
+   "name": "bessel_i_nu",
+   "file": "posim/src/special.rs",
+   "line": 356
+  },
+  {
+   "name": "bessel_y_nu",
+   "file": "posim/src/special.rs",
+   "line": 360
+  },
+  {
+   "name": "bessel_k_nu",
+   "file": "posim/src/special.rs",
+   "line": 364
+  },
+  {
+   "name": "ln_gamma_z",
+   "file": "posim/src/special.rs",
+   "line": 387
+  },
+  {
+   "name": "rgamma_z",
+   "file": "posim/src/special.rs",
+   "line": 390
+  },
+  {
+   "name": "hankel_h2_z",
+   "file": "posim/src/special.rs",
+   "line": 403
+  },
+  {
+   "name": "hankel_h1_nu",
+   "file": "posim/src/special.rs",
+   "line": 407
+  },
+  {
+   "name": "hankel_h2_nu",
+   "file": "posim/src/special.rs",
+   "line": 411
+  },
+  {
+   "name": "hankel_h2_prime_z",
+   "file": "posim/src/special.rs",
+   "line": 419
+  },
+  {
+   "name": "hankel_h2_prime_nu",
+   "file": "posim/src/special.rs",
+   "line": 427
+  },
+  {
+   "name": "sph_hankel_h2",
+   "file": "posim/src/special.rs",
+   "line": 437
+  },
+  {
+   "name": "sph_hankel_h2_prime",
+   "file": "posim/src/special.rs",
+   "line": 445
+  },
+  {
+   "name": "bessel_y_scaled",
+   "file": "posim/src/special.rs",
+   "line": 460
+  },
+  {
+   "name": "bessel_i_scaled",
+   "file": "posim/src/special.rs",
+   "line": 464
+  },
+  {
+   "name": "bessel_k_scaled",
+   "file": "posim/src/special.rs",
+   "line": 468
+  },
+  {
+   "name": "hankel_h2_scaled",
+   "file": "posim/src/special.rs",
+   "line": 476
+  },
+  {
+   "name": "jacobi_eigen",
+   "file": "posim/src/special.rs",
+   "line": 491
+  },
+  {
+   "name": "solve_tridiag_c",
+   "file": "posim/src/special.rs",
+   "line": 507
+  },
+  {
+   "name": "wigner_6j",
+   "file": "posim/src/special.rs",
+   "line": 531
+  },
+  {
+   "name": "clebsch_gordan",
+   "file": "posim/src/special.rs",
+   "line": 550
+  }
+ ],
+ "_counts": {
+  "core": 10,
+  "constants": 2,
+  "special": 61
+ }
+}

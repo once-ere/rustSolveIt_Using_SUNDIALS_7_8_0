@@ -1,0 +1,29 @@
+# Off-center impact spins up a box: L = r x J — dynamic notebook
+#
+# A 1-kg sphere at v = [4, 0, 0] strikes a free 2-kg cuboid ABOVE its
+# center (g = 0): contact at t = 0.3125 at point [-0.5, 0.5, 0], impulse
+# J = 4.444 along +x.  The angular impulse is L = r x (J n) =
+# (-0.5, 0.5, 0) x (4.444, 0, 0) = (0, 0, -2.222) — the box, not spinning
+# before, tumbles at omega_z = -8/3 while the hud's total L holds at the
+# incoming sphere's orbital [0, 0, -2].  Watch the box start rotating
+# after the hit; the golden contact arrows (Contacts button or C key)
+# show the action-reaction pair at the impact.
+#
+# Launch:   posim_notebook spin_up
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/spin_up.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.25, position = [-2, 0.5, 0], velocity = [4, 0, 0] }
+new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.5, 1, 1] }
+
+# Baselines before anything moves: the box has NO spin, the system's
+# total angular momentum about the origin is already [0, 0, -2] (all of
+# it the sphere's orbital r x p), and the energy is the sphere's 8 J.
+get obj1.angular_momentum
+momentum
+angmom
+energy
+
+scene create

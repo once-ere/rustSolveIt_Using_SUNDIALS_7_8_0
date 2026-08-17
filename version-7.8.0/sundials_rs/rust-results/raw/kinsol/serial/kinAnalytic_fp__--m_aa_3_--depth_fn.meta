@@ -1,0 +1,10 @@
+example:  kinAnalytic_fp
+crate:    kinsol_rs
+source:   crates/kinsol_rs/examples/kinAnalytic_fp.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinAnalytic_fp
+argv:     --m_aa 3 --depth_fn
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinAnalytic_fp__--m_aa_3_--depth_fn
+exit:     0 (OK)
+seconds:  0.106
+stdout:   707 bytes, sha256 21f45b4b3887b860030beed082f46e4236ffbbadbcbad9f8c82f84a9ed83500c
+stderr:   0 bytes

@@ -1,0 +1,108 @@
+# Routh I.Art.92 — impacts cannot move the centre of gravity
+# — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 92: "A free system of mutually attracting particles is in
+# motion. Prove (1) that the centre of gravity moves in a straight line with
+# uniform velocity, and (2) that the motion of the centre of gravity is not
+# affected by any impacts between the particles."
+#
+# WHY IT HOLDS. Art. 93 gives the reason in one line: "the effect of the
+# mutual action of two particles (whether attracting or impinging on each
+# other) is to transfer a momentum from one to the other". Every internal
+# action -- gravitational or percussive -- appears twice, equal and opposite,
+# so it cancels from the sum. The total linear momentum is therefore an exact
+# constant, and since the total momentum IS the total mass times the velocity
+# of the centre of gravity, that centre must move uniformly in a straight line
+# no matter how violent the interior becomes.
+#
+# WHAT MAKES IT A REAL TEST. This notebook runs BOTH kinds of internal action
+# at once -- pairwise gravity (G = 1) and hard elastic collisions -- so the
+# particles genuinely attract, swing past one another, and strike. The
+# trajectories are complicated and chaotic; the centre of gravity is not.
+#
+# THE NUMBERS. Four unit-mass spheres of radius 0.3:
+#
+#   obj0  at (-1.5,  0.2, 0)  moving ( 1.2,  0.0, 0)
+#   obj1  at ( 1.5, -0.2, 0)  moving (-0.8,  0.0, 0)
+#   obj2  at ( 0.0,  1.5, 0)  moving ( 0.0, -1.0, 0)
+#   obj3  at ( 0.0, -1.5, 0)  moving ( 0.0,  0.9, 0)
+#
+# Total mass M = 4. Total momentum P = (0.4, -0.1, 0), which is conserved
+# exactly. Centre of gravity at t = 0 is the origin, so for all time
+#
+#     COM(t) = P/M * t = (0.1*t, -0.025*t, 0)
+#
+# and in particular COM(5) = (0.5, -0.125, 0) exactly. The cells compute the
+# centre of gravity directly as the mean of the four positions (legitimate
+# because the masses are equal) and print its distance from that prediction.
+#
+# Note what is NOT conserved: total energy falls whenever a collision is
+# inelastic, and the individual paths are unpredictable. Momentum and the
+# centre of gravity do not care.
+#
+# SETUP NOTE. The collision radii also serve a numerical purpose: hard spheres
+# cannot pass through each other, so no pair can reach the r -> 0 singularity
+# of the 1/r^2 attraction. The system stays well conditioned however long it
+# runs.
+#
+# WHAT YOU WATCH: four bodies falling together under their own gravity,
+# scattering off each other, and flying apart on complicated paths -- while
+# their mean position slides steadily along one straight line at constant
+# speed, exactly as if nothing had happened.
+#
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_centre_of_gravity
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_centre_of_gravity.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_centre_of_gravity.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 1
+set system.rtol = 1e-12
+set system.atol = 1e-14
+collide on
+
+new sphere { mass = 1, radius = 0.3, position = [-1.5,  0.2, 0], velocity = [ 1.2,  0,   0], restitution = 1 }
+new sphere { mass = 1, radius = 0.3, position = [ 1.5, -0.2, 0], velocity = [-0.8,  0,   0], restitution = 1 }
+new sphere { mass = 1, radius = 0.3, position = [ 0,    1.5, 0], velocity = [ 0,   -1.0, 0], restitution = 1 }
+new sphere { mass = 1, radius = 0.3, position = [ 0,   -1.5, 0], velocity = [ 0,    0.9, 0], restitution = 1 }
+
+# total momentum (0.4, -0.1, 0) and the centre of gravity at the origin
+momentum
+(obj0.position + obj1.position + obj2.position + obj3.position) / 4
+
+run 5 steps 10
+
+# how many impacts happened, and the momentum afterwards -- unchanged
+system.collisions
+momentum
+# the centre of gravity, and its distance from the predicted (0.5, -0.125, 0)
+(obj0.position + obj1.position + obj2.position + obj3.position) / 4
+norm((obj0.position + obj1.position + obj2.position + obj3.position) / 4 - [0.5, -0.125, 0])
+reset
+
+set system.g_constant = 1
+set system.rtol = 1e-12
+set system.atol = 1e-14
+collide on
+new sphere { mass = 1, radius = 0.3, position = [-1.5,  0.2, 0], velocity = [ 1.2,  0,   0], restitution = 1 }
+new sphere { mass = 1, radius = 0.3, position = [ 1.5, -0.2, 0], velocity = [-0.8,  0,   0], restitution = 1 }
+new sphere { mass = 1, radius = 0.3, position = [ 0,    1.5, 0], velocity = [ 0,   -1.0, 0], restitution = 1 }
+new sphere { mass = 1, radius = 0.3, position = [ 0,   -1.5, 0], velocity = [ 0,    0.9, 0], restitution = 1 }
+momentum
+
+scene create
+scene set_time_step 0.02

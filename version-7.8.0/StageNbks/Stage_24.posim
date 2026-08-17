@@ -1,0 +1,373 @@
+# ===========================================================================
+# STAGE #24 - The sliver at 4 <= |nu| <= 8
+# ===========================================================================
+#
+# Why a whole band of Bessel parameter space had no usable method, and how measuring the instrument first changed the answer.
+#
+# This notebook is COMPLETE IN ITSELF. It does not depend on, and does not
+# refer you to, any other notebook. Everything needed to reproduce, run,
+# view and understand this stage is written out below.
+#
+# WHAT THIS STAGE WAS ABOUT
+#
+# The crate evaluates Bessel functions of COMPLEX ORDER by offering several
+# different expansions and picking whichever reports the smallest error
+# estimate. Each expansion is valid somewhere and useless elsewhere:
+#
+#   * the ascending series          - good for small |z|, loses digits as
+#                                     exp(|z|) grows
+#   * the 1/z asymptotic expansions - good for large |z|, needs |4 nu^2|
+#                                     small compared with |z|
+#   * the Debye expansion           - a large-order expansion
+#   * the Airy-type expansion       - valid near the turning point |z| ~ |nu|
+#
+# The task was a band where NONE of them would accept: |nu| between about 4
+# and 8, with |z| a few times larger. On a map of (order, argument ratio)
+# it is a thin diagonal strip, which is why it was called a 'sliver'.
+#
+# WHAT WAS ACTUALLY FOUND
+#
+# Measuring first, before writing any new expansion, found three things:
+#
+#  1. THE MEASURING INSTRUMENT WAS BROKEN. Accuracy at complex order had
+#     been judged by the J-Y Wronskian
+#
+#         J_(nu+1) Y_nu - J_nu Y_(nu+1) = 2 / (pi z)
+#
+#     divided by its own largest term. Off the real axis this is vacuous:
+#     J and Y are both (H1 +- H2)/2, so when one Hankel function dominates
+#     the other they are THE SAME FUNCTION to within |H1/H2|, and the
+#     scaled residual reports that ratio rather than any error. At
+#     nu = 5+2i, z = 200+80i it read 8.2e-24 - which looked like a triumph
+#     and was simply |H1|/|H2|.
+#
+#  2. THREE BRANCH DEFECTS in the Debye route, each returning a confident,
+#     plausible, wrong number:
+#       - the square root t = (1 - x^2)^(1/2) taken on the principal
+#         branch, whose CUT IS the oscillatory region the expansion covers;
+#         crossing it exchanges the two solutions, so H1 came back as H2 -
+#         wrong by a factor of 2e23;
+#       - the same defect at REAL order as soon as z is complex;
+#       - the prefactor (2 pi nu t)^(-1/2), a SEPARATE branch, crossed once
+#         arg z > pi/2, negating both members. A Wronskian is bilinear, so
+#         it is blind to a sign shared by both - that defect survived every
+#         check in the crate by construction.
+#
+#  3. THE GUARD WAS WRITTEN IN THE WRONG VARIABLE. It refused the region by
+#     ORDER (|nu| >= 8) when accuracy is actually governed by |z|/|nu| and
+#     arg(z/nu). It was simultaneously too strict (refusing good small-order
+#     points) and far too loose (accepting large-order points whose error
+#     estimate was 1e14 times too small).
+#
+# The sliver went from 94% to 97% served - not by adding a method, but by
+# repairing the branches and restating the guard in the measured variables.
+
+# ---------------------------------------------------------------------------
+# HOW TO RUN THIS NOTEBOOK
+# ---------------------------------------------------------------------------
+#
+# This notebook is COMPLETE IN ITSELF. It never refers you to another
+# notebook, another README or another document: everything needed to build,
+# run, display and understand this stage is written out below.
+#
+# Lines beginning with '#' are comments and are ignored by the interpreter.
+# Every other line is a command, executed in the order written.
+#
+# STEP 1 - GET THE CODE AND A RUST TOOLCHAIN.
+#
+#     git clone https://github.com/once-ere/rustSimulate.git
+#     cd rustSimulate
+#
+#   There are no submodules and no external crates to fetch: every
+#   dependency is vendored in the tree. If 'cargo' is not found, install
+#   Rust from https://rustup.rs and re-open the terminal.
+#
+# STEP 2 - BUILD ONCE. From the repository root (the directory holding
+# Cargo.toml):
+#
+#     cargo build -p posim --release
+#
+#   The first build compiles the workspace and takes a few minutes. Every
+#   later run is immediate. This produces ./target/release/posim .
+#
+# STEP 3 - RUN THIS NOTEBOOK. Any ONE of these three forms works:
+#
+#     ./target/release/posim --notebook StageNbks/Stage_24.posim
+#     ./target/release/posim --script   StageNbks/Stage_24.posim
+#     cargo run -p posim --release -- --notebook StageNbks/Stage_24.posim
+#
+#   --notebook  executes the file, prints an In[n]:= / Out[n]= transcript,
+#               and then LEAVES YOU AT THE PROMPT with all state intact.
+#               This is the mode to use: it is what makes the session
+#               interactive, and it is required for the live window.
+#   --script    executes the file and EXITS. Use it for a plain
+#               reproducible transcript; you cannot interact afterwards.
+#   cargo run   identical to the first form, but re-checks the build
+#               first. Use it if you are editing the source.
+#
+# STEP 4 - WORK BY HAND (optional). Start the bare interpreter:
+#
+#     ./target/release/posim
+#
+#   and paste the command lines from this file one at a time. Type HELP
+#   for the complete command language, and %quit to leave. Other useful
+#   magics: %history, %rerun <n>, %edit <n> <text>, %save <file>, %reset.
+#
+# ---------------------------------------------------------------------------
+# RUNNING THIS STAGE AS AN INTERACTIVE SIMULATION
+# ---------------------------------------------------------------------------
+#
+# WHAT THIS STAGE IS: it evaluates Bessel functions of complex order. Every result it produces is a
+# NUMBER printed at the prompt.
+#
+# WHY THERE IS NOTHING TO ANIMATE, stated plainly rather than hidden: a
+# function value has no position, no extent and no time coordinate. The
+# 3-D scene window draws rigid bodies moving through space. This notebook
+# creates no rigid bodies, so 'scene create' here opens a window that
+# correctly reports 'showing 0 entities', and 'scene start' would then
+# advance a world containing nothing. Both commands work; they simply have
+# nothing to show. The results of this stage ARE the printed numbers.
+#
+# THAT DOES NOT LEAVE YOU WITHOUT AN INTERACTIVE SIMULATION, and this
+# notebook will not send you elsewhere to find one. The complete recipe is
+# written out here. Build once:
+#
+#     cargo build -p posim --release
+#     ./target/release/posim
+#
+# then type these lines exactly, in this order:
+#
+#     set system.g_constant = 0
+#     box 4
+#     new sphere { mass = 1, radius = 1/2, position = [0, 0, 0], velocity = [30, 17, 11] }
+#     new sphere { mass = 2, radius = 1/2, position = [1.2, -0.7, 0.4], velocity = [-12, 25, -9] }
+#     new cuboid { mass = 3, half_extents = [0.4, 0.4, 0.4], position = [-1.1, 0.9, -0.8], velocity = [8, -14, 20] }
+#     energy
+#     scene create
+#     scene set_time_step 0.002
+#     scene start
+#
+# What you will see, exactly:
+#
+#     Out[2]= box: inner size 4 x 4 x 4 - six static walls ...
+#     Out[6]= 2495
+#     Out[7]= scene window created: http://127.0.0.1:<port>/
+#             showing 9 entities; SCENE START begins the evolution
+#     Out[8]= scene time step dt = 0.002
+#     Out[9]= scene playback: running
+#
+#   Nine entities is three bodies plus the box's six static walls. Gravity
+#   is off and the walls are perfectly elastic, so the energy printed as
+#   2495 is an exact invariant: type 'energy' again at any time while the
+#   window runs and it must still read 2495 to within rounding. Watching
+#   that number hold while the bodies bounce is the point of the exercise.
+#
+#   Then experiment: 'scene set_time_step 0.05' is 25x coarser and the
+#   motion visibly jumps between frames; 'scene set_time_step 0.0005' is
+#   four times finer and smoother. 'scene reverse', after letting it run
+#   for a few seconds, plays the recorded history backwards.
+#
+# You can also paste those same lines into THIS notebook's session: run it
+#   ./target/release/posim --notebook StageNbks/Stage_24.posim
+# and type them at the In[n]:= prompt when the transcript finishes. The
+# stage's own results stay in the session above them.
+#
+# WHEN FINISHED:  scene close   (frees the port), then  %quit .
+#
+# ---------------------------------------------------------------------------
+# OPENING THE WINDOW IN A BROWSER - EXACTLY WHAT HAPPENS, ON EVERY OS
+# ---------------------------------------------------------------------------
+#
+# 'scene create' prints THREE lines, for example:
+#
+#     scene window created: http://127.0.0.1:41234/
+#     (asked your desktop to open it; if no window appeared, open that address yourself)
+#     showing 12 entities; SCENE START begins the evolution — HELP lists all scene commands
+#
+# The MIDDLE line tells you what was actually attempted, and it has two
+# forms. Read it: it is the difference between waiting for a window that
+# is coming and waiting for one that is not.
+#
+#     (asked your desktop to open it; ...)     a browser launch was made
+#     (no browser was launched — open that address yourself)
+#
+# The port is chosen by the operating system afresh on every run. To pin
+# it, give the port:  'scene create 8080'  always serves
+# http://127.0.0.1:8080/ . If that port is busy, 'scene create' reports
+# the bind error; pick another.
+#
+# posim makes ONE best-effort attempt to open your browser, by running
+# exactly:
+#
+#     xdg-open <url>
+#
+# xdg-open is a Linux/BSD utility. That has consequences worth stating
+# plainly, because a window that does not appear is otherwise alarming:
+#
+#   * Linux/BSD with xdg-utils installed - the browser opens by itself,
+#     and the middle line reads 'asked your desktop to open it'.
+#   * macOS - NOTHING OPENS, and nothing is broken: xdg-open does not
+#     exist there, so the middle line reads 'no browser was launched'.
+#     Copy the printed URL into any browser, or in a second terminal:
+#         open http://127.0.0.1:41234/
+#   * Windows - NOTHING OPENS, same reason, same middle line. Copy the
+#     printed URL into any browser, or in a second terminal:
+#         start http://127.0.0.1:41234/
+#   * Headless server or SSH session - nothing opens. Forward the port and
+#     browse from your own machine:
+#         ssh -L 41234:127.0.0.1:41234 <user>@<host>
+#     then open http://127.0.0.1:41234/ locally.
+#
+# Setting the environment variable POSIM_NO_BROWSER to any value suppresses
+# the attempt entirely. The URL is still printed and still works; this is
+# what the automated tests use:
+#
+#     POSIM_NO_BROWSER=1 ./target/release/posim
+#
+# The page is plain HTML, CSS and JavaScript served by posim itself over a
+# websocket. Nothing is installed, nothing is fetched from the network, and
+# the listener is bound to 127.0.0.1, so it is not reachable from another
+# machine by design.
+#
+# ---------------------------------------------------------------------------
+# THE SCENE WINDOW: EVERY CONTROL, AND ITS TYPED EQUIVALENT
+# ---------------------------------------------------------------------------
+#
+# TOOLBAR, in the order it appears left to right:
+#
+#   [>]  Start      scene start        begin / resume forward evolution
+#   [||] Pause      scene pause        freeze, keep the window live
+#   [#]  Stop       scene stop         stop evolution AND clear history
+#   [<]  Reverse    scene reverse      play backward through the history
+#   [o]  Reset      scene reset        every value and the time return to
+#                                      their initial values; Start then
+#                                      runs the simulation again
+#   [|<]            (button only)      one step backward
+#   [>|]            (button only)      one step forward
+#   dt [___] Set    scene set_time_step <dt>
+#                                      simulated seconds per frame; type a
+#                                      number in the box and press Set
+#   [magnifier +]   scene zoom in      zoom in
+#   [magnifier -]   scene zoom out     zoom out
+#   [^]  View       (button only)      reset the camera to its home pose
+#   Grid            (button only)      toggle the ground grid
+#   Trails          (button only)      toggle motion trails
+#   Labels          (button only)      toggle object labels
+#   Contacts        (button only)      toggle contact-normal arrows drawn
+#                                      at collision points
+#   ?               (button only)      toggle the controls cheat-sheet
+#
+# MOUSE AND KEYBOARD, with the pointer over the window:
+#
+#   left-drag                rotate (orbit) around the scene
+#   shift-drag or right-drag translate (pan) with the mouse
+#   mouse wheel              zoom in / out
+#   +  or  =                 zoom in
+#   -  or  _                 zoom out
+#   Left / Right arrow       translate the view left / right
+#   Up / Down arrow          translate the view up / down
+#   Space                    start / pause playback
+#   R                        reset the view
+#   G                        toggle the ground grid
+#   T                        toggle motion trails
+#   L                        toggle object labels
+#   C                        toggle contact-normal arrows
+#   H  or  ?                 toggle the controls cheat-sheet
+#
+#   READ THIS ONE TWICE, because the natural assumption is wrong: the
+#   ARROW KEYS MOVE THE CAMERA, not the simulation. To advance the
+#   physics one frame at a time use the [|<] and [>|] toolbar buttons.
+#
+# THE STATUS BAR along the bottom reports, live: body count, contact count,
+# hidden count, simulated time, dt, energy, frames per second, camera yaw /
+# pitch / distance, playback mode, recorded-history depth, and the websocket
+# connection state.
+#
+# TYPED COMMANDS, available at the In[n]:= prompt while the window is open.
+# The window and the prompt drive the SAME state, so a typed command and
+# the button that mirrors it cannot disagree:
+#
+#   scene status                 connection / camera / playback report
+#   scene refresh                re-sync the window after adding, removing
+#                                or editing bodies
+#   scene redraw                 force a full redraw of every window
+#   scene hide <n> | all         hide entities
+#   scene show <n> | all         show them again
+#   scene translate dx dy [dz]   move the view
+#   scene rotate dyaw dpitch     rotate the view
+#   scene zoom in | out | <f>    zoom (f > 1 zooms in)
+#   scene set_time_step <dt>     simulated seconds per frame
+#   scene start | stop | pause | reverse | reset
+#   scene events                 read asynchronous events from the window
+#   scene close                  shut the window and free the port
+#                                (alias: scene destroy)
+#   energy                       print the total energy, live, while it runs
+#   HELP                         the complete command language
+#
+# ONE BEHAVIOUR THAT LOOKS LIKE A FAULT AND IS NOT. 'scene reverse'
+# immediately after opening answers:
+#
+#     nothing to reverse - no forward history recorded yet
+#
+# Reverse replays RECORDED history. Until the scene has actually run
+# forward there is nothing recorded to play back. Let it run a few seconds,
+# then Reverse works. 'scene stop' clears that history deliberately, so
+# Reverse is empty again after a Stop.
+#
+# TROUBLESHOOTING, precisely:
+#
+#   'no scene window - run SCENE CREATE first'
+#       The window was closed, or never opened. Type 'scene create'.
+#   The window opens but says 'showing 0 entities'
+#       The world genuinely holds no bodies. Build them first, then
+#       'scene refresh'. An empty window is an honest report, not a bug.
+#   The port is already in use
+#       'scene close', then 'scene create <another port>'.
+#   The page loads but never moves
+#       Playback is not running: press Start, or type 'scene start'.
+#   Bodies jump through each other
+#       The time step is too large for their speed. Lower it with
+#       'scene set_time_step <smaller dt>' or the dt box and Set.
+#
+# ---------------------------------------------------------------------------
+# RECREATING THE STAGE SCENARIO
+# ---------------------------------------------------------------------------
+#
+# The commands below evaluate Bessel functions across the band in question.
+# Watch how the values behave as the order and argument ratio change.
+#
+# A real order and a real argument, well inside the easy region: every
+# method agrees here and the answer is machine-precision.
+bessel_j_nu(5.0, 15.0)
+bessel_y_nu(5.0, 15.0)
+
+# Now walk the argument ratio z/nu across the sliver at nu = 5.
+# 1/z asymptotics need |4 nu^2| = 100 small compared with |z|, so they
+# only become available once |z| is comfortably past 12.5.
+bessel_j_nu(5.0, 6.0)
+bessel_j_nu(5.0, 10.0)
+bessel_j_nu(5.0, 20.0)
+bessel_j_nu(5.0, 40.0)
+
+# The same walk for Y, which is the harder of the pair because it is built
+# from a reflection that cancels.
+bessel_y_nu(5.0, 6.0)
+bessel_y_nu(5.0, 10.0)
+bessel_y_nu(5.0, 20.0)
+
+# The identity that adjudicates all of this. For any order and argument,
+#     J_(nu+1) Y_nu - J_nu Y_(nu+1) = 2 / (pi z)
+# The right-hand side involves no Bessel function at all, which is what
+# makes it a usable referee - PROVIDED you remember the resolution limit
+# described above. At real order and real argument it is trustworthy.
+bessel_j_nu(6.0, 20.0) * bessel_y_nu(5.0, 20.0) - bessel_j_nu(5.0, 20.0) * bessel_y_nu(6.0, 20.0)
+2 / (3.14159265358979 * 20.0)
+
+# Those two lines should agree to about fifteen digits. If you change 20.0
+# to 60.0 in all four places they still agree; that is the check the stage
+# used, and the point of the stage is that the SCALED version of it stops
+# working off the real axis while looking like it still works.
+
+# ===========================================================================
+# END OF STAGE #24 NOTEBOOK
+# ===========================================================================

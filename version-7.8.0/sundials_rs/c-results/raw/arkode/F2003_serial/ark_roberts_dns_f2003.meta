@@ -1,0 +1,10 @@
+example:  ark_roberts_dns_f2003
+source:   examples/arkode/F2003_serial/ark_roberts_dns_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_roberts_dns_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_roberts_dns_f2003
+exit:     0 (OK)
+seconds:  0.206
+stdout:   2441 bytes, sha256 347170d66a2b54868fb44218bddf73c487c4917cbaba81523fa177cb0796fd06
+stderr:   0 bytes

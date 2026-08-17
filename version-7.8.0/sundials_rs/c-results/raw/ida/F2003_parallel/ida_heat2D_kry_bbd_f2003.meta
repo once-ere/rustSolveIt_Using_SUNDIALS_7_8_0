@@ -1,0 +1,10 @@
+example:  ida_heat2D_kry_bbd_f2003
+source:   examples/ida/F2003_parallel/ida_heat2D_kry_bbd_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/F2003_parallel/ida_heat2D_kry_bbd_f2003
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/F2003_parallel/ida_heat2D_kry_bbd_f2003
+exit:     0 (OK)
+seconds:  1.207
+stdout:   3560 bytes, sha256 bca8387b6b78c62393b0fa5733eea8d644a8719977ef7a223976756708e2d8a6
+stderr:   762 bytes

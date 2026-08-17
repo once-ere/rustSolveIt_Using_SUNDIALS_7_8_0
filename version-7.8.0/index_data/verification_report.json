@@ -1,0 +1,8241 @@
+[
+ {
+  "id": "kw.new",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.set",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.get",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.del",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.del",
+  "kind": "keyword",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.list",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.step",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.run",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.steps",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.method",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.adams",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.bdf",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.sprk",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.energy",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.com",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.momentum",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.angmom",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.laplace",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.help",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.point",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.sphere",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.cuboid",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.cuboid",
+  "kind": "keyword",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.torus",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.disk",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.disk",
+  "kind": "keyword",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.cylinder",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.box",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.reset",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.qm",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.qm2",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.qm3",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.scene",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.create",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.close",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.close",
+  "kind": "keyword",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.translate",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.rotate",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.zoom",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.in",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.out",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.hide",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.show",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.refresh",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.redraw",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.start",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.stop",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.pause",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.reverse",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.set_time_step",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.set_time_step",
+  "kind": "keyword",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.status",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.events",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.all",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.as",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.let",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.funcs",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.funcs",
+  "kind": "keyword",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.dumbbell",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.dumbbell",
+  "kind": "keyword",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.collide",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.contacts",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.on",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "kw.off",
+  "kind": "keyword",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.id",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.id",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.id",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.id",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.x",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.x",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.x",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.x",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.y",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.y",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.y",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.y",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.z",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.z",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.z",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.z",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vx",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vx",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vx",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vx",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vy",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vy",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vy",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vy",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vz",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vz",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vz",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.vz",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m1",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m1",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m1",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m1",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m2",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m2",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m2",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m2",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m_rod",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m_rod",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m_rod",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.m_rod",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r1",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r1",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r1",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r1",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r2",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r2",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r2",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.r2",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.rod_radius",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.rod_radius",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.rod_radius",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.rod_radius",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.length",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.length",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.length",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.length",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.mass",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.mass",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.mass",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.mass",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_mass",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_mass",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_mass",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_mass",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.charge",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.charge",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.charge",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.charge",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.position",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.position",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.position",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.position",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.velocity",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.velocity",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.velocity",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.velocity",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.momentum",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.momentum",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.momentum",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.momentum",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.orientation",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.orientation",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.orientation",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.orientation",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_velocity",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_velocity",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_velocity",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_velocity",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_momentum",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_momentum",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_momentum",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.angular_momentum",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inertia_tensor",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inertia_tensor",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inertia_tensor",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inertia_tensor",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_inertia_tensor",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_inertia_tensor",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_inertia_tensor",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inverse_inertia_tensor",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.magnetic_moment_tensor",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.magnetic_moment_tensor",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.magnetic_moment_tensor",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.magnetic_moment_tensor",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.kinetic_energy",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.kinetic_energy",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.kinetic_energy",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.kinetic_energy",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.boundary",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.boundary",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.boundary",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.boundary",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.radius",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.radius",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.radius",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.radius",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_extents",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_extents",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_extents",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_extents",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.ring_radius",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.ring_radius",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.ring_radius",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.ring_radius",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.tube_radius",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.tube_radius",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.tube_radius",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.tube_radius",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inner_radius",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inner_radius",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inner_radius",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.inner_radius",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.outer_radius",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.outer_radius",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.outer_radius",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.outer_radius",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.height",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.height",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.height",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.height",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_height",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_height",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_height",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.half_height",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.force",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.force",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.force",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.force",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.torque",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.torque",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.torque",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.torque",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.restitution",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.restitution",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.restitution",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.obj.restitution",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.g_constant",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.g_constant",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.g_constant",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.g_constant",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.softening",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.softening",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.softening",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.softening",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.uniform_gravity",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.uniform_gravity",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.uniform_gravity",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.uniform_gravity",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.e_field",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.e_field",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.e_field",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.e_field",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.b_field",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.b_field",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.b_field",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.b_field",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.rtol",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.rtol",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.rtol",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.rtol",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.atol",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.atol",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.atol",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.atol",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.time",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.time",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.time",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.time",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.method",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.method",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.method",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.method",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.count",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.count",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.count",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.count",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collide",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collide",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collide",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collide",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contacts",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contacts",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contacts",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contacts",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collisions",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collisions",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collisions",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.collisions",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.restitution_threshold",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.restitution_threshold",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.restitution_threshold",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.restitution_threshold",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contact_slop",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contact_slop",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contact_slop",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.contact_slop",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.box",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.box",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.box",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.system.box",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.i",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.i",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.i",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.i",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.j",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.j",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.j",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.j",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.t",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.t",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.t",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.t",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.point",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.point",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.point",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.point",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.normal",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.normal",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.normal",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.normal",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.depth",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.depth",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.depth",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.depth",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.rel_vel_n",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.rel_vel_n",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.rel_vel_n",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.rel_vel_n",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.impulse",
+  "kind": "property",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.impulse",
+  "kind": "property",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.impulse",
+  "kind": "property",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "prop.contact.impulse",
+  "kind": "property",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.dot",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.dot",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.dot",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.dot",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cross",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cross",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cross",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cross",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.normalize",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.normalize",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.normalize",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.normalize",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sqrt",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sqrt",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sqrt",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sqrt",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.abs",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.abs",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.abs",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.abs",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sin",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sin",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sin",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sin",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cos",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cos",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cos",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.cos",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.exp",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.exp",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.exp",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.exp",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.log",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.log",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.log",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.log",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.pi",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.pi",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.pi",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.pi",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.tau",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.tau",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.tau",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "const.tau",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rel_err",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rel_err",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rel_err",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rel_err",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.assoc_legendre_p",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.assoc_legendre_p",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.assoc_legendre_p",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.assoc_legendre_p",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gauss_legendre",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gauss_legendre",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gauss_legendre",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gauss_legendre",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_3j",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_3j",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_3j",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_3j",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_9j",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_9j",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_9j",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_9j",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.eigenvalues",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.eigenvalues",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.eigenvalues",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.eigenvalues",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gamma_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gamma_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gamma_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gamma_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.airy_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.airy_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.airy_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.airy_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_prime_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1_prime",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1_prime",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1_prime",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h1_prime",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_scaled",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_scaled",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_scaled",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_scaled",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_scaled",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_scaled",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_scaled",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_scaled",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_cyclic_tridiag_c",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_cyclic_tridiag_c",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_cyclic_tridiag_c",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_cyclic_tridiag_c",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j_prime",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j_prime",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j_prime",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_j_prime",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y_prime",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y_prime",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y_prime",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_y_prime",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p_prime",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p_prime",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p_prime",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.legendre_p_prime",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm_assoc_legendre_p",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm_assoc_legendre_p",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm_assoc_legendre_p",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.norm_assoc_legendre_p",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm_real",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm_real",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm_real",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_harm_real",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_h",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_h",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_h",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_h",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_he",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_he",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_he",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hermite_he",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_t",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_t",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_t",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_t",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_u",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_u",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_u",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.chebyshev_u",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l_assoc",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l_assoc",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l_assoc",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.laguerre_l_assoc",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gegenbauer_c",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gegenbauer_c",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gegenbauer_c",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.gegenbauer_c",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_p",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_p",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_p",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_p",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_array",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_array",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_array",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_j_array",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.ln_gamma_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.ln_gamma_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.ln_gamma_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.ln_gamma_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rgamma_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rgamma_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rgamma_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.rgamma_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h1_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_z",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_z",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_z",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_z",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_nu",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_nu",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_nu",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_prime_nu",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2_prime",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2_prime",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2_prime",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.sph_hankel_h2_prime",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_scaled",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_scaled",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_scaled",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_y_scaled",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_scaled",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_scaled",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_scaled",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_i_scaled",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_scaled",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_scaled",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_scaled",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.bessel_k_scaled",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_scaled",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_scaled",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_scaled",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.hankel_h2_scaled",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_eigen",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_eigen",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_eigen",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.jacobi_eigen",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag_c",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag_c",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag_c",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.solve_tridiag_c",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_6j",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_6j",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_6j",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.wigner_6j",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.clebsch_gordan",
+  "kind": "builtin",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.clebsch_gordan",
+  "kind": "builtin",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.clebsch_gordan",
+  "kind": "builtin",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "fn.clebsch_gordan",
+  "kind": "builtin",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.history",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.history",
+  "kind": "magic",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.rerun",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.edit",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.save",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.load",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.reset",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.quit",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.quit",
+  "kind": "magic",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.quit",
+  "kind": "magic",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.quit",
+  "kind": "magic",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.exit",
+  "kind": "magic",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.exit",
+  "kind": "magic",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.exit",
+  "kind": "magic",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "magic.exit",
+  "kind": "magic",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.number",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.number",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.number",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.number",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.complex",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.complex",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.complex",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.complex",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.vec3",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.vec3",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.vec3",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.vec3",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.quaternion",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.quaternion",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.quaternion",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.quaternion",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.mat3",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.mat3",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.mat3",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.mat3",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.string",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.string",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.string",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.string",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.list",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.list",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.list",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.list",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.point",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.point",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.point",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.point",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.sphere",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.sphere",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.sphere",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.sphere",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cuboid",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cuboid",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cuboid",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cuboid",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.torus",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.torus",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.torus",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.torus",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.disk",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.disk",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.disk",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.disk",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cylinder",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cylinder",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cylinder",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.cylinder",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.dumbbell",
+  "kind": "type",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.dumbbell",
+  "kind": "type",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.dumbbell",
+  "kind": "type",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "type.shape.dumbbell",
+  "kind": "type",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.billiard_box",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.billiard_break",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.bouncing_ball_restitution",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.box_of_shapes",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.box_of_shapes_m32",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.charged_in_b_field",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.charged_in_e_field",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.colliding_binary",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.double_slit",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.head_on_exchange",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.kepler_orbit",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.magnetic_spin_up",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.newtons_cradle",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.outer_solar_system",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.restitution_ladder",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.spin_up",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.spinning_target",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.static_anchor",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.thin_wall_toi",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.three_bodies",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.thrown_ball",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.tumbling_body",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.tunneling",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.two_dumbbells",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.unequal_masses",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_24",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2A",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2B",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2C",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2D",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2E",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2F",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2G",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2H",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2I",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.Stage_2J",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.01_head_on_exchange",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.02_unequal_masses",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.03_restitution_ladder",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.04_newtons_cradle",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.05_billiard_break",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.06_spin_up",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.07_thin_wall_toi",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.08_colliding_binary",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.09_spinning_target",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.10_billiard_box",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.11_box_of_shapes",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "nb.12_two_dumbbells",
+  "kind": "notebook",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.1",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.2",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.3",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.4",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.5",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.6",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.7",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.8",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.9",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.10",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.12",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.13",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.14",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.grammar.16",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.guide.13",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.collision.1",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.collision.11",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.collision.12",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.notebook.1",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.notebook.2",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.notebook.5",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.notebook.6",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.4",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.4",
+  "kind": "example",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.4",
+  "kind": "example",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.4",
+  "kind": "example",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.8",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.8",
+  "kind": "example",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.8",
+  "kind": "example",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.8",
+  "kind": "example",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.10",
+  "kind": "example",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.10",
+  "kind": "example",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.10",
+  "kind": "example",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "ex.specfn.10",
+  "kind": "example",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.new",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.new",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.new",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.new",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.set",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.set",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.set",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.set",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.get",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.get",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.get",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.get",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.del",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.del",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.del",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.del",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.list",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.list",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.list",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.list",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.step",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.step",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.step",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.step",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.run",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.run",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.run",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.run",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.steps",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.steps",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.steps",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.steps",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.method",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.method",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.method",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.method",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.energy",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.energy",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.energy",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.energy",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.com",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.com",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.com",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.com",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.momentum",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.momentum",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.momentum",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.momentum",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.angmom",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.angmom",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.angmom",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.angmom",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.laplace",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.laplace",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.laplace",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.laplace",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.reset",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.reset",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.reset",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.reset",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.help",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.help",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.help",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.help",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.collide",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.collide",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.collide",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.collide",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.contacts",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.contacts",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.contacts",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.contacts",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.let",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.let",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.let",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.let",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.funcs",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.funcs",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.funcs",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.funcs",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.show",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.show",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.show",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.show",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.box",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.box",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.box",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.box",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.expr",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.expr",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.expr",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.expr",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.def",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.def",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.def",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.def",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.call",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.call",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.call",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.call",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.create",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.create",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.create",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.create",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.close",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.close",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.close",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.close",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.translate",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.translate",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.translate",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.translate",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.rotate",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.rotate",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.rotate",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.rotate",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.zoom",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.zoom",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.zoom",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.zoom",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.hide",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.hide",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.hide",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.hide",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.show",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.show",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.show",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.show",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.refresh",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.refresh",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.refresh",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.refresh",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.redraw",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.redraw",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.redraw",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.redraw",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.start",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.start",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.start",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.start",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.stop",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.stop",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.stop",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.stop",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.pause",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.pause",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.pause",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.pause",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reverse",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reverse",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reverse",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reverse",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reset",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reset",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reset",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.reset",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.set_time_step",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.set_time_step",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.set_time_step",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.set_time_step",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.status",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.status",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.status",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.status",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.events",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.events",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.events",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.scene.events",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.status",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.status",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.status",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.status",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.grid",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.grid",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.grid",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.grid",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.potential",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.potential",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.potential",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.potential",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.mass",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.mass",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.mass",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.mass",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.hbar",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.hbar",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.hbar",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.hbar",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.method",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.method",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.method",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.method",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.states",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.states",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.states",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.states",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.state",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.state",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.state",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.state",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.packet",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.packet",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.packet",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.packet",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.step",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.step",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.step",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.step",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.run",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.run",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.run",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.run",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.norm",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.norm",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.norm",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.norm",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.energy",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.energy",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.energy",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.energy",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.position",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.position",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.position",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.position",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.momentum",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.momentum",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.momentum",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.momentum",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.prob",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.prob",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.prob",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.prob",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.density",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.density",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.density",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.density",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.drive",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.drive",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.drive",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.drive",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.absorb",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.absorb",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.absorb",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.absorb",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.animate",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.animate",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.animate",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.animate",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.reset",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.reset",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.reset",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.reset",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.transmission",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.transmission",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.transmission",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.transmission",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.scan",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.scan",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.scan",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm.scan",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.status",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.status",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.status",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.status",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.grid",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.grid",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.grid",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.grid",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.potential",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.potential",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.potential",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.potential",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.packet",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.packet",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.packet",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.packet",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.step",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.step",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.step",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.step",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.run",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.run",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.run",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.run",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.norm",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.norm",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.norm",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.norm",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.energy",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.energy",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.energy",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.energy",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.centroid",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.centroid",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.centroid",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.centroid",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.prob",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.prob",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.prob",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.prob",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.absorb",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.absorb",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.absorb",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.absorb",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.drive",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.drive",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.drive",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.drive",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.states",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.states",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.states",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.states",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.state",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.state",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.state",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.state",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.reset",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.reset",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.reset",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.reset",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.animate",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.animate",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.animate",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm2.animate",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.status",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.status",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.status",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.status",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.grid",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.grid",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.grid",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.grid",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.potential",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.potential",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.potential",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.potential",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.packet",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.packet",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.packet",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.packet",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.states",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.states",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.states",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.states",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.state",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.state",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.state",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.state",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.step",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.step",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.step",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.step",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.run",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.run",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.run",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.run",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.norm",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.norm",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.norm",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.norm",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.energy",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.energy",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.energy",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.energy",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.centroid",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.centroid",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.centroid",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.centroid",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.prob",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.prob",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.prob",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.prob",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.absorb",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.absorb",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.absorb",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.absorb",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.drive",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.drive",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.drive",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.drive",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.animate",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.animate",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.animate",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.animate",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.iso",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.iso",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.iso",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.iso",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.reset",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.reset",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.reset",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.qm3.reset",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.exec",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.exec",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.exec",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.exec",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.get",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.get",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.get",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.get",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.set",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.set",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.set",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.set",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.state",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.state",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.state",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.state",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.help",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.help",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.help",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.help",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.quit",
+  "kind": "command",
+  "level": "trivial",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.quit",
+  "kind": "command",
+  "level": "intermediate",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.quit",
+  "kind": "command",
+  "level": "advanced",
+  "ok": true,
+  "reasons": []
+ },
+ {
+  "id": "cmd.machine.quit",
+  "kind": "command",
+  "level": "expert",
+  "ok": true,
+  "reasons": []
+ }
+]

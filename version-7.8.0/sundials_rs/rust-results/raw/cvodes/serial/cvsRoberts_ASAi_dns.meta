@@ -1,0 +1,10 @@
+example:  cvsRoberts_ASAi_dns
+crate:    cvodes_rs
+source:   crates/cvodes_rs/examples/cvsRoberts_ASAi_dns.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsRoberts_ASAi_dns
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsRoberts_ASAi_dns
+exit:     0 (OK)
+seconds:  0.106
+stdout:   5336 bytes, sha256 9e3b3a9e1e06b09e0f18b31f40ec2bfac56a4d1da5986d58e5db0d317c65fba1
+stderr:   0 bytes

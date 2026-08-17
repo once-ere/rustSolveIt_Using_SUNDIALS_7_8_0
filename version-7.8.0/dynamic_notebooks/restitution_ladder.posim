@@ -1,0 +1,40 @@
+# The restitution ladder: e = 1.0 / 0.8 / 0.5 / 0.2 side by side — dynamic notebook
+#
+# Four identical head-on pairs (m = 1, r = 0.5, closing speed 2), one
+# per lane (y = +3, +1, -1, -3), each lane with its own restitution
+# e = 1.0 / 0.8 / 0.5 / 0.2 (set on BOTH members — a pair uses min).
+# All four lanes strike at the same instant t = 1.5; the anchor is the
+# separation speed afterwards = e x 2 per lane: 2.0 / 1.6 / 1.0 / 0.4.
+# Watch the lanes reopen at visibly different speeds while the hud E
+# ticks down from 4 (only the elastic top lane keeps its share) and
+# P stays [0, 0, 0]; contact arrows flash in all four lanes at once.
+#
+# Launch:   posim_notebook restitution_ladder
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/restitution_ladder.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+# --- lane y = +3: e = 1.0 (elastic) — separation speed 2 -------------
+new sphere { mass = 1, radius = 0.5, position = [-2, 3, 0], velocity = [1, 0, 0], restitution = 1.0 }
+new sphere { mass = 1, radius = 0.5, position = [2, 3, 0], velocity = [-1, 0, 0], restitution = 1.0 }
+# --- lane y = +1: e = 0.8 — separation speed 1.6 ---------------------
+new sphere { mass = 1, radius = 0.5, position = [-2, 1, 0], velocity = [1, 0, 0], restitution = 0.8 }
+new sphere { mass = 1, radius = 0.5, position = [2, 1, 0], velocity = [-1, 0, 0], restitution = 0.8 }
+# --- lane y = -1: e = 0.5 — separation speed 1 -----------------------
+new sphere { mass = 1, radius = 0.5, position = [-2, -1, 0], velocity = [1, 0, 0], restitution = 0.5 }
+new sphere { mass = 1, radius = 0.5, position = [2, -1, 0], velocity = [-1, 0, 0], restitution = 0.5 }
+# --- lane y = -3: e = 0.2 — separation speed 0.4 ---------------------
+new sphere { mass = 1, radius = 0.5, position = [-2, -3, 0], velocity = [1, 0, 0], restitution = 0.2 }
+new sphere { mass = 1, radius = 0.5, position = [2, -3, 0], velocity = [-1, 0, 0], restitution = 0.2 }
+# baselines before running: E = 4 (eight unit masses at speed 1),
+# P = [0, 0, 0] and L = [0, 0, 0] (every lane is mirror-symmetric);
+# the ladder itself, one member per lane:
+energy
+momentum
+angmom
+get obj0.restitution
+get obj2.restitution
+get obj4.restitution
+get obj6.restitution
+scene create

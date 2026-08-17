@@ -1,0 +1,10 @@
+example:  kinLaplace_picard_kry
+crate:    kinsol_rs
+source:   crates/kinsol_rs/examples/kinLaplace_picard_kry.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinLaplace_picard_kry
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinLaplace_picard_kry
+exit:     0 (OK)
+seconds:  0.106
+stdout:   1761 bytes, sha256 02de672f876b0057225e3f11519c7008dee049eaede8c3a723bfda7555b31cf7
+stderr:   0 bytes

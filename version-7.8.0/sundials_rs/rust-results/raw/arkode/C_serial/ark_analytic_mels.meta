@@ -1,0 +1,10 @@
+example:  ark_analytic_mels
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_analytic_mels.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic_mels
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic_mels
+exit:     0 (OK)
+seconds:  0.105
+stdout:   801 bytes, sha256 f509501a8a065347643d573eed0a60f16bc07821ddd5c87516c5a96e9b1cbe7e
+stderr:   0 bytes

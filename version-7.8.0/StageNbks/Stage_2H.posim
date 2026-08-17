@@ -1,0 +1,404 @@
+# ===========================================================================
+# STAGE #2H - Resolving the last survivor
+# ===========================================================================
+#
+# The specification written for the missing test turned out to be impossible - and finding out why was the result.
+#
+# This notebook is COMPLETE IN ITSELF. It does not depend on, and does not
+# refer you to, any other notebook. Everything needed to reproduce, run,
+# view and understand this stage is written out below.
+#
+# WHAT THIS STAGE WAS ABOUT
+#
+# The previous stage left one mutation surviving - the Zeno escalation
+# threshold - and SPECIFIED the test it needed: a chain of SEQUENTIAL
+# near-simultaneous impacts that must stay elastic, 'a Newton's cradle,
+# most likely'.
+#
+# BUILDING IT SHOWED THE SPECIFICATION WAS WRONG, and that is the finding.
+#
+# A Newton's cradle does not produce such a chain. Its spheres TOUCH, so
+# every contact is flagged in a single root return and the solver batches
+# them into ONE event carrying several contacts. Separating them into
+# distinct events would need time gaps under 1e-9 - which at any sane speed
+# is below the contact tolerance, i.e. still touching.
+#
+# So bursts above one arise ONLY in true Zeno behaviour, where any threshold
+# between 1 and 64 produces the same intended plastic result. The constant's
+# exact value is genuinely unconstrained - and that is a DIFFERENT THING
+# from an untested guard.
+#
+# THE FIX WAS TO ASK A BETTER QUESTION. The number 64 is a tuning choice;
+# what needs pinning is the guard's BEHAVIOUR at both ends:
+#
+#     threshold = 0            fires on every impact       CAUGHT
+#     threshold = usize::MAX   never fires at all          CAUGHT
+#
+# Both ends nailed down. That is a more useful statement than 'the threshold
+# is tested' would have been, and it is true.
+#
+# FOUR MORE CRITICAL LINES were added to the probe and all were caught:
+# the complex gamma function's Stirling argument shift, complex Airy's
+# series/asymptotic switch, the constant Ai(0) with four digits dropped, and
+# the restitution threshold. Score: 18 of 19.
+#
+# The single remaining survivor is a documented EQUIVALENT MUTANT - inside
+# the guarded sector two different branch-anchor coefficients unwrap to the
+# same branch, so no input in the served domain can distinguish them.
+#
+# THE UNIQUENESS RULE EARNED ITS KEEP AGAIN. Every mutation anchor must
+# match exactly once or the run aborts. It fired twice more here: once on an
+# anchor matching TWO lines - the two integrator paths carry the same guard,
+# which is itself worth knowing, since a fix applied to one and not the
+# other is exactly the earlier granularity hazard - and once on zero.
+
+# ---------------------------------------------------------------------------
+# HOW TO RUN THIS NOTEBOOK
+# ---------------------------------------------------------------------------
+#
+# This notebook is COMPLETE IN ITSELF. It never refers you to another
+# notebook, another README or another document: everything needed to build,
+# run, display and understand this stage is written out below.
+#
+# Lines beginning with '#' are comments and are ignored by the interpreter.
+# Every other line is a command, executed in the order written.
+#
+# STEP 1 - GET THE CODE AND A RUST TOOLCHAIN.
+#
+#     git clone https://github.com/once-ere/rustSimulate.git
+#     cd rustSimulate
+#
+#   There are no submodules and no external crates to fetch: every
+#   dependency is vendored in the tree. If 'cargo' is not found, install
+#   Rust from https://rustup.rs and re-open the terminal.
+#
+# STEP 2 - BUILD ONCE. From the repository root (the directory holding
+# Cargo.toml):
+#
+#     cargo build -p posim --release
+#
+#   The first build compiles the workspace and takes a few minutes. Every
+#   later run is immediate. This produces ./target/release/posim .
+#
+# STEP 3 - RUN THIS NOTEBOOK. Any ONE of these three forms works:
+#
+#     ./target/release/posim --notebook StageNbks/Stage_2H.posim
+#     ./target/release/posim --script   StageNbks/Stage_2H.posim
+#     cargo run -p posim --release -- --notebook StageNbks/Stage_2H.posim
+#
+#   --notebook  executes the file, prints an In[n]:= / Out[n]= transcript,
+#               and then LEAVES YOU AT THE PROMPT with all state intact.
+#               This is the mode to use: it is what makes the session
+#               interactive, and it is required for the live window.
+#   --script    executes the file and EXITS. Use it for a plain
+#               reproducible transcript; you cannot interact afterwards.
+#   cargo run   identical to the first form, but re-checks the build
+#               first. Use it if you are editing the source.
+#
+# STEP 4 - WORK BY HAND (optional). Start the bare interpreter:
+#
+#     ./target/release/posim
+#
+#   and paste the command lines from this file one at a time. Type HELP
+#   for the complete command language, and %quit to leave. Other useful
+#   magics: %history, %rerun <n>, %edit <n> <text>, %save <file>, %reset.
+#
+# WHICH FORM YOU NEED FOR A LIVE WINDOW: --notebook or the bare
+# interpreter. NOT --script, which exits as soon as the file ends and
+# takes the window with it.
+#
+# ---------------------------------------------------------------------------
+# RUNNING THIS STAGE AS AN INTERACTIVE SIMULATION
+# ---------------------------------------------------------------------------
+#
+# This stage animates fully. It is a rigid-body scene (a settling ball, and Newton's cradle),
+# which is exactly what the 3-D scene window draws.
+#
+# METHOD 1 - ONE COMMAND. THE WINDOW OPENS AND IS ALREADY MOVING.
+#
+#     cargo build -p posim --release
+#     ./target/release/posim --notebook StageNbks/Stage_2H.posim
+#
+#   The last command lines of this notebook are 'scene create',
+#   'scene set_time_step 0.005', 'scene zoom 2', 'scene start' and
+#   'scene status'. They run automatically, so by the time you see the
+#   In[n]:= prompt the window already exists and the bodies are already
+#   in motion. Among the last lines of the transcript you will see,
+#   in this order:
+#
+#       scene window created: http://127.0.0.1:<port>/
+#       (asked your desktop to open it; ...)   <- or 'no browser was
+#                                                 launched' - see below
+#       showing 2 entities; SCENE START begins the evolution — HELP lists all scene commands
+#       scene time step dt = 0.005
+#       camera distance = <d>
+#       scene playback: running
+#       scene: http://127.0.0.1:<port>/  (<k> window(s) connected)
+#       mode = running, ... entities = 2 (hidden: none)
+#
+#   '<k> window(s) connected' counts browsers actually attached: it reads
+#   0 until a browser loads the page, then 1. A running scene with 0
+#   connected windows is normal and correct - the physics does not wait
+#   for an audience.
+#
+#   You are then left at an INTERACTIVE prompt with the window live.
+#   Type any scene command and the picture responds at once. '%quit'
+#   ends the session and closes the window with it.
+#
+# METHOD 2 - BUILD IT BY HAND, one line at a time.
+#
+#     cargo build -p posim --release
+#     ./target/release/posim
+#
+#   Then type the scenario lines from the 'RECREATING THE STAGE SCENARIO'
+#   section below - every 'set', 'box' and 'new ...' line, in order, down
+#   to the last one. Skip the 'run' lines: 'run' advances the physics in
+#   batch, and you want the window to do the advancing. Then:
+#
+#       scene create
+#       scene set_time_step 0.005
+#       scene zoom 2
+#       scene start
+#
+#   'scene create' reports 'showing 2 entities'. If it reports 0, the
+#   'new ...' lines did not run - re-enter them and type 'scene refresh'.
+#
+#   THE TIME STEP IS NOT COSMETIC. It sets how much simulated time each
+#   frame advances. The value 0.005 was chosen for this scenario: too
+#   large and fast bodies pass through each other between frames; too
+#   small and the motion crawls. Change it live with the dt box and Set,
+#   or 'scene set_time_step <dt>'.
+#
+# METHOD 3 - WATCH THE INVARIANT WHILE IT RUNS. With the window playing,
+# type 'energy' at the prompt as often as you like. The number is read
+# from the same state the window is drawing, so it is the invariant of the
+# motion you are watching, not a separate calculation.
+#
+# WHEN FINISHED:  scene close   (frees the port), then  %quit .
+#
+# ---------------------------------------------------------------------------
+# OPENING THE WINDOW IN A BROWSER - EXACTLY WHAT HAPPENS, ON EVERY OS
+# ---------------------------------------------------------------------------
+#
+# 'scene create' prints THREE lines, for example:
+#
+#     scene window created: http://127.0.0.1:41234/
+#     (asked your desktop to open it; if no window appeared, open that address yourself)
+#     showing 12 entities; SCENE START begins the evolution — HELP lists all scene commands
+#
+# The MIDDLE line tells you what was actually attempted, and it has two
+# forms. Read it: it is the difference between waiting for a window that
+# is coming and waiting for one that is not.
+#
+#     (asked your desktop to open it; ...)     a browser launch was made
+#     (no browser was launched — open that address yourself)
+#
+# The port is chosen by the operating system afresh on every run. To pin
+# it, give the port:  'scene create 8080'  always serves
+# http://127.0.0.1:8080/ . If that port is busy, 'scene create' reports
+# the bind error; pick another.
+#
+# posim makes ONE best-effort attempt to open your browser, by running
+# exactly:
+#
+#     xdg-open <url>
+#
+# xdg-open is a Linux/BSD utility. That has consequences worth stating
+# plainly, because a window that does not appear is otherwise alarming:
+#
+#   * Linux/BSD with xdg-utils installed - the browser opens by itself,
+#     and the middle line reads 'asked your desktop to open it'.
+#   * macOS - NOTHING OPENS, and nothing is broken: xdg-open does not
+#     exist there, so the middle line reads 'no browser was launched'.
+#     Copy the printed URL into any browser, or in a second terminal:
+#         open http://127.0.0.1:41234/
+#   * Windows - NOTHING OPENS, same reason, same middle line. Copy the
+#     printed URL into any browser, or in a second terminal:
+#         start http://127.0.0.1:41234/
+#   * Headless server or SSH session - nothing opens. Forward the port and
+#     browse from your own machine:
+#         ssh -L 41234:127.0.0.1:41234 <user>@<host>
+#     then open http://127.0.0.1:41234/ locally.
+#
+# Setting the environment variable POSIM_NO_BROWSER to any value suppresses
+# the attempt entirely. The URL is still printed and still works; this is
+# what the automated tests use:
+#
+#     POSIM_NO_BROWSER=1 ./target/release/posim
+#
+# The page is plain HTML, CSS and JavaScript served by posim itself over a
+# websocket. Nothing is installed, nothing is fetched from the network, and
+# the listener is bound to 127.0.0.1, so it is not reachable from another
+# machine by design.
+#
+# ---------------------------------------------------------------------------
+# THE SCENE WINDOW: EVERY CONTROL, AND ITS TYPED EQUIVALENT
+# ---------------------------------------------------------------------------
+#
+# TOOLBAR, in the order it appears left to right:
+#
+#   [>]  Start      scene start        begin / resume forward evolution
+#   [||] Pause      scene pause        freeze, keep the window live
+#   [#]  Stop       scene stop         stop evolution AND clear history
+#   [<]  Reverse    scene reverse      play backward through the history
+#   [o]  Reset      scene reset        every value and the time return to
+#                                      their initial values; Start then
+#                                      runs the simulation again
+#   [|<]            (button only)      one step backward
+#   [>|]            (button only)      one step forward
+#   dt [___] Set    scene set_time_step <dt>
+#                                      simulated seconds per frame; type a
+#                                      number in the box and press Set
+#   [magnifier +]   scene zoom in      zoom in
+#   [magnifier -]   scene zoom out     zoom out
+#   [^]  View       (button only)      reset the camera to its home pose
+#   Grid            (button only)      toggle the ground grid
+#   Trails          (button only)      toggle motion trails
+#   Labels          (button only)      toggle object labels
+#   Contacts        (button only)      toggle contact-normal arrows drawn
+#                                      at collision points
+#   ?               (button only)      toggle the controls cheat-sheet
+#
+# MOUSE AND KEYBOARD, with the pointer over the window:
+#
+#   left-drag                rotate (orbit) around the scene
+#   shift-drag or right-drag translate (pan) with the mouse
+#   mouse wheel              zoom in / out
+#   +  or  =                 zoom in
+#   -  or  _                 zoom out
+#   Left / Right arrow       translate the view left / right
+#   Up / Down arrow          translate the view up / down
+#   Space                    start / pause playback
+#   R                        reset the view
+#   G                        toggle the ground grid
+#   T                        toggle motion trails
+#   L                        toggle object labels
+#   C                        toggle contact-normal arrows
+#   H  or  ?                 toggle the controls cheat-sheet
+#
+#   READ THIS ONE TWICE, because the natural assumption is wrong: the
+#   ARROW KEYS MOVE THE CAMERA, not the simulation. To advance the
+#   physics one frame at a time use the [|<] and [>|] toolbar buttons.
+#
+# THE STATUS BAR along the bottom reports, live: body count, contact count,
+# hidden count, simulated time, dt, energy, frames per second, camera yaw /
+# pitch / distance, playback mode, recorded-history depth, and the websocket
+# connection state.
+#
+# TYPED COMMANDS, available at the In[n]:= prompt while the window is open.
+# The window and the prompt drive the SAME state, so a typed command and
+# the button that mirrors it cannot disagree:
+#
+#   scene status                 connection / camera / playback report
+#   scene refresh                re-sync the window after adding, removing
+#                                or editing bodies
+#   scene redraw                 force a full redraw of every window
+#   scene hide <n> | all         hide entities
+#   scene show <n> | all         show them again
+#   scene translate dx dy [dz]   move the view
+#   scene rotate dyaw dpitch     rotate the view
+#   scene zoom in | out | <f>    zoom (f > 1 zooms in)
+#   scene set_time_step <dt>     simulated seconds per frame
+#   scene start | stop | pause | reverse | reset
+#   scene events                 read asynchronous events from the window
+#   scene close                  shut the window and free the port
+#                                (alias: scene destroy)
+#   energy                       print the total energy, live, while it runs
+#   HELP                         the complete command language
+#
+# ONE BEHAVIOUR THAT LOOKS LIKE A FAULT AND IS NOT. 'scene reverse'
+# immediately after opening answers:
+#
+#     nothing to reverse - no forward history recorded yet
+#
+# Reverse replays RECORDED history. Until the scene has actually run
+# forward there is nothing recorded to play back. Let it run a few seconds,
+# then Reverse works. 'scene stop' clears that history deliberately, so
+# Reverse is empty again after a Stop.
+#
+# TROUBLESHOOTING, precisely:
+#
+#   'no scene window - run SCENE CREATE first'
+#       The window was closed, or never opened. Type 'scene create'.
+#   The window opens but says 'showing 0 entities'
+#       The world genuinely holds no bodies. Build them first, then
+#       'scene refresh'. An empty window is an honest report, not a bug.
+#   The port is already in use
+#       'scene close', then 'scene create <another port>'.
+#   The page loads but never moves
+#       Playback is not running: press Start, or type 'scene start'.
+#   Bodies jump through each other
+#       The time step is too large for their speed. Lower it with
+#       'scene set_time_step <smaller dt>' or the dt box and Set.
+#
+# ---------------------------------------------------------------------------
+# RECREATING THE STAGE SCENARIO
+# ---------------------------------------------------------------------------
+#
+# PART 1 - the Newton's cradle that motivated the specification. An incomer
+# strikes a chain of four touching spheres; the impulse must propagate so
+# that ONLY the far sphere leaves, at the incomer's speed.
+#
+# This is also the demonstration that the contacts are SIMULTANEOUS: the
+# whole chain resolves inside one event, which is precisely why it could not
+# raise the burst counter.
+reset
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [0, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [3, 0, 0] }
+
+# Total energy and momentum before the strike.
+energy
+momentum
+
+run 6 steps 60
+
+# After: only the last sphere should be moving, at the incomer's speed,
+# with energy and momentum unchanged.
+energy
+momentum
+get obj0.velocity
+get obj4.velocity
+
+# PART 2 - a settling ball, which IS genuine Zeno behaviour: infinitely many
+# impacts in finite time. The guard must fire here, and the run must
+# terminate and come to rest rather than looping forever.
+reset
+set system.g_constant = 0
+new cuboid { mass = 1, half_extents = [5, 0.5, 5], position = [0, -0.5, 0] }
+set obj0.inverse_mass = 0
+new sphere { mass = 1, radius = 0.5, position = [0, 2, 0], restitution = 0.5 }
+set system.uniform_gravity = [0, -10, 0]
+run 6 steps 60
+get obj1.position
+get obj1.velocity
+
+# PART 3 - the probe itself, from a normal shell at the repository root:
+#
+#     bash scripts/mutation_probe.sh zeno
+#
+# Expect all three Zeno mutations CAUGHT: the burst window, the guard always
+# firing, and the guard never firing.
+
+
+# ---------------------------------------------------------------------------
+# NOW DISPLAY IT. The settling ball from PART 2 is the currently loaded
+# system, so these lines open the window and start it. Watch the bounces
+# shorten geometrically and the ball come to rest ON the floor rather than
+# sinking through it - that is the Zeno guard doing its job.
+#
+# To watch the Newton's cradle instead, re-run the PART 1 lines above (they
+# begin with `reset`) and then type: scene refresh
+# ---------------------------------------------------------------------------
+scene create
+scene set_time_step 0.005
+scene zoom 2
+scene start
+scene status
+
+# ===========================================================================
+# END OF STAGE #2H NOTEBOOK
+# ===========================================================================

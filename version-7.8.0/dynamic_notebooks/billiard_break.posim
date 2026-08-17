@@ -1,0 +1,25 @@
+# A tiny billiard break: cue into a three-ball rack — dynamic notebook
+#
+# A cue ball (m = 1, r = 0.5, v = [2, 0, 0]) breaks a three-ball rack:
+# the apex at the origin, two balls behind it at [0.9, +/-0.55, 0], all
+# at e = 0.95. Each outgoing direction lies along the line of centers of
+# its collision (read the contact normals!), and total momentum is
+# conserved through the whole multi-ball cascade: P stays [2, 0, 0]
+# (|P| = 2; baseline KE = 0.5*1*2^2 = 2; L about the origin = 0).
+# Watch the hud P hold [2, 0, 0] while E dips at each e = 0.95 impact,
+# and toggle the golden contact arrows (C key) to see the normals.
+#
+# Launch:   posim_notebook billiard_break
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/billiard_break.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-4, 0, 0], velocity = [2, 0, 0], restitution = 0.95 }
+new sphere { mass = 1, radius = 0.5, position = [0, 0, 0], restitution = 0.95 }
+new sphere { mass = 1, radius = 0.5, position = [0.9, 0.55, 0], restitution = 0.95 }
+new sphere { mass = 1, radius = 0.5, position = [0.9, -0.55, 0], restitution = 0.95 }
+energy
+momentum
+angmom
+scene create

@@ -1,0 +1,10 @@
+example:  cvsDiurnal_kry
+source:   examples/cvodes/serial/cvsDiurnal_kry.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsDiurnal_kry
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsDiurnal_kry
+exit:     0 (OK)
+seconds:  0.206
+stdout:   2860 bytes, sha256 175cd73d3f78930b1c7df415f9901b7c8a8b8ddf99ee2fe118eacea4d255d40a
+stderr:   0 bytes

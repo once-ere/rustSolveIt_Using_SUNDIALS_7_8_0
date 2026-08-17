@@ -1,0 +1,10 @@
+example:  idaFoodWeb_kry
+crate:    ida_rs
+source:   crates/ida_rs/examples/idaFoodWeb_kry.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idaFoodWeb_kry
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/ida/serial/idaFoodWeb_kry
+exit:     0 (OK)
+seconds:  0.206
+stdout:   1516 bytes, sha256 94053386b480102c353c5be7328534776fb393467262fa6dd3e0ebaeb11058a8
+stderr:   0 bytes

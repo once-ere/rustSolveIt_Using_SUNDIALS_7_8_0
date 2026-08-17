@@ -1,0 +1,5 @@
+# The tennis-racket theorem (Dzhanibekov effect): a torque-free body
+# spun about its intermediate principal axis flips over and over,
+# while L stays exactly constant.
+new cuboid { mass = 1, half_extents = [1.6, 0.9, 0.25], position = [0,0,0], angular_momentum = [0.02, 3.0, 0.02] }
+method adams

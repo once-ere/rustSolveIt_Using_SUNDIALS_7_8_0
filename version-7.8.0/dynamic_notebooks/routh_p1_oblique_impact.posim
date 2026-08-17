@@ -1,0 +1,102 @@
+# Routh I.Art.89 — oblique impact of equal smooth spheres: the velocities come
+# out PERPENDICULAR — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 89: "Two smooth homogeneous spheres A and B impinge obliquely
+# on each other. To find the subsequent motion."
+#
+# THE METHOD. Routh's rule is to resolve along and perpendicular to the LINE
+# OF CENTRES at the instant of contact:
+#
+#   * the spheres are SMOOTH, so no tangential impulse can act, and the
+#     tangential component of each velocity is UNCHANGED;
+#   * along the line of centres the problem is the direct impact of Art. 83,
+#     so momentum plus Newton's restitution rule (Art. 84) settle it.
+#
+# THE CONSEQUENCE FOR EQUAL ELASTIC SPHERES. With equal masses and e = 1 the
+# direct impact exchanges the normal components (Art. 85). So if B is at rest
+# and A arrives with velocity v, then writing n for the unit vector along the
+# line of centres,
+#
+#     A keeps   v - (v.n)n        (its tangential part)
+#     B takes         (v.n)n      (the whole normal part)
+#
+# Their scalar product is [v - (v.n)n] . [(v.n)n] = (v.n)(v.n) - (v.n)^2*|n|^2
+# = 0 identically. So after ANY oblique elastic impact of equal spheres the
+# two velocities are at RIGHT ANGLES -- whatever the impact parameter, whatever
+# the speed. (The degenerate exception is the head-on case, where A stops and
+# has no direction left.)
+#
+# THE NUMBERS. Equal unit masses, radius 0.5, restitution 1. B sits at the
+# origin; A starts at (-3, 0.5, 0) moving (1, 0, 0), so the impact parameter is
+# 0.5 -- half the contact separation, giving a 30-degree oblique hit. Contact
+# occurs when the centres are 1 apart, i.e. at A_x = -sqrt(0.75) =
+# -0.8660254037844386, reached at t = 2.1339745962155614. The line of centres
+# there is n = (-0.8660254037844386, 0.5, 0), and v.n = -0.8660254037844386, so
+#
+#     A after = (0.25,  0.4330127018922193, 0)     |A| = 0.5
+#     B after = (0.75, -0.4330127018922193, 0)     |B| = 0.8660254037844386
+#
+# Checks the cells print: their dot product is 0 (perpendicular); the momentum
+# sum is (1, 0, 0), unchanged; and 0.5^2 + 0.8660254^2 = 1, so vis viva is
+# conserved exactly, as it must be for e = 1.
+#
+# SETUP NOTE. Gravity is off (g_constant = 0) -- posim's pairwise gravity is on
+# by default with G = 1 and would bend the approach before contact.
+#
+# WHAT YOU WATCH: a sphere clips another off-centre and the two leave along
+# paths that make a perfect right angle -- the shape every billiard player
+# knows, here as a consequence of Routh's two resolutions.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_oblique_impact
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_oblique_impact.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_oblique_impact.posim
+# ---------------------------------------------------------------------------
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+collide on
+
+new sphere { mass = 1, radius = 0.5, position = [-3, 0.5, 0], velocity = [1, 0, 0], restitution = 1 }
+new sphere { mass = 1, radius = 0.5, position = [ 0, 0,   0], restitution = 1 }
+
+momentum
+energy
+
+run 4 steps 4
+
+obj0.velocity
+obj1.velocity
+# the two velocities are perpendicular
+dot(obj0.velocity, obj1.velocity)
+# speeds 0.5 and 0.8660254037844386, momentum and vis viva both unchanged
+norm(obj0.velocity)
+norm(obj1.velocity)
+momentum
+energy
+system.collisions
+reset
+
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+collide on
+new sphere { mass = 1, radius = 0.5, position = [-3, 0.5, 0], velocity = [1, 0, 0], restitution = 1 }
+new sphere { mass = 1, radius = 0.5, position = [ 0, 0,   0], restitution = 1 }
+
+scene create
+scene set_time_step 0.02

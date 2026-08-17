@@ -1,0 +1,129 @@
+# Routh I.Arts.159-160 — the parabola of safety, and the two ways to hit a
+# target — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I, Art. 159: "To project a particle from a given point P with a given
+# velocity V so that it shall pass through another given point Q."
+#
+# ROUTH'S CONSTRUCTION. The speed at P fixes the COMMON DIRECTRIX of every
+# trajectory of that speed, because v^2 = 2g*(depth below the directrix). All
+# the parabolas from P with speed V therefore share one horizontal directrix,
+# at height V^2/(2g) above P, and their foci all lie on a circle of radius
+# V^2/(2g) about P. Requiring the path to pass through Q puts the focus on a
+# second circle, about Q. Two circles meet in TWO points -- so a reachable
+# target admits exactly TWO trajectories, a flat one and a lofted one -- or
+# touch, at the limit of range, or miss entirely.
+#
+# THE ENVELOPE. The boundary of the reachable set is the PARABOLA OF SAFETY,
+#
+#     y = V^2/(2g) - g*x^2/(2*V^2)
+#
+# Inside it, two trajectories; on it, one; outside it, none -- you are safe.
+#
+# THE ALGEBRA FOR THE TWO ANGLES. Writing t = tan(alpha), a projectile through
+# (x, y) satisfies y = x*t - (g*x^2/(2V^2))(1 + t^2), i.e.
+#
+#     (g x^2 / 2V^2) t^2  -  x t  +  ( y + g x^2 / 2V^2 )  =  0
+#
+# a quadratic in t. Its discriminant vanishing IS the parabola of safety.
+#
+# THE NUMBERS. V = 10, g = 9.81, launching from the origin:
+#
+#     apex of the envelope  V^2/(2g) = 5.09683995922528
+#     maximum range         V^2/g    = 10.19367991845056
+#     envelope height at x = 6        = 3.33103995922528
+#
+# Target Q = (6, 2), comfortably inside. The quadratic gives
+#
+#     high arc: alpha = 68.71729429454481 deg, v = (3.62969990030487, 9.318008297577697, 0)
+#               reaching x = 6 at t = 1.6530292213678714
+#     low arc:  alpha = 39.71765452837721 deg, v = (7.692026952223115, 6.390048620024201, 0)
+#               reaching x = 6 at t = 0.7800284680835533
+#
+# Both are fired below, each flown to its own arrival time, and both are found
+# at (6, 2). Five more projectiles at 20, 35, 50, 65 and 80 degrees are then
+# flown together, and for each the clearance
+#
+#     5.09683995922528 - 0.04905*x^2 - y
+#
+# is printed: it is non-negative for every one of them at every instant, which
+# is the envelope doing its job. (0.04905 = g/(2V^2).)
+#
+# SETUP NOTE. system.g_constant = 0 so the projectiles do not attract one
+# another; the uniform field is the only force, which is Routh's problem. With
+# no pairwise term they may also share a launch point with no singularity.
+#
+# WHAT YOU WATCH: a fan of trajectories from one point at one speed, every one
+# of them staying under the same invisible parabola, and two of them crossing
+# at the same target.
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_parabola_of_safety
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_parabola_of_safety.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_parabola_of_safety.posim
+# ---------------------------------------------------------------------------
+
+# ---- the two arcs to Q = (6, 2), each flown alone to its own arrival time
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new point { mass = 1, position = [0,0,0], velocity = [3.62969990030487, 9.318008297577697, 0] }
+run 1.6530292213678714 steps 2
+obj0.position
+norm(obj0.position - [6, 2, 0])
+reset
+
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new point { mass = 1, position = [0,0,0], velocity = [7.692026952223115, 6.390048620024201, 0] }
+run 0.7800284680835533 steps 2
+obj0.position
+norm(obj0.position - [6, 2, 0])
+reset
+
+# ---- a fan of five, all at speed 10: none escapes the envelope
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+set system.rtol = 1e-13
+set system.atol = 1e-15
+new point { mass = 1, position = [0,0,0], velocity = [9.396926207859084, 3.420201433256687, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [8.191520442889918, 5.735764363510462, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [6.427876096865394, 7.660444431189780, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [4.226182617406994, 9.063077870366499, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [1.736481776669303, 9.848077530122080, 0] }
+
+run 0.8 steps 1
+5.09683995922528 - 0.04905 * obj0.position.x * obj0.position.x - obj0.position.y
+5.09683995922528 - 0.04905 * obj2.position.x * obj2.position.x - obj2.position.y
+5.09683995922528 - 0.04905 * obj4.position.x * obj4.position.x - obj4.position.y
+run 0.7 steps 1
+5.09683995922528 - 0.04905 * obj0.position.x * obj0.position.x - obj0.position.y
+5.09683995922528 - 0.04905 * obj2.position.x * obj2.position.x - obj2.position.y
+5.09683995922528 - 0.04905 * obj4.position.x * obj4.position.x - obj4.position.y
+reset
+
+set system.g_constant = 0
+set system.gravity = [0, -9.81, 0]
+new point { mass = 1, position = [0,0,0], velocity = [3.62969990030487, 9.318008297577697, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [7.692026952223115, 6.390048620024201, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [9.396926207859084, 3.420201433256687, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [6.427876096865394, 7.660444431189780, 0] }
+new point { mass = 1, position = [0,0,0], velocity = [1.736481776669303, 9.848077530122080, 0] }
+
+scene create
+scene set_time_step 0.02

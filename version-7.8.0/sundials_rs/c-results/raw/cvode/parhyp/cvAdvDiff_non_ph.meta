@@ -1,0 +1,10 @@
+example:  cvAdvDiff_non_ph
+source:   examples/cvode/parhyp/cvAdvDiff_non_ph.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/parhyp/cvAdvDiff_non_ph
+argv:     
+launcher: mpirun --oversubscribe -np 2
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/parhyp/cvAdvDiff_non_ph
+exit:     0 (OK)
+seconds:  0.609
+stdout:   749 bytes, sha256 2bac12dc849ae48e9c83029feed7a7e703d249579774249650b00e55740d54f1
+stderr:   762 bytes

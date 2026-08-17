@@ -1,0 +1,10 @@
+example:  idasFoodWeb_bnd_omp
+source:   examples/idas/C_openmp/idasFoodWeb_bnd_omp.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/C_openmp/idasFoodWeb_bnd_omp
+argv:     4
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/C_openmp/idasFoodWeb_bnd_omp__4
+exit:     0 (OK)
+seconds:  6.212
+stdout:   1527 bytes, sha256 f9e0e0f0ece4a37496485cba99693fadc37fb786989b9add32e5fd8da160c9b2
+stderr:   0 bytes

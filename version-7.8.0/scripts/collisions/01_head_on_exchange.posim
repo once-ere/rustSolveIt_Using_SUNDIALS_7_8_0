@@ -1,0 +1,21 @@
+# Example 1 — equal masses, head on, perfectly elastic (e = 1):
+# the canonical action-reaction demonstration. Two identical spheres
+# approach at ±1; at the analytic time of impact t = 1.5 the SUNDIALS
+# root finder lands on the touch, the impulse acts along the contact
+# normal, and the velocities EXCHANGE exactly. Momentum stays 0 and
+# energy is conserved to machine precision.
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+collide
+momentum
+energy
+step 3
+contacts
+get contact0.t
+get contact0.normal
+get contact0.impulse
+get obj0.velocity
+get obj1.velocity
+momentum
+energy

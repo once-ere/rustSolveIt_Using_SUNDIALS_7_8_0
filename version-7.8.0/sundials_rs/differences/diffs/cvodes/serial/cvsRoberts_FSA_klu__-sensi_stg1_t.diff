@@ -1,0 +1,7 @@
+--- c-results/raw/cvodes/serial/cvsRoberts_FSA_klu__-sensi_stg1_t.stdout
++++ rust-results/raw/cvodes/serial/cvsRoberts_FSA_klu__-sensi_stg1_t.stdout
+@@ -75,3 +75,3 @@
+                   Solution         5.1573e-08   2.0629e-13   1.0000e+00 
+-                  Sensitivity 1   -2.6618e-06  -5.4898e-12   2.6618e-06 
++                  Sensitivity 1   -2.6618e-06  -5.4901e-12   2.6618e-06 
+                   Sensitivity 2    1.0763e-11   2.2421e-17  -1.0763e-11 

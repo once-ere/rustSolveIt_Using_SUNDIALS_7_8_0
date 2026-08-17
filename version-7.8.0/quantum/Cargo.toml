@@ -1,0 +1,9 @@
+[package]
+name = "quantum"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "One-dimensional quantum mechanics: bound states and time-dependent propagation"
+
+[dependencies]
+special_functions = { path = "../special_functions" }

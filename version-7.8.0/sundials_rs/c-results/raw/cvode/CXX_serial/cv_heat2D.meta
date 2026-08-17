@@ -1,0 +1,10 @@
+example:  cv_heat2D
+source:   examples/cvode/CXX_serial/cv_heat2D.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/CXX_serial/cv_heat2D
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/CXX_serial/cv_heat2D
+exit:     0 (OK)
+seconds:  0.206
+stdout:   2667 bytes, sha256 667403339bb3e0c659cdfe2b0d5fa4b3601869f4aa61b65882d7746ffaa53ec0
+stderr:   0 bytes

@@ -1,0 +1,17 @@
+# Example 4 — Newton's cradle with five spheres: four touching balls,
+# one incomer. At the single detected impact the impulse propagates
+# through the chain in the solver's Gauss-Seidel passes — only the FAR
+# ball exits, at the incomer's speed. Everything between stays put.
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [0, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [1, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [2, 0, 0] }
+new sphere { mass = 1, radius = 0.5, position = [3, 0, 0] }
+step 4
+get obj0.velocity.x
+get obj1.velocity.x
+get obj2.velocity.x
+get obj3.velocity.x
+get obj4.velocity.x
+momentum

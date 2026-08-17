@@ -1,0 +1,10 @@
+example:  ark_kpr_nestedmri_f2003
+source:   examples/arkode/F2003_serial/ark_kpr_nestedmri_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_kpr_nestedmri_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_kpr_nestedmri_f2003
+exit:     0 (OK)
+seconds:  0.206
+stdout:   5808 bytes, sha256 de54208f2c00022792e481fed49a1b78dcb1ebe82bcf17310a913bf6d9d4fc75
+stderr:   0 bytes

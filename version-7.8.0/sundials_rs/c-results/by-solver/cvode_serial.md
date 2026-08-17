@@ -1,0 +1,33 @@
+# CVODE — C examples (`examples/cvode/serial`)
+
+23 (example, argv) variants, executed on the machine described in
+[`../README.md`](../README.md).
+
+`stdout bytes` and `sha256` are of the captured stdout stream; re-run
+`tools/c_examples_run.sh` and they must reproduce exactly.
+
+| # | example | argv | exit | status | seconds | stdout bytes | sha256 (first 16) | raw |
+|---:|---|---|---:|---|---:|---:|---|---|
+| 1 | `cvAdvDiff_bnd` | _(none)_ | 0 | OK | 0.206 | 848 | `2ea0937bb293ce55` | [stdout](../raw/cvode/serial/cvAdvDiff_bnd.stdout) · [meta](../raw/cvode/serial/cvAdvDiff_bnd.meta) |
+| 2 | `cvAdvDiff_bndL` | _(none)_ | 0 | OK | 0.206 | 848 | `2ea0937bb293ce55` | [stdout](../raw/cvode/serial/cvAdvDiff_bndL.stdout) · [meta](../raw/cvode/serial/cvAdvDiff_bndL.meta) |
+| 3 | `cvAnalytic_mels` | _(none)_ | 0 | OK | 0.207 | 770 | `c13a8a670343e246` | [stdout](../raw/cvode/serial/cvAnalytic_mels.stdout) · [meta](../raw/cvode/serial/cvAnalytic_mels.meta) |
+| 4 | `cvDirectDemo_ls` | _(none)_ | 0 | OK | 0.206 | 17673 | `a19abd5087bb90d0` | [stdout](../raw/cvode/serial/cvDirectDemo_ls.stdout) · [meta](../raw/cvode/serial/cvDirectDemo_ls.meta) |
+| 5 | `cvDisc_dns` | _(none)_ | 0 | OK | 0.206 | 3360 | `77b1dd2393e53661` | [stdout](../raw/cvode/serial/cvDisc_dns.stdout) · [meta](../raw/cvode/serial/cvDisc_dns.meta) |
+| 6 | `cvDiurnal_kry` | _(none)_ | 0 | OK | 0.206 | 2860 | `3d5bdd944af9101c` | [stdout](../raw/cvode/serial/cvDiurnal_kry.stdout) · [meta](../raw/cvode/serial/cvDiurnal_kry.meta) |
+| 7 | `cvDiurnal_kry_bp` | _(none)_ | 0 | OK | 0.207 | 6047 | `0651440486243145` | [stdout](../raw/cvode/serial/cvDiurnal_kry_bp.stdout) · [meta](../raw/cvode/serial/cvDiurnal_kry_bp.meta) |
+| 8 | `cvKrylovDemo_ls` | _(none)_ | 0 | OK | 0.206 | 11712 | `24cbfc892a79f788` | [stdout](../raw/cvode/serial/cvKrylovDemo_ls.stdout) · [meta](../raw/cvode/serial/cvKrylovDemo_ls.meta) |
+| 9 | `cvKrylovDemo_ls` | `0 1` | 0 | OK | 0.206 | 2472 | `3b2b30835739bd73` | [stdout](../raw/cvode/serial/cvKrylovDemo_ls__0_1.stdout) · [meta](../raw/cvode/serial/cvKrylovDemo_ls__0_1.meta) |
+| 10 | `cvKrylovDemo_ls` | `1` | 0 | OK | 0.206 | 11712 | `24cbfc892a79f788` | [stdout](../raw/cvode/serial/cvKrylovDemo_ls__1.stdout) · [meta](../raw/cvode/serial/cvKrylovDemo_ls__1.meta) |
+| 11 | `cvKrylovDemo_ls` | `2` | 0 | OK | 0.206 | 11712 | `24cbfc892a79f788` | [stdout](../raw/cvode/serial/cvKrylovDemo_ls__2.stdout) · [meta](../raw/cvode/serial/cvKrylovDemo_ls__2.meta) |
+| 12 | `cvKrylovDemo_prec` | _(none)_ | 0 | OK | 0.207 | 26471 | `b1cf95a1d917a850` | [stdout](../raw/cvode/serial/cvKrylovDemo_prec.stdout) · [meta](../raw/cvode/serial/cvKrylovDemo_prec.meta) |
+| 13 | `cvParticle_dns` | _(none)_ | 0 | OK | 0.206 | 885 | `fa77abe19cddd1f7` | [stdout](../raw/cvode/serial/cvParticle_dns.stdout) · [meta](../raw/cvode/serial/cvParticle_dns.meta) |
+| 14 | `cvPendulum_dns` | _(none)_ | 0 | OK | 0.206 | 1900 | `66778152510991e4` | [stdout](../raw/cvode/serial/cvPendulum_dns.stdout) · [meta](../raw/cvode/serial/cvPendulum_dns.meta) |
+| 15 | `cvRoberts_block_klu` | _(none)_ | 0 | OK | 0.206 | 1198 | `2f6ca3f9647cf9c9` | [stdout](../raw/cvode/serial/cvRoberts_block_klu.stdout) · [meta](../raw/cvode/serial/cvRoberts_block_klu.meta) |
+| 16 | `cvRoberts_dns` | _(none)_ | 0 | OK | 0.206 | 2217 | `c23a663fee1d66b7` | [stdout](../raw/cvode/serial/cvRoberts_dns.stdout) · [meta](../raw/cvode/serial/cvRoberts_dns.meta) |
+| 17 | `cvRoberts_dnsL` | _(none)_ | 0 | OK | 0.206 | 1261 | `abf33560958e0f9f` | [stdout](../raw/cvode/serial/cvRoberts_dnsL.stdout) · [meta](../raw/cvode/serial/cvRoberts_dnsL.meta) |
+| 18 | `cvRoberts_dns_constraints` | _(none)_ | 0 | OK | 0.206 | 1261 | `106ba20145b7ce7c` | [stdout](../raw/cvode/serial/cvRoberts_dns_constraints.stdout) · [meta](../raw/cvode/serial/cvRoberts_dns_constraints.meta) |
+| 19 | `cvRoberts_dns_negsol` | _(none)_ | 0 | OK | 0.206 | 2409 | `911bb744d63c8c33` | [stdout](../raw/cvode/serial/cvRoberts_dns_negsol.stdout) · [meta](../raw/cvode/serial/cvRoberts_dns_negsol.meta) |
+| 20 | `cvRoberts_dns_uw` | _(none)_ | 0 | OK | 0.206 | 1261 | `abf33560958e0f9f` | [stdout](../raw/cvode/serial/cvRoberts_dns_uw.stdout) · [meta](../raw/cvode/serial/cvRoberts_dns_uw.meta) |
+| 21 | `cvRoberts_klu` | _(none)_ | 0 | OK | 0.206 | 1245 | `de88e6bc45119b34` | [stdout](../raw/cvode/serial/cvRoberts_klu.stdout) · [meta](../raw/cvode/serial/cvRoberts_klu.meta) |
+| 22 | `cvRocket_dns` | _(none)_ | 0 | OK | 0.206 | 4212 | `2887cbbe9072a465` | [stdout](../raw/cvode/serial/cvRocket_dns.stdout) · [meta](../raw/cvode/serial/cvRocket_dns.meta) |
+| 23 | `cvVdp_auto_nls` | _(none)_ | 0 | OK | 0.206 | 2403 | `2046a2142816e67a` | [stdout](../raw/cvode/serial/cvVdp_auto_nls.stdout) · [meta](../raw/cvode/serial/cvVdp_auto_nls.meta) |

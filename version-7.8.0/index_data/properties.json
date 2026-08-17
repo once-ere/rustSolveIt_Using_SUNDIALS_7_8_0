@@ -1,0 +1,90 @@
+{
+  "_source": "posim/src/vm.rs — load_path() (read arms) and store_path() (write arms). Extracted line-by-line 2026-07-30; every entry's read_line/write_line points at the match arm that implements it.",
+  "_rw_legend": "R = readable only; RW = readable and writable; R+refused = a write arm exists but returns a guiding error rather than writing.",
+
+  "object": [
+    {"name": "id", "aliases": [], "type": "number", "rw": "RW", "read_line": 2280, "shapes": "all", "meaning": "user label; does not affect physics"},
+    {"name": "x", "aliases": [], "type": "number", "rw": "RW", "read_line": 2282, "shapes": "all", "meaning": "shorthand for position.x"},
+    {"name": "y", "aliases": [], "type": "number", "rw": "RW", "read_line": 2283, "shapes": "all", "meaning": "shorthand for position.y"},
+    {"name": "z", "aliases": [], "type": "number", "rw": "RW", "read_line": 2284, "shapes": "all", "meaning": "shorthand for position.z"},
+    {"name": "vx", "aliases": [], "type": "number", "rw": "RW", "read_line": 2285, "shapes": "all", "meaning": "shorthand for velocity.x"},
+    {"name": "vy", "aliases": [], "type": "number", "rw": "RW", "read_line": 2286, "shapes": "all", "meaning": "shorthand for velocity.y"},
+    {"name": "vz", "aliases": [], "type": "number", "rw": "RW", "read_line": 2287, "shapes": "all", "meaning": "shorthand for velocity.z"},
+    {"name": "m1", "aliases": [], "type": "number", "rw": "RW", "read_line": 2290, "shapes": "dumbbell", "meaning": "sphere-1 mass; write rebuilds mass, COM offsets and inertia"},
+    {"name": "m2", "aliases": [], "type": "number", "rw": "RW", "read_line": 2290, "shapes": "dumbbell", "meaning": "sphere-2 mass; write rebuilds the body"},
+    {"name": "m_rod", "aliases": [], "type": "number", "rw": "RW", "read_line": 2290, "shapes": "dumbbell", "meaning": "rod mass; recovered from stored mass fractions, so reads round in the 16th digit"},
+    {"name": "r1", "aliases": [], "type": "number", "rw": "RW", "read_line": 2298, "shapes": "dumbbell", "meaning": "sphere-1 radius"},
+    {"name": "r2", "aliases": [], "type": "number", "rw": "RW", "read_line": 2298, "shapes": "dumbbell", "meaning": "sphere-2 radius"},
+    {"name": "rod_radius", "aliases": ["rod_r"], "type": "number", "rw": "RW", "read_line": 2302, "shapes": "dumbbell", "meaning": "rod radius"},
+    {"name": "length", "aliases": ["len"], "type": "number", "rw": "RW", "read_line": 2308, "shapes": "dumbbell", "meaning": "distance between the sphere centers"},
+    {"name": "mass", "aliases": [], "type": "number", "rw": "RW", "read_line": 2312, "shapes": "all", "meaning": "writing also updates inverse_mass (m <= 0 -> 1/m := 0)"},
+    {"name": "inverse_mass", "aliases": [], "type": "number", "rw": "RW", "read_line": 2313, "shapes": "all", "meaning": "writing back-computes mass; 0 makes the body static (an immovable wall)"},
+    {"name": "charge", "aliases": [], "type": "number", "rw": "RW", "read_line": 2314, "shapes": "all", "meaning": "Coulombs"},
+    {"name": "position", "aliases": ["pos"], "type": "vec3", "rw": "RW", "read_line": 2315, "shapes": "all", "meaning": "world position (the COM for every shape, including the dumbbell)"},
+    {"name": "velocity", "aliases": ["vel"], "type": "vec3", "rw": "RW", "read_line": 2316, "shapes": "all", "meaning": "DERIVED: reads p/m, writes p := m v"},
+    {"name": "momentum", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2317, "shapes": "all", "meaning": "the canonical stored linear state"},
+    {"name": "orientation", "aliases": [], "type": "quaternion", "rw": "RW", "read_line": 2318, "shapes": "all", "meaning": "w-first; renormalized to unit length on write"},
+    {"name": "angular_velocity", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2319, "shapes": "all", "meaning": "derived: omega = R I^-1 R^T L; writes L := R I R^T omega"},
+    {"name": "angular_momentum", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2320, "shapes": "all", "meaning": "the canonical stored angular state (spin)"},
+    {"name": "inertia_tensor", "aliases": [], "type": "mat3", "rw": "RW", "read_line": 2321, "shapes": "all", "meaning": "body frame; writing updates the inverse (singular -> zero inverse = cannot rotate)"},
+    {"name": "inverse_inertia_tensor", "aliases": [], "type": "mat3", "rw": "RW", "read_line": 2322, "shapes": "all", "meaning": "writing back-computes the tensor"},
+    {"name": "magnetic_moment_tensor", "aliases": [], "type": "mat3", "rw": "RW", "read_line": 2323, "shapes": "all", "meaning": "maps B to torque: tau = (R M R^T) B"},
+    {"name": "kinetic_energy", "aliases": ["energy"], "type": "number", "rw": "R", "read_line": 2324, "shapes": "all", "meaning": "1/2 m |v|^2 + 1/2 omega . L"},
+    {"name": "boundary", "aliases": ["shape"], "type": "string", "rw": "R", "read_line": 2325, "shapes": "all", "meaning": "debug description of the shape"},
+    {"name": "radius", "aliases": [], "type": "number", "rw": "RW", "read_line": 2326, "shapes": "sphere, disk, cylinder", "meaning": "writing recomputes inertia and KEEPS the shape family; a torus is REFUSED"},
+    {"name": "half_extents", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2337, "shapes": "cuboid", "meaning": "writing recomputes inertia"},
+    {"name": "ring_radius", "aliases": [], "type": "number", "rw": "RW", "read_line": 2341, "shapes": "torus", "meaning": "radius c of the circle traced by the tube center"},
+    {"name": "tube_radius", "aliases": [], "type": "number", "rw": "RW", "read_line": 2345, "shapes": "torus", "meaning": "the tube's own radius a"},
+    {"name": "inner_radius", "aliases": [], "type": "number", "rw": "RW", "read_line": 2349, "shapes": "torus", "meaning": "derived c - a (the hole); accepts >= 0 — 0 is the horn torus"},
+    {"name": "outer_radius", "aliases": [], "type": "number", "rw": "RW", "read_line": 2355, "shapes": "torus", "meaning": "derived c + a; writing one of the pair holds the other fixed"},
+    {"name": "height", "aliases": [], "type": "number", "rw": "RW", "read_line": 2361, "shapes": "cylinder", "meaning": "the FULL height = 2 * half_height"},
+    {"name": "half_height", "aliases": [], "type": "number", "rw": "RW", "read_line": 2361, "shapes": "cylinder", "meaning": "half the full height"},
+    {"name": "force", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2371, "shapes": "all", "meaning": "constant external force applied during STEP/RUN"},
+    {"name": "torque", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2372, "shapes": "all", "meaning": "constant external torque"},
+    {"name": "restitution", "aliases": [], "type": "number", "rw": "RW", "read_line": 2373, "shapes": "all", "meaning": "bounciness e in [0,1] (default 1 = elastic); a pair uses min(e_i, e_j)"}
+  ],
+
+  "system": [
+    {"name": "g_constant", "aliases": ["g"], "type": "number", "rw": "RW", "read_line": 2253, "write_line": 2459, "meaning": "Newton's G for pairwise gravity (default 1)"},
+    {"name": "softening", "aliases": [], "type": "number", "rw": "RW", "read_line": 2254, "meaning": "Plummer softening length epsilon (default 1e-6); forces use (r^2+e^2)^(3/2)"},
+    {"name": "uniform_gravity", "aliases": ["gravity"], "type": "vec3", "rw": "RW", "read_line": 2255, "meaning": "constant acceleration field, e.g. [0,-9.81,0]"},
+    {"name": "e_field", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2256, "meaning": "uniform electric field; force qE"},
+    {"name": "b_field", "aliases": [], "type": "vec3", "rw": "RW", "read_line": 2257, "meaning": "uniform magnetic field; force q v x B, torque (R M R^T) B"},
+    {"name": "rtol", "aliases": [], "type": "number", "rw": "RW", "read_line": 2258, "meaning": "CVODE relative tolerance (default 1e-10)"},
+    {"name": "atol", "aliases": [], "type": "number", "rw": "RW", "read_line": 2259, "meaning": "CVODE absolute tolerance (default 1e-12)"},
+    {"name": "time", "aliases": ["t"], "type": "number", "rw": "RW", "read_line": 2260, "meaning": "current simulation time"},
+    {"name": "method", "aliases": [], "type": "string", "rw": "R", "read_line": 2261, "meaning": "current integrator description"},
+    {"name": "count", "aliases": ["n"], "type": "number", "rw": "R", "read_line": 2262, "meaning": "number of objects"},
+    {"name": "collide", "aliases": [], "type": "number", "rw": "R+refused", "read_line": 2263, "write_line": 2481, "meaning": "1 when collision detection is on; SET refuses with `use COLLIDE ON / COLLIDE OFF to switch collision detection`"},
+    {"name": "contacts", "aliases": [], "type": "number", "rw": "R", "read_line": 2264, "meaning": "contacts recorded by the last STEP/RUN"},
+    {"name": "collisions", "aliases": [], "type": "number", "rw": "R", "read_line": 2265, "meaning": "running total of resolved impulses this session; deliberately NOT a keyword so this spelling stays free"},
+    {"name": "restitution_threshold", "aliases": [], "type": "number", "rw": "RW", "read_line": 2266, "meaning": "approach speeds below this bounce with e = 0 (anti-jitter; default 1e-3)"},
+    {"name": "contact_slop", "aliases": [], "type": "number", "rw": "RW", "read_line": 2267, "meaning": "tolerated overlap before positional projection (default 1e-9)"},
+    {"name": "box", "aliases": [], "type": "number", "rw": "R", "read_line": 2268, "meaning": "inner side length of the rigid bounding box; 0 = none. Created/removed by the BOX command"}
+  ],
+
+  "contact": [
+    {"name": "i", "aliases": [], "type": "number", "rw": "R", "read_line": 2390, "meaning": "lower index of the colliding pair (i < j)"},
+    {"name": "j", "aliases": [], "type": "number", "rw": "R", "read_line": 2391, "meaning": "higher index of the colliding pair"},
+    {"name": "t", "aliases": ["time"], "type": "number", "rw": "R", "read_line": 2392, "meaning": "the event time — the root the solver landed on"},
+    {"name": "point", "aliases": [], "type": "vec3", "rw": "R", "read_line": 2393, "meaning": "world-space contact point"},
+    {"name": "normal", "aliases": [], "type": "vec3", "rw": "R", "read_line": 2394, "meaning": "unit normal pointing from obji toward objj; objj receives +J n, obji receives -J n"},
+    {"name": "depth", "aliases": [], "type": "number", "rw": "R", "read_line": 2395, "meaning": "penetration depth at the event (~0 — the root lands on the touch)"},
+    {"name": "rel_vel_n", "aliases": ["approach"], "type": "number", "rw": "R", "read_line": 2396, "meaning": "approach speed along the normal (negative = approaching)"},
+    {"name": "impulse", "aliases": ["impulse_n"], "type": "number", "rw": "R", "read_line": 2397, "meaning": "scalar impulse magnitude J that was applied"}
+  ],
+
+  "components": {
+    "_source": "posim/src/vm.rs — apply_comp()",
+    "vec3": [".x", ".y", ".z"],
+    "quaternion": [".w", ".x", ".y", ".z"],
+    "note": "Component writes are safe read-modify-write operations through the full field's get/set pair."
+  },
+
+  "path_roots": [
+    {"root": "objN", "meaning": "positional handle, numbered by position in the system; DEL renumbers"},
+    {"root": "system", "meaning": "the simulation-wide settings and observables; reserved as a name"},
+    {"root": "contactK", "meaning": "read-only record of the K-th contact of the last STEP/RUN"},
+    {"root": "<name>", "meaning": "a user name registered with NEW ... AS; follows every renumbering"}
+  ]
+}

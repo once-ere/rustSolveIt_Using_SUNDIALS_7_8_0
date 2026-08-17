@@ -1,0 +1,19 @@
+# 5. A charged sphere in a uniform B field.
+#   gyroradius r = m|v| / (|q| B) = 2*5/(3*6) = 0.5555...
+#   period     T = 2 pi m / (|q| B) = 0.6981317007977318
+# Half a period puts the ion diametrically opposite: |x| = 2r.
+# Another half brings it home. RUN takes a DURATION, so both legs are
+# T/2 = 0.3490658503988659.
+# The Lorentz force is velocity-dependent and fast: use BDF.
+set system.g_constant = 0
+set system.b_field = [0, 0, 6]
+new sphere as ion { mass = 2, charge = -3, radius = 0.05, position = [0, 0, 0], velocity = [5, 0, 0] }
+method bdf
+run 0.3490658503988659 steps 200
+get ion.position
+norm(ion.position)
+2 * (2 * 5 / (3 * 6))
+run 0.3490658503988659 steps 200
+get ion.position
+get ion.velocity
+norm(ion.velocity)

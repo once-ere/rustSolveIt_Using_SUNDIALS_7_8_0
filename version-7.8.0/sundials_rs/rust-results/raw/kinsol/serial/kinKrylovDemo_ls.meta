@@ -1,0 +1,10 @@
+example:  kinKrylovDemo_ls
+crate:    kinsol_rs
+source:   crates/kinsol_rs/examples/kinKrylovDemo_ls.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinKrylovDemo_ls
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinKrylovDemo_ls
+exit:     0 (OK)
+seconds:  0.105
+stdout:   3420 bytes, sha256 27535204b5a07f97e954b35c79edcc55a9c5b663c0c25acb209412a84fc47d97
+stderr:   0 bytes

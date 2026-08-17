@@ -1,0 +1,127 @@
+[package]
+name = "cvodes_rs"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# forwards to sundials_core/host-libm; see that manifest
+host-libm = ["sundials_core/host-libm"]
+
+[dependencies]
+sundials_core = { path = "../sundials_core" }
+
+[[example]]
+name = "cvsAdvDiff_ASAi_bnd"
+path = "examples/cvsAdvDiff_ASAi_bnd.rs"
+
+[[example]]
+name = "cvsAdvDiff_FSA_non"
+path = "examples/cvsAdvDiff_FSA_non.rs"
+
+[[example]]
+name = "cvsAdvDiff_bnd"
+path = "examples/cvsAdvDiff_bnd.rs"
+
+[[example]]
+name = "cvsAdvDiff_bndL"
+path = "examples/cvsAdvDiff_bndL.rs"
+
+[[example]]
+name = "cvsAnalytic_mels"
+path = "examples/cvsAnalytic_mels.rs"
+
+[[example]]
+name = "cvsDirectDemo_ls"
+path = "examples/cvsDirectDemo_ls.rs"
+
+[[example]]
+name = "cvsDiurnal_FSA_kry"
+path = "examples/cvsDiurnal_FSA_kry.rs"
+
+[[example]]
+name = "cvsDiurnal_kry"
+path = "examples/cvsDiurnal_kry.rs"
+
+[[example]]
+name = "cvsDiurnal_kry_bp"
+path = "examples/cvsDiurnal_kry_bp.rs"
+
+[[example]]
+name = "cvsFoodWeb_ASAi_kry"
+path = "examples/cvsFoodWeb_ASAi_kry.rs"
+
+[[example]]
+name = "cvsFoodWeb_ASAp_kry"
+path = "examples/cvsFoodWeb_ASAp_kry.rs"
+
+[[example]]
+name = "cvsHessian_ASA_FSA"
+path = "examples/cvsHessian_ASA_FSA.rs"
+
+[[example]]
+name = "cvsKrylovDemo_ls"
+path = "examples/cvsKrylovDemo_ls.rs"
+
+[[example]]
+name = "cvsKrylovDemo_prec"
+path = "examples/cvsKrylovDemo_prec.rs"
+
+[[example]]
+name = "cvsLotkaVolterra_ASA"
+path = "examples/cvsLotkaVolterra_ASA.rs"
+
+[[example]]
+name = "cvsParticle_dns"
+path = "examples/cvsParticle_dns.rs"
+
+[[example]]
+name = "cvsPendulum_dns"
+path = "examples/cvsPendulum_dns.rs"
+
+[[example]]
+name = "cvsRoberts_ASAi_klu"
+path = "examples/cvsRoberts_ASAi_klu.rs"
+
+[[example]]
+name = "cvsRoberts_ASAi_dns"
+path = "examples/cvsRoberts_ASAi_dns.rs"
+
+[[example]]
+name = "cvsRoberts_ASAi_dns_constraints"
+path = "examples/cvsRoberts_ASAi_dns_constraints.rs"
+
+[[example]]
+name = "cvsRoberts_FSA_klu"
+path = "examples/cvsRoberts_FSA_klu.rs"
+
+[[example]]
+name = "cvsRoberts_FSA_dns"
+path = "examples/cvsRoberts_FSA_dns.rs"
+
+[[example]]
+name = "cvsRoberts_FSA_dns_Switch"
+path = "examples/cvsRoberts_FSA_dns_Switch.rs"
+
+[[example]]
+name = "cvsRoberts_FSA_dns_constraints"
+path = "examples/cvsRoberts_FSA_dns_constraints.rs"
+
+[[example]]
+name = "cvsRoberts_klu"
+path = "examples/cvsRoberts_klu.rs"
+
+[[example]]
+name = "cvsRoberts_dns"
+path = "examples/cvsRoberts_dns.rs"
+
+[[example]]
+name = "cvsRoberts_dnsL"
+path = "examples/cvsRoberts_dnsL.rs"
+
+[[example]]
+name = "cvsRoberts_dns_constraints"
+path = "examples/cvsRoberts_dns_constraints.rs"
+
+[[example]]
+name = "cvsRoberts_dns_uw"
+path = "examples/cvsRoberts_dns_uw.rs"

@@ -1,0 +1,313 @@
+{
+ "_source": "posim/src/parser.rs (EBNF header + productions), posim/src/vm.rs HELP_TEXT, posim/src/qm.rs QM_SUBCOMMANDS",
+ "commands": [
+  {
+   "name": "NEW",
+   "syntax": "NEW <shape> [ \"AS\" (IDENT|STRING) ] [ \"{\" init {\",\" init} \"}\" ]",
+   "meaning": "create one physical object; prints its handle objN"
+  },
+  {
+   "name": "SET",
+   "syntax": "SET <path> = <expr>",
+   "meaning": "write any field through the get/set API"
+  },
+  {
+   "name": "GET",
+   "syntax": "GET <path>",
+   "meaning": "read any field \u2014 a PATH only, no arithmetic"
+  },
+  {
+   "name": "DEL",
+   "syntax": "DEL <NUMBER>",
+   "meaning": "delete object n; later objects renumber"
+  },
+  {
+   "name": "LIST",
+   "syntax": "LIST",
+   "meaning": "one line per object"
+  },
+  {
+   "name": "STEP",
+   "syntax": "STEP <expr>",
+   "meaning": "advance time by dt through SUNDIALS"
+  },
+  {
+   "name": "RUN",
+   "syntax": "RUN <expr> [ \"STEPS\" NUMBER ]",
+   "meaning": "advance by t with n evenly spaced output points (default 10)"
+  },
+  {
+   "name": "METHOD",
+   "syntax": "METHOD ( \"ADAMS\" | \"BDF\" | \"SPRK\" IDENT [NUMBER] )",
+   "meaning": "choose the SUNDIALS integrator"
+  },
+  {
+   "name": "ENERGY",
+   "syntax": "ENERGY",
+   "meaning": "total energy: kinetic + softened pairwise gravity + uniform-field potentials"
+  },
+  {
+   "name": "COM",
+   "syntax": "COM",
+   "meaning": "system center of mass"
+  },
+  {
+   "name": "MOMENTUM",
+   "syntax": "MOMENTUM",
+   "meaning": "total linear momentum"
+  },
+  {
+   "name": "ANGMOM",
+   "syntax": "ANGMOM",
+   "meaning": "total angular momentum about the origin (orbital + spin)"
+  },
+  {
+   "name": "LAPLACE",
+   "syntax": "LAPLACE <NUMBER>",
+   "meaning": "Laplace-Runge-Lenz vector of object n about the system COM, k = G*M_total"
+  },
+  {
+   "name": "RESET",
+   "syntax": "RESET",
+   "meaning": "wipe everything back to an empty system (NOT the same as SCENE RESET)"
+  },
+  {
+   "name": "HELP",
+   "syntax": "HELP",
+   "meaning": "the quick-reference card"
+  },
+  {
+   "name": "SCENE",
+   "syntax": "SCENE <scenecmd>",
+   "meaning": "the graphical scene window family"
+  },
+  {
+   "name": "COLLIDE",
+   "syntax": "COLLIDE [ \"ON\" | \"OFF\" ]",
+   "meaning": "switch rigid-body collision detection; bare reports status"
+  },
+  {
+   "name": "CONTACTS",
+   "syntax": "CONTACTS",
+   "meaning": "list every contact of the last STEP/RUN"
+  },
+  {
+   "name": "LET",
+   "syntax": "LET IDENT = <expr>",
+   "meaning": "bind a session variable"
+  },
+  {
+   "name": "FUNCS",
+   "syntax": "FUNCS",
+   "meaning": "list user function signatures"
+  },
+  {
+   "name": "SHOW",
+   "syntax": "SHOW IDENT",
+   "meaning": "print a user function's source verbatim"
+  },
+  {
+   "name": "BOX",
+   "syntax": "BOX [ \"OFF\" | <expr> ]",
+   "meaning": "rigid, infinitely massive bounding box; bare reports status"
+  },
+  {
+   "name": "QM",
+   "syntax": "QM <qmcmd>",
+   "meaning": "one-dimensional quantum mechanics"
+  },
+  {
+   "name": "QM2",
+   "syntax": "QM2 <qm2cmd>",
+   "meaning": "two-dimensional quantum mechanics, by ADI"
+  },
+  {
+   "name": "QM3",
+   "syntax": "QM3 <qm3cmd>",
+   "meaning": "three-dimensional quantum mechanics"
+  },
+  {
+   "name": "<expr>",
+   "syntax": "<expr>",
+   "meaning": "bare expression \u2014 the only way to do arithmetic on a field"
+  },
+  {
+   "name": "DEF",
+   "syntax": "DEF name(param [= default], ...) { body }",
+   "meaning": "LINE FORM, recognised before the grammar; every body line is syntax-checked at definition"
+  },
+  {
+   "name": "<call>",
+   "syntax": "name(arg, ...)",
+   "meaning": "call a user function; missing trailing arguments take their defaults"
+  }
+ ],
+ "scene_subcommands": [
+  "CREATE [port]",
+  "CLOSE",
+  "TRANSLATE dx dy [dz]",
+  "ROTATE dyaw dpitch",
+  "ZOOM (IN|OUT|f)",
+  "HIDE [n|ALL]",
+  "SHOW [n|ALL]",
+  "REFRESH",
+  "REDRAW",
+  "START",
+  "STOP",
+  "PAUSE",
+  "REVERSE",
+  "RESET",
+  "SET_TIME_STEP dt",
+  "STATUS",
+  "EVENTS"
+ ],
+ "qm_subcommands": [
+  "status",
+  "grid",
+  "potential",
+  "mass",
+  "hbar",
+  "method",
+  "states",
+  "state",
+  "packet",
+  "step",
+  "run",
+  "norm",
+  "energy",
+  "position",
+  "momentum",
+  "prob",
+  "density",
+  "drive",
+  "absorb",
+  "animate",
+  "reset",
+  "transmission",
+  "scan"
+ ],
+ "qm2_subcommands": [
+  "status",
+  "grid",
+  "potential",
+  "packet",
+  "step",
+  "run",
+  "norm",
+  "energy",
+  "centroid|position",
+  "prob|probability",
+  "absorb",
+  "drive",
+  "states",
+  "state",
+  "reset",
+  "animate"
+ ],
+ "qm3_subcommands": [
+  "status",
+  "grid",
+  "potential",
+  "packet",
+  "states",
+  "state",
+  "step",
+  "run",
+  "norm",
+  "energy",
+  "centroid|position",
+  "prob|probability",
+  "absorb",
+  "drive",
+  "animate",
+  "iso|isosurface",
+  "reset"
+ ],
+ "machine_ops": [
+  {
+   "op": "exec",
+   "shape": "{\"op\":\"exec\",\"code\":\"<one or more command lines>\"}"
+  },
+  {
+   "op": "get",
+   "shape": "{\"op\":\"get\",\"path\":\"obj0.position\"}"
+  },
+  {
+   "op": "set",
+   "shape": "{\"op\":\"set\",\"path\":\"obj0.mass\",\"value\":2.5}"
+  },
+  {
+   "op": "state",
+   "shape": "{\"op\":\"state\"}"
+  },
+  {
+   "op": "help",
+   "shape": "{\"op\":\"help\"}"
+  },
+  {
+   "op": "quit",
+   "shape": "{\"op\":\"quit\"}"
+  }
+ ],
+ "shapes": [
+  "POINT",
+  "SPHERE",
+  "CUBOID",
+  "TORUS",
+  "DISK",
+  "CYLINDER",
+  "DUMBBELL"
+ ],
+ "value_types": [
+  "number",
+  "complex",
+  "vec3",
+  "quaternion",
+  "mat3",
+  "string",
+  "list"
+ ],
+ "operators": {
+  "arithmetic": [
+   "+",
+   "-",
+   "*",
+   "/",
+   "unary -"
+  ],
+  "comparison": [
+   "<",
+   "<=",
+   ">",
+   ">=",
+   "==",
+   "!="
+  ],
+  "note": "comparisons sit at the LOWEST precedence and yield 1/0; there is no boolean type"
+ },
+ "cli_modes": [
+  {
+   "flag": "(none)",
+   "meaning": "interactive notebook REPL"
+  },
+  {
+   "flag": "--script <file>",
+   "meaning": "batch; exits nonzero if any cell failed"
+  },
+  {
+   "flag": "--notebook <file>",
+   "meaning": "load a file then STAY interactive (the dynamic-notebook launcher)"
+  },
+  {
+   "flag": "--machine",
+   "meaning": "JSONL request/reply protocol (the JupyterLab kernel's transport)"
+  }
+ ],
+ "_counts": {
+  "commands": 28,
+  "scene": 17,
+  "qm": 23,
+  "qm2": 16,
+  "qm3": 17
+ }
+}

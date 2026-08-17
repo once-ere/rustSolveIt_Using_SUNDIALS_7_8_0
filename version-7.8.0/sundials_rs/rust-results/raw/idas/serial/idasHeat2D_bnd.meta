@@ -1,0 +1,10 @@
+example:  idasHeat2D_bnd
+crate:    idas_rs
+source:   crates/idas_rs/examples/idasHeat2D_bnd.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasHeat2D_bnd
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasHeat2D_bnd
+exit:     0 (OK)
+seconds:  0.105
+stdout:   1478 bytes, sha256 3dc0d5ea6d93ec207b33db04d8b131b5e1dd204467610d9fdd81d4e342a67edf
+stderr:   0 bytes

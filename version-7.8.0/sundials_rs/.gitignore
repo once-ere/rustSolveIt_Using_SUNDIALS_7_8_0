@@ -1,0 +1,18 @@
+/target
+# /logs is scratch, except the two the documents cite by line number:
+# requirements.md §3 attributes each backend failure to a line of
+# c_build.log, and differences/ATTRIBUTION.md's ulp table is read off
+# libm_differential.log. Citations nobody can open are not citations.
+/logs/*
+!/logs/c_build.log
+!/logs/libm_differential.log
+# summary.txt is the gate result; evidence/purerust-libm-gate/ holds the
+# copies the documents cite, so the live one stays scratch.
+.claude/
+
+# Runtime artifacts examples write into their CWD (stats CSVs, solution
+# trajectories). Root-anchored so real repo data files keep tracking —
+# e.g. crates/sundials_core/src/sundials_utils_cvec.txt, the printf
+# reference vectors.
+/*.csv
+/*.txt

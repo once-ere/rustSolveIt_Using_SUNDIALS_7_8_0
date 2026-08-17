@@ -1,0 +1,10 @@
+example:  ark_damped_harmonic_symplectic
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_damped_harmonic_symplectic.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_damped_harmonic_symplectic
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_damped_harmonic_symplectic
+exit:     0 (OK)
+seconds:  0.107
+stdout:   969 bytes, sha256 539892ab15d3dfc6eeffb18c5b10c42478f189960409952dd4b4a10405df4427
+stderr:   0 bytes

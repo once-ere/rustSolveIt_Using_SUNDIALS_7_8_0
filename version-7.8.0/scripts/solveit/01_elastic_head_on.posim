@@ -1,0 +1,20 @@
+# 1. Unequal masses in a head-on elastic collision.
+# Analytic: v1' = ((m1-m2)v1 + 2 m2 v2)/(m1+m2), and mirror for v2'.
+set system.g_constant = 0
+collide on
+new sphere as heavy { mass = 3, radius = 0.5, position = [-3, 0, 0], velocity = [2, 0, 0] }
+new sphere as light { mass = 1, radius = 0.5, position = [ 3, 0, 0], velocity = [-4, 0, 0] }
+energy
+momentum
+run 2 steps 200
+get heavy.velocity
+get light.velocity
+# analytic values, computed in the language itself
+let m1 = 3
+let m2 = 1
+let u1 = 2
+let u2 = -4
+((m1 - m2) * u1 + 2 * m2 * u2) / (m1 + m2)
+((m2 - m1) * u2 + 2 * m1 * u1) / (m1 + m2)
+energy
+momentum

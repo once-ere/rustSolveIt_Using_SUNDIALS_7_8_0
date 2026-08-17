@@ -1,0 +1,367 @@
+##### scripts/collisions/01_head_on_exchange.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+Out[3]= obj1
+In[4]:= collide
+Out[4]= collisions ON (1 collidable pair(s); 0 impulse(s) so far)
+In[5]:= momentum
+Out[5]= [0, 0, 0]
+In[6]:= energy
+Out[6]= 1
+In[7]:= step 3
+Out[7]= t = 3 (advanced by 3, 26 solver steps, 1 collision(s) — CONTACTS lists them)
+In[8]:= contacts
+Out[8]= contact0: obj0 <-> obj1 at t = 1.5
+  point  = [0, 0, 0]
+  normal = [1, 0, 0]  (from obj0 toward obj1)
+  depth = 0, approach speed = 2, impulse = 2
+In[9]:= get contact0.t
+Out[9]= 1.5
+In[10]:= get contact0.normal
+Out[10]= [1, 0, 0]
+In[11]:= get contact0.impulse
+Out[11]= 2
+In[12]:= get obj0.velocity
+Out[12]= [-1, 0, 0]
+In[13]:= get obj1.velocity
+Out[13]= [1, 0, 0]
+In[14]:= momentum
+Out[14]= [0, 0, 0]
+In[15]:= energy
+Out[15]= 1
+##### scripts/collisions/02_unequal_masses.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 3, radius = 0.5, position = [0, 0, 0] }
+Out[3]= obj1
+In[4]:= step 4
+Out[4]= t = 4 (advanced by 4, 26 solver steps, 1 collision(s) — CONTACTS lists them)
+In[5]:= get obj0.velocity.x
+Out[5]= -0.5
+In[6]:= get obj1.velocity.x
+Out[6]= 0.5
+In[7]:= momentum
+Out[7]= [1, 0, 0]
+##### scripts/collisions/03_restitution_ladder.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+Out[3]= obj1
+In[4]:= step 3
+Out[4]= t = 3 (advanced by 3, 26 solver steps, 1 collision(s) — CONTACTS lists them)
+In[5]:= obj1.velocity.x - obj0.velocity.x
+Out[5]= 2
+In[6]:= energy
+Out[6]= 1
+In[7]:= reset
+Out[7]= system reset
+In[8]:= set system.g_constant = 0
+In[9]:= new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0], restitution = 0.8 }
+Out[9]= obj0
+In[10]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+Out[10]= obj1
+In[11]:= step 3
+Out[11]= t = 3 (advanced by 3, 24 solver steps, 1 collision(s) — CONTACTS lists them)
+In[12]:= obj1.velocity.x - obj0.velocity.x
+Out[12]= 1.6
+In[13]:= energy
+Out[13]= 0.6400000000000001
+In[14]:= reset
+Out[14]= system reset
+In[15]:= set system.g_constant = 0
+In[16]:= new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0], restitution = 0.5 }
+Out[16]= obj0
+In[17]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+Out[17]= obj1
+In[18]:= step 3
+Out[18]= t = 3 (advanced by 3, 20 solver steps, 1 collision(s) — CONTACTS lists them)
+In[19]:= obj1.velocity.x - obj0.velocity.x
+Out[19]= 1
+In[20]:= energy
+Out[20]= 0.25
+In[21]:= reset
+Out[21]= system reset
+In[22]:= set system.g_constant = 0
+In[23]:= new sphere { mass = 1, radius = 0.5, position = [-2, 0, 0], velocity = [1, 0, 0], restitution = 0.2 }
+Out[23]= obj0
+In[24]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0], velocity = [-1, 0, 0] }
+Out[24]= obj1
+In[25]:= step 3
+Out[25]= t = 3 (advanced by 3, 17 solver steps, 1 collision(s) — CONTACTS lists them)
+In[26]:= obj1.velocity.x - obj0.velocity.x
+Out[26]= 0.3999999999999999
+In[27]:= energy
+Out[27]= 0.03999999999999998
+##### scripts/collisions/04_newtons_cradle.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [0, 0, 0] }
+Out[3]= obj1
+In[4]:= new sphere { mass = 1, radius = 0.5, position = [1, 0, 0] }
+Out[4]= obj2
+In[5]:= new sphere { mass = 1, radius = 0.5, position = [2, 0, 0] }
+Out[5]= obj3
+In[6]:= new sphere { mass = 1, radius = 0.5, position = [3, 0, 0] }
+Out[6]= obj4
+In[7]:= step 4
+Out[7]= t = 4 (advanced by 4, 18 solver steps, 4 collision(s) — CONTACTS lists them)
+In[8]:= get obj0.velocity.x
+Out[8]= 0
+In[9]:= get obj1.velocity.x
+Out[9]= 0
+In[10]:= get obj2.velocity.x
+Out[10]= 0
+In[11]:= get obj3.velocity.x
+Out[11]= 0
+In[12]:= get obj4.velocity.x
+Out[12]= 1
+In[13]:= momentum
+Out[13]= [1, 0, 0]
+##### scripts/collisions/05_billiard_break.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.5, position = [-4, 0, 0], velocity = [2, 0, 0], restitution = 0.95 }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.5, position = [0, 0, 0], restitution = 0.95 }
+Out[3]= obj1
+In[4]:= new sphere { mass = 1, radius = 0.5, position = [0.9, 0.55, 0], restitution = 0.95 }
+Out[4]= obj2
+In[5]:= new sphere { mass = 1, radius = 0.5, position = [0.9, -0.55, 0], restitution = 0.95 }
+Out[5]= obj3
+In[6]:= momentum
+Out[6]= [2, 0, 0]
+In[7]:= step 3
+Out[7]= t = 3 (advanced by 3, 51 solver steps, 4 collision(s) — CONTACTS lists them)
+In[8]:= contacts
+Out[8]= contact0: obj0 <-> obj1 at t = 1.5
+  point  = [-0.5, 0, 0]
+  normal = [1, 0, 0]  (from obj0 toward obj1)
+  depth = 0, approach speed = 2, impulse = 1.95
+contact1: obj1 <-> obj2 at t = 1.5332488951669214
+  point  = [0.4824176727877484, 0.275, 0]
+  normal = [0.8351646544245033, 0.55, 0]  (from obj1 toward obj2)
+  depth = 0, approach speed = 1.6285710761277814, impulse = 1.5878567992245871
+contact2: obj1 <-> obj3 at t = 1.5332488951669214
+  point  = [0.4824176727877484, -0.275, 0]
+  normal = [0.8351646544245033, -0.55, 0]  (from obj1 toward obj3)
+  depth = 0, approach speed = 1.0013676404340697, impulse = 0.976333449423218
+contact3: obj0 <-> obj1 at t = 1.8132074392302107
+  point  = [-0.4865611201936529, -0.04708032633455161, 0]
+  normal = [0.9955570156896734, -0.09416065266910323, 0]  (from obj0 toward obj1)
+  depth = 0.00000000000000011102230246251565, approach speed = 0.2087781978407575, impulse = 0.20355874289473855
+In[9]:= get obj0.velocity
+Out[9]= [-0.15265433459382738, 0.01916722408747076, 0]
+In[10]:= get obj1.velocity
+Out[10]= [0.011133271703202219, -0.3555050664782239, 0]
+In[11]:= get obj2.velocity
+Out[11]= [1.3261218750000001, 0.873321239573523, 0]
+In[12]:= get obj3.velocity
+Out[12]= [0.815399187890625, -0.5369833971827699, 0]
+In[13]:= momentum
+Out[13]= [2, 0, 0]
+##### scripts/collisions/06_spin_up.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new sphere { mass = 1, radius = 0.25, position = [-2, 0.5, 0], velocity = [4, 0, 0] }
+Out[2]= obj0
+In[3]:= new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.5, 1, 1] }
+Out[3]= obj1
+In[4]:= get obj1.angular_momentum
+Out[4]= [0, 0, 0]
+In[5]:= step 1
+Out[5]= t = 1 (advanced by 1, 85 solver steps, 1 collision(s) — CONTACTS lists them)
+In[6]:= contacts
+Out[6]= contact0: obj0 <-> obj1 at t = 0.3125
+  point  = [-0.5, 0.5, 0]
+  normal = [1, 0, 0]  (from obj0 toward obj1)
+  depth = 0, approach speed = 4, impulse = 4.444444444444445
+In[7]:= get contact0.point
+Out[7]= [-0.5, 0.5, 0]
+In[8]:= get contact0.impulse
+Out[8]= 4.444444444444445
+In[9]:= get obj1.angular_momentum
+Out[9]= [0, 0, -2.2222222222222223]
+In[10]:= get obj1.angular_velocity
+Out[10]= [0, 0, -2.666666666666667]
+In[11]:= angmom
+Out[11]= [0, 0, -2]
+##### scripts/collisions/07_thin_wall_toi.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new cuboid { mass = 1, position = [0, 0, 0], half_extents = [0.005, 5, 5] }
+Out[2]= obj0
+In[3]:= set obj0.inverse_mass = 0
+In[4]:= set obj0.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+In[5]:= new sphere { mass = 1, radius = 0.01, position = [-2, 0, 0], velocity = [100, 0, 0] }
+Out[5]= obj1
+In[6]:= step 0.05
+Out[6]= t = 0.05 (advanced by 0.05, 2002 solver steps, 1 collision(s) — CONTACTS lists them)
+In[7]:= contacts
+Out[7]= contact0: obj0 <-> obj1 at t = 0.019850000000000846
+  point  = [-0.005, 0, 0]
+  normal = [-1, -0, -0]  (from obj0 toward obj1)
+  depth = 0.000000000000022126397936084174, approach speed = 100, impulse = 200
+In[8]:= get contact0.t
+Out[8]= 0.019850000000000846
+In[9]:= get obj1.velocity.x
+Out[9]= -100
+In[10]:= get obj1.position.x
+Out[10]= -3.030000000000014
+##### scripts/collisions/08_colliding_binary.posim
+In[1]:= set system.g_constant = 1
+In[2]:= new sphere { mass = 1, radius = 0.3, position = [-1, 0, 0], velocity = [0, -0.316227766, 0], restitution = 0.6 }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.3, position = [1, 0, 0], velocity = [0, 0.316227766, 0], restitution = 0.6 }
+Out[3]= obj1
+In[4]:= energy
+Out[4]= -0.4000000000105867
+In[5]:= momentum
+Out[5]= [0, 0, 0]
+In[6]:= run 6 steps 12
+Out[6]= t = 6 (309 solver steps, 12 snapshots, |dE/E| = 2.489e-1, 1 collision(s) — CONTACTS lists them)
+In[7]:= contacts
+Out[7]= contact0: obj0 <-> obj1 at t = 2.884205150724602
+  point  = [0, 0, 0]
+  normal = [-0.555555522431048, 0.8314794414153397, 0]  (from obj0 toward obj1)
+  depth = 0.000000000000010769163338864018, approach speed = 0.7888106724036998, impulse = 0.6310485379229599
+In[8]:= energy
+Out[8]= -0.49955556202585566
+In[9]:= momentum
+Out[9]= [0.00000000000000027755575615628914, -0.0000000000000002220446049250313, 0]
+In[10]:= get obj0.position
+Out[10]= [-0.3356338249720023, 0.4951822016076849, 0]
+In[11]:= get obj1.position
+Out[11]= [0.3356338249720033, -0.4951822016076866, 0]
+##### scripts/collisions/09_spinning_target.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new cuboid { mass = 2, position = [0, 0, 0], half_extents = [0.6, 0.6, 0.6], angular_velocity = [0, 0, 2] }
+Out[2]= obj0
+In[3]:= new sphere { mass = 1, radius = 0.3, position = [-3, 0.4, 0], velocity = [2, 0, 0] }
+Out[3]= obj1
+In[4]:= angmom
+Out[4]= [0, 0, 0.15999999999999992]
+In[5]:= energy
+Out[5]= 2.96
+In[6]:= step 2
+Out[6]= t = 2 (advanced by 2, 86 solver steps, 1 collision(s) — CONTACTS lists them)
+In[7]:= contacts
+Out[7]= contact0: obj0 <-> obj1 at t = 0.9655899592834437
+  point  = [-0.7730369010125487, 0.34987704936579467, 0]
+  normal = [-0.9859439347353071, 0.16707650211403258, -0]  (from obj0 toward obj1)
+  depth = 0.000000000000026867397195928788, approach speed = 2.4034935760686995, impulse = 3.0099680523146617
+In[8]:= get obj0.angular_momentum
+Out[8]= [0, 0, 0.31044030597153427]
+In[9]:= get obj1.velocity
+Out[9]= [-0.9676597449266859, 0.5028949336557211, 0]
+In[10]:= angmom
+Out[10]= [0, 0, 0.15999999999999984]
+In[11]:= energy
+Out[11]= 2.9600000000000013
+##### scripts/collisions/10_billiard_box.posim
+In[1]:= set system.g_constant = 0
+In[2]:= new cuboid { mass = 1, position = [-3, 0, 0], half_extents = [0.2, 2, 2] }
+Out[2]= obj0
+In[3]:= set obj0.inverse_mass = 0
+In[4]:= set obj0.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+In[5]:= new cuboid { mass = 1, position = [3, 0, 0], half_extents = [0.2, 2, 2] }
+Out[5]= obj1
+In[6]:= set obj1.inverse_mass = 0
+In[7]:= set obj1.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+In[8]:= new sphere { mass = 1, radius = 0.3, position = [0, 0, 0], velocity = [1.7, 0, 0] }
+Out[8]= obj2
+In[9]:= energy
+Out[9]= 1.4449999999999998
+In[10]:= run 20 steps 10
+Out[10]= t = 20 (356 solver steps, 10 snapshots, |dE/E| = 0.000e0, 7 collision(s) — CONTACTS lists them)
+In[11]:= get system.collisions
+Out[11]= 7
+In[12]:= energy
+Out[12]= 1.4449999999999998
+In[13]:= get obj2.velocity.x
+Out[13]= -1.7
+##### scripts/collisions/11_box_of_shapes.posim
+In[1]:= set system.g_constant = 0
+In[2]:= box 4
+Out[2]= box: inner size 4 x 4 x 4 — six static walls obj0, obj1, obj2, obj3, obj4, obj5 with inverse_mass = 0 (infinitely massive); objects collide elastically off the inside faces
+In[3]:= new torus { mass = 1, inner_radius = 1, outer_radius = 2, orientation = [0.888073833977115, -0.325057583671868, 0.325057583671868, 0] }
+Out[3]= obj6
+In[4]:= new point { mass = 1, position = [1.406590, -0.995859, 0.569601], velocity = [100, 200, 100] }
+Out[4]= obj7
+In[5]:= new sphere { mass = 2, radius = 1/2, position = [1.424704, 1.367496, -0.493612] }
+Out[5]= obj8
+In[6]:= new disk { mass = 2/3, radius = 1, position = [-0.677386, -1.041493, -1.091679], orientation = [0.900447102352677, 0.307567078752479, -0.307567078752479, 0] }
+Out[6]= obj9
+In[7]:= new cuboid { mass = 5/3, half_extents = [0.5, 0.5, 0.5], position = [1.074397, 0.816223, 1.102099] }
+Out[7]= obj10
+In[8]:= new cylinder { mass = 2, radius = 1/2, height = 3/2, position = [-1.027024, -1.403890, -0.485619], orientation = [0.968912421710645, 0, 0.247403959254523, 0] }
+Out[8]= obj11
+In[9]:= list
+Out[9]= obj0: cuboid he=[1, 4, 4], mass=0, charge=0, pos=[3, 0, 0] [wall: static, inverse_mass=0]
+obj1: cuboid he=[1, 4, 4], mass=0, charge=0, pos=[-3, 0, 0] [wall: static, inverse_mass=0]
+obj2: cuboid he=[4, 1, 4], mass=0, charge=0, pos=[0, 3, 0] [wall: static, inverse_mass=0]
+obj3: cuboid he=[4, 1, 4], mass=0, charge=0, pos=[0, -3, 0] [wall: static, inverse_mass=0]
+obj4: cuboid he=[4, 4, 1], mass=0, charge=0, pos=[0, 0, 3] [wall: static, inverse_mass=0]
+obj5: cuboid he=[4, 4, 1], mass=0, charge=0, pos=[0, 0, -3] [wall: static, inverse_mass=0]
+obj6: torus ring=1.5 tube=0.5, mass=1, charge=0, pos=[0, 0, 0]
+obj7: point, mass=1, charge=0, pos=[1.40659, -0.995859, 0.569601]
+obj8: sphere r=0.5, mass=2, charge=0, pos=[1.424704, 1.367496, -0.493612]
+obj9: disk r=1, mass=0.6666666666666666, charge=0, pos=[-0.677386, -1.041493, -1.091679]
+obj10: cuboid he=[0.5, 0.5, 0.5], mass=1.6666666666666667, charge=0, pos=[1.074397, 0.816223, 1.102099]
+obj11: cylinder r=0.5 h=1.5, mass=2, charge=0, pos=[-1.027024, -1.40389, -0.485619]
+In[10]:= collide
+Out[10]= collisions ON (51 collidable pair(s); 0 impulse(s) so far)
+In[11]:= get obj0.inverse_mass
+Out[11]= 0
+In[12]:= get obj6.inertia_tensor
+Out[12]= [[1.28125, 0, 0], [0, 1.28125, 0], [0, 0, 2.4375]]
+In[13]:= energy
+Out[13]= 30000
+In[14]:= momentum
+Out[14]= [100, 200, 100]
+In[15]:= run 0.1 steps 100
+Out[15]= t = 0.1 (2121 solver steps, 100 snapshots, |dE/E| = 2.040e-10, 119 collision(s) — CONTACTS lists them)
+In[16]:= energy
+Out[16]= 29999.999993880127
+In[17]:= momentum
+Out[17]= [146.48911126803657, 102.1478121131382, 46.01601291636828]
+In[18]:= get system.collisions
+Out[18]= 119
+In[19]:= get system.box
+Out[19]= 4
+##### scripts/collisions/12_two_dumbbells.posim
+In[1]:= set system.g_constant = 0
+In[2]:= def create_dumbell(name, m1 = 1, m2 = 1, m_rod = 0.5, r1 = 0.25, r2 = 0.25, rod_radius = 0.1, length = 1, position = [0, 0, 0], velocity = [0, 0, 0], angular_velocity = [0, 0, 0]) {
+  new dumbbell as name { m1 = m1, m2 = m2, m_rod = m_rod, r1 = r1, r2 = r2, rod_radius = rod_radius, length = length, position = position, velocity = velocity, angular_velocity = angular_velocity }
+}
+Out[2]= function create_dumbell(11 parameter(s)) defined — 1 body line(s)
+In[3]:= create_dumbell("dumbell0", 1, 2, 0.5, 0.25, 0.25, 0.1, 1, [-2, 0.15, 0], [1.5, 0, 0], [0, 0, 0.6])
+Out[3]= obj0 as dumbell0
+In[4]:= create_dumbell("dumbell1", 2, 1, 0.4, 0.3, 0.2, 0.08, 1.2, [2, -0.15, 0], [-1.5, 0, 0], [0.4, 0, 0])
+Out[4]= obj1 as dumbell1
+In[5]:= list
+Out[5]= obj0: dumbbell r1=0.25 r2=0.25 rod_r=0.1 len=1, mass=3.5, charge=0, pos=[-2, 0.15, 0]
+obj1: dumbbell r1=0.3 r2=0.2 rod_r=0.08 len=1.2, mass=3.4, charge=0, pos=[2, -0.15, 0]
+In[6]:= get dumbell0.m1
+Out[6]= 1
+In[7]:= get dumbell1.m_rod
+Out[7]= 0.3999999999999999
+In[8]:= get dumbell0.vx
+Out[8]= 1.5
+In[9]:= energy
+Out[9]= 7.865310611764706
+In[10]:= momentum
+Out[10]= [0.15000000000000036, 0, 0]
+In[11]:= angmom
+Out[11]= [0.4443030588235295, 0, -1.5059999999999998]
+In[12]:= run 3 steps 60
+Out[12]= t = 3 (3861 solver steps, 60 snapshots, |dE/E| = 9.463e-11, 2 collision(s) — CONTACTS lists them)
+In[13]:= energy
+Out[13]= 7.865310611020375
+In[14]:= momentum
+Out[14]= [0.15000000000000036, 0, 0]
+In[15]:= angmom
+Out[15]= [0.44430305882373156, -0.000000000000009547918011776346, -1.505999999999855]
+In[16]:= get system.collisions
+Out[16]= 2

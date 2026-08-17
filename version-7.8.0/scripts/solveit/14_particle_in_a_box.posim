@@ -1,0 +1,22 @@
+# 14. The infinite square well, solved inside the language.
+# QM GRID pins psi to zero just outside the domain -- that IS an
+# infinite square well of width L. With hbar = m = 1 the exact levels
+# are E_n = n^2 pi^2 / (2 L^2). On [0, 1] that is 4.9348022005446793,
+# 19.739208802178716, 44.413219804902106, 78.95683520871486.
+qm grid 0 1 800
+qm potential zero
+qm mass 1
+qm hbar 1
+qm states 4
+# the exact answers, computed in-language
+pi * pi / 2
+4 * pi * pi / 2
+9 * pi * pi / 2
+16 * pi * pi / 2
+# and a physical check: the ground state must be normalised, symmetric,
+# and have <x> exactly in the middle
+qm state 1
+qm norm
+qm position
+qm energy
+qm prob 0 0.5

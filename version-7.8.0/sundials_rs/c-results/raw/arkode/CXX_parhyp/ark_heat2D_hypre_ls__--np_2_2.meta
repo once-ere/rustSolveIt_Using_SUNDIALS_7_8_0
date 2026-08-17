@@ -1,0 +1,10 @@
+example:  ark_heat2D_hypre_ls
+source:   examples/arkode/CXX_parhyp/ark_heat2D_hypre_ls.cpp
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parhyp/ark_heat2D_hypre_ls
+argv:     --np 2 2
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parhyp/ark_heat2D_hypre_ls__--np_2_2
+exit:     0 (OK)
+seconds:  0.940
+stdout:   3030 bytes, sha256 2aa37197538045a9c1e56f72dc7d01af7528563cc653ca96087840abf5eecd37
+stderr:   762 bytes

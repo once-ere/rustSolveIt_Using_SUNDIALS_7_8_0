@@ -1,0 +1,17 @@
+# Example 5 — a billiard break: the cue ball strikes the apex of a
+# three-ball triangle at e = 0.95. Each outgoing direction lies along
+# the line of centers of its collision (read the normals!), and total
+# momentum is conserved through the whole multi-ball cascade.
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-4, 0, 0], velocity = [2, 0, 0], restitution = 0.95 }
+new sphere { mass = 1, radius = 0.5, position = [0, 0, 0], restitution = 0.95 }
+new sphere { mass = 1, radius = 0.5, position = [0.9, 0.55, 0], restitution = 0.95 }
+new sphere { mass = 1, radius = 0.5, position = [0.9, -0.55, 0], restitution = 0.95 }
+momentum
+step 3
+contacts
+get obj0.velocity
+get obj1.velocity
+get obj2.velocity
+get obj3.velocity
+momentum

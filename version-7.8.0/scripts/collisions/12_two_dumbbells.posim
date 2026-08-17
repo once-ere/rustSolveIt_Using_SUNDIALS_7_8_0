@@ -1,0 +1,39 @@
+# Example 12 — two colliding dumbbells built by a USER-DEFINED function.
+#
+# `create_dumbell` is defined IN THE NOTEBOOK LANGUAGE (DEF): it takes a
+# name plus every entity value (all optional — defaults fill in) and
+# builds a 'dumbbell' object: two solid spheres m1 and m2, of masses m1
+# and m2, connected by a rigid rod of mass m_rod — ONE rigid body whose
+# local origin is its center of mass. After creation the user-chosen
+# name supplies values: dumbell0.m1, dumbell0.m2, dumbell0.m_rod,
+# dumbell0.x, dumbell0.vx, ... all read AND write (member writes rebuild
+# total mass, COM offsets and the inertia tensor).
+#
+# The two dumbbells approach off-center and collide elastically.
+# EXPECTATIONS (G = 0, restitution 1, no walls):
+#   total energy            E  conserved,
+#   total linear momentum   P  conserved,
+#   total angular momentum  L  conserved (the impulse pair acts at one
+#                              shared contact point ⇒ zero net torque);
+# the scene window's 'conserved quantities' readout shows the labeled
+# E / P / L values live (SCENE CREATE opens it).
+#
+# Run: cargo run -p posim -- --script scripts/collisions/12_two_dumbbells.posim
+set system.g_constant = 0
+def create_dumbell(name, m1 = 1, m2 = 1, m_rod = 0.5, r1 = 0.25, r2 = 0.25, rod_radius = 0.1, length = 1, position = [0, 0, 0], velocity = [0, 0, 0], angular_velocity = [0, 0, 0]) {
+  new dumbbell as name { m1 = m1, m2 = m2, m_rod = m_rod, r1 = r1, r2 = r2, rod_radius = rod_radius, length = length, position = position, velocity = velocity, angular_velocity = angular_velocity }
+}
+create_dumbell("dumbell0", 1, 2, 0.5, 0.25, 0.25, 0.1, 1, [-2, 0.15, 0], [1.5, 0, 0], [0, 0, 0.6])
+create_dumbell("dumbell1", 2, 1, 0.4, 0.3, 0.2, 0.08, 1.2, [2, -0.15, 0], [-1.5, 0, 0], [0.4, 0, 0])
+list
+get dumbell0.m1
+get dumbell1.m_rod
+get dumbell0.vx
+energy
+momentum
+angmom
+run 3 steps 60
+energy
+momentum
+angmom
+get system.collisions

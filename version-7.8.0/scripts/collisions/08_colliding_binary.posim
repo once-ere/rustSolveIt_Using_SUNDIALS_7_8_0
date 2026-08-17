@@ -1,0 +1,16 @@
+# Example 8 — gravity AND collisions together: two spheres on a bound
+# elliptical orbit whose pericenter (0.5) is SMALLER than the sum of
+# radii (0.6). Gravity pulls them together, the impact fires at the
+# exact touch, an e = 0.6 bounce robs energy, and the orbit shrinks —
+# but momentum stays exactly zero throughout.
+set system.g_constant = 1
+new sphere { mass = 1, radius = 0.3, position = [-1, 0, 0], velocity = [0, -0.316227766, 0], restitution = 0.6 }
+new sphere { mass = 1, radius = 0.3, position = [1, 0, 0], velocity = [0, 0.316227766, 0], restitution = 0.6 }
+energy
+momentum
+run 6 steps 12
+contacts
+energy
+momentum
+get obj0.position
+get obj1.position

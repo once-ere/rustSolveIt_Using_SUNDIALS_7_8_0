@@ -1,0 +1,104 @@
+# Routh I.Art.85 + 87 — equal elastic spheres EXCHANGE velocities, and a
+# sphere with m = e*m' is reduced to REST — dynamic notebook
+#
+# E. J. Routh, "A Treatise on Dynamics of a Particle" (Cambridge, 1898),
+# Part I. Two consequences of the impact equations of Arts. 83-84, each a
+# statement about one number being exactly zero afterwards.
+#
+# Art. 85: "When two perfectly elastic spheres of equal mass impinge on each
+# other the bodies exchange velocities."
+#
+# Art. 87: "If one sphere of mass m impinge directly on another of mass m'
+# which is at rest and if m = m'e, the impinging sphere therefore loses its
+# whole momentum and is reduced to rest."
+#
+# THE ALGEBRA. For a direct impact of m (speed u) on m' (at rest), with
+# Newton's restitution rule of Art. 84 (relative separation = -e x relative
+# approach) and conservation of momentum,
+#
+#     v  = u * (m - e*m') / (m + m')          (the impinging sphere)
+#     v' = u * m*(1 + e)  / (m + m')          (the struck sphere)
+#
+# Art. 85 is m = m', e = 1:   v = 0 and v' = u -- a clean exchange.
+# Art. 87 is m = e*m':        the numerator m - e*m' vanishes identically, so
+# v = 0 whatever u is. The impinging sphere stops dead and hands over ALL its
+# momentum, without the masses being equal and without the impact being elastic.
+#
+# THE TWO CASES BELOW.
+#
+#   case A  m = 1, m' = 1, e = 1     -> expect v = 0,   v' = 1
+#   case B  m = 1, m' = 2, e = 0.5   -> m = e*m' exactly, so
+#                                       v = 0 and v' = 1*1.5/3 = 0.5
+#
+# Momentum checks in both: 1*0 + 1*1 = 1 in case A, 1*0 + 2*0.5 = 1 in case B,
+# each equal to the initial 1*1 = 1.
+#
+# SETUP NOTES. Gravity is switched OFF (g_constant = 0) so the only interaction
+# is the impact itself -- posim's pairwise gravity is on by default with G = 1
+# and would otherwise curve the approach. Spheres of radius 0.5 touch when
+# their centres are 1 apart; the mover starts 2 units of gap away at unit
+# speed, so contact is at t = 2 and a run to t = 4 is comfortably past it.
+# posim takes the pair restitution as min(e_i, e_j), so both spheres carry the
+# same value in each case.
+#
+# WHAT YOU WATCH: case B is the striking one -- a light sphere runs into a
+# heavier stationary one, stops absolutely dead at the moment of contact, and
+# the heavy one glides away. Nothing about the picture suggests the masses and
+# the restitution are in the exact ratio that makes it happen.
+#
+# ---------------------------------------------------------------------------
+# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+#
+#     posim_notebook routh_p1_sphere_exchange
+#
+# or, without the shell alias, the always-available form:
+#
+#     cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_sphere_exchange.posim
+#
+# The scene window opens in your browser. To start the simulation, press Start
+# in that window, or type this at the In[] prompt in the terminal:
+#
+#     scene start
+#
+# If no browser should be launched (the URL is printed instead), use:
+#
+#     POSIM_NO_BROWSER=1 cargo run -p posim --release -- --notebook dynamic_notebooks/routh_p1_sphere_exchange.posim
+# ---------------------------------------------------------------------------
+
+# ---- case A : equal masses, perfectly elastic -> exchange of velocities
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+collide on
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0], restitution = 1 }
+new sphere { mass = 1, radius = 0.5, position = [ 0, 0, 0], restitution = 1 }
+run 4 steps 4
+obj0.vx
+obj1.vx
+system.collisions
+reset
+
+# ---- case B : m = e*m' (1 = 0.5 * 2) -> the impinging sphere stops dead
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+collide on
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0], restitution = 0.5 }
+new sphere { mass = 2, radius = 0.5, position = [ 0, 0, 0], restitution = 0.5 }
+run 4 steps 4
+obj0.vx
+obj1.vx
+obj0.momentum + obj1.momentum
+reset
+
+# ---- the scene: case B, rebuilt at t = 0 and left Stopped
+set system.g_constant = 0
+set system.rtol = 1e-13
+set system.atol = 1e-15
+collide on
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0], restitution = 0.5 }
+new sphere { mass = 2, radius = 0.5, position = [ 0, 0, 0], restitution = 0.5 }
+momentum
+
+scene create
+scene set_time_step 0.02

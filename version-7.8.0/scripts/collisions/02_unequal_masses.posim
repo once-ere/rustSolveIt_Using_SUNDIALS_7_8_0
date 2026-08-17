@@ -1,0 +1,12 @@
+# Example 2 — unequal masses, 1-D elastic textbook formulas:
+# m1 = 1 at v = 1 strikes m2 = 3 at rest.
+#   v1' = (m1 - m2)/(m1 + m2) = -1/2
+#   v2' =    2 m1 /(m1 + m2) = +1/2
+# The light ball bounces BACK — the classic surprise.
+set system.g_constant = 0
+new sphere { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+new sphere { mass = 3, radius = 0.5, position = [0, 0, 0] }
+step 4
+get obj0.velocity.x
+get obj1.velocity.x
+momentum

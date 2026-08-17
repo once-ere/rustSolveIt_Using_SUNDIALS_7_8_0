@@ -1,0 +1,75 @@
+############ kepler_orbit
+Kepler orbit, e = 0.6, t in [0, 100] (~15.9 orbits)
+
+CVODE Adams (rtol 1e-10, atol 1e-12)
+  steps taken            = 4540
+  |dE/E|                 = 2.430222e-09
+  |dL|/|L|               = 5.144452e-08
+  |dA|/|A| (Runge-Lenz)  = 1.131858e-07
+
+ARKODE SPRKStep MCLACHLAN_4_4 (fixed dt = 0.01)
+  steps taken            = 10000
+  |dE/E|                 = 3.790119e-09
+  |dL|/|L|               = 1.260448e-09
+  |dA|/|A| (Runge-Lenz)  = 6.920925e-07
+
+SUCCESS: all conservation checks passed
+exit=0
+############ outer_solar_system
+Outer solar system N-body problem (6 bodies, 78 equations incl. rigid DOF)
+physical_object -> sundials_rs CVODE (Adams + Newton + dense DQ Jacobian)
+
+  t (days)      com x (AU)     com y (AU)     com z (AU)      energy drift
+     50000      0.30898119    -0.12830142    -0.06401681      1.991119e-07
+    100000      0.61775767    -0.25005271    -0.12520879      3.927803e-07
+    150000      0.92653416    -0.37180400    -0.18640077      5.121495e-07
+    200000      1.23531064    -0.49355528    -0.24759275      4.900916e-08
+    250000      1.54408712    -0.61530657    -0.30878473      2.733654e-08
+    300000      1.85286360    -0.73705785    -0.36997671      1.797031e-07
+    350000      2.16164008    -0.85880914    -0.43116868      3.947370e-07
+    400000      2.47041656    -0.98056042    -0.49236066      4.179098e-07
+    450000      2.77919305    -1.10231171    -0.55355264      5.783308e-07
+    500000      3.08796953    -1.22406299    -0.61474462      7.835809e-07
+
+Pluto at t = 500000 days:
+  x =    31.78592516  y =    38.63618957  z =     3.19279415
+
+Final Statistics:
+  internal steps     = 12581
+  rhs evaluations    = 16680
+  nonlinear iters    = 16677
+  error test fails   = 1042
+  relative energy drift over 500000 days = 7.835809e-07
+  SUCCESS: energy drift within 1e-6
+exit=0
+############ tumbling_body
+Torque-free tumbling cuboid, t in [0, 25], 25 snapshots
+  internal steps    = 1525
+  |dL|/|L|          = 0.000000e+00
+  |dKE|/KE          = 5.103724e-09
+  | |q| - 1 |       = 0.000000e+00
+  final w           = Vec3 { x: -0.002979137322269937, y: 3.0000001077647966, z: -0.00013719967149522248 }
+SUCCESS: rigid-body invariants conserved
+exit=0
+############ charged_in_b_field
+Charged sphere in uniform B (q = -1.5, B = 4, |v| = 3)
+  expected gyroradius   = 1.000000
+  measured gyroradius   = 1.000000
+  |v| drift             = 7.219880e-09
+  orbit closure |x(T)|  = 7.232739e-09
+SUCCESS: gyration matches analytic solution
+exit=0
+############ newtons_cradle
+Newton's cradle: 1 incomer at v = 1 into 4 touching spheres
+  collisions resolved : 4
+  final velocities    : [0.0, 0.0, 0.0, 0.0, 1.0]
+  total momentum      : [1, 0, 0]
+SUCCESS: impulse propagated through the chain, momentum conserved
+exit=0
+############ bouncing_ball_restitution
+Bouncing ball: h = 4.5, g = 10, e = 0.8
+  impact time  : 0.9486832980505138 (analytic 0.9486832980505138)
+  impact normal: [-0, 1, -0] (floor → ball)
+  rebound apex : 3.37997191386479 (analytic 3.380000000000001)
+SUCCESS: rebound apex = e^2 x drop height, impact at the exact TOI
+exit=0

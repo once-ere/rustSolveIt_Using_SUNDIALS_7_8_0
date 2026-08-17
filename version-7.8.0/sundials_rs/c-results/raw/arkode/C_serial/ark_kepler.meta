@@ -1,0 +1,10 @@
+example:  ark_kepler
+source:   examples/arkode/C_serial/ark_kepler.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_kepler
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_kepler
+exit:     0 (OK)
+seconds:  0.205
+stdout:   5036 bytes, sha256 e524ae31f2839470c0698f12076bcdcfefec08cd257ae058910e5b650f7b1d34
+stderr:   0 bytes

@@ -1,0 +1,205 @@
+### cvode_rs ###
+cvAdvDiff_bnd                            []  IDENTICAL
+cvAnalytic_mels                          []  IDENTICAL
+cvDirectDemo_ls                          []  IDENTICAL
+cvDisc_dns                               []  IDENTICAL
+cvDiurnal_kry_bp                         []  IDENTICAL
+cvDiurnal_kry                            []  IDENTICAL
+cvKrylovDemo_ls                          []  IDENTICAL
+cvKrylovDemo_ls                          [1]  IDENTICAL
+cvKrylovDemo_ls                          [2]  IDENTICAL
+cvKrylovDemo_prec                        []  IDENTICAL
+cvParticle_dns                           []  IDENTICAL
+cvPendulum_dns                           []  DIFF(10 lines)
+cvRoberts_dns                            []  IDENTICAL
+cvRoberts_dns_constraints                []  IDENTICAL
+cvRoberts_dns_negsol                     []  DIFF(2 lines)
+cvRoberts_dns_uw                         []  IDENTICAL
+cvRocket_dns                             []  IDENTICAL
+cvVdp_auto_nls                           []  IDENTICAL
+cvKrylovDemo_ls                          [0 1]  IDENTICAL
+cvAdvDiff_bndL                           []  IDENTICAL
+cvRoberts_dnsL                           []  DIFF(16 lines)
+cvRoberts_block_klu                      []  EXCLUDED excluded(klu)
+cvRoberts_klu                            []  EXCLUDED excluded(klu)
+cvRoberts_sps                            []  EXCLUDED excluded(superlu)
+### cvodes_rs ###
+cvsAdvDiff_ASAi_bnd                      []  IDENTICAL
+cvsAdvDiff_FSA_non                       [-sensi sim t]  IDENTICAL
+cvsAdvDiff_FSA_non                       [-sensi stg t]  IDENTICAL
+cvsAdvDiff_bnd                           []  IDENTICAL
+cvsAnalytic_mels                         []  IDENTICAL
+cvsAnalytic_mels                         [cvodes.max_order 3]  IDENTICAL
+cvsDirectDemo_ls                         []  IDENTICAL
+cvsDiurnal_FSA_kry                       [-sensi sim t]  IDENTICAL
+cvsDiurnal_FSA_kry                       [-sensi stg t]  IDENTICAL
+cvsDiurnal_kry                           []  IDENTICAL
+cvsDiurnal_kry_bp                        []  IDENTICAL
+cvsFoodWeb_ASAi_kry                      []  IDENTICAL
+cvsFoodWeb_ASAp_kry                      []  IDENTICAL
+cvsHessian_ASA_FSA                       []  IDENTICAL
+cvsKrylovDemo_ls                         []  DIFF(25 lines)
+cvsKrylovDemo_ls                         [1]  DIFF(25 lines)
+cvsKrylovDemo_ls                         [2]  DIFF(25 lines)
+cvsKrylovDemo_prec                       []  IDENTICAL
+cvsLotkaVolterra_ASA                     []  IDENTICAL
+cvsParticle_dns                          []  IDENTICAL
+cvsPendulum_dns                          []  DIFF(10 lines)
+cvsRoberts_ASAi_dns                      []  IDENTICAL
+cvsRoberts_ASAi_dns_constraints          []  IDENTICAL
+cvsRoberts_FSA_dns                       [-sensi sim t]  IDENTICAL
+cvsRoberts_FSA_dns                       [-sensi stg1 t]  IDENTICAL
+cvsRoberts_FSA_dns_Switch                []  IDENTICAL
+cvsRoberts_FSA_dns_constraints           [-sensi stg1 t]  IDENTICAL
+cvsRoberts_dns                           []  IDENTICAL
+cvsRoberts_dns_constraints               []  IDENTICAL
+cvsRoberts_dns_uw                        []  IDENTICAL
+cvsKrylovDemo_ls                         [0 1]  DIFF(738 lines)
+cvsAdvDiff_bndL                          []  IDENTICAL
+cvsRoberts_dnsL                          []  DIFF(32 lines)
+cvsRoberts_ASAi_klu                      []  EXCLUDED excluded(klu)
+cvsRoberts_FSA_klu                       [-sensi stg1 t]  EXCLUDED excluded(klu)
+cvsRoberts_klu                           []  EXCLUDED excluded(klu)
+cvsRoberts_ASAi_sps                      []  EXCLUDED excluded(superlu)
+cvsRoberts_FSA_sps                       [-sensi stg1 t]  EXCLUDED excluded(superlu)
+cvsRoberts_sps                           []  EXCLUDED excluded(superlu)
+### kinsol_rs ###
+kinAnalytic_fp                           []  IDENTICAL
+kinAnalytic_fp                           [--damping_fp 0.5]  IDENTICAL
+kinAnalytic_fp                           [--damping_fn]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 2]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 2 --delay_aa 2]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 2 --damping_aa 0.5]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 2 --damping_fn]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 3 --depth_fn]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 2 --orth_aa 1]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 2 --orth_aa 2]  IDENTICAL
+kinAnalytic_fp                           [--m_aa 2 --orth_aa 3]  IDENTICAL
+kinFerTron_dns                           []  IDENTICAL
+kinFoodWeb_kry                           []  IDENTICAL
+kinKrylovDemo_ls                         []  IDENTICAL
+kinLaplace_bnd                           []  IDENTICAL
+kinLaplace_picard_bnd                    []  IDENTICAL
+kinLaplace_picard_kry                    []  IDENTICAL
+kinRoberts_fp                            []  IDENTICAL
+kinRoberts_fp                            [kinsol.m_aa 1]  IDENTICAL
+kinRoboKin_dns                           []  DIFF(32 lines)
+kinFerTron_klu                           []  EXCLUDED excluded(klu)
+kinRoboKin_slu                           []  EXCLUDED excluded(superlu)
+### ida_rs ###
+idaAnalytic_mels                         []  IDENTICAL
+idaAnalytic_mels                         [ida.scalar_tolerances 1e-3 1e-8]  IDENTICAL
+idaFoodWeb_bnd                           []  IDENTICAL
+idaFoodWeb_kry                           []  IDENTICAL
+idaHeat2D_bnd                            []  IDENTICAL
+idaHeat2D_kry                            []  IDENTICAL
+idaKrylovDemo_ls                         []  IDENTICAL
+idaKrylovDemo_ls                         [1]  IDENTICAL
+idaKrylovDemo_ls                         [2]  IDENTICAL
+idaRoberts_dns                           []  IDENTICAL
+idaSlCrank_dns                           []  IDENTICAL
+idaHeat2D_klu                            []  EXCLUDED excluded(klu)
+idaRoberts_klu                           []  EXCLUDED excluded(klu)
+idaRoberts_sps                           []  EXCLUDED excluded(superlu)
+### idas_rs ###
+idasAkzoNob_ASAi_dns                     []  DIFF(3 lines)
+idasAkzoNob_dns                          []  IDENTICAL
+idasAnalytic_mels                        []  IDENTICAL
+idasAnalytic_mels                        [idas.init_step 1e-5]  IDENTICAL
+idasFoodWeb_bnd                          []  IDENTICAL
+idasHeat2D_bnd                           []  IDENTICAL
+idasHeat2D_kry                           []  IDENTICAL
+idasHessian_ASA_FSA                      []  IDENTICAL
+idasKrylovDemo_ls                        []  IDENTICAL
+idasKrylovDemo_ls                        [1]  IDENTICAL
+idasKrylovDemo_ls                        [2]  IDENTICAL
+idasRoberts_ASAi_dns                     []  IDENTICAL
+idasRoberts_FSA_dns                      [-sensi stg t]  IDENTICAL
+idasRoberts_dns                          []  IDENTICAL
+idasSlCrank_dns                          []  IDENTICAL
+idasSlCrank_FSA_dns                      []  IDENTICAL
+idasRoberts_ASAi_klu                     []  EXCLUDED excluded(klu)
+idasRoberts_FSA_klu                      [-sensi stg t]  EXCLUDED excluded(klu)
+idasRoberts_klu                          []  EXCLUDED excluded(klu)
+idasRoberts_ASAi_sps                     []  EXCLUDED excluded(superlu)
+idasRoberts_FSA_sps                      [-sensi stg t]  EXCLUDED excluded(superlu)
+idasRoberts_sps                          []  EXCLUDED excluded(superlu)
+### arkode_rs ###
+ark_analytic                             []  IDENTICAL
+ark_analytic                             [arkode.scalar_tolerances 1e-6 1e-8 arkode.table_names ARKODE_ESDIRK547L2SA_7_4_5 ARKODE_ERK_NONE]  IDENTICAL
+ark_advection_diffusion_reaction_splitting []  IDENTICAL
+ark_analytic_lsrk                        []  IDENTICAL
+ark_analytic_lsrk_varjac                 []  IDENTICAL
+ark_analytic_lsrk_domeigest              []  IDENTICAL
+ark_analytic_lsrk_domeigest              [arkid.dom_eig_est_init_preprocess_iters 1 sundomeigestimator.max_iters 1]  IDENTICAL
+ark_analytic_mels                        []  IDENTICAL
+ark_analytic_nonlin                      []  IDENTICAL
+ark_analytic_partitioned                 [forcing]  DIFF(84 lines)
+ark_analytic_partitioned                 [splitting]  DIFF(84 lines)
+ark_analytic_partitioned                 [splitting ARKODE_SPLITTING_BEST_2_2_2]  DIFF(84 lines)
+ark_analytic_partitioned                 [splitting ARKODE_SPLITTING_RUTH_3_3_2]  DIFF(84 lines)
+ark_analytic_partitioned                 [splitting ARKODE_SPLITTING_YOSHIDA_8_6_2]  DIFF(84 lines)
+ark_analytic_ssprk                       []  IDENTICAL
+ark_brusselator_1D_mri                   []  IDENTICAL
+ark_brusselator_fp                       []  IDENTICAL
+ark_brusselator_lsrk_domeigest           []  IDENTICAL
+ark_brusselator_lsrk_externaldomeigest   []  IDENTICAL
+ark_brusselator_mri                      []  IDENTICAL
+ark_brusselator                          []  IDENTICAL
+ark_brusselator1D_imexmri                [0 0.001]  IDENTICAL
+ark_brusselator1D_imexmri                [2 0.001]  IDENTICAL
+ark_brusselator1D_imexmri                [3 0.001]  IDENTICAL
+ark_brusselator1D_imexmri                [4 0.001]  IDENTICAL
+ark_brusselator1D_imexmri                [5 0.001]  IDENTICAL
+ark_brusselator1D_imexmri                [6 0.001]  IDENTICAL
+ark_brusselator1D_imexmri                [7 0.001]  IDENTICAL
+ark_brusselator1D                        []  IDENTICAL
+ark_conserved_exp_entropy_ark            [1 0]  IDENTICAL
+ark_conserved_exp_entropy_ark            [1 1]  DIFF(1 lines)
+ark_conserved_exp_entropy_erk            [1]  IDENTICAL
+ark_damped_harmonic_symplectic           []  DIFF(26 lines)
+ark_dissipated_exp_entropy               [1 0]  IDENTICAL
+ark_dissipated_exp_entropy               [1 1]  DIFF(1 lines)
+ark_harmonic_symplectic                  []  DIFF(26 lines)
+ark_heat1D_adapt                         []  IDENTICAL
+ark_heat1D                               []  IDENTICAL
+ark_kepler                               [--stepper ERK --step-mode adapt]  IDENTICAL
+ark_kepler                               [--stepper ERK --step-mode fixed --count-orbits]  DIFF(36 lines)
+ark_kepler                               [--stepper SPRK --step-mode fixed --count-orbits --use-compensated-sums]  DIFF(28 lines)
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_EULER_1_1 --tf 50 --check-order --nout 1]  DIFF(242 lines)
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_LEAPFROG_2_2 --tf 50 --check-order --nout 1]  IDENTICAL
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_2_2 --tf 50 --check-order --nout 1]  IDENTICAL
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_3_3 --tf 50 --check-order --nout 1]  IDENTICAL
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_4_4 --tf 50 --check-order --nout 1]  IDENTICAL
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_MCLACHLAN_5_6 --tf 50 --check-order --nout 1]  IDENTICAL
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_PSEUDO_LEAPFROG_2_2 --tf 50 --check-order --nout 1]  IDENTICAL
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_RUTH_3_3 --tf 50 --check-order --nout 1]  DIFF(242 lines)
+ark_kepler                               [--stepper SPRK --step-mode fixed --method ARKODE_SPRK_YOSHIDA_6_8 --tf 50 --check-order --nout 1]  IDENTICAL
+ark_kepler                               []  DIFF(26 lines)
+ark_kpr_mri                              [0 1 0.005]  IDENTICAL
+ark_kpr_mri                              [1 0 0.01]  IDENTICAL
+ark_kpr_mri                              [1 1 0.002]  IDENTICAL
+ark_kpr_mri                              [2 4 0.002]  IDENTICAL
+ark_kpr_mri                              [3 2 0.001]  IDENTICAL
+ark_kpr_mri                              [4 3 0.001]  IDENTICAL
+ark_kpr_mri                              [5 4 0.001]  IDENTICAL
+ark_kpr_mri                              [6 5 0.001]  IDENTICAL
+ark_kpr_mri                              [7 2 0.002]  IDENTICAL
+ark_kpr_mri                              [8 3 0.001 -100 100 0.5 1]  IDENTICAL
+ark_kpr_mri                              [9 3 0.001 -100 100 0.5 1]  IDENTICAL
+ark_kpr_mri                              [10 4 0.001 -100 100 0.5 1]  IDENTICAL
+ark_kpr_mri                              [11 2 0.001]  IDENTICAL
+ark_kpr_mri                              [12 3 0.005]  IDENTICAL
+ark_kpr_mri                              [13 4 0.01]  IDENTICAL
+ark_KrylovDemo_prec                      []  IDENTICAL
+ark_KrylovDemo_prec                      [1]  IDENTICAL
+ark_KrylovDemo_prec                      [2]  IDENTICAL
+ark_lotka_volterra_ASA                   [--check-freq 1]  IDENTICAL
+ark_lotka_volterra_ASA                   [--check-freq 5]  IDENTICAL
+ark_onewaycouple_mri                     []  IDENTICAL
+ark_reaction_diffusion_mri               []  DIFF(70 lines)
+ark_robertson_constraints                []  IDENTICAL
+ark_robertson_root                       []  IDENTICAL
+ark_robertson                            []  IDENTICAL
+ark_twowaycouple_mri                     []  IDENTICAL
+ark_brusselator_fp                       [1]  IDENTICAL

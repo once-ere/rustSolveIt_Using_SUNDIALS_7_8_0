@@ -1,0 +1,10 @@
+example:  cvsRoberts_dns
+source:   examples/cvodes/serial/cvsRoberts_dns.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_dns
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_dns
+exit:     0 (OK)
+seconds:  0.206
+stdout:   2217 bytes, sha256 c23a663fee1d66b796391f36bea3f771f2e110cfa357952fdf5cd539b0f9740e
+stderr:   0 bytes

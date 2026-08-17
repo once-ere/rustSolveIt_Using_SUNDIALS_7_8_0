@@ -1,0 +1,28 @@
+# An eccentric Kepler orbit (e = 0.6) and the Runge-Lenz compass — dynamic notebook
+#
+# A 1e9 "sun" fixes the focus and a unit-mass planet starts at perihelion
+# [0.4, 0, 0] with v = [0, 2, 0]; g_constant = 1e-9 makes G*M_total = 1, so the
+# period is 2*pi ~ 6.283 and the total energy is E = -m*k/(2a) = -0.5 exactly.
+# LAPLACE 1 is the Runge-Lenz compass: divided by m*k it IS the eccentricity
+# vector — the baseline below reads [0.6, 0, 0], e = 0.6 pointing at perihelion.
+# Watch the hud E hold -0.5 while the planet whips through perihelion (+x) and
+# crawls at aphelion; one orbit takes ~21 wall-seconds at the default dt 0.01.
+# One notebook, three documented sources: grammar.md Example 1 + Example 11,
+# user guide Example S2, and physical_object/examples/kepler_orbit.rs.
+#
+# Launch:   posim_notebook kepler_orbit
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/kepler_orbit.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+new point { mass = 1e9, position = [0, 0, 0] }
+new point { mass = 1, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+set system.g_constant = 1e-9
+set system.softening = 0
+
+# Baselines before anything moves: total energy (analytic -0.5) and the
+# Runge-Lenz vector (m*k*e_vec = [0.6, 0, 0] — the axis the orbit must keep).
+energy
+laplace 1
+
+scene create

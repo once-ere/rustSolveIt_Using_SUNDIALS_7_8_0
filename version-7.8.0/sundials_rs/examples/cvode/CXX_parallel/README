@@ -1,0 +1,3 @@
+List of parallel CVODE C++ examples
+
+  cv_heat2D_p : 2-D heat equation (PCG with Jacobi preconditioner)

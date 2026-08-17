@@ -1,0 +1,5 @@
+Linux 6.6.87.2-microsoft-standard-WSL2 x86_64
+ldd (Ubuntu GLIBC 2.39-0ubuntu8.7) 2.39
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+rustc 1.93.1 (01f6ddf75 2026-02-11)
+model name	: Intel(R) Core(TM) Ultra 9 275HX

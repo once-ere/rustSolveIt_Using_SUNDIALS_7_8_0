@@ -1,0 +1,10 @@
+example:  ark_diurnal_kry_bp_f2003
+source:   examples/arkode/F2003_serial/ark_diurnal_kry_bp_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_diurnal_kry_bp_f2003
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_diurnal_kry_bp_f2003
+exit:     0 (OK)
+seconds:  0.206
+stdout:   3133 bytes, sha256 218e0ed424638af123724ba7fb0ae827f0177314359cc15162a9c83f009c9e53
+stderr:   0 bytes

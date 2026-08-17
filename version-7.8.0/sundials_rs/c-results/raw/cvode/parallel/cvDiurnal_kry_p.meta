@@ -1,0 +1,10 @@
+example:  cvDiurnal_kry_p
+source:   examples/cvode/parallel/cvDiurnal_kry_p.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/parallel/cvDiurnal_kry_p
+argv:     
+launcher: mpirun --oversubscribe -np 4
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/parallel/cvDiurnal_kry_p
+exit:     0 (OK)
+seconds:  0.607
+stdout:   2402 bytes, sha256 f18a3e7d3f49a4f70d71acafbf7fdd1e5771544c0f63d722ad89bbaeda360892
+stderr:   762 bytes

@@ -1,0 +1,10 @@
+example:  test_fsunlinsol_fortran_mod
+source:   examples/arkode/F2003_custom/test_fsunlinsol_fortran_mod.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_custom/test_fsunlinsol_fortran_mod
+argv:     
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_custom/test_fsunlinsol_fortran_mod
+exit:     0 (OK)
+seconds:  0.206
+stdout:   178 bytes, sha256 335d2d1bc69ba55ba5a942dfed241901dde478fb54a94f7af678c4ace2be5cdd
+stderr:   0 bytes

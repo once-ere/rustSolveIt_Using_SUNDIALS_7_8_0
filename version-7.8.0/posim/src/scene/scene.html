@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>posim scene</title>
+<style>
+  :root {
+    --bg: #10141a; --panel: #1a2129; --panel2: #212a35; --edge: #2e3a48;
+    --text: #d7e0ea; --dim: #8797a8; --accent: #4ea1ff; --ok: #37c26e;
+    --warn: #e0b13c; --err: #e05555;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 13px/1.4 system-ui, "Segoe UI", sans-serif;
+    display: flex; flex-direction: column;
+  }
+  /* ---------- toolbar ---------- */
+  #toolbar {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    padding: 6px 10px; background: var(--panel);
+    border-bottom: 1px solid var(--edge);
+  }
+  #toolbar .group {
+    display: flex; align-items: center; gap: 4px;
+    padding: 2px 8px 2px 0; border-right: 1px solid var(--edge);
+  }
+  #toolbar .group:last-child { border-right: none; }
+  #toolbar button {
+    background: var(--panel2); color: var(--text);
+    border: 1px solid var(--edge); border-radius: 5px;
+    padding: 4px 9px; cursor: pointer; font-size: 13px;
+  }
+  #toolbar button:hover { border-color: var(--accent); }
+  #toolbar button.active { background: #14406b; border-color: var(--accent); }
+  #toolbar input[type=number] {
+    width: 82px; background: var(--panel2); color: var(--text);
+    border: 1px solid var(--edge); border-radius: 5px; padding: 4px 6px;
+  }
+  #toolbar .lbl { color: var(--dim); margin-left: 2px; }
+  #title { font-weight: 600; color: var(--accent); margin-right: 4px; }
+  /* ---------- canvas ---------- */
+  #stage { position: relative; flex: 1; min-height: 0; }
+  #scene { position: absolute; inset: 0; width: 100%; height: 100%;
+           display: block; cursor: grab; }
+  #scene.dragging { cursor: grabbing; }
+  /* ---------- help overlay ---------- */
+  #help {
+    position: absolute; top: 12px; right: 12px; max-width: 340px;
+    background: rgba(20, 26, 34, 0.95); border: 1px solid var(--edge);
+    border-radius: 8px; padding: 12px 16px; display: none; z-index: 5;
+  }
+  #help.show { display: block; }
+  #help h2 { font-size: 14px; color: var(--accent); margin-bottom: 8px; }
+  #help td { padding: 2px 8px 2px 0; vertical-align: top; }
+  #help td:first-child { color: var(--warn); white-space: nowrap; }
+  /* ---------- status bar ---------- */
+  #statusbar {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 4px 12px; background: var(--panel);
+    border-top: 1px solid var(--edge); color: var(--dim); font-size: 12px;
+  }
+  #statusbar b { color: var(--text); font-weight: 600; }
+  #conn-dot { display: inline-block; width: 8px; height: 8px;
+              border-radius: 50%; background: var(--err); margin-right: 4px; }
+  #conn-dot.ok { background: var(--ok); }
+  .mode-running { color: var(--ok); } .mode-paused { color: var(--warn); }
+  .mode-stopped { color: var(--dim); } .mode-reversing { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div id="toolbar">
+    <span id="title">posim scene</span>
+    <span class="group">
+      <button id="bt-start"   title="Start forward evolution (Space)">&#9654; Start</button>
+      <button id="bt-pause"   title="Pause evolution (Space)">&#10074;&#10074; Pause</button>
+      <button id="bt-stop"    title="Stop evolution and clear history">&#9632; Stop</button>
+      <button id="bt-reverse" title="Play backward through recorded history">&#9664; Reverse</button>
+      <button id="bt-reset"   title="Re-initialize: every value returns to its initial value and time returns to its initial value; Start then runs the simulation again">&#8634; Reset</button>
+      <button id="bt-back"    title="One step backward">&#8676;</button>
+      <button id="bt-step"    title="One step forward">&#8677;</button>
+    </span>
+    <span class="group">
+      <span class="lbl">dt</span>
+      <input id="in-dt" type="number" step="any" min="0" value="0.01"
+             title="Time step for the playback loop">
+      <button id="bt-setdt" title="Apply the time step">Set</button>
+    </span>
+    <span class="group">
+      <button id="bt-zin"  title="Zoom in (+ or mouse wheel up)">&#128269;+</button>
+      <button id="bt-zout" title="Zoom out (- or mouse wheel down)">&#128269;&#8722;</button>
+      <button id="bt-home" title="Reset the view (R)">&#8962; View</button>
+    </span>
+    <span class="group">
+      <button id="bt-grid"   class="active" title="Toggle the ground grid (G)">Grid</button>
+      <button id="bt-trails" class="active" title="Toggle motion trails (T)">Trails</button>
+      <button id="bt-labels" class="active" title="Toggle object labels (L)">Labels</button>
+      <button id="bt-contacts" class="active"
+              title="Toggle contact-normal arrows at collision points (C)">Contacts</button>
+      <button id="bt-help"   title="Show the controls cheat-sheet (H or ?)">?</button>
+    </span>
+  </div>
+
+  <div id="stage">
+    <canvas id="scene"></canvas>
+    <div id="help">
+      <h2>Controls</h2>
+      <table>
+        <tr><td>&#8592; &#8594;</td><td>translate the view left / right</td></tr>
+        <tr><td>&#8593; &#8595;</td><td>translate the view up / down</td></tr>
+        <tr><td>left-drag</td><td>rotate (orbit) around the scene</td></tr>
+        <tr><td>wheel</td><td>zoom in / out</td></tr>
+        <tr><td>+ / &#8722;</td><td>zoom in / out (keyboard)</td></tr>
+        <tr><td>shift-drag<br>right-drag</td><td>translate (pan) with the mouse</td></tr>
+        <tr><td>Space</td><td>start / pause playback</td></tr>
+        <tr><td>R</td><td>reset the view</td></tr>
+        <tr><td>G / T / L</td><td>toggle grid / trails / labels</td></tr>
+        <tr><td>C</td><td>toggle contact-normal arrows</td></tr>
+        <tr><td>H or ?</td><td>toggle this help</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="hud" style="position:absolute; top:44px; left:10px; z-index:5;
+       font: 12px ui-monospace, monospace; color:#c6d2df;
+       background:rgba(10,14,20,0.55); padding:6px 9px; border-radius:6px;
+       pointer-events:none; white-space:pre;">conserved quantities
+E  = &ndash;
+P  = &ndash;
+L  = &ndash;</div>
+  <div id="statusbar">
+    <span><span id="conn-dot"></span><span id="st-conn">connecting&hellip;</span></span>
+    <span>mode <b id="st-mode" class="mode-stopped">stopped</b></span>
+    <span>t = <b id="st-time">0</b></span>
+    <span>dt = <b id="st-dt">0.01</b></span>
+    <span>E = <b id="st-energy">&ndash;</b></span>
+    <span>bodies <b id="st-bodies">0</b></span>
+    <span>hidden <b id="st-hidden">0</b></span>
+    <span>contacts <b id="st-contacts">0</b></span>
+    <span>history <b id="st-history">0</b></span>
+    <span>cam yaw <b id="st-yaw">0&deg;</b> pitch <b id="st-pitch">0&deg;</b>
+          dist <b id="st-dist">0</b></span>
+    <span><b id="st-fps">0</b> fps</span>
+  </div>
+
+<script>
+"use strict";
+/* ================= scene window application =================
+ * Receives: init (entity geometry + camera), frame (poses), camera.
+ * Sends:    cmd (toolbar), camera (gesture sync), event (errors). */
+
+const canvas = document.getElementById("scene");
+const ctx = canvas.getContext("2d");
+
+const state = {
+  entities: [],           /* {i, shape, radius?, half_extents?, ring_radius?,
+                             tube_radius?, half_height?, r1?, r2?, rod_radius?,
+                             z1?, z2?, wall?, name?, mass}              */
+  bodies: [],             /* [x,y,z,qw,qx,qy,qz] per entity           */
+  box: null,              /* inner side length of the rigid bounding box */
+  hidden: new Set(),
+  trails: [],             /* per entity: array of [x,y,z]             */
+  t: 0, dt: 0.01, mode: "stopped", energy: NaN, history: 0,
+  ptot: null, ltot: null,      /* total momentum / angular momentum */
+  cam: { yaw: -60, pitch: 55, dist: 12, target: [0, 0, 0] },
+  homeCam: null,
+  showGrid: true, showTrails: true, showLabels: true, showContacts: true,
+  /* recent contacts, each {point, normal, impulse, seen} — kept ~600 ms
+   * so a single-tick impact stays visible */
+  contactFlash: [],
+  contactCount: 0,
+  frames: 0, fps: 0,
+};
+
+/* ---------------- WebSocket link ---------------- */
+let ws = null, wsOpen = false, retryMs = 500;
+
+function connect() {
+  ws = new WebSocket("ws://" + location.host + "/ws");
+  ws.onopen = () => {
+    wsOpen = true; retryMs = 500;
+    setConn(true, "connected to posim");
+  };
+  ws.onclose = () => {
+    wsOpen = false;
+    setConn(false, "disconnected — retrying");
+    setTimeout(connect, retryMs);
+    retryMs = Math.min(retryMs * 2, 8000);
+  };
+  ws.onerror = () => {};
+  ws.onmessage = (e) => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+    if (msg.type === "init") applyInit(msg);
+    else if (msg.type === "frame") applyFrame(msg);
+    else if (msg.type === "camera") applyCamera(msg.camera, true);
+  };
+}
+
+function send(obj) { if (wsOpen) ws.send(JSON.stringify(obj)); }
+function sendCmd(action, value) {
+  const m = { type: "cmd", action: action };
+  if (value !== undefined) m.value = value;
+  send(m);
+}
+/* report page errors back to the notebook as async events */
+window.addEventListener("error", (e) => {
+  send({ type: "event", level: "error",
+         message: "scene window JS error: " + e.message });
+});
+
+function setConn(ok, text) {
+  document.getElementById("conn-dot").className = ok ? "ok" : "";
+  document.getElementById("st-conn").textContent = text;
+}
+
+/* ---------------- incoming messages ---------------- */
+function applyInit(msg) {
+  state.entities = msg.entities || [];
+  state.box = (typeof msg.box === "number") ? msg.box : null;
+  state.hidden = new Set(msg.hidden || []);
+  state.trails = state.entities.map(() => []);
+  state.bodies = [];
+  state.t = msg.t; state.dt = msg.dt; state.mode = msg.mode;
+  document.getElementById("in-dt").value = msg.dt;
+  applyCamera(msg.camera, false);
+  if (!state.homeCam) state.homeCam = JSON.parse(JSON.stringify(state.cam));
+  updateStatus();
+}
+
+function applyFrame(msg) {
+  state.bodies = msg.bodies || [];
+  state.hidden = new Set(msg.hidden || []);
+  state.t = msg.t; state.dt = msg.dt; state.mode = msg.mode;
+  state.energy = msg.energy; state.history = msg.history;
+  state.ptot = msg.p || null; state.ltot = msg.l || null;
+  /* contact normals: refresh the flash list (deduplicated by pair) */
+  const now = performance.now();
+  state.contactCount = (msg.contacts || []).length;
+  for (const c of msg.contacts || []) {
+    const key = c.i + ":" + c.j;
+    const existing = state.contactFlash.find((f) => f.key === key);
+    if (existing) {
+      existing.point = c.point; existing.normal = c.normal;
+      existing.impulse = c.impulse; existing.seen = now;
+    } else {
+      state.contactFlash.push({ key, point: c.point, normal: c.normal,
+                                impulse: c.impulse, seen: now });
+    }
+  }
+  state.contactFlash = state.contactFlash.filter((f) => now - f.seen < 600);
+  if (state.showTrails && (state.mode === "running" || state.mode === "reversing")) {
+    for (let i = 0; i < state.bodies.length; i++) {
+      if (!state.trails[i]) state.trails[i] = [];
+      const b = state.bodies[i];
+      const tr = state.trails[i];
+      const last = tr[tr.length - 1];
+      if (!last || last[0] !== b[0] || last[1] !== b[1] || last[2] !== b[2]) {
+        tr.push([b[0], b[1], b[2]]);
+        if (tr.length > 800) tr.shift();
+      }
+    }
+  }
+  updateStatus();
+}
+
+function applyCamera(c, remote) {
+  if (!c) return;
+  /* while the user is dragging, their gesture wins over remote sync */
+  if (remote && drag.active) return;
+  state.cam.yaw = c.yaw; state.cam.pitch = c.pitch;
+  state.cam.dist = c.dist; state.cam.target = c.target.slice();
+}
+
+/* camera changes made here are synced back (throttled to 10 Hz) */
+let camDirty = false;
+setInterval(() => {
+  if (camDirty && wsOpen) {
+    camDirty = false;
+    send({ type: "camera", yaw: state.cam.yaw, pitch: state.cam.pitch,
+           dist: state.cam.dist, target: state.cam.target });
+  }
+}, 100);
+function touchCamera() { camDirty = true; }
+
+/* ---------------- camera math (z-up orbit) ---------------- */
+function camBasis() {
+  const d2r = Math.PI / 180;
+  const cy = Math.cos(state.cam.yaw * d2r), sy = Math.sin(state.cam.yaw * d2r);
+  const cp = Math.cos(state.cam.pitch * d2r), sp = Math.sin(state.cam.pitch * d2r);
+  /* unit vector from target toward the camera */
+  const dir = [cp * cy, cp * sy, sp];
+  const t = state.cam.target;
+  const eye = [t[0] + state.cam.dist * dir[0],
+               t[1] + state.cam.dist * dir[1],
+               t[2] + state.cam.dist * dir[2]];
+  const fwd = [-dir[0], -dir[1], -dir[2]];
+  /* right = fwd x up(z), normalized */
+  let rx = fwd[1], ry = -fwd[0], rz = 0;
+  const rn = Math.hypot(rx, ry) || 1;
+  rx /= rn; ry /= rn;
+  /* camera up = right x fwd */
+  const ux = ry * fwd[2] - rz * fwd[1];
+  const uy = rz * fwd[0] - rx * fwd[2];
+  const uz = rx * fwd[1] - ry * fwd[0];
+  return { eye, fwd, right: [rx, ry, rz], up: [ux, uy, uz] };
+}
+
+function project(p, basis, w, h, focal) {
+  const dx = p[0] - basis.eye[0], dy = p[1] - basis.eye[1], dz = p[2] - basis.eye[2];
+  const zc = dx * basis.fwd[0] + dy * basis.fwd[1] + dz * basis.fwd[2];
+  if (zc < 1e-6) return null;          /* behind the camera */
+  const xc = dx * basis.right[0] + dy * basis.right[1] + dz * basis.right[2];
+  const yc = dx * basis.up[0] + dy * basis.up[1] + dz * basis.up[2];
+  return { x: w / 2 + focal * xc / zc, y: h / 2 - focal * yc / zc, z: zc };
+}
+
+/* ---------------- rendering ---------------- */
+function entityColor(i) { return "hsl(" + ((i * 67) % 360) + " 70% 60%)"; }
+
+function rotateByQuat(v, q) {
+  /* v' = q v q*  (q = [w,x,y,z]) */
+  const [w, x, y, z] = q, [vx, vy, vz] = v;
+  const tx = 2 * (y * vz - z * vy), ty = 2 * (z * vx - x * vz), tz = 2 * (x * vy - y * vx);
+  return [vx + w * tx + (y * tz - z * ty),
+          vy + w * ty + (z * tx - x * tz),
+          vz + w * tz + (x * ty - y * tx)];
+}
+
+function draw() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== w * devicePixelRatio || canvas.height !== h * devicePixelRatio) {
+    canvas.width = w * devicePixelRatio; canvas.height = h * devicePixelRatio;
+  }
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const basis = camBasis();
+  const focal = 0.9 * Math.min(w, h);
+
+  if (state.showGrid) drawGrid(basis, w, h, focal);
+  if (state.box) drawBox(state.box, basis, w, h, focal);
+
+  /* trails first (under the bodies) */
+  if (state.showTrails) {
+    for (let i = 0; i < state.trails.length; i++) {
+      if (state.hidden.has(i)) continue;
+      const tr = state.trails[i];
+      if (!tr || tr.length < 2) continue;
+      ctx.strokeStyle = entityColor(i);
+      ctx.globalAlpha = 0.45; ctx.lineWidth = 1;
+      ctx.beginPath();
+      let started = false;
+      for (const p of tr) {
+        const s = project(p, basis, w, h, focal);
+        if (!s) { started = false; continue; }
+        if (started) ctx.lineTo(s.x, s.y);
+        else { ctx.moveTo(s.x, s.y); started = true; }
+      }
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  /* bodies, painter-sorted far -> near */
+  const order = [];
+  for (let i = 0; i < state.entities.length; i++) {
+    if (state.hidden.has(i)) continue;
+    /* the six BOX wall slabs are represented by the box wireframe */
+    if (state.entities[i].wall) continue;
+    const b = state.bodies[i];
+    const pos = b ? [b[0], b[1], b[2]] : [0, 0, 0];
+    const s = project(pos, basis, w, h, focal);
+    if (s) order.push({ i, s, pos, b });
+  }
+  order.sort((a, b) => b.s.z - a.s.z);
+  for (const { i, s, pos, b } of order) {
+    const ent = state.entities[i];
+    const color = entityColor(i);
+    if (ent.shape === "cuboid") {
+      drawCuboid(ent, pos, b, basis, w, h, focal, color);
+    } else if (ent.shape === "torus") {
+      drawTorus(ent, pos, b, basis, w, h, focal, color);
+    } else if (ent.shape === "disk") {
+      drawDisk(ent, pos, b, basis, w, h, focal, color);
+    } else if (ent.shape === "cylinder") {
+      drawCylinder(ent, pos, b, basis, w, h, focal, color);
+    } else if (ent.shape === "dumbbell") {
+      drawDumbbell(ent, pos, b, basis, w, h, focal, color);
+    } else {
+      const rWorld = ent.shape === "sphere" ? ent.radius : 0;
+      const rPix = Math.max(3, focal * rWorld / s.z);
+      const grad = ctx.createRadialGradient(
+        s.x - rPix * 0.3, s.y - rPix * 0.3, rPix * 0.1, s.x, s.y, rPix);
+      grad.addColorStop(0, "#ffffff");
+      grad.addColorStop(0.25, color);
+      grad.addColorStop(1, "rgba(0,0,0,0.85)");
+      ctx.fillStyle = ent.shape === "sphere" ? grad : color;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, rPix, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+    if (state.showLabels) {
+      ctx.fillStyle = "#c6d2df";
+      ctx.font = "11px system-ui";
+      ctx.fillText(ent.name || ("obj" + i), s.x + 8, s.y - 8);
+    }
+  }
+
+  if (state.showContacts) drawContacts(basis, w, h, focal);
+}
+
+/* Contact normals: a double-headed arrow through the contact point
+ * along ±n̂ — the action-reaction line — fading out over ~600 ms.
+ * The arrowhead sits on the j side (the body that receives +J·n̂). */
+function drawContacts(basis, w, h, focal) {
+  const now = performance.now();
+  const L = Math.max(0.35, niceStep(state.cam.dist / 8) * 0.5);
+  for (const c of state.contactFlash) {
+    const age = (now - c.seen) / 600;
+    if (age >= 1) continue;
+    const p = c.point, n = c.normal;
+    const a = [p[0] - n[0] * L, p[1] - n[1] * L, p[2] - n[2] * L];
+    const b = [p[0] + n[0] * L, p[1] + n[1] * L, p[2] + n[2] * L];
+    const sa = project(a, basis, w, h, focal);
+    const sb = project(b, basis, w, h, focal);
+    const sp = project(p, basis, w, h, focal);
+    if (!sa || !sb || !sp) continue;
+    ctx.globalAlpha = 1 - age;
+    ctx.strokeStyle = "#ffd24a";
+    ctx.fillStyle = "#ffd24a";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(sa.x, sa.y);
+    ctx.lineTo(sb.x, sb.y);
+    ctx.stroke();
+    /* arrowhead at the j end */
+    const dx = sb.x - sa.x, dy = sb.y - sa.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len, uy = dy / len, ah = Math.min(10, len * 0.25);
+    ctx.beginPath();
+    ctx.moveTo(sb.x, sb.y);
+    ctx.lineTo(sb.x - ah * ux - ah * 0.5 * uy, sb.y - ah * uy + ah * 0.5 * ux);
+    ctx.lineTo(sb.x - ah * ux + ah * 0.5 * uy, sb.y - ah * uy - ah * 0.5 * ux);
+    ctx.closePath();
+    ctx.fill();
+    /* contact point dot */
+    ctx.beginPath();
+    ctx.arc(sp.x, sp.y, 3, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawCuboid(ent, pos, b, basis, w, h, focal, color) {
+  const he = ent.half_extents || [1, 1, 1];
+  const q = b ? [b[3], b[4], b[5], b[6]] : [1, 0, 0, 0];
+  const corners = [];
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) {
+    const local = [sx * he[0], sy * he[1], sz * he[2]];
+    const rot = rotateByQuat(local, q);
+    corners.push(project(
+      [pos[0] + rot[0], pos[1] + rot[1], pos[2] + rot[2]], basis, w, h, focal));
+  }
+  const edges = [[0,1],[2,3],[4,5],[6,7],[0,2],[1,3],[4,6],[5,7],[0,4],[1,5],[2,6],[3,7]];
+  ctx.strokeStyle = color; ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  for (const [a, c] of edges) {
+    if (!corners[a] || !corners[c]) continue;
+    ctx.moveTo(corners[a].x, corners[a].y);
+    ctx.lineTo(corners[c].x, corners[c].y);
+  }
+  ctx.stroke();
+}
+
+/* Strokes a closed loop of local-frame points rotated by q and
+ * translated to pos (skipping behind-camera segments). */
+function strokeLoop(points, pos, q, basis, w, h, focal, close) {
+  ctx.beginPath();
+  let started = false, first = null;
+  for (const local of points) {
+    const r = rotateByQuat(local, q);
+    const s = project([pos[0] + r[0], pos[1] + r[1], pos[2] + r[2]], basis, w, h, focal);
+    if (!s) { started = false; continue; }
+    if (started) ctx.lineTo(s.x, s.y);
+    else { ctx.moveTo(s.x, s.y); started = true; if (!first) first = s; }
+  }
+  if (close && started && first) ctx.lineTo(first.x, first.y);
+  ctx.stroke();
+}
+
+/* n points of a circle of radius r, in the local plane z = z0 */
+function circlePts(r, z0, n) {
+  const pts = [];
+  for (let k = 0; k < n; k++) {
+    const a = (2 * Math.PI * k) / n;
+    pts.push([r * Math.cos(a), r * Math.sin(a), z0]);
+  }
+  return pts;
+}
+
+/* Torus wireframe: outer + inner equators, two tube-top/bottom rings,
+ * and four tube cross-sections — enough to read the hole and the spin. */
+function drawTorus(ent, pos, b, basis, w, h, focal, color) {
+  const R = ent.ring_radius || 1, r = ent.tube_radius || 0.25;
+  const q = b ? [b[3], b[4], b[5], b[6]] : [1, 0, 0, 0];
+  ctx.strokeStyle = color; ctx.lineWidth = 1.6;
+  strokeLoop(circlePts(R + r, 0, 48), pos, q, basis, w, h, focal, true);
+  strokeLoop(circlePts(R - r, 0, 40), pos, q, basis, w, h, focal, true);
+  ctx.lineWidth = 1.0;
+  strokeLoop(circlePts(R, r, 44), pos, q, basis, w, h, focal, true);
+  strokeLoop(circlePts(R, -r, 44), pos, q, basis, w, h, focal, true);
+  for (let k = 0; k < 4; k++) {
+    const phi = (Math.PI / 2) * k;
+    const cx = Math.cos(phi), sy = Math.sin(phi);
+    const sect = [];
+    for (let j = 0; j < 20; j++) {
+      const a = (2 * Math.PI * j) / 20;
+      const rho = R + r * Math.cos(a);
+      sect.push([rho * cx, rho * sy, r * Math.sin(a)]);
+    }
+    strokeLoop(sect, pos, q, basis, w, h, focal, true);
+  }
+}
+
+/* Disk wireframe: rim + two diameters (so spin is visible). */
+function drawDisk(ent, pos, b, basis, w, h, focal, color) {
+  const a = ent.radius || 1;
+  const q = b ? [b[3], b[4], b[5], b[6]] : [1, 0, 0, 0];
+  ctx.strokeStyle = color; ctx.lineWidth = 1.6;
+  strokeLoop(circlePts(a, 0, 48), pos, q, basis, w, h, focal, true);
+  ctx.lineWidth = 1.0;
+  strokeLoop([[-a, 0, 0], [a, 0, 0]], pos, q, basis, w, h, focal, false);
+  strokeLoop([[0, -a, 0], [0, a, 0]], pos, q, basis, w, h, focal, false);
+}
+
+/* Cylinder wireframe: two cap rims + four side lines. */
+function drawCylinder(ent, pos, b, basis, w, h, focal, color) {
+  const r = ent.radius || 0.5, hh = ent.half_height || 1;
+  const q = b ? [b[3], b[4], b[5], b[6]] : [1, 0, 0, 0];
+  ctx.strokeStyle = color; ctx.lineWidth = 1.6;
+  strokeLoop(circlePts(r, hh, 36), pos, q, basis, w, h, focal, true);
+  strokeLoop(circlePts(r, -hh, 36), pos, q, basis, w, h, focal, true);
+  ctx.lineWidth = 1.0;
+  for (let k = 0; k < 4; k++) {
+    const a = (Math.PI / 2) * k;
+    const x = r * Math.cos(a), y = r * Math.sin(a);
+    strokeLoop([[x, y, -hh], [x, y, hh]], pos, q, basis, w, h, focal, false);
+  }
+}
+
+/* Dumbbell: two shaded spheres at their (rotated) offsets joined by
+ * the rod's four silhouette lines — one rigid body, spin visible. */
+function drawDumbbell(ent, pos, b, basis, w, h, focal, color) {
+  const q = b ? [b[3], b[4], b[5], b[6]] : [1, 0, 0, 0];
+  /* ?? not ||: a legitimate 0 / -0.0 offset must not fall back */
+  const z1 = ent.z1 ?? -0.5, z2 = ent.z2 ?? 0.5;
+  const centers = [[z1, ent.r1 ?? 0.25], [z2, ent.r2 ?? 0.25]];
+  /* rod silhouette: 4 lines between the sphere centers offset radially */
+  ctx.strokeStyle = color; ctx.lineWidth = 1.2;
+  const rodr = ent.rod_radius ?? 0.1;
+  for (const dir of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+    const a = rotateByQuat([dir[0] * rodr, dir[1] * rodr, z1], q);
+    const c = rotateByQuat([dir[0] * rodr, dir[1] * rodr, z2], q);
+    const sa = project([pos[0] + a[0], pos[1] + a[1], pos[2] + a[2]], basis, w, h, focal);
+    const sc = project([pos[0] + c[0], pos[1] + c[1], pos[2] + c[2]], basis, w, h, focal);
+    if (sa && sc) { ctx.beginPath(); ctx.moveTo(sa.x, sa.y); ctx.lineTo(sc.x, sc.y); ctx.stroke(); }
+  }
+  for (const [zc, r] of centers) {
+    const c = rotateByQuat([0, 0, zc], q);
+    const sp = project([pos[0] + c[0], pos[1] + c[1], pos[2] + c[2]], basis, w, h, focal);
+    if (!sp) continue;
+    const rPix = Math.max(3, focal * r / sp.z);
+    const grad = ctx.createRadialGradient(
+      sp.x - rPix * 0.3, sp.y - rPix * 0.3, rPix * 0.1, sp.x, sp.y, rPix);
+    grad.addColorStop(0, "#ffffff");
+    grad.addColorStop(0.25, color);
+    grad.addColorStop(1, "rgba(0,0,0,0.85)");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(sp.x, sp.y, rPix, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+}
+
+/* The rigid bounding box: a dashed light wireframe of the interior
+ * cube (the six static wall slabs are not drawn as bodies). */
+function drawBox(size, basis, w, h, focal) {
+  const hf = size / 2;
+  const corners = [];
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) {
+    corners.push(project([sx * hf, sy * hf, sz * hf], basis, w, h, focal));
+  }
+  const edges = [[0,1],[2,3],[4,5],[6,7],[0,2],[1,3],[4,6],[5,7],[0,4],[1,5],[2,6],[3,7]];
+  ctx.strokeStyle = "#5d84a8"; ctx.lineWidth = 1.4;
+  ctx.setLineDash([6, 5]);
+  ctx.beginPath();
+  for (const [a, c] of edges) {
+    if (!corners[a] || !corners[c]) continue;
+    ctx.moveTo(corners[a].x, corners[a].y);
+    ctx.lineTo(corners[c].x, corners[c].y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function drawGrid(basis, w, h, focal) {
+  /* XY ground grid (z = 0) sized to the camera distance */
+  const step = niceStep(state.cam.dist / 8);
+  const n = 10, ext = n * step;
+  const cx = Math.round(state.cam.target[0] / step) * step;
+  const cy = Math.round(state.cam.target[1] / step) * step;
+  ctx.strokeStyle = "#232d39"; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let k = -n; k <= n; k++) {
+    strokeSeg([cx + k * step, cy - ext, 0], [cx + k * step, cy + ext, 0], basis, w, h, focal);
+    strokeSeg([cx - ext, cy + k * step, 0], [cx + ext, cy + k * step, 0], basis, w, h, focal);
+  }
+  ctx.stroke();
+  /* world axes */
+  axis([1, 0, 0], "#b04a4a", "x", basis, w, h, focal);
+  axis([0, 1, 0], "#4a9a5a", "y", basis, w, h, focal);
+  axis([0, 0, 1], "#4a6ab0", "z", basis, w, h, focal);
+}
+
+function niceStep(raw) {
+  const p = Math.pow(10, Math.floor(Math.log10(Math.max(raw, 1e-12))));
+  const m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+
+function strokeSeg(a, b, basis, w, h, focal) {
+  const pa = project(a, basis, w, h, focal), pb = project(b, basis, w, h, focal);
+  if (pa && pb) { ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); }
+}
+
+function axis(dir, color, name, basis, w, h, focal) {
+  const L = niceStep(state.cam.dist / 8) * 2;
+  const o = project([0, 0, 0], basis, w, h, focal);
+  const e = project([dir[0] * L, dir[1] * L, dir[2] * L], basis, w, h, focal);
+  if (!o || !e) return;
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(o.x, o.y); ctx.lineTo(e.x, e.y); ctx.stroke();
+  ctx.fillStyle = color; ctx.font = "11px system-ui";
+  ctx.fillText(name, e.x + 4, e.y);
+}
+
+/* ---------------- render + fps loop ---------------- */
+function loop() { draw(); state.frames++; requestAnimationFrame(loop); }
+setInterval(() => {
+  state.fps = state.frames; state.frames = 0;
+  document.getElementById("st-fps").textContent = state.fps;
+}, 1000);
+
+/* ---------------- status bar ---------------- */
+function fmt(x, digits) {
+  if (typeof x !== "number" || !isFinite(x)) return "–";
+  return Math.abs(x) >= 1e5 || (Math.abs(x) < 1e-3 && x !== 0)
+    ? x.toExponential(digits) : x.toFixed(digits);
+}
+function updateStatus() {
+  const el = (id) => document.getElementById(id);
+  el("st-mode").textContent = state.mode;
+  el("st-mode").className = "mode-" + state.mode;
+  el("st-time").textContent = fmt(state.t, 4);
+  el("st-dt").textContent = state.dt;
+  el("st-energy").textContent = fmt(state.energy, 5);
+  const v3 = (v) => v ? "[" + v.map((x) => fmt(x, 5)).join(", ") + "]  |.| = " +
+                        fmt(Math.hypot(v[0], v[1], v[2]), 5) : "\u2013";
+  el("hud").textContent = "conserved quantities\n" +
+    "E  = " + fmt(state.energy, 8) + "\n" +
+    "P  = " + v3(state.ptot) + "\n" +
+    "L  = " + v3(state.ltot);
+  el("st-bodies").textContent = state.entities.length;
+  el("st-hidden").textContent = state.hidden.size;
+  el("st-contacts").textContent = state.contactCount;
+  el("st-history").textContent = state.history;
+  el("st-yaw").textContent = fmt(state.cam.yaw, 0) + "°";
+  el("st-pitch").textContent = fmt(state.cam.pitch, 0) + "°";
+  el("st-dist").textContent = fmt(state.cam.dist, 2);
+  const on = (id, flag) => el(id).classList.toggle("active", flag);
+  on("bt-grid", state.showGrid); on("bt-trails", state.showTrails);
+  on("bt-labels", state.showLabels); on("bt-contacts", state.showContacts);
+}
+setInterval(updateStatus, 250);
+
+/* ---------------- toolbar wiring ---------------- */
+const on = (id, fn) => document.getElementById(id).addEventListener("click", fn);
+on("bt-start",   () => sendCmd("start"));
+on("bt-pause",   () => sendCmd("pause"));
+on("bt-stop",    () => { sendCmd("stop"); state.trails = state.entities.map(() => []); });
+on("bt-reverse", () => sendCmd("reverse"));
+on("bt-reset",   () => { sendCmd("reset"); state.trails = state.entities.map(() => []); state.contactFlash = []; });
+on("bt-step",    () => sendCmd("step"));
+on("bt-back",    () => sendCmd("step_back"));
+on("bt-setdt",   () => {
+  const v = parseFloat(document.getElementById("in-dt").value);
+  if (isFinite(v) && v > 0) sendCmd("set_dt", v);
+  else send({ type: "event", level: "error", message: "dt must be a positive number" });
+});
+on("bt-zin",  () => zoom(1.2));
+on("bt-zout", () => zoom(1 / 1.2));
+on("bt-home", resetView);
+on("bt-grid",   () => { state.showGrid = !state.showGrid; });
+on("bt-trails", () => { state.showTrails = !state.showTrails; });
+on("bt-labels", () => { state.showLabels = !state.showLabels; });
+on("bt-contacts", () => { state.showContacts = !state.showContacts; });
+on("bt-help",   () => document.getElementById("help").classList.toggle("show"));
+
+function zoom(factor) {
+  state.cam.dist = Math.min(1e9, Math.max(1e-3, state.cam.dist / factor));
+  touchCamera();
+}
+function resetView() {
+  if (state.homeCam) {
+    state.cam = JSON.parse(JSON.stringify(state.homeCam));
+    touchCamera();
+  }
+}
+
+/* ---------------- keyboard: arrows translate, +/- zoom ---------------- */
+window.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT") return;
+  const pan = state.cam.dist * 0.06;
+  const basis = camBasis();
+  const moveBy = (vx, k) => {
+    state.cam.target[0] += vx[0] * k;
+    state.cam.target[1] += vx[1] * k;
+    state.cam.target[2] += vx[2] * k;
+    touchCamera();
+  };
+  switch (e.key) {
+    case "ArrowLeft":  moveBy(basis.right, -pan); break;   /* view slides left  */
+    case "ArrowRight": moveBy(basis.right,  pan); break;   /* view slides right */
+    case "ArrowUp":    moveBy(basis.up,     pan); break;
+    case "ArrowDown":  moveBy(basis.up,    -pan); break;
+    case "+": case "=": zoom(1.2); break;
+    case "-": case "_": zoom(1 / 1.2); break;
+    case " ":
+      sendCmd(state.mode === "running" ? "pause" : "start");
+      break;
+    case "r": case "R": resetView(); break;
+    case "g": case "G": state.showGrid = !state.showGrid; break;
+    case "t": case "T": state.showTrails = !state.showTrails; break;
+    case "l": case "L": state.showLabels = !state.showLabels; break;
+    case "c": case "C": state.showContacts = !state.showContacts; break;
+    case "h": case "H": case "?":
+      document.getElementById("help").classList.toggle("show"); break;
+    default: return;
+  }
+  e.preventDefault();
+});
+
+/* ---------------- mouse: left-drag rotate, wheel zoom, shift/right pan */
+const drag = { active: false, pan: false, x: 0, y: 0 };
+canvas.addEventListener("mousedown", (e) => {
+  drag.active = true;
+  drag.pan = e.button === 2 || e.shiftKey;
+  drag.x = e.clientX; drag.y = e.clientY;
+  canvas.classList.add("dragging");
+});
+window.addEventListener("mouseup", () => {
+  drag.active = false;
+  canvas.classList.remove("dragging");
+});
+window.addEventListener("mousemove", (e) => {
+  if (!drag.active) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.x = e.clientX; drag.y = e.clientY;
+  if (drag.pan) {
+    const k = state.cam.dist * 0.0016;
+    const basis = camBasis();
+    state.cam.target[0] += (-dx * basis.right[0] + dy * basis.up[0]) * k;
+    state.cam.target[1] += (-dx * basis.right[1] + dy * basis.up[1]) * k;
+    state.cam.target[2] += (-dx * basis.right[2] + dy * basis.up[2]) * k;
+  } else {
+    state.cam.yaw = (state.cam.yaw - dx * 0.4) % 360;
+    state.cam.pitch = Math.min(89, Math.max(-89, state.cam.pitch + dy * 0.4));
+  }
+  touchCamera();
+});
+canvas.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  zoom(e.deltaY < 0 ? 1.15 : 1 / 1.15);
+}, { passive: false });
+canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+
+connect();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

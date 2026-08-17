@@ -1,0 +1,38 @@
+# A thrown ball vs the textbook parabola — dynamic notebook
+#
+# A 0.145 kg baseball leaves [0, 1, 0] at v = [30, 30, 0] under uniform
+# gravity [0, -9.81, 0] — the closed-form solution is x(t) = 30 t,
+# y(t) = 1 + 30 t - 9.81 t²/2. Anchors: apex y ≈ 46.87 at t ≈ 3.06 s,
+# range x = 183.6 by t = 6.12 s (grammar.md §9 Example 2 matches the
+# simulated flight to ~1e-13). Watch the hud E (≈131.92, constant) and
+# P (px constant at 4.35, py falling) as the parabola sweeps the window.
+#
+# Launch:   posim_notebook thrown_ball
+#     or:   cargo run -p posim --release -- --notebook dynamic_notebooks/thrown_ball.posim
+# Press Start in the scene window (or type SCENE START here) to run
+# and display the simulation.
+
+new point { mass = 0.145, position = [0, 1, 0], velocity = [30, 30, 0] }
+set system.gravity = [0, -9.81, 0]
+
+# Baselines before any step: total energy, momentum, launch point
+energy
+momentum
+get obj0.position
+
+# Analytic anchors: range 30·6.12, apex time 30/9.81, apex height 1 + 30²/(2·9.81)
+30 * 6.12
+30 / 9.81
+1 + 30 * 30 / (2 * 9.81)
+
+scene create
+
+# Playback: dt = 0.02 at ~30 ticks/s makes the 6.12 s flight take ~10 wall seconds
+scene set_time_step 0.02
+
+# Framing: the arc spans 183.6 x 46.9 units, centered near [92, 23].
+# Move the look-at point to [90, 20, 0] and zoom 0.06 (distance 12 -> 200),
+# which widens the default ±5..10-unit view to roughly ±100..165 units —
+# the whole parabola fits with margin. Default yaw/pitch left alone.
+scene translate 90 20
+scene zoom 0.06

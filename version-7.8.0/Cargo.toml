@@ -1,0 +1,27 @@
+[workspace]
+resolver = "2"
+members = [
+    "quantum",
+    "physical_object",
+    "posim",
+    "special_functions",
+]
+default-members = [
+    "quantum","posim"]
+# Vendored third-party code is a dependency, never a workspace member:
+# excluding it keeps `cargo test --workspace` reporting OUR tests only,
+# and stops upstream lint settings leaking into this workspace.
+# See THIRD_PARTY.md for provenance.
+# sundials_rs is a self-contained workspace vendored beneath this one.
+# Without this exclude, cargo would absorb its crates into THIS workspace
+# and they would inherit `version.workspace` from here (0.1.0) instead of
+# their own 7.8.0 — silently misreporting the SUNDIALS version they port.
+exclude = ["sundials_rs", "vendor/spec_math"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[profile.release]
+opt-level = 3

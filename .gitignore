@@ -1,0 +1,14 @@
+# Working clones of the two upstream repositories this release was built
+# from. They are NOT part of this repository: the 7.8.0 engine is
+# vendored byte-identically at version-7.8.0/sundials_rs/, and the
+# 7.7.0 predecessor is only ever a comparison baseline.
+#   git clone https://github.com/once-ere/rustSolveIt.git
+#   git clone https://github.com/once-ere/SUNDIALS_7_8_Rust_port_for_Linux.git
+/rustSolveIt/
+/SUNDIALS_7_8_Rust_port_for_Linux/
+
+# Local agent/editor configuration
+/.claude/
+
+# Build output of any workspace beneath this root
+target/

@@ -1,0 +1,10 @@
+example:  ark_kpr_mri_f2003
+source:   examples/arkode/F2003_serial/ark_kpr_mri_f2003.f90
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_kpr_mri_f2003
+argv:     6 0.005
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_kpr_mri_f2003__6_0.005
+exit:     0 (OK)
+seconds:  0.206
+stdout:   3673 bytes, sha256 596bbe25ad3c99de6d630aeb9130e0b9918ff6e88f343d37b84ef7466a30a897
+stderr:   0 bytes

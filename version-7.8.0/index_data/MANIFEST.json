@@ -1,0 +1,79 @@
+{
+ "phase": 9,
+ "extracted": "2026-07-30",
+ "tier_A_notebook_surface": {
+  "keyword": 57,
+  "command": 107,
+  "magic": 8,
+  "property": 63,
+  "builtin": 73,
+  "type": 14,
+  "notebook": 48,
+  "example": 85,
+  "total": 455
+ },
+ "tier_B_first_party_rust": 528,
+ "tier_C_sundials_rs": 4165,
+ "rust_items_by_crate": {
+  "arkode_rs": 1154,
+  "sundials_core": 789,
+  "cvodes_rs": 643,
+  "idas_rs": 623,
+  "ida_rs": 359,
+  "cvode_rs": 352,
+  "kinsol_rs": 245,
+  "quantum": 177,
+  "physical_object": 131,
+  "special_functions": 131,
+  "posim": 89
+ },
+ "grand_total": 5148,
+ "files": [
+  "keywords.json",
+  "commands.json",
+  "magics.json",
+  "properties.json",
+  "builtins.json",
+  "corpora.json",
+  "doc_examples.json",
+  "rust_items.jsonl",
+  "DIVERGENCES.md",
+  "MANIFEST.json"
+ ],
+ "divergences_found": 6,
+ "prose_files_read": 21,
+ "primary_source_files_scanned": 325,
+ "catalog": {
+  "entries": 452,
+  "examples_total": 1007,
+  "examples_posim_verified": 942,
+  "examples_shell_not_batch_verifiable": 65,
+  "pass_rate": "942/942 (100%)",
+  "verified_date": "2026-07-30",
+  "stubs": 76
+ },
+ "divergences_fixed": 1,
+ "final": {
+  "entities": 4830,
+  "tier_A": 452,
+  "tier_B": 491,
+  "tier_C": 3887,
+  "examples_total": 3110,
+  "examples_runnable": 1342,
+  "examples_verified": 1435,
+  "posim_executed": 1153,
+  "rust_compiled": 258,
+  "stubs_A_B": 0,
+  "tier_C_reference": 3887,
+  "see_also_links": 872,
+  "acceptance_criteria": "31/31",
+  "app": {
+   "index_of_entities.html": "1.2 MB",
+   "catalog-c.js": "4.0 MB, lazy"
+  },
+  "machine_executed": 24,
+  "tier_A_four_rung": "254/254",
+  "quoted_transcripts": 65,
+  "reference_A_B": 233
+ }
+}

@@ -1,0 +1,10 @@
+example:  ark_brusselator1D
+crate:    arkode_rs
+source:   crates/arkode_rs/examples/ark_brusselator1D.rs
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_brusselator1D
+argv:     
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_brusselator1D
+exit:     0 (OK)
+seconds:  0.106
+stdout:   5665 bytes, sha256 403a2dfeb4cf80d4ab0c929c16169cd3681a12ef1cacc90b58c3595dad1be920
+stderr:   0 bytes

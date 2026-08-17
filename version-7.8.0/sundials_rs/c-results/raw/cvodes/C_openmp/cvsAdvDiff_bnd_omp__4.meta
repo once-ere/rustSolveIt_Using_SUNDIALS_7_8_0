@@ -1,0 +1,10 @@
+example:  cvsAdvDiff_bnd_omp
+source:   examples/cvodes/C_openmp/cvsAdvDiff_bnd_omp.c
+binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/C_openmp/cvsAdvDiff_bnd_omp
+argv:     4
+launcher: <direct>
+cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/C_openmp/cvsAdvDiff_bnd_omp__4
+exit:     0 (OK)
+seconds:  0.205
+stdout:   865 bytes, sha256 1c57b85092cd755787ad3e076a1f418a3c07d865206a2261fcd61ec7cb5875f0
+stderr:   0 bytes
