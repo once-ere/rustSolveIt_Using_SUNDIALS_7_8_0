@@ -1475,7 +1475,7 @@ The recorder drives `posim --machine` and asks it to `step` — **every
 advance is a real SUNDIALS step**. The tool is a camera, not a physics
 engine.
 
-Nine recordings ship with the repository:
+Ten recordings ship with the repository:
 
 | file | what to watch | measured over the recording |
 |---|---|---|
@@ -1488,6 +1488,7 @@ Nine recordings ship with the repository:
 | [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four **`CONSTRAIN` rods** — one row each, the cheapest linkage in the language, going chaotic | run continuously at the default tolerance the rods hold to \|*g*\| = 5.4 × 10⁻¹⁵, i.e. roundoff |
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top on a **`BALL` joint**, precessing under gravity | 1.020440 rad/s against the exact Ω = *Mgr*/(*I₃ω₃*) = 1.020408, 3 parts in 10⁵ |
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings**, three perpendicular `HINGE` axes | total *L·ŷ* conserved to 6.4 × 10⁻¹⁵; every centre stays on the pivot to 7 × 10⁻³⁵ |
+| [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same rings with a **pendulous** bowl — a ship's compass, seeking level | periods 1.878587 and 2.582727 s against measured 1.883852 and 2.589688 |
 
 That last one is the one to open if you only open one, because it shows
 a joint doing something a rod cannot. A `UNIVERSAL` holds a shared point

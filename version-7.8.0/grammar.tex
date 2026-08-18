@@ -3540,7 +3540,7 @@ and $dt$ the recording was made with. \textbf{This is the point of the
 format}: you can stop on the frame where something looks wrong and read
 the conserved quantities off it.
 
-\subsection{The nine shipped recordings}
+\subsection{The ten shipped recordings}
 
 \begin{center}
 \begin{tabular}{p{3.6cm}p{6.4cm}p{4.2cm}}
@@ -3582,6 +3582,10 @@ rings on three perpendicular \kw{hinge} axes; the push goes in about
 one axis and comes out about another & total $L\cdot\hat y$ conserved
 to $6.4\text{e-}15$; no centre moves further from the pivot than
 $7\text{e-}35$\\
+\code{videos/cardan\_compass.html} & the same two rings, but with a
+\textbf{pendulous} bowl, so gravity is the restoring torque and the
+card seeks level & two physical-pendulum periods, $1.878587$ and
+$2.582727$ s, measured $1.883852$ and $2.589688$\\
 \end{tabular}
 \end{center}
 
@@ -3640,29 +3644,53 @@ exactly on the plane $z = 0$, and the chain reaches $|z| = 1.7147$. A
 hinged chain would still be at exactly zero, for ever, because that is
 what fixing an axis means.
 
-\subsection{A hinge hands you a conservation law}
+\subsection{One number decides what a suspension does}
 
-Two of the recordings are the same object under different mounts, and
-the pair is worth reading together.
+Three of the recordings hang a rotor in a mount, and the only thing
+that really differs between them is where the centre of mass sits
+relative to the pivot. Read them as one experiment with one dial.
 
 \begin{center}
-\begin{tabular}{p{3.2cm}p{5.2cm}p{5.2cm}}
-& \code{spinning\_top} & \code{gyroscope\_gimbal}\\\hline
-mount & one \kw{ball} at the tip & three \kw{hinge}s, perpendicular
-axes\\
-rows & 3 on 6 freedoms & 15 on 18 freedoms\\
-centre of mass & a distance $r = 0.6$ from the pivot & \textbf{on} the
-pivot\\
-gravity & lever arm $r$, so a torque & lever arm zero, so none\\
-what happens & steady precession at $Mgr/(I_3\omega_3)$ & no
-gravitational precession at all\\
+\begin{tabular}{p{2.4cm}p{3.7cm}p{3.2cm}p{3.7cm}}
+& \code{spinning\_top} & \code{gyro\_gimbal} & \code{cardan\_compass}\\\hline
+mount & one \kw{ball} at the tip & three \kw{hinge}s & two \kw{hinge}s\\
+rows & 3 on 6 freedoms & 15 on 18 & 10 on 12\\
+centre of mass & $r = 0.6$ \textbf{from} the pivot & \textbf{on} the
+pivot & $d = 0.12$ \textbf{below} it\\
+gravity & lever arm $r$: a torque & lever arm 0: none & lever arm $d$: a
+\emph{restoring} torque\\
+result & steady precession $Mgr/(I_3\omega_3)$ & no gravitational
+precession & swings back to level, $2\pi\sqrt{I/Mgd}$\\
 \end{tabular}
 \end{center}
 
-The gimbal scene keeps the same \code{uniform\_gravity} as the top, and
-it does nothing. That is not a setting to notice; it is the point. A
-gimballed gyroscope is not balancing against gravity, it is free of it,
-because a lever arm of zero produces a torque of zero.
+All three carry a \code{uniform\_gravity}. In the middle column it does
+nothing whatever, and that is the point rather than an oversight: a
+lever arm of zero produces a torque of zero, so a gimballed gyroscope
+is not balancing against gravity, it is free of it. Move the centre of
+mass off the pivot and gravity comes back --- \emph{above} the pivot it
+would tip the thing over, \emph{below} it, it rights it. That last case
+is the whole of a ship's compass: it is not held level by its bearings,
+it is held level by its own weight.
+
+\textbf{The compass periods.} With the bowl pendulous each axis is an
+ordinary physical pendulum. In pitch only the bowl swings, giving
+$I = M(3R^2+4h^2)/12 + Md^2 = 0.21046667$ and $T = 1.878587$ s; in roll
+ring and bowl swing together, $I = 0.35803042$ against a restoring
+$(M_b - M_r)gd$, giving $T = 2.582727$ s. Measured: $1.883852$ and
+$2.589688$. The $2.8\times10^{-3}$ excess is not solver error --- halve
+the kick and it falls by $4.01$ and $4.02$, the signature of a term in
+$\theta^2$. Drive one axis alone and the attribution is exact: the
+pitch period comes out $4.99\times10^{-4}$ long against a predicted
+$\theta^2/16 = 5.02\times10^{-4}$.
+
+\textbf{A cost of the midpoint pivot.} Two hinges sharing one point
+force $p_{\text{frame}} = p_{\text{bowl}} = -p_{\text{ring}}$, so
+hanging the bowl $d$ below the centre puts the \emph{ring's} centre $d$
+above it. That is not cosmetic: the ring is then top-heavy and
+\textbf{subtracts} from the restoring torque, which is why the roll
+period carries $(M_b - M_r)$ and not $(M_b + M_r)$, and why the ring is
+made light.
 
 \textbf{And a hinge cannot torque about its own axis.} That is
 precisely the freedom it grants --- but read the other way round it is

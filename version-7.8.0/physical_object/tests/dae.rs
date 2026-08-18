@@ -576,6 +576,125 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The compass of `videos/cardan_compass.html`, against the physical
+/// pendulum period.
+///
+/// ```text
+/// frame --HINGE x-- ring --HINGE z-- bowl
+/// ```
+///
+/// The same two-ring suspension as the gyroscope gimbal, differing in
+/// one number: there every centre of mass sat **on** the pivot, so
+/// gravity had no lever arm and did nothing. Here the bowl is
+/// *pendulous* — its centre of mass hangs `d` below the pivot — and
+/// that is the entire mechanism. A ship's compass is not held level by
+/// its bearings; it is held level by its own weight.
+///
+/// So each axis is a physical pendulum:
+///
+/// ```text
+/// T = 2π √( I / (M g d) ),   I = M(3R² + 4h²)/12 + M d²
+/// ```
+///
+/// This excites the inner hinge **alone**, where the attribution is
+/// exact: the measured period sits `4.99e-4` above the linear formula,
+/// and the finite-amplitude correction `θ²/16` for this swing predicts
+/// `5.02e-4`. The residual is the known nonlinear term, not error —
+/// which is why the assertion is against `θ²/16` rather than a round
+/// tolerance.
+#[test]
+fn a_cardan_compass_swings_at_the_physical_pendulum_period() {
+    const MB: f64 = 2.0; // bowl
+    const RB: f64 = 0.6;
+    const HB: f64 = 0.05;
+    const D: f64 = 0.12; // centre of mass below the pivot
+    const W: f64 = 0.3; // the kick, about the inner hinge
+
+    let i_pivot = MB * (3.0 * RB * RB + 4.0 * HB * HB) / 12.0 + MB * D * D;
+    let period = 2.0 * std::f64::consts::PI * (i_pivot / (MB * G * D)).sqrt();
+
+    let s2 = std::f64::consts::FRAC_1_SQRT_2;
+    let mut frame = physical_object::new_point(0, 1.0, Vec3::new(0.0, -D, 0.0), Vec3::zeros());
+    frame.set_inverse_mass(0.0);
+    frame.set_inertia_tensor(Mat3::zeros());
+
+    /* The midpoint pivot rule forces p_frame = p_bowl = -p_ring, so a
+     * bowl hung d below centre puts the ring's centre d above it. */
+    let mut ring = physical_object::new_from_shape(
+        1,
+        0.2,
+        0.0,
+        Vec3::new(0.0, D, 0.0),
+        Vec3::zeros(),
+        Vec3::zeros(),
+        Boundary::Torus { ring_radius: 0.85, tube_radius: 0.035 },
+    );
+    ring.set_orientation(Quat::new(s2, 0.0, s2, 0.0));
+
+    /* Kicked about the inner hinge only. The linear velocity is the one
+     * that rotation implies about a pivot at the origin, v = ω × r, so
+     * the shared point stays still and ġ = 0. */
+    let mut bowl = physical_object::new_from_shape(
+        2,
+        MB,
+        0.0,
+        Vec3::new(0.0, -D, 0.0),
+        Vec3::new(W * D, 0.0, 0.0),
+        Vec3::new(0.0, 0.0, W),
+        Boundary::Cylinder { radius: RB, half_height: HB },
+    );
+    bowl.set_orientation(Quat::new(s2, s2, 0.0, 0.0));
+    bowl.set_angular_velocity(Vec3::new(0.0, 0.0, W));
+
+    let mut s = PhysicalObjectSystem::new(vec![frame, ring, bowl], 0.0);
+    s.uniform_gravity = Vec3::new(0.0, -G, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_hinge(&snap, 0, 1, Vec3::new(1.0, 0.0, 0.0)).unwrap();
+    s.constraints.add_hinge(&snap, 1, 2, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+    assert_eq!(s.constraints.len(), 10, "two hinges are five rows each");
+
+    /* The compass card's upward normal; its tilt off level is the swing. */
+    let tilt = |s: &PhysicalObjectSystem| {
+        let up = -s.objects[2].get_orientation().normalize().rotate(Vec3::new(0.0, 0.0, 1.0));
+        up.x.atan2(up.y)
+    };
+
+    let dt = 0.002;
+    let (mut prev_t, mut prev, mut crossings, mut amp) = (0.0, tilt(&s), Vec::new(), 0.0_f64);
+    let mut worst_g = 0.0_f64;
+    for k in 1..=2000 {
+        let t = dt * f64::from(k);
+        let r = integrate::run(&mut s, t, 1).expect("compass run");
+        worst_g = worst_g.max(r.constraint_drift.0);
+        let now = tilt(&s);
+        amp = amp.max(now.abs());
+        if prev < 0.0 && now >= 0.0 {
+            // linear interpolation onto the crossing
+            crossings.push(prev_t + dt * (-prev) / (now - prev));
+        }
+        prev_t = t;
+        prev = now;
+    }
+    assert!(worst_g < 1e-7, "the two hinges must hold: |g| = {worst_g:e}");
+    assert!(crossings.len() >= 2, "need at least one full swing");
+
+    let measured = (crossings[crossings.len() - 1] - crossings[0])
+        / (crossings.len() - 1) as f64;
+    let excess = (measured - period) / period;
+    let theta2_16 = amp * amp / 16.0;
+    /* The period is long by exactly the finite-amplitude term, so the
+     * two agree to a few percent OF EACH OTHER — a far tighter claim
+     * than "the period is close to the formula". */
+    assert!(
+        (excess - theta2_16).abs() < 0.1 * theta2_16,
+        "the excess should BE the θ²/16 correction: measured {measured} vs {period} \
+         (excess {excess:e}, θ²/16 = {theta2_16:e}, amplitude {} deg)",
+        amp.to_degrees()
+    );
+}
+
 /// The gimbal of `videos/gyroscope_gimbal.html`, and the conservation
 /// law a hinge hands you for free.
 ///

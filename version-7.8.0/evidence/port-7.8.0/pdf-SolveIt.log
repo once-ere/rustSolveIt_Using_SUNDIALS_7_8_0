@@ -162,39 +162,54 @@ Underfull \hbox (badness 3884) in paragraph at lines 1199--1201
 
 Overfull \hbox (18.29332pt too wide) in paragraph at lines 1204--1204
 []|\T1/lmtt/m/n/10.95 gyroscope_gimbal.html| 
+
+Overfull \hbox (6.79585pt too wide) in paragraph at lines 1208--1208
+[]|\T1/lmtt/m/n/10.95 cardan_compass.html| 
+
+Underfull \hbox (badness 10000) in paragraph at lines 1210--1212
+[]|\T1/lmr/m/n/10.95 periods $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT1/lmr
+/m/n/10.95 878587$ \T1/lmr/m/n/10.95 and
+
+Underfull \hbox (badness 10000) in paragraph at lines 1210--1212
+\OT1/lmr/m/n/10.95 2\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 582727$ \T1/lmr/m/n
+/10.95 s against
+
+Underfull \hbox (badness 10000) in paragraph at lines 1210--1212
+\T1/lmr/m/n/10.95 mea-sured $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT1/lmr/
+m/n/10.95 883852$ \T1/lmr/m/n/10.95 and
 [20] [21]
-Overfull \hbox (16.23592pt too wide) in paragraph at lines 1252--1257
+Overfull \hbox (16.23592pt too wide) in paragraph at lines 1256--1261
 \T1/lmr/m/n/10.95 Six ex-am-ple pro-grams, each print-ing \T1/lmtt/m/n/10.95 SU
 CCESS \T1/lmr/m/n/10.95 or \T1/lmtt/m/n/10.95 FAILURE \T1/lmr/m/n/10.95 and ex-
 it-ing nonzero if it fails: \T1/lmtt/m/n/10.95 kepler_orbit\T1/lmr/m/n/10.95 ,
 
-Overfull \hbox (65.46307pt too wide) in paragraph at lines 1252--1257
+Overfull \hbox (65.46307pt too wide) in paragraph at lines 1256--1261
 \T1/lmtt/m/n/10.95 outer_solar_system\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 tum
 bling_body\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 charged_in_b_field\T1/lmr/m/n/
 10.95 , \T1/lmtt/m/n/10.95 newtons_cradle\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95
  bouncing_ball_restitution\T1/lmr/m/n/10.95 . 
 
-Overfull \hbox (18.23682pt too wide) in paragraph at lines 1277--1281
+Overfull \hbox (18.23682pt too wide) in paragraph at lines 1281--1285
 \T1/lmr/m/n/10.95 diffed. They are iden-ti-cal byte for byte. See \T1/lmtt/m/n/
 10.95 PORT_7.8.0_PROVENANCE.md \T1/lmr/m/n/10.95 and \T1/lmtt/m/n/10.95 evidenc
 e/port-7.8.0/\T1/lmr/m/n/10.95 . 
 
-Underfull \hbox (badness 4168) in paragraph at lines 1293--1293
+Underfull \hbox (badness 4168) in paragraph at lines 1297--1297
 []|\T1/lmtt/m/n/10.95 RUN \T1/lmr/m/n/10.95 over-shoots where you
 
-Underfull \hbox (badness 6396) in paragraph at lines 1295--1295
+Underfull \hbox (badness 6396) in paragraph at lines 1299--1299
 []|\T1/lmr/m/n/10.95 bodies pass through each
 
-Underfull \hbox (badness 10000) in paragraph at lines 1296--1296
+Underfull \hbox (badness 10000) in paragraph at lines 1300--1300
 []|\T1/lmtt/m/n/10.95 SPRK method requires a
 
-Underfull \hbox (badness 10000) in paragraph at lines 1309--1309
+Underfull \hbox (badness 10000) in paragraph at lines 1313--1313
 []|\T1/lmtt/m/n/10.95 probability accumulating
 [22]
-Underfull \hbox (badness 10000) in paragraph at lines 1349--1349
+Underfull \hbox (badness 10000) in paragraph at lines 1353--1353
 []|\T1/lmtt/m/n/10.95 collision_detection.md \T1/lmr/m/n/10.95 /
 
-Overfull \hbox (13.0103pt too wide) in paragraph at lines 1351--1351
+Overfull \hbox (13.0103pt too wide) in paragraph at lines 1355--1355
 []|\T1/lmtt/m/n/10.95 physical_object_simulator.md
 [23] [24] (./SolveIt.aux) )
 (see the transcript file for additional information)</usr/share/texmf/fonts/typ
@@ -209,5 +224,5 @@ type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb><
 /usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/
 public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on SolveIt.pdf (24 pages, 398297 bytes).
+Output written on SolveIt.pdf (24 pages, 398487 bytes).
 Transcript written on SolveIt.log.

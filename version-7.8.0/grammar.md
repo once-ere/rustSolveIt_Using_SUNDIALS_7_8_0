@@ -3573,7 +3573,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The nine shipped recordings
+### 12.3 The ten shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3588,6 +3588,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four `CONSTRAIN` rods, the cheapest linkage there is at one row each, going chaotic | run continuously at the default tolerance the rods hold to `\|g\| = 5.4e-15`; this recording, 250 cold restarts, holds `\|g\| = 7.8e-8` |
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `6.4e-15`; no centre moves further from the pivot than `7e-35` |
+| [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.582727` s, measured `1.883852` and `2.589688` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3649,23 +3650,54 @@ exactly on the plane `z = 0`, and the chain reaches `|z| = 1.7147`. A
 hinged chain would still be at exactly zero, for ever, because that is
 what fixing an axis means.
 
-### 12.6 A hinge hands you a conservation law
+### 12.6 One number decides what a suspension does
 
-Two of the recordings are the same object under different mounts, and
-the pair is worth reading together.
+Three of the recordings hang a rotor in a mount, and the only thing
+that really differs between them is where the centre of mass sits
+relative to the pivot. Read them as one experiment with one dial.
 
-| | `spinning_top.html` | `gyroscope_gimbal.html` |
-|---|---|---|
-| mount | one `BALL` at the tip | three `HINGE`s, perpendicular axes |
-| rows | 3 on 6 freedoms | 15 on 18 freedoms |
-| centre of mass | a distance `r = 0.6` from the pivot | **on** the pivot |
-| gravity | lever arm `r`, so a torque | lever arm zero, so none |
-| what happens | steady precession at `Mgr/(I₃ω₃)` | no gravitational precession at all |
+| | `spinning_top` | `gyroscope_gimbal` | `cardan_compass` |
+|---|---|---|---|
+| mount | one `BALL` at the tip | three `HINGE`s | two `HINGE`s |
+| rows | 3 on 6 freedoms | 15 on 18 | 10 on 12 |
+| centre of mass | `r = 0.6` **from** the pivot | **on** the pivot | `d = 0.12` **below** it |
+| gravity | lever arm `r`: a torque | lever arm 0: none | lever arm `d`: a *restoring* torque |
+| result | steady precession, `Mgr/(I₃ω₃)` | no gravitational precession at all | swings back to level, `2π√(I/Mgd)` |
 
-The gimbal scene keeps the same `uniform_gravity` as the top, and it
-does nothing. That is not a setting to notice; it is the point. A
-gimballed gyroscope is not balancing against gravity, it is free of it,
-because a lever arm of zero produces a torque of zero.
+All three carry a `uniform_gravity`. In the middle column it does
+nothing whatever, and that is the point rather than an oversight: a
+lever arm of zero produces a torque of zero, so a gimballed gyroscope
+is not balancing against gravity, it is free of it. Move the centre of
+mass off the pivot and gravity comes back — *above* the pivot it would
+tip the thing over, *below* it, it rights it. That last case is the
+whole of a ship's compass: it is not held level by its bearings, it is
+held level by its own weight, and the bearings only get out of the way.
+
+**The compass periods.** With the bowl pendulous, each axis is an
+ordinary physical pendulum:
+
+```text
+pitch, inner hinge — only the bowl swings
+   I = M(3R² + 4h²)/12 + M d² = 0.21046667      T = 1.878587 s
+roll, outer hinge — ring and bowl swing together
+   I = 0.35803042,  restoring (M_b − M_r) g d   T = 2.582727 s
+```
+
+measured `1.883852` and `2.589688`. The `2.8e-3` excess is not solver
+error: halve the kick and it falls by `4.01` and `4.02`, which is the
+signature of a term in `θ²`. Drive one axis alone and the attribution
+is exact — the pitch period comes out `4.99e-4` long against a
+predicted `θ²/16 = 5.02e-4`.
+
+**A cost of the midpoint pivot, worth seeing once.** Two hinges sharing
+one point force `p_frame = p_bowl = −p_ring` (§12.9), so hanging the
+bowl `d` below the centre puts the *ring's* centre `d` above it. That
+is not cosmetic: the ring is then top-heavy and **subtracts** from the
+restoring torque, which is why the roll period carries `(M_b − M_r)`
+and not `(M_b + M_r)`, and why the ring is made light. The net first
+moment stays downward, so the suspension is stable — but the arithmetic
+had to account for a body the geometry put where nobody would have
+chosen to.
 
 **And a hinge cannot torque about its own axis.** That is precisely the
 freedom it grants — but read the other way round it is a conservation
