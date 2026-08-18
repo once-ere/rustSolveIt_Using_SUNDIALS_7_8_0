@@ -3518,11 +3518,11 @@ posim behind it. The other thing you often want is a file — something
 you can mail to a colleague, open next year on a laptop with no Rust
 toolchain, and still scrub frame by frame.
 
-`tools/record_video.py` makes one:
+`recorder/src/record_video.py` makes one:
 
 ```bash
 cargo build --release -p posim          # once
-tools/record_video.py videos/scenes/kepler_ellipse.posim \
+../recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
      -o videos/kepler_ellipse.html \
      --frames 360 --dt 0.02 \
      --title "Kepler orbit, e = 0.6" \

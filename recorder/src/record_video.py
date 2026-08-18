@@ -23,12 +23,17 @@ How it works, end to end:
 
 Usage:
 
-    tools/record_video.py SETUP.posim -o out.html [--frames N] [--dt DT]
-                          [--title "..."] [--caption "..."]
+    record_video.py SETUP.posim -o out.html [--frames N] [--dt DT]
+                    [--title "..."] [--caption "..."]
 
 The setup script is ordinary posim source.  Anything it prints is
 ignored; only the state dumps become frames.  A `STEP`/`RUN` inside the
 setup script is fine — it just means the recording starts later.
+
+This tool lives in its own directory, apart from the Rust workspace it
+records, so it has to *find* that workspace rather than assume it sits
+one level up.  See `find_workspace`; `--workspace` and `--posim` override
+the search when the layout is unusual.
 """
 
 import argparse
@@ -39,26 +44,83 @@ import subprocess
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-ROOT = HERE.parent
+
+#: Where a built posim can be, relative to a cargo workspace root.
+BIN_CANDIDATES = ("target/release/posim", "target/debug/posim")
 
 
-def find_posim() -> str:
-    """Prefer the release binary, fall back to debug, else explain."""
-    for rel in ("target/release/posim", "target/debug/posim"):
-        p = ROOT / rel
+def _binary_in(root: pathlib.Path):
+    """The built posim under `root`, release preferred, or None."""
+    for rel in BIN_CANDIDATES:
+        p = root / rel
         if p.is_file() and os.access(p, os.X_OK):
-            return str(p)
+            return p
+    return None
+
+
+def find_workspace(explicit=None, near=None) -> pathlib.Path:
+    """Locate the cargo workspace whose posim we should drive.
+
+    Searched in order, first hit wins:
+
+    1. `--workspace`, or `$POSIM_WORKSPACE`.
+    2. The scene script's directory and each of its ancestors.
+    3. The current directory and each of its ancestors.
+
+    Only *ancestors* are searched, never siblings.  An earlier version
+    also scanned each ancestor's immediate children, so that a recorder
+    living in `recorder/` would find a release in `version-7.8.0/`
+    without configuration.  That is exactly the search that goes wrong:
+    a checkout holding more than one posim workspace — the port next to
+    the upstream it was ported from — resolves to whichever name sorts
+    first, which is silently the wrong engine.  Three of the five
+    shipped scenes still recorded byte-identically against it, because
+    the two engines agree to the bit; the fourth failed only because it
+    uses a joint the older grammar has not got.  A recording must never
+    depend on which sibling sorts first, so the scene decides: it lives
+    inside the workspace it belongs to.
+    """
+    if explicit is None:
+        explicit = os.environ.get("POSIM_WORKSPACE")
+    if explicit:
+        root = pathlib.Path(explicit).resolve()
+        if _binary_in(root) is None:
+            sys.exit(
+                f"no built posim under {root}\n"
+                "Build it first:  cargo build --release -p posim"
+            )
+        return root
+
+    starts = []
+    if near is not None:
+        starts.append(pathlib.Path(near).resolve().parent)
+    starts.append(pathlib.Path.cwd())
+    for start in starts:
+        for d in (start, *start.parents):
+            if _binary_in(d) is not None:
+                return d
     sys.exit(
         "posim binary not found.\n"
         "Build it first:  cargo build --release -p posim\n"
-        f"(looked in {ROOT}/target/release and {ROOT}/target/debug)"
+        "or point the recorder at the workspace:  --workspace DIR\n"
+        "(searched upward from "
+        + " and from ".join(str(s) for s in starts)
+        + ")"
     )
+
+
+def find_posim(root: pathlib.Path) -> str:
+    """The built posim under an already-located workspace."""
+    p = _binary_in(root)
+    if p is None:
+        sys.exit(f"no built posim under {root}")
+    return str(p)
 
 
 class Posim:
     """One `posim --machine` child process, spoken to in JSONL."""
 
-    def __init__(self, binary: str):
+    def __init__(self, binary: str, cwd=None):
         env = dict(os.environ, POSIM_NO_BROWSER="1")
         self.proc = subprocess.Popen(
             [binary, "--machine"],
@@ -66,7 +128,10 @@ class Posim:
             stdout=subprocess.PIPE,
             text=True,
             bufsize=1,
-            cwd=str(ROOT),
+            # posim resolves relative paths against its own cwd, so it is
+            # started in the workspace it belongs to, not in whatever
+            # directory the recorder happened to be invoked from.
+            cwd=str(cwd) if cwd else None,
             env=env,
         )
 
@@ -105,6 +170,14 @@ class Posim:
         except (BrokenPipeError, ValueError):
             pass
         self.proc.wait(timeout=30)
+        # Closing the pipes is not optional once several recordings run
+        # in one process: the child exits either way, but its pipe ends
+        # stay open until the garbage collector gets to them.
+        for pipe in (self.proc.stdin, self.proc.stdout):
+            try:
+                pipe.close()
+            except (BrokenPipeError, ValueError, OSError):
+                pass
 
 
 def setup_lines(path: pathlib.Path):
@@ -169,8 +242,9 @@ def frame_of(state: dict) -> dict:
     }
 
 
-def record(script: pathlib.Path, frames: int, dt: float):
-    posim = Posim(find_posim())
+def record(script: pathlib.Path, frames: int, dt: float, workspace=None):
+    workspace = workspace or find_workspace(near=script)
+    posim = Posim(find_posim(workspace), cwd=workspace)
     try:
         for line in setup_lines(script):
             posim.exec_line(line)
@@ -673,9 +747,18 @@ def main():
         help="opening camera: 'iso' looks down on the scene, 'front' looks "
         "straight along -z, which is what a planar linkage wants",
     )
+    ap.add_argument(
+        "--workspace",
+        type=pathlib.Path,
+        default=None,
+        help="the cargo workspace holding the posim to drive; found "
+        "automatically, or from $POSIM_WORKSPACE, when not given",
+    )
     args = ap.parse_args()
 
-    bodies, frames, meta = record(args.script, args.frames, args.dt)
+    bodies, frames, meta = record(
+        args.script, args.frames, args.dt, workspace=args.workspace
+    )
     title = args.title or args.script.stem.replace("_", " ")
     html = (PAGE
             .replace("__TITLE__", title)

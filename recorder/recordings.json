@@ -1,0 +1,56 @@
+{
+  "base": "../version-7.8.0",
+  "workspace": "../version-7.8.0",
+  "recordings": [
+    {
+      "name": "kepler_ellipse",
+      "scene": "videos/scenes/kepler_ellipse.posim",
+      "out": "videos/kepler_ellipse.html",
+      "frames": 360,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "Kepler orbit, e = 0.6",
+      "caption": "One planet round a heavy sun, CVODE Adams, 360 frames of dt = 0.02 (t = 7.2, about two orbits). Watch the speed swing between perihelion and aphelion. Measured over the recording: |dE|/E = 9.8e-8, |dL|/|L| = 1.3e-7."
+    },
+    {
+      "name": "tumbling_racket",
+      "scene": "videos/scenes/tumbling_racket.posim",
+      "out": "videos/tumbling_racket.html",
+      "frames": 400,
+      "dt": 0.01,
+      "view": "iso",
+      "title": "The tennis-racket theorem",
+      "caption": "A torque-free cuboid (half-extents 1.6, 0.9, 0.25) spun about its INTERMEDIATE principal axis. It flips end over end \u2014 the Dzhanibekov effect \u2014 while the angular momentum stays put: measured |d|L||/|L| = 0 exactly, |dE|/E = 6.4e-9 over t = 4."
+    },
+    {
+      "name": "box_of_shapes",
+      "scene": "videos/scenes/box_of_shapes.posim",
+      "out": "videos/box_of_shapes.html",
+      "frames": 300,
+      "dt": 0.01,
+      "view": "iso",
+      "title": "Mixed shapes in a rigid box",
+      "caption": "The regression scenario mixed_shapes_rattle_in_the_box_conserving_energy: a cylinder, a disk and a cuboid inside a rigid BOX 4 whose six wall slabs have inverse_mass = 0, with G = 0. 36 real CVODE rootfinding events in t = 3; measured |dE|/E = 3.4e-16, i.e. exact to the last bit. Gold arrows are the analytic contact normals, scaled by the applied impulse. |L| about the origin is NOT conserved here, and should not be: the immovable walls supply outside torque."
+    },
+    {
+      "name": "double_pendulum_hinges",
+      "scene": "videos/scenes/double_pendulum_hinges.posim",
+      "out": "videos/double_pendulum_hinges.html",
+      "frames": 400,
+      "dt": 0.01,
+      "view": "front",
+      "title": "Double pendulum on two hinges",
+      "caption": "Two HINGE joints \u2014 each fixing a point and an axis, each leaving one freedom \u2014 assembled into the classic chaotic linkage. 400 frames of dt = 0.01 (t = 4), every one a real IDA step on the constrained DAE. The gold rings are the joints; their axes run along z, straight at you in this opening view, so drag to see them. Measured: the joints hold to |g| = 5.6e-8 over the whole recording. Energy wanders by 4.5e-3 against a scale of mgL = 14.7 \u2014 3 parts in 10,000 \u2014 and the same mechanism run as ONE continuous 4 s integration instead of 400 separate steps holds it to 7.4e-5, because each step restarts the multistep solver at order one."
+    },
+    {
+      "name": "universal_joint",
+      "scene": "videos/scenes/universal_joint.posim",
+      "out": "videos/universal_joint.html",
+      "frames": 180,
+      "dt": 0.025,
+      "view": "iso",
+      "title": "A universal joint transmitting rotation",
+      "caption": "A torque spins the input shaft up from rest; the Cardan joint carries the rotation across to the output shaft, which a rod braces to a post. The bend runs from straight to cos-inverse 0.6 = 53.130 degrees and back, and the speed ratio across the joint swings with it \u2014 a Cardan joint is not a constant-velocity joint."
+    }
+  ]
+}

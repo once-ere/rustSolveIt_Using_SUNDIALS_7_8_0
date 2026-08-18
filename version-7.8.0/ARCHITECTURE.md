@@ -812,13 +812,35 @@ Regression invariant: `cargo test --workspace` green (**605 tests**:
 11 vendored identities + 55 doctests) and `cargo build --workspace --all-targets` warning-free at
 every commit.
 
-## 7. The video recorder (`tools/record_video.py`)
+## 7. The video recorder (`../recorder/`)
 
-Outside the Rust constraint boundary, like `jupyter/`. It drives
-`posim --machine` over the §3.5 protocol: run the setup script line by
-line, then alternate `{"op":"state"}` and `{"op":"exec","code":"step
-<dt>"}`, and emit one self-contained HTML page with the frames embedded
-and a vanilla-JS canvas player around them.
+Outside the Rust constraint boundary, like `jupyter/`, and outside this
+directory: the recorder is a standalone package at the repository root,
+with its own CMake build, tests and documentation
+([`../recorder/README.md`](../recorder/README.md),
+[`../recorder/docs/FRAME_FORMAT.md`](../recorder/docs/FRAME_FORMAT.md)).
+It drives `posim --machine` over the §3.5 protocol: run the setup script
+line by line, then alternate `{"op":"state"}` and
+`{"op":"exec","code":"step <dt>"}`, and emit one self-contained HTML page
+with the frames embedded and a vanilla-JS canvas player around them.
+
+Two consequences of living outside this workspace, both pinned:
+
+- **The workspace is never inferred from what sits beside what.** A
+  checkout can hold more than one posim workspace — this port beside the
+  upstream it came from — and the two agree bit for bit on everything the
+  older grammar can express, so recording against the wrong one is
+  silent. Resolution order is `--workspace` / `$POSIM_WORKSPACE`, then
+  the manifest's `workspace` key, then the **scene script's** own
+  ancestors, then the current directory's. Ancestors only, never
+  siblings: the scene lives inside the workspace it belongs to.
+- **The parameters of every shipped recording are recorded, not
+  remembered.** `../recorder/recordings.json` holds each one's scene,
+  frame count, `dt`, opening camera, title and caption, because none of
+  that is recoverable from a finished recording without picking the HTML
+  apart. `record_all.py --check` re-records every entry into a temporary
+  directory and compares byte for byte; that check is CTest test
+  `recorder-e2e`.
 
 Pinned properties:
 

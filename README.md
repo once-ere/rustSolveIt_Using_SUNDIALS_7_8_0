@@ -85,7 +85,7 @@ frame you stopped on.
 | [`universal_joint.html`](version-7.8.0/videos/universal_joint.html) — a **universal joint** driving a shaft | bend bounded at cos b = 0.6000004 vs exactly 0.6 |
 
 Every advance in a recording is a real SUNDIALS step; the recorder
-(`version-7.8.0/tools/record_video.py`) is a camera, not a physics
+(`recorder/`) is a camera, not a physics
 engine.
 
 ## Licence

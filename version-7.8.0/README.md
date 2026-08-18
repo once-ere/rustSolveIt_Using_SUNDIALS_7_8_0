@@ -134,7 +134,7 @@ Record your own from any posim script:
 
 ```bash
 cargo build --release -p posim
-tools/record_video.py videos/scenes/kepler_ellipse.posim \
+../recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
      -o /tmp/mine.html --frames 360 --dt 0.02 --title "..."
 ```
 

@@ -12,3 +12,11 @@
 
 # Build output of any workspace beneath this root
 target/
+
+# Python bytecode. The recorder (recorder/) is Python and lives at this
+# root, so the rule version-7.8.0/.gitignore carries does not reach it.
+__pycache__/
+*.pyc
+
+# Out-of-source CMake build trees for recorder/
+/build/
