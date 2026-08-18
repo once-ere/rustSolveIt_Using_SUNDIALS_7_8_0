@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rod Pendulum Chain — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 1000px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Rod pendulum chain <small>anchor —rod— bob1 —rod— bob2 —rod— bob3
+  —rod— bob4, released from rest, driven live by the pure-Rust SUNDIALS IDA
+  solver — the page only draws what the solver returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="540"></canvas>
+<div id="stats"></div>
+<footer>Model: four CONSTRAIN rods — the smallest joint in the language, ONE
+row each holding g = |d| &minus; L — so 4 rows on 24 freedoms. A rod is a
+single well-scaled scalar with none of the index-2 orientation coupling, so
+it is the best-conditioned joint AND the one with no automatic tolerance
+floor: at the default 1e-10 the per-frame cold restarts fail on the second
+restart, so this scene sets rtol 1e-6 by hand — the trap it exists to
+document. Released from rest in a 3-D zigzag, so |g_dot| starts at exactly
+zero and gravity plus rod tension do all the rest.</footer>
+<script>
+"use strict";
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 260, OX = 430, OY = 150;
+const CY = -0.50, CP = -0.30;
+const cy = Math.cos(CY), sy = Math.sin(CY), cp = Math.cos(CP), sp = Math.sin(CP);
+const L = 0.4;                               // every rod's length
+let trail = [], worstRod = 0;
+
+function proj(v) {
+  const [x0, y0, z0] = v;
+  const x1 = x0 * cy + z0 * sy, z1 = -x0 * sy + z0 * cy;
+  const y2 = y0 * cp - z1 * sp;
+  return [OX + x1 * SC, OY - y2 * SC];
+}
+function line(a, b, color, width) {
+  const p = proj(a), s = proj(b);
+  cx.strokeStyle = color; cx.lineWidth = width; cx.lineCap = "round";
+  cx.beginPath(); cx.moveTo(p[0], p[1]); cx.lineTo(s[0], s[1]); cx.stroke();
+}
+function dotAt(v, r, color) {
+  const p = proj(v);
+  cx.fillStyle = color;
+  cx.beginPath(); cx.arc(p[0], p[1], r, 0, 7); cx.fill();
+}
+const dist = (a, b) => Math.hypot(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
+
+const BOBCOL = ["#9fb8d0", "#d0a95f", "#8fb0c9", "#c98d5f"];
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  // the anchor and the vertical through it
+  line([0, 0.5, 0], [0, 0, 0], "#26303a", 4);
+  line([0, 0, 0], [0, -1.7, 0], "#1c242c", 1);
+
+  // rods and bobs
+  const pts = [[0, 0, 0], ...s.p];
+  let worstNow = 0;
+  for (let i = 0; i < 4; i++) {
+    line(pts[i], pts[i + 1], "#4b5a68", 3);
+    worstNow = Math.max(worstNow, Math.abs(dist(pts[i], pts[i + 1]) - L));
+  }
+  if (s.running && s.t > 0) worstRod = Math.max(worstRod, worstNow);
+  dotAt([0, 0, 0], 5, "#8a97a5");
+  s.p.forEach((v, i) => dotAt(v, 7, BOBCOL[i]));
+
+  // trail of the last bob
+  const tip = s.p[3];
+  if (s.running) {
+    trail.push([...tip]);
+    if (trail.length > 900) trail.shift();
+  }
+  cx.strokeStyle = "#7fd18b"; cx.lineWidth = 1.5;
+  cx.beginPath();
+  trail.forEach((v, i) => {
+    const p = proj(v);
+    i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  });
+  cx.stroke();
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">worst rod stretch</span>
+         <span class="v good">${worstRod ? worstRod.toExponential(2) : "—"}</span>
+         <span class="k">(each rod 0.4 exactly)</span></div>
+    <div><span class="k">bob4 depth</span> <span class="v">${tip[1].toFixed(4)}</span></div>
+    <div><span class="k">|L&middot;&#375; &minus; L&#8320;|</span>
+         <span class="v good">${Math.abs(s.L[1] - s.L0y).toExponential(2)}</span></div>
+    <div><span class="k">|dE/E|</span>
+         <span class="v good">${Math.abs((s.E - s.E0) / s.E0).toExponential(2)}</span></div>
+    <div><span class="k">worst |g|</span> <span class="v good">${s.g == null ? "—" : s.g.toExponential(2)}</span></div>
+    <div><span class="k">worst |g_dot|</span> <span class="v good">${s.gdot == null ? "—" : s.gdot.toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset"); trail = []; worstRod = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
