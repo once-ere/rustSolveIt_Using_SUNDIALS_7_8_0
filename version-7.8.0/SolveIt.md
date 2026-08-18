@@ -1462,7 +1462,7 @@ someone else, record it:
 
 ```bash
 cargo build --release -p posim
-../recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
+recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
      -o videos/kepler_ellipse.html --frames 360 --dt 0.02 \
      --title "Kepler orbit, e = 0.6"
 ```
@@ -1607,7 +1607,7 @@ with the complete EBNF grammar and a further eighteen worked examples.
 | `scripts/solveit/` | the nineteen examples in section 7 |
 | `scripts/collisions/` | twelve documented collision scripts |
 | `videos/` | recorded browser videos; `videos/scenes/` the scripts behind them |
-| `tools/` | the index builder and the verifiers (the video recorder moved to `../recorder/`) |
+| `tools/` | the index builder and the verifiers (the video recorder is its own package, `recorder/`) |
 | `evidence/port-7.8.0/` | the logs behind every claim in section 9.5 |
 
 ### The documents

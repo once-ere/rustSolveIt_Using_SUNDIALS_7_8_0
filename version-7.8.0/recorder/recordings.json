@@ -1,6 +1,6 @@
 {
-  "base": "../version-7.8.0",
-  "workspace": "../version-7.8.0",
+  "base": "..",
+  "workspace": "..",
   "recordings": [
     {
       "name": "kepler_ellipse",

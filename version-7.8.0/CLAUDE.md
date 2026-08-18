@@ -43,7 +43,7 @@ including which donor sources were deliberately not carried over — is in
   --script scripts/solveit/NN_name.posim` (01–16; documented with
   captured output in `SolveIt.md` §7)
 - Browser video: `cargo build --release -p posim` then
-  `../recorder/src/record_video.py videos/scenes/<x>.posim -o videos/<x>.html
+  `recorder/src/record_video.py videos/scenes/<x>.posim -o videos/<x>.html
   --frames N --dt DT --title "..." --caption "..."`
 - Wire protocol test: `python3 jupyter/test_protocol.py` (needs
   `cargo build --release` first — it prefers `target/release/posim`,
@@ -80,7 +80,7 @@ including which donor sources were deliberately not carried over — is in
   a reader thread streams async `{"event":...}` lines to the notebook;
   `.venv/` and `.kernels/` are gitignored scratch.
 - `tools/` — the index pipeline, the example verifiers, and
-  the video recorder in `../recorder/` (also outside the Rust constraints).
+  the video recorder in `recorder/` (also outside the Rust constraints).
 - `videos/`, `videos/scenes/` — recorded browser videos and the posim
   scripts that produced them.
 - `evidence/port-7.8.0/` — the logs behind every claim in
@@ -103,7 +103,7 @@ including which donor sources were deliberately not carried over — is in
 1. **Sundials-only integration.** All stepping goes through
    `physical_object/src/integrate.rs` calling `cvode_rs`/`arkode_rs`.
    Never add a hand-rolled Euler/Verlet/RK stepper anywhere — including
-   in examples, docs, tooling (`../recorder/` drives `step`;
+   in examples, docs, tooling (`recorder/` drives `step`;
    it does not integrate), and the scene playback thread (it calls
    `integrate::step`; reverse is snapshot replay from the history ring,
    never negative-dt integration).
@@ -381,7 +381,7 @@ dumbbell impact; entity labels show the registered user names
 two shaded spheres at their rotated COM offsets joined by the rod's four
 silhouette lines.
 
-The recorded video player (`../recorder/src/record_video.py`) follows the same
+The recorded video player (`recorder/src/record_video.py`) follows the same
 rules: wall slabs excluded from both the draw list and the camera
 auto-fit, round shapes rotated about their local z axis, contact arrows
 along the exact analytic normal scaled by impulse.

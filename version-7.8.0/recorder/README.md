@@ -1,15 +1,20 @@
 # The posim video recorder
 
-Records a [posim](../version-7.8.0) run into a single HTML file you can
-open next month, on a machine with no Rust toolchain and no network, and
-still watch the same motion, scrub it, and read the conserved quantities
-off the frame you stopped on.
+Records a [posim](..) run into a single HTML file you can open next
+month, on a machine with no Rust toolchain and no network, and still
+watch the same motion, scrub it, and read the conserved quantities off
+the frame you stopped on.
+
+Commands below are run from the parent directory, the cargo workspace:
 
 ```bash
-cargo build --release -p posim          # in ../version-7.8.0
-recorder/src/record_video.py version-7.8.0/videos/scenes/kepler_ellipse.posim \
+cargo build --release -p posim
+recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
     -o /tmp/mine.html --frames 360 --dt 0.02 --title "Kepler orbit"
 ```
+
+They work from anywhere, though. The recorder does not assume where it
+has been put — see [Which workspace gets recorded](#which-workspace-gets-recorded).
 
 That is the whole dependency list: Python 3.8+, and a built posim. No
 pip install, no CDN, nothing fetched at record time or at view time.

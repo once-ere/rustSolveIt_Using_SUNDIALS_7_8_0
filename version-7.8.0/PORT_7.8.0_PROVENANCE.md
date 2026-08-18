@@ -208,7 +208,7 @@ system settings with it.**
 | path | what |
 |---|---|
 | `sundials_rs/` | the 7.8.0 engine, with its own `VERIFICATION.md`, `differences/`, `evidence/`, `c-results/` and `rust-results/` — every one of its examples diffed against the upstream C reference |
-| `../recorder/` | records a posim run into a self-contained browser player |
+| `recorder/` | records a posim run into a self-contained browser player |
 | `videos/*.html` | three recorded videos, openable offline, no CDN |
 | `videos/scenes/*.posim` | the scripts they were recorded from |
 | `evidence/port-7.8.0/` | the logs quoted above |
@@ -231,7 +231,7 @@ cd rustSolveIt_Using_SUNDIALS_7_8_0/version-7.8.0
 cargo build --workspace --all-targets      # must be warning-free
 cargo test  --workspace                    # 592 passed
 cargo run -p physical_object --release --example outer_solar_system
-python3 ../recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
+python3 recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
         -o /tmp/kepler.html --frames 360 --dt 0.02
 ```
 

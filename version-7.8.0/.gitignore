@@ -71,3 +71,7 @@ posim/examples/_tierb_compile_check.rs
 # and already covers it; this line is here so the rule is visible when
 # someone reads the file looking for sundials_rs.
 sundials_rs/target/
+
+# Out-of-source CMake build trees for recorder/
+/build/
+/recorder/build/
