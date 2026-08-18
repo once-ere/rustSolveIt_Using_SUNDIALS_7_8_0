@@ -75,3 +75,6 @@ sundials_rs/target/
 # Out-of-source CMake build trees for recorder/
 /build/
 /recorder/build/
+
+# JupyterLab per-session checkpoints (notebooks/ is served live)
+.ipynb_checkpoints/
