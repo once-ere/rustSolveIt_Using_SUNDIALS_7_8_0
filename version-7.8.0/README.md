@@ -118,7 +118,7 @@ the worked cases.
 
 ## Browser videos
 
-Five recorded runs you can open offline — no server, no CDN, nothing
+Six recorded runs you can open offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -129,6 +129,7 @@ frame you stopped on.
 | [videos/box_of_shapes.html](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid rattling in a rigid `BOX 4`; gold arrows are the analytic contact normals, sized by impulse | 36 collision events, \|dE\|/E = 3.4e-16 |
 | [videos/double_pendulum_hinges.html](videos/double_pendulum_hinges.html) | **two `HINGE` joints** made into the chaotic double pendulum; gold rings are the joints | the joints hold to \|g\| = 5.6e-8 |
 | [videos/universal_joint.html](videos/universal_joint.html) | a **`UNIVERSAL` joint** carrying a driven shaft's rotation to a second shaft; the bend flattens straight and folds back, and the speed across the joint swings with it | the bend stops at cos b = 0.6000004 against a geometric bound of exactly 0.6; joints hold to \|g\| = 4.0e-7 |
+| [videos/ball_joint_chain.html](videos/ball_joint_chain.html) | four links on **`BALL` joints**, whirling as they collapse out of the plane they started on | joints hold to \|g\| = 3.3e-9; \|z\| runs from exactly 0 to 1.7147 |
 
 Record your own from any posim script:
 

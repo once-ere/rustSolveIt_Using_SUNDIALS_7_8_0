@@ -72,7 +72,7 @@ dependence to find.
 
 ## Browser videos
 
-Five recorded runs, openable offline — no server, no CDN, nothing
+Six recorded runs, openable offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -83,6 +83,7 @@ frame you stopped on.
 | [`box_of_shapes.html`](version-7.8.0/videos/box_of_shapes.html) — three shapes in a rigid box | 36 collisions, \|dE\|/E = 3.4e-16 |
 | [`double_pendulum_hinges.html`](version-7.8.0/videos/double_pendulum_hinges.html) — **two hinges**, the chaotic linkage | joints hold to \|g\| = 5.6e-8 |
 | [`universal_joint.html`](version-7.8.0/videos/universal_joint.html) — a **universal joint** driving a shaft | bend bounded at cos b = 0.6000004 vs exactly 0.6 |
+| [`ball_joint_chain.html`](version-7.8.0/videos/ball_joint_chain.html) — a **chain on ball joints** | leaves its plane: \|z\| from exactly 0 to 1.7147 |
 
 Every advance in a recording is a real SUNDIALS step; the recorder
 (`version-7.8.0/recorder/`) is a camera, not a physics

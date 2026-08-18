@@ -3540,7 +3540,7 @@ and $dt$ the recording was made with. \textbf{This is the point of the
 format}: you can stop on the frame where something looks wrong and read
 the conserved quantities off it.
 
-\subsection{The five shipped recordings}
+\subsection{The six shipped recordings}
 
 \begin{center}
 \begin{tabular}{p{3.6cm}p{6.4cm}p{4.2cm}}
@@ -3564,6 +3564,10 @@ driven shaft's rotation to a second shaft; the bend flattens out
 straight and folds back, and the speed across the joint swings with it
 & the bend stops at $\cos\beta = 0.6000004$ against a geometric bound
 of exactly $0.6$; the three joints hold to $|g| = 4.0\text{e-}7$\\
+\code{videos/ball\_joint\_chain.html} & four links on \kw{ball}
+joints, whirling as they collapse; the chain leaves the plane it
+started on, which a hinged chain cannot & the four joints hold to
+$|g| = 3.3\text{e-}9$; $|z|$ runs from exactly $0$ to $1.7147$\\
 \end{tabular}
 \end{center}
 
@@ -3582,6 +3586,45 @@ The lesson generalizes: \textbf{a conservation claim carries its system
 settings with it.} When a run's $|dE/E|$ surprises you, check
 \kw{energy}, \code{system.g\_constant}, \code{system.softening} and
 \code{system.uniform\_gravity} before suspecting the integrator.
+
+\subsection{What a BALL joint buys, measured exactly}
+
+\kw{ball} and \kw{hinge} are easy to describe and easy to confuse: both
+hold a point, and a hinge additionally holds an axis. The ball-chain
+recording turns that sentence into a number.
+
+Take four links laid end to end and start them as a \textbf{rigid
+rotation} of the whole assembly about the vertical,
+$v = \omega \times r$ with $\omega = [0, 1.5, 0]$, so
+$v = [0, 0, -1.5x]$. A rigid motion moves nothing relative to anything,
+so it violates no joint of any kind --- as a \emph{position} constraint.
+The velocity constraint is where the two joints part company:
+
+\begin{center}
+\begin{tabular}{p{6.4cm}p{2.6cm}p{2.6cm}}
+\textbf{the same four links, joined by} & \textbf{worst $|g|$} &
+\textbf{worst $|\dot g|$}\\\hline
+four \kw{ball} joints & $0$ exactly & $\mathbf{0}$ \textbf{exactly}\\
+four \kw{hinge} joints about $z$ & $0$ exactly & $\mathbf{1.5}$\\
+\end{tabular}
+\end{center}
+
+$1.5$ is not approximately anything. It is $\Omega$, the whirl rate,
+because the whirl is precisely the component a hinge about $z$ forbids,
+and the velocity residual of a forbidden motion is its own magnitude.
+
+\textbf{What follows from it.} A start with $|\dot g| \neq 0$ is not on
+the constraint manifold, so before integrating anything the solver must
+project the velocities onto it, and that projection \emph{changes the
+motion you asked for}. The hinge chain cannot be given this whirl; it
+can only be given whatever remains after the whirl is removed. The ball
+chain takes it untouched, and \code{initial\_velocity\_projected} is
+$0$.
+
+Watch the recording's $z$ axis for the consequence. Every link starts
+exactly on the plane $z = 0$, and the chain reaches $|z| = 1.7147$. A
+hinged chain would still be at exactly zero, for ever, because that is
+what fixing an axis means.
 
 \subsection{Count your rows before you brace a mechanism}
 

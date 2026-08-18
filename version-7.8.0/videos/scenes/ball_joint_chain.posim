@@ -1,0 +1,52 @@
+# A four-link chain hung on BALL joints, whirling as it collapses.
+#
+# A BALL joint holds one point and frees all three rotations. That is
+# the difference this recording is about. The double-pendulum recording
+# uses HINGE joints, and a hinge fixes an axis as well as a point, so
+# that mechanism is trapped in a plane for ever. Swap the hinges for
+# ball joints and the same chain can go anywhere.
+#
+#     anchor --BALL-- link1 --BALL-- link2 --BALL-- link3 --BALL-- link4
+#
+# Four free links are 24 freedoms; four ball joints are 4 x 3 = 12 rows.
+# Twelve freedoms left, full rank, nothing over-constrained.
+#
+# THE START IS A RIGID ROTATION, and that is deliberate. The chain lies
+# along +x and every link is given the velocity it would have if the
+# whole assembly were turning about the vertical through the pivot at
+# 1.5 rad/s:
+#
+#     v = omega x r  with omega = [0, 1.5, 0],  so v = [0, 0, -1.5 x]
+#
+# A rigid motion satisfies every joint constraint exactly, so the run
+# begins ON the constraint manifold: |g| = 0 and |g_dot| = 0, both
+# exactly, and no consistent-velocity projection is needed.
+#
+# Give the identical start to the same chain built from HINGE joints
+# about z and it is NOT consistent: |g_dot| = 1.5, exactly the whirl
+# rate, because the whirl is the one thing a hinge about z forbids. The
+# hinge chain would have to have that rotation projected out of it
+# before it could start. The ball chain takes it untouched.
+#
+# So watch the z axis. Every link starts exactly on the plane z = 0 and
+# the chain reaches |z| = 1.7147, where a hinge chain would still be at
+# exactly zero. It does not start at REST in z — the whirl's velocity is
+# precisely what points out of that plane, which is the same fact from
+# the other side.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -3.0, 0]
+collide off
+# Every joint pivots at the MIDPOINT of its pair as it stands now, so
+# the links are laid end to end and each pivot lands on the ends they
+# share: 0, 0.5, 1.0, 1.5. The anchor sits one half-link back so the
+# first pivot lands on the origin rather than inside link1.
+new sphere as anchor { mass = 1, radius = 0.05, position = [-0.25, 0, 0], inverse_mass = 0 }
+new cuboid as link1 { mass = 1, half_extents = [0.25, 0.06, 0.06], position = [0.25, 0, 0], velocity = [0, 0, -0.375], angular_velocity = [0, 1.5, 0] }
+new cuboid as link2 { mass = 1, half_extents = [0.25, 0.06, 0.06], position = [0.75, 0, 0], velocity = [0, 0, -1.125], angular_velocity = [0, 1.5, 0] }
+new cuboid as link3 { mass = 1, half_extents = [0.25, 0.06, 0.06], position = [1.25, 0, 0], velocity = [0, 0, -1.875], angular_velocity = [0, 1.5, 0] }
+new cuboid as link4 { mass = 1, half_extents = [0.25, 0.06, 0.06], position = [1.75, 0, 0], velocity = [0, 0, -2.625], angular_velocity = [0, 1.5, 0] }
+ball anchor link1
+ball link1 link2
+ball link2 link3
+ball link3 link4
+method ida

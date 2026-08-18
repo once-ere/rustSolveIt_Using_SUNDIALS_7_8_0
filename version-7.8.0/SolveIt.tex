@@ -1190,6 +1190,10 @@ $|g| = 5.6\times10^{-8}$ through 400 IDA steps\\
 a driven shaft's rotation across to a second shaft, braced by a rod to
 a post & the bend stops at $\cos\beta = 0.6000004$ against a geometric
 bound of exactly $0.6$; three joints hold to $|g| = 4.0\times10^{-7}$\\
+\code{ball\_joint\_chain.html} & four links on \textbf{\kw{ball} joints}
+--- the chain whirls out of the plane it started on, which a hinged
+chain cannot do & the four joints hold to $|g| = 3.3\times10^{-9}$;
+$|z|$ runs from exactly $0$ to $1.7147$\\
 \end{tabular}
 \end{center}
 
@@ -1205,7 +1209,7 @@ freedoms and three of them are redundant, which leaves the constrained
 solve singular. One \kw{constrain} --- a single row --- braces it
 instead, and pins the bend to a closed form: the shaft sweeps a cone,
 and $\cos\beta$ cannot go below $0.6$. The recording touches
-$0.6000004$. Grammar \S12.5 works the arithmetic through.
+$0.6000004$. Grammar \S12.6 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or
 $\leftarrow\rightarrow$), a scrub bar, speed from $0.25\times$ to

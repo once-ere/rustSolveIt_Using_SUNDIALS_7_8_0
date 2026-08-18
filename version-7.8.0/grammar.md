@@ -3573,7 +3573,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The five shipped recordings
+### 12.3 The six shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3584,6 +3584,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/box_of_shapes.html`](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid rattling in a rigid `BOX 4`; the gold arrows are the analytic contact normals, sized by impulse | 36 collision events, `\|dE\|/E = 3.4e-16` |
 | [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | two `HINGE` joints assembled into the chaotic linkage; the gold rings are the joints | the joints hold to `\|g\| = 5.6e-8`; energy wanders 3 parts in 10,000 |
 | [`videos/universal_joint.html`](videos/universal_joint.html) | a `UNIVERSAL` joint carrying a driven shaft's rotation to a second shaft; the bend flattens out straight and folds back, and the speed across the joint swings with it | the bend stops at `cos β = 0.6000004` against a geometric bound of exactly `0.6`; the three joints hold to `\|g\| = 4.0e-7` |
+| [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on `BALL` joints, whirling as they collapse; the chain leaves the plane it started on, which a hinged chain cannot | the four joints hold to `\|g\| = 3.3e-9`; `\|z\|` runs from exactly 0 to 1.7147 |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3605,7 +3606,47 @@ settings with it.** When a run's `|dE/E|` surprises you, check `ENERGY`,
 `system.g_constant`, `system.softening` and `system.uniform_gravity`
 before suspecting the integrator.
 
-### 12.5 Count your rows before you brace a mechanism
+### 12.5 What a BALL joint buys, measured exactly
+
+`BALL` and `HINGE` are easy to describe and easy to confuse: both hold a
+point, and a hinge additionally holds an axis. The ball-chain recording
+turns that sentence into a number.
+
+Take four links laid end to end and start them as a **rigid rotation**
+of the whole assembly about the vertical:
+
+```text
+v = ω × r,  with  ω = [0, 1.5, 0]     so  v = [0, 0, -1.5 x]
+```
+
+A rigid motion moves nothing relative to anything, so it violates no
+joint of any kind — as a *position* constraint. The velocity constraint
+is where the two joints part company. `CONSTRAINTS` reports the worst
+`|ġ|` over the joint set, and for the identical starting state:
+
+| the same four links, joined by | worst \|g\| | worst \|ġ\| |
+|---|---|---|
+| four `BALL` joints | `0` exactly | **`0` exactly** |
+| four `HINGE` joints about z | `0` exactly | **`1.5`** |
+
+`1.5` is not approximately anything. It is Ω, the whirl rate, because
+the whirl is precisely the component a hinge about z forbids, and the
+velocity residual of a forbidden motion is its own magnitude.
+
+**What follows from it.** A start with `|ġ| ≠ 0` is not on the
+constraint manifold, so before integrating anything the solver must
+project the velocities onto it (§11.4) — and that projection *changes
+the motion you asked for*. The hinge chain cannot be given this whirl;
+it can only be given whatever remains after the whirl is removed. The
+ball chain takes it untouched, and `RunReport.initial_velocity_projected`
+is `0`.
+
+Watch the recording's z axis for the consequence. Every link starts
+exactly on the plane `z = 0`, and the chain reaches `|z| = 1.7147`. A
+hinged chain would still be at exactly zero, for ever, because that is
+what fixing an axis means.
+
+### 12.6 Count your rows before you brace a mechanism
 
 The universal-joint recording is worth reading as a design exercise,
 because the obvious way to build it does not work.

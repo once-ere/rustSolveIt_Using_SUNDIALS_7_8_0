@@ -576,6 +576,113 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The chain of `videos/ball_joint_chain.html`, and the one thing a
+/// ball joint does that a hinge cannot.
+///
+/// ```text
+/// anchor --BALL-- link1 --BALL-- link2 --BALL-- link3 --BALL-- link4
+/// ```
+///
+/// A hinge fixes an axis as well as a point, so a hinged chain is
+/// trapped in a plane for ever. A ball joint fixes only the point, so
+/// the same chain can leave it — and the sharpest way to show that is
+/// not the trajectory but the **start**.
+///
+/// The chain lies along x and is given the velocity field of a rigid
+/// rotation about the vertical, `v = ω × r` with `ω = [0, Ω, 0]`. A
+/// rigid motion violates no joint at all, so for ball joints
+/// `ġ = J·u = 0` **exactly**. Hand the identical state to the same
+/// chain built from hinges about z and `|ġ| = Ω` exactly, because the
+/// whirl is precisely the component a hinge about z forbids.
+///
+/// That is a closed-form number for an inconsistency, which is a
+/// stronger check than a tolerance: the residual is not merely small
+/// for one and large for the other, it is zero and Ω.
+#[test]
+fn a_ball_chain_accepts_a_whirl_that_a_hinge_chain_forbids() {
+    const OMEGA: f64 = 1.5;
+    const H: f64 = 0.25; // link half-length
+
+    /* Links laid end to end, so each joint's midpoint pivot lands on the
+     * ends the pair shares. The anchor sits one half-link back, putting
+     * the first pivot on the origin rather than inside link1. */
+    let build = || {
+        let mut objs = vec![world_anchor(0, Vec3::new(-H, 0.0, 0.0))];
+        for k in 0..4 {
+            let x = H + 2.0 * H * k as f64;
+            let mut b = physical_object::new_from_shape(
+                k as usize + 1,
+                1.0,
+                0.0,
+                Vec3::new(x, 0.0, 0.0),
+                Vec3::new(0.0, 0.0, -OMEGA * x), // ω × r, with ω = [0, Ω, 0]
+                Vec3::new(0.0, OMEGA, 0.0),
+                Boundary::Cuboid { half_extents: [H, 0.06, 0.06] },
+            );
+            b.set_angular_velocity(Vec3::new(0.0, OMEGA, 0.0));
+            objs.push(b);
+        }
+        let mut s = PhysicalObjectSystem::new(objs, 0.0);
+        s.uniform_gravity = Vec3::new(0.0, -3.0, 0.0);
+        s.collide_enabled = false;
+        s.method = Method::Ida;
+        s
+    };
+
+    /* The velocity residual of whatever joint set is installed. */
+    let gdot = |s: &PhysicalObjectSystem| {
+        let pose = ConstraintSet::poses(s);
+        let v: Vec<Vec3> = s.objects.iter().map(|o| o.get_velocity()).collect();
+        let w: Vec<Vec3> = s.objects.iter().map(|o| o.get_angular_velocity()).collect();
+        let mut out = vec![0.0; s.constraints.len()];
+        s.constraints.velocity_residual(&pose, &v, &w, &mut out);
+        out.iter().fold(0.0_f64, |m, r| m.max(r.abs()))
+    };
+
+    let mut ball = build();
+    let snap = ball.clone();
+    for k in 0..4 {
+        ball.constraints.add_ball(&snap, k, k + 1).unwrap();
+    }
+    assert_eq!(ball.constraints.len(), 12, "four ball joints are 3 rows each");
+
+    let mut hinge = build();
+    let snap = hinge.clone();
+    for k in 0..4 {
+        hinge.constraints.add_hinge(&snap, k, k + 1, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+    }
+
+    // the whole point, and both numbers are exact
+    assert_eq!(gdot(&ball), 0.0, "a rigid rotation violates no ball joint");
+    assert!(
+        (gdot(&hinge) - OMEGA).abs() < 1e-12,
+        "a hinge about z forbids exactly the whirl: expected |g_dot| = {OMEGA}, got {}",
+        gdot(&hinge)
+    );
+
+    /* Every link starts ON the plane z = 0 — though not at rest in z,
+     * since the whirl's velocity is exactly what points out of it. */
+    for k in 1..=4 {
+        assert_eq!(ball.objects[k].get_position().z, 0.0, "starts flat");
+    }
+
+    /* Consistent in, consistent out: nothing is projected away. */
+    let report = integrate::run(&mut ball, 0.02, 1).expect("chain start");
+    assert_eq!(report.initial_velocity_projected, 0.0, "the start needed no projection");
+
+    let mut off_plane = 0.0_f64;
+    let mut worst_g = 0.0_f64;
+    for k in 2..=250 {
+        let r = integrate::run(&mut ball, 0.02 * f64::from(k), 1).expect("chain run");
+        worst_g = worst_g.max(r.constraint_drift.0);
+        for b in &ball.objects {
+            off_plane = off_plane.max(b.get_position().z.abs());
+        }
+    }
+    assert!(worst_g < 1e-7, "the four joints must hold: |g| = {worst_g:e}");
+    assert!(off_plane > 1.5, "a hinged chain stays at z = 0; got {off_plane}");
+}
+
 /// The drive train of `videos/universal_joint.html`:
 ///
 /// ```text
