@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Universal Joint — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 1000px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Universal joint <small>bearing —hinge— input shaft —universal— output
+  shaft —rod— post, driven live by the pure-Rust SUNDIALS IDA solver — the
+  page only draws what the solver returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="500"></canvas>
+<div id="stats"></div>
+<footer>Model: HINGE 5 + UNIVERSAL 4 + ROD 1 = 10 rows on 12 freedoms. The
+UNIVERSAL holds one shared point and one right angle between the trunnion
+axes — it does NOT hold the shafts straight; the rod to the post bounds that
+freedom, so the bend runs from 0&deg; to 53.130&deg; (cos = 0.6) and no
+further. A constant torque spins the input up from rest. Watch the speed
+ratio: a Cardan joint is not constant-velocity — the ratio must live between
+cos&beta; and 1/cos&beta; for the current bend &beta;.</footer>
+<script>
+"use strict";
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 330, OX = 180, OY = 260;
+const CY = -0.50, CP = -0.30;
+const cy = Math.cos(CY), sy = Math.sin(CY), cp = Math.cos(CP), sp = Math.sin(CP);
+let trail = [], maxBend = 0;
+
+function quatRot(q, v) {
+  const [w, x, y, z] = q, [vx, vy, vz] = v;
+  const tx = 2 * (y * vz - z * vy), ty = 2 * (z * vx - x * vz), tz = 2 * (x * vy - y * vx);
+  return [vx + w * tx + y * tz - z * ty,
+          vy + w * ty + z * tx - x * tz,
+          vz + w * tz + x * ty - y * tx];
+}
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+const dot = (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+function proj(v) {
+  const [x0, y0, z0] = v;
+  const x1 = x0 * cy + z0 * sy, z1 = -x0 * sy + z0 * cy;
+  const y2 = y0 * cp - z1 * sp;
+  return [OX + x1 * SC, OY - y2 * SC];
+}
+function line(a, b, color, width) {
+  const p = proj(a), s = proj(b);
+  cx.strokeStyle = color; cx.lineWidth = width; cx.lineCap = "round";
+  cx.beginPath(); cx.moveTo(p[0], p[1]); cx.lineTo(s[0], s[1]); cx.stroke();
+}
+function dotAt(v, r, color) {
+  const p = proj(v);
+  cx.fillStyle = color;
+  cx.beginPath(); cx.arc(p[0], p[1], r, 0, 7); cx.fill();
+}
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  const POST = [1.5, 0, -0.3];
+
+  const ain = quatRot(s.input_q,  [1, 0, 0]);      // input shaft direction
+  const aout = quatRot(s.output_q, [1, 0, 0]);     // output shaft direction
+  const inA = add(s.input_p,  mul(ain, -0.3));     // hinge end
+  const cross = add(s.input_p, mul(ain, 0.3));     // the cross
+  const outB = add(s.output_p, mul(aout, 0.3));    // braced far end
+
+  // anchors
+  line([0, -0.55, 0], [0, 0, 0], "#26303a", 4);            // bearing pillar
+  line([1.5, -0.55, -0.3], POST, "#26303a", 4);            // post pillar
+  dotAt([0, 0, 0], 5, "#8a97a5");
+  dotAt(POST, 5, "#8a97a5");
+
+  // the brace rod
+  line(s.output_p, POST, "#4b5a68", 2);
+
+  // input shaft with a spinning yoke at the cross end
+  line(inA, cross, "#9fb8d0", 7);
+  const uin = quatRot(s.input_q, [0, 0, 1]);       // its trunnion axis
+  line(add(cross, mul(uin, -0.12)), add(cross, mul(uin, 0.12)), "#5d84a8", 5);
+  // a paint mark so the spin is visible
+  const mk = quatRot(s.input_q, [0, 0.09, 0]);
+  line(add(inA, mk), add(add(inA, mul(ain, 0.15)), mk), "#c9524a", 3);
+
+  // output shaft with its trunnion
+  line(cross, outB, "#d0a95f", 7);
+  const wout = quatRot(s.output_q, [0, 1, 0]);
+  line(add(cross, mul(wout, -0.12)), add(cross, mul(wout, 0.12)), "#b08d45", 5);
+
+  dotAt(cross, 5, "#e8eef4");
+
+  // trail of the braced end, riding its circle
+  if (s.running) {
+    trail.push(outB);
+    if (trail.length > 700) trail.shift();
+  }
+  cx.strokeStyle = "#7fd18b"; cx.lineWidth = 1.5;
+  cx.beginPath();
+  trail.forEach((v, i) => {
+    const p = proj(v);
+    i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  });
+  cx.stroke();
+
+  // ---- measurements -------------------------------------------------
+  const bend = Math.acos(Math.min(1, Math.max(-1, dot(ain, aout)))) * 180 / Math.PI;
+  if (s.running) maxBend = Math.max(maxBend, bend);
+  const wIn  = dot(s.input_w,  ain);               // spin about own axis
+  const wOut = dot(s.output_w, aout);
+  const ratio = Math.abs(wIn) > 0.05 ? wOut / wIn : null;
+  const cb = Math.cos(bend * Math.PI / 180);
+  const square = Math.abs(dot(uin, wout));         // the 4th row, live
+  // and that row's exact time derivative — the velocity-level identity
+  // the joint enforces at EVERY instant, even while the bend is swinging
+  // (the [cos b, 1/cos b] ratio envelope only applies at steady bend):
+  const cr = (a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+  const sqRate = Math.abs(dot(cr(s.input_w, uin), wout) + dot(uin, cr(s.output_w, wout)));
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">bend &beta;</span> <span class="v">${bend.toFixed(2)}&deg;</span></div>
+    <div><span class="k">max bend</span> <span class="v">${maxBend.toFixed(2)}&deg;</span>
+         <span class="k">(53.130 limit)</span></div>
+    <div><span class="k">&omega; in / out</span> <span class="v">${wIn.toFixed(3)} / ${wOut.toFixed(3)}</span></div>
+    <div><span class="k">ratio</span> <span class="v">${ratio === null ? "—" : ratio.toFixed(4)}</span>
+         <span class="k">steady-bend env. [${cb.toFixed(3)} .. ${(1/cb).toFixed(3)}]</span></div>
+    <div><span class="k">trunnions &perp; |u&middot;w|</span> <span class="v good">${square.toExponential(2)}</span></div>
+    <div><span class="k">|d/dt(u&middot;w)|</span> <span class="v good">${sqRate.toExponential(2)}</span></div>
+    <div><span class="k">worst |g|</span> <span class="v good">${s.g == null ? "—" : s.g.toExponential(2)}</span></div>
+    <div><span class="k">worst |g_dot|</span> <span class="v good">${s.gdot == null ? "—" : s.gdot.toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset"); trail = []; maxBend = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
