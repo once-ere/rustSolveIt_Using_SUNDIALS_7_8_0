@@ -1,0 +1,73 @@
+# Cardan gears: a wheel of radius r inside a ring of radius 2r, and the
+# straight line that falls out of it.
+#
+#   centre --HINGE z-- crank --HINGE z-- planet        ring: reference only
+#
+# When a wheel rolls inside a ring of exactly twice its radius, every
+# point on the wheel's rim travels along a straight line — a diameter of
+# the ring. It is the Tusi couple, and it is the reason Cardan gears
+# were used to convert rotation into straight-line motion before the
+# slider-crank was common. The hypocycloid of ratio 2 is degenerate: it
+# is not an approximation to a straight line, it IS one.
+#
+# READ THIS BEFORE BELIEVING THE PICTURE. There is no rolling contact
+# here. This joint set has four constraints — CONSTRAIN (1 row), BALL
+# (3), UNIVERSAL (4), HINGE (5) — and not one of them couples a rotation
+# to a translation, which is what rolling means. There is no gear
+# constraint and no line constraint either.
+#
+# So the outer ring is drawn for reference and NOTHING is attached to
+# it. It is a static body, present only to show the circle the planet
+# would be rolling inside. The planet is not touching it in any sense
+# the solver knows about.
+#
+# What holds the 2:1 relation is the START, not a constraint:
+#
+#     crank  angular_velocity = [0, 0,  1]
+#     planet angular_velocity = [0, 0, -1]
+#
+# For a wheel rolling inside a ring of twice its radius the wheel turns
+# once backwards for each forward turn of the crank, so equal and
+# opposite rates ARE the rolling condition. And with no gravity and no
+# torque anywhere, both rates are conserved: the crank's because the
+# planet's reaction on it is purely centripetal, and the planet's
+# because its centre of mass sits exactly ON the hinge, so the force
+# there has no moment about it. The ratio therefore persists, and the
+# rim point runs along the x axis.
+#
+# THE DIFFERENCE THIS MAKES IS MEASURABLE, and it is the point of the
+# recording. A real gear pair would hold the line however it were
+# loaded. Here the ratio is only an initial condition, so integration
+# error accumulates in it and the line slowly degrades:
+#
+#     315 cold restarts, one per frame   |y| <= 1.795e-3
+#     the same 6.3 s run continuously    |y| <= 4.137e-5
+#
+# a factor of 43, and the same restart-versus-continuation effect as the
+# rod chain (grammar §12.9). The straight line is exact in the geometry;
+# what you see is what one floored tolerance and 315 restarts leave of
+# it. Watch the trail: it is a line, and it is 2 units long, exactly
+# 2r either side of the centre.
+set system.g_constant = 0
+set system.uniform_gravity = [0, 0, 0]
+collide off
+# Every joint pivots at the MIDPOINT of its pair, so the anchor sits one
+# crank-radius the far side of the centre, and the crank and planet
+# share a centre: that puts the first pivot on the origin and the second
+# exactly on the planet's axle at [0.5, 0, 0].
+new point as centre { mass = 1, position = [-0.5, 0, 0], inverse_mass = 0 }
+new cuboid as crank { mass = 0.3, half_extents = [0.5, 0.04, 0.02], position = [0.5, 0, 0] }
+# The planet is a cylinder, symmetric about its LOCAL z, hinged about z:
+# here that IS correct, because a gear wheel turns about its own axis.
+new cylinder as planet { mass = 1, radius = 0.5, half_height = 0.03, position = [0.5, 0, 0] }
+# Reference only — no joint attaches to this.
+new torus as ring { mass = 1, ring_radius = 1.0, tube_radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+hinge centre crank [0, 0, 1]
+hinge crank planet [0, 0, 1]
+method ida
+# Consistent by construction: each body's material point at its pivot has
+# the velocity the other gives it, so g_dot = J u = 0 to roundoff.
+set crank.angular_velocity = [0, 0, 1]
+set crank.velocity = [0, 0.5, 0]
+set planet.angular_velocity = [0, 0, -1]
+set planet.velocity = [0, 0.5, 0]

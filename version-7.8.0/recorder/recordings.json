@@ -101,6 +101,16 @@
       "view": "iso",
       "title": "A compass in a Cardan suspension",
       "caption": "Two HINGE joints on two perpendicular horizontal axes: 10 rows on 12 freedoms, leaving the roll and pitch the suspension exists to give. Both rings lie FLAT, because a gimbal ring pivots about a DIAMETER -- a line in its own plane -- so its plane must contain both hinge axes. The difference from the gyroscope gimbal is one number. There every centre of mass sat ON the pivot, the lever arm was zero and gravity did nothing; here the bowl is PENDULOUS, its centre of mass hanging d = 0.12 below the pivot, and that is the whole mechanism. A ship's compass is not held level by its bearings -- it is held level by its own weight, and the bearings only get out of the way. So each axis is a physical pendulum with a period you can write down, T = 2 pi sqrt(I/(Mgd)): 1.878587 s in pitch, where only the bowl swings, and 2.307339 s in roll, where ring and bowl swing together. Measured off this recording: 1.883426 s and 2.313653 s. The 2.6e-3 excess is not solver error but finite amplitude -- halve the kick and it falls by 4.01 and 4.02, the signature of a theta-squared term. Excited on one axis alone the attribution is exact: the pitch period comes out 4.99e-4 long against a predicted theta^2/16 = 5.02e-4. The two hinges hold to |g| = 3.4e-9; the card never tilts more than 7.34 degrees off level and the ring swings 5.26 degrees about its hinge."
+    },
+    {
+      "name": "cardan_gear",
+      "scene": "videos/scenes/cardan_gear.posim",
+      "out": "videos/cardan_gear.html",
+      "frames": 315,
+      "dt": 0.02,
+      "view": "front",
+      "title": "Cardan gears, and a straight line",
+      "caption": "A wheel of radius r inside a ring of radius 2r: every point on the wheel's rim travels along a straight line, a diameter of the ring. The hypocycloid of ratio 2 is degenerate -- it is not an approximation to a straight line, it IS one -- and Cardan gears were used to turn rotation into straight-line motion because of it. READ THIS BEFORE BELIEVING THE PICTURE: there is no rolling contact here. This joint set has CONSTRAIN, BALL, UNIVERSAL and HINGE, and not one of them couples a rotation to a translation, which is what rolling means. The outer ring is drawn for reference and nothing is attached to it. What holds the 2:1 relation is the START -- crank +1 rad/s, planet -1 rad/s, which for this radius ratio IS the rolling condition -- and with no gravity and no torque both rates are conserved, so it persists. The difference that makes is measurable, and is the point: a real gear pair would hold the line under any load, while here the ratio is only an initial condition, so error accumulates in it. Over 315 cold restarts, one per frame, the rim point leaves the line by up to 1.8e-3; the same 6.3 s run as one continuous integration holds it to 4.1e-5, a factor of 43. Watch the trail: a line, 2 units long, exactly 2r either side of centre."
     }
   ]
 }

@@ -576,6 +576,90 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The Cardan gears of `videos/cardan_gear.html`, against the
+/// degenerate hypocycloid.
+///
+/// A wheel of radius `r` rolling inside a ring of radius `2r` sends
+/// every point of its rim along a **straight line** — a diameter of the
+/// ring. The hypocycloid of ratio 2 does not approximate a line, it is
+/// one, and the rim point sits at
+///
+/// ```text
+/// P = (2r cos θ, 0),   θ the crank angle
+/// ```
+///
+/// **Nothing here enforces rolling.** This joint set couples no rotation
+/// to a translation — there is no gear constraint and no line
+/// constraint — so the 2:1 relation is imposed by the initial rates
+/// (`+1` and `−1`, which for this radius ratio *is* the rolling
+/// condition) and persists only because nothing torques either body.
+/// That is exactly what the assertion checks: if the rates did not stay
+/// locked, the rim would leave the line at once.
+///
+/// The check is closed-form at three crank angles, including the one
+/// where the rim point passes through the centre of the ring.
+#[test]
+fn cardan_gears_send_a_rim_point_along_a_straight_line() {
+    const R: f64 = 0.5; // wheel radius; the ring is 2R
+    let pi = std::f64::consts::PI;
+
+    let mut centre = physical_object::new_point(0, 1.0, Vec3::new(-R, 0.0, 0.0), Vec3::zeros());
+    centre.set_inverse_mass(0.0);
+    centre.set_inertia_tensor(Mat3::zeros());
+    /* The midpoint pivot rule puts the first hinge on the origin and the
+     * second on the planet's axle: the anchor sits one crank radius the
+     * far side of centre, and crank and planet share a centre. */
+    let mut crank = physical_object::new_from_shape(
+        1, 0.3, 0.0,
+        Vec3::new(R, 0.0, 0.0),
+        Vec3::new(0.0, R, 0.0),      // v = ω × r
+        Vec3::new(0.0, 0.0, 1.0),
+        Boundary::Cuboid { half_extents: [R, 0.04, 0.02] },
+    );
+    crank.set_angular_velocity(Vec3::new(0.0, 0.0, 1.0));
+    let mut planet = physical_object::new_from_shape(
+        2, 1.0, 0.0,
+        Vec3::new(R, 0.0, 0.0),
+        Vec3::new(0.0, R, 0.0),
+        Vec3::new(0.0, 0.0, -1.0),   // equal and opposite: the rolling ratio
+        Boundary::Cylinder { radius: R, half_height: 0.03 },
+    );
+    planet.set_angular_velocity(Vec3::new(0.0, 0.0, -1.0));
+
+    let mut s = PhysicalObjectSystem::new(vec![centre, crank, planet], 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_hinge(&snap, 0, 1, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+    s.constraints.add_hinge(&snap, 1, 2, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+    assert_eq!(s.constraints.len(), 10, "two hinges are five rows each");
+
+    /* The material point of the planet that starts on the rim at +2R. */
+    let rim = |s: &PhysicalObjectSystem| {
+        s.objects[2].get_position()
+            + s.objects[2].get_orientation().normalize().rotate(Vec3::new(R, 0.0, 0.0))
+    };
+    assert!((rim(&s) - Vec3::new(2.0 * R, 0.0, 0.0)).norm() < 1e-12, "starts at +2r");
+
+    let report = integrate::run(&mut s, 0.02, 1).expect("gear start");
+    assert_eq!(report.initial_velocity_projected, 0.0, "the start is consistent");
+
+    /* θ = π/2: the rim point is at the centre of the ring, having run
+     * half the line. θ = π: the far end. θ = 2π: back where it began. */
+    for (theta, want_x) in [(pi / 2.0, 0.0), (pi, -2.0 * R), (2.0 * pi, 2.0 * R)] {
+        let r = integrate::run(&mut s, theta, 200).expect("gear run");
+        assert!(r.constraint_drift.0 < 1e-6, "|g| = {:e}", r.constraint_drift.0);
+        let p = rim(&s);
+        assert!(
+            (p.x - want_x).abs() < 2e-3,
+            "at crank angle {theta} the rim point should be at x = {want_x}, got {p:?}"
+        );
+        /* The whole claim: it never leaves the line. */
+        assert!(p.y.abs() < 2e-3, "the rim point left the line: y = {:e}", p.y);
+        assert!(p.z.abs() < 1e-9, "and it stays in the plane: z = {:e}", p.z);
+    }
+}
+
 /// The compass of `videos/cardan_compass.html`, against the physical
 /// pendulum period.
 ///
@@ -909,7 +993,7 @@ fn a_spinning_top_precesses_at_the_closed_form_rate() {
 /// multiplier seed and no BDF history. At the default tolerance these
 /// same four rods fail on the *second* restart, which is why the scene
 /// asks for the floor values by hand. That is a statement about
-/// restarting, not about accuracy; the scene file and grammar §12.8
+/// restarting, not about accuracy; the scene file and grammar §12.9
 /// record it.
 #[test]
 fn a_rod_chain_is_the_cheapest_joint_and_holds_to_roundoff() {

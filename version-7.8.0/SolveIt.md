@@ -1475,7 +1475,7 @@ The recorder drives `posim --machine` and asks it to `step` — **every
 advance is a real SUNDIALS step**. The tool is a camera, not a physics
 engine.
 
-Ten recordings ship with the repository:
+Eleven recordings ship with the repository:
 
 | file | what to watch | measured over the recording |
 |---|---|---|
@@ -1489,6 +1489,7 @@ Ten recordings ship with the repository:
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top on a **`BALL` joint**, precessing under gravity | 1.020440 rad/s against the exact Ω = *Mgr*/(*I₃ω₃*) = 1.020408, 3 parts in 10⁵ |
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings**, three perpendicular `HINGE` axes | total *L·ŷ* conserved to 1.4 × 10⁻¹⁴; every centre stays on the pivot to 1.2 × 10⁻³⁴ |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same rings with a **pendulous** bowl — a ship's compass, seeking level | periods 1.878587 and 2.307339 s against measured 1.883426 and 2.313653 |
+| [`videos/cardan_gear.html`](videos/cardan_gear.html) | **Cardan gears** — a wheel in a ring of twice its radius, its rim point tracing a straight line | line held to 4.1 × 10⁻⁵ run continuously; stroke exactly ±2*r* |
 
 That last one is the one to open if you only open one, because it shows
 a joint doing something a rod cannot. A `UNIVERSAL` holds a shared point
@@ -1501,7 +1502,7 @@ rows on 12 freedoms and three of them are redundant, which leaves the
 constrained solve singular. One `CONSTRAIN` — a single row — braces it
 instead, and pins the bend to a closed form: the shaft sweeps a cone,
 and cos *β* cannot go below 0.6. The recording touches 0.6000004.
-Grammar §12.9 works the arithmetic through.
+Grammar §12.10 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or ← →), a scrub
 bar, speed from 0.25× to 4×, drag to orbit, wheel to zoom, and toggles

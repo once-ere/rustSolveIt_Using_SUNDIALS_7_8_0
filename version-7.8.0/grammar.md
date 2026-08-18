@@ -3573,7 +3573,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The ten shipped recordings
+### 12.3 The eleven shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3589,6 +3589,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `1.4e-14`; no centre moves further from the pivot than `1.2e-34` |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.307339` s, measured `1.883426` and `2.313653` |
+| [`videos/cardan_gear.html`](videos/cardan_gear.html) | a wheel inside a ring of twice its radius: the rim point runs along a **straight line**, the degenerate hypocycloid | the line is held to `1.8e-3` over 315 restarts, `4.1e-5` run continuously; stroke exactly `±2r` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3701,7 +3702,7 @@ from `2.307339` to `2.582727` s. The recording caught it: the ring sat
 there visibly inert while the bowl rocked.
 
 **A cost of the midpoint pivot, worth seeing once.** Two hinges sharing
-one point force `p_frame = p_bowl = −p_ring` (§12.9), so hanging the
+one point force `p_frame = p_bowl = −p_ring` (§12.10), so hanging the
 bowl `d` below the centre puts the *ring's* centre `d` above it. That
 is not cosmetic: the ring is then top-heavy and **subtracts** from the
 restoring torque, which is why the roll period carries `(M_b − M_r)`
@@ -3745,7 +3746,58 @@ about one axis, rotation out about another, is the whole of gyroscopic
 behaviour, and here it is a consequence of the two lines above rather
 than a separate rule.
 
-### 12.7 A closed form that is exact, and how to actually hit it
+### 12.7 What the joint set cannot say
+
+Every other recording in this chapter is a mechanism the language can
+*build*. The Cardan-gear one is not, and it is worth being exact about
+why, because the boundary is sharp.
+
+A wheel of radius `r` rolling inside a ring of radius `2r` sends every
+point of its rim along a straight line — a diameter of the ring. The
+hypocycloid of ratio 2 does not approximate a line, it **is** one, and
+that is why Cardan gears were used to turn rotation into straight-line
+motion. The rim point sits at `P = (2r cos θ, 0)`.
+
+**Rolling is not expressible here.** The four joints are
+
+| | rows | what it holds |
+|---|---|---|
+| `CONSTRAIN` | 1 | a distance |
+| `BALL` | 3 | a point |
+| `UNIVERSAL` | 4 | a point and a right angle |
+| `HINGE` | 5 | a point and an axis |
+
+and not one of them couples a **rotation to a translation**, which is
+what rolling means. There is no gear constraint and no line constraint
+either. So the recording does not enforce the 2:1 relation; it *starts*
+with it — crank `+1 rad/s`, planet `−1 rad/s`, which for this radius
+ratio is exactly the rolling condition — and relies on both rates being
+conserved, which they are: the planet's reaction on the crank is purely
+centripetal, and the planet's own centre of mass sits on its hinge, so
+the force there has no moment about it.
+
+**And the difference is measurable, which is the useful part.** A real
+gear pair holds the line under any load. An initial condition only holds
+it until integration error accumulates:
+
+```text
+315 cold restarts, one per frame   |y| ≤ 1.795e-3
+the same 6.3 s run continuously    |y| ≤ 4.137e-5
+```
+
+a factor of 43, and the same restart-versus-continuation effect as
+§12.9. The straight line is exact in the geometry; what the recording
+shows is what one floored tolerance and 315 restarts leave of it.
+
+**The general point.** A constraint you cannot write is not a constraint
+you can fake with initial conditions — you get the right motion and the
+wrong mechanism, and the two are told apart by disturbing it. If you
+need rolling, gearing, or a point confined to a line, this joint set
+will not give it to you, and a scene that appears to show one is worth
+reading twice. The outer ring in that recording is drawn for reference
+and **nothing is attached to it**.
+
+### 12.8 A closed form that is exact, and how to actually hit it
 
 The spinning-top recording is the one place in this chapter where the
 answer is a formula you can look up, so it is worth being precise about
@@ -3801,7 +3853,7 @@ not just the position level**, and a closed form that assumes a
 particular steady state has to be started in that state or it is not
 the thing you are measuring.
 
-### 12.8 A restart is not a continuation
+### 12.9 A restart is not a continuation
 
 The rod-chain recording exists to document a trap that costs an
 afternoon if you meet it without warning.
@@ -3858,7 +3910,7 @@ robust either way, which is why the scene ships with four and writes
 its coordinates out in full. If a constrained run's success depends on
 how you rounded the input, you are on a knife edge, not on a result.
 
-### 12.9 Count your rows before you brace a mechanism
+### 12.10 Count your rows before you brace a mechanism
 
 The universal-joint recording is worth reading as a design exercise,
 because the obvious way to build it does not work.

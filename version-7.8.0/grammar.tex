@@ -3540,7 +3540,7 @@ and $dt$ the recording was made with. \textbf{This is the point of the
 format}: you can stop on the frame where something looks wrong and read
 the conserved quantities off it.
 
-\subsection{The ten shipped recordings}
+\subsection{The eleven shipped recordings}
 
 \begin{center}
 \begin{tabular}{p{3.6cm}p{6.4cm}p{4.2cm}}
@@ -3582,6 +3582,10 @@ rings on three perpendicular \kw{hinge} axes; the push goes in about
 one axis and comes out about another & total $L\cdot\hat y$ conserved
 to $6.4\text{e-}15$; no centre moves further from the pivot than
 $7\text{e-}35$\\
+\code{videos/cardan\_gear.html} & a wheel inside a ring of twice
+its radius: the rim point runs along a \textbf{straight line}, the
+degenerate hypocycloid & the line is held to $1.8\text{e-}3$ over 315
+restarts, $4.1\text{e-}5$ run continuously; stroke exactly $\pm 2r$\\
 \code{videos/cardan\_compass.html} & the same two rings, but with a
 \textbf{pendulous} bowl, so gravity is the restoring torque and the
 card seeks level & two physical-pendulum periods, $1.878587$ and
@@ -3733,6 +3737,42 @@ $7.43^\circ$ from where it began, and the rotation reappears as a
 right angles to the push. Rotation in about one axis, rotation out
 about another, is the whole of gyroscopic behaviour, and here it is a
 consequence of the two laws above rather than a separate rule.
+
+\subsection{What the joint set cannot say}
+
+Every other recording in this chapter is a mechanism the language can
+\emph{build}. The Cardan-gear one is not, and the boundary is worth
+stating exactly.
+
+A wheel of radius $r$ rolling inside a ring of radius $2r$ sends every
+point of its rim along a straight line --- a diameter of the ring. The
+hypocycloid of ratio 2 does not approximate a line, it \textbf{is} one,
+and the rim point sits at $P = (2r\cos\theta, 0)$.
+
+\textbf{Rolling is not expressible here.} \kw{constrain} holds a
+distance (1 row), \kw{ball} a point (3), \kw{universal} a point and a
+right angle (4), \kw{hinge} a point and an axis (5) --- and not one of
+them couples a \textbf{rotation to a translation}, which is what
+rolling means. There is no gear constraint and no line constraint
+either. So the recording does not enforce the 2:1 relation; it
+\emph{starts} with it, crank $+1$ and planet $-1$ rad/s, which for this
+radius ratio is exactly the rolling condition, and relies on both rates
+being conserved --- which they are, because the planet's reaction on the
+crank is purely centripetal and the planet's centre of mass sits on its
+own hinge.
+
+\textbf{And the difference is measurable, which is the useful part.} A
+real gear pair holds the line under any load; an initial condition holds
+it only until integration error accumulates. Over 315 cold restarts,
+one per frame, the rim point leaves the line by up to
+$1.795\times10^{-3}$; the same 6.3\,s run continuously holds it to
+$4.137\times10^{-5}$, a factor of 43.
+
+\textbf{The general point.} A constraint you cannot write is not a
+constraint you can fake with initial conditions --- you get the right
+motion and the wrong mechanism, and the two are told apart by disturbing
+it. The outer ring in that recording is drawn for reference and
+\textbf{nothing is attached to it}.
 
 \subsection{A closed form that is exact, and how to actually hit it}
 

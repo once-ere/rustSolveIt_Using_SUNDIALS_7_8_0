@@ -118,7 +118,7 @@ the worked cases.
 
 ## Browser videos
 
-Ten recorded runs you can open offline — no server, no CDN, nothing
+Eleven recorded runs you can open offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -134,6 +134,7 @@ frame you stopped on.
 | [videos/spinning_top.html](videos/spinning_top.html) | a top held at its tip by a **`BALL` joint**, precessing under gravity | 1.020440 rad/s vs the exact 1.020408 — 3 parts in 10⁵ |
 | [videos/gyroscope_gimbal.html](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings** on three perpendicular `HINGE` axes; push it one way, it moves another | `L·ŷ` conserved to 1.4e-14 |
 | [videos/cardan_compass.html](videos/cardan_compass.html) | the same two rings with a **pendulous** bowl: a ship's compass held level by its own weight | two physical-pendulum periods matched, 1.878587 and 2.307339 s |
+| [videos/cardan_gear.html](videos/cardan_gear.html) | **Cardan gears**: a wheel inside a ring of twice its radius, rim point on a straight line | line held to 4.1e-5 continuously; stroke exactly ±2r |
 
 Record your own from any posim script:
 

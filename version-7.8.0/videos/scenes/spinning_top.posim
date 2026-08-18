@@ -48,7 +48,7 @@
 # the symmetry axis, and the pivot itself stays still under both, so
 # g_dot = J u = 0 exactly and nothing is projected at the start.
 #
-# THE TOLERANCE. As in the rod-chain recording (grammar §12.8), a
+# THE TOLERANCE. As in the rod-chain recording (grammar §12.9), a
 # recording is one `step` per frame and every `step` is a cold restart.
 # A gyroscope turning at 20 rad/s is the most demanding scene here: the
 # automatic orientation-joint floor of 1e-6 / 1e-8 is NOT enough, and
