@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rack &amp; Pinion — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 980px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Rack &amp; pinion <small>a falling rack winding up a flywheel, driven live
+  by the pure-Rust SUNDIALS IDA solver — the page only draws what the solver
+  returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="480"></canvas>
+<div id="stats"></div>
+<footer>Model: HINGE 5 + PRISMATIC 5 + RACK 1 = 11 rows on 12 freedoms — one
+freedom left, the drive. Closed form: a = mg / (m + I/r&sup2;) = g/2 exactly,
+independent of the pitch radius, because a solid disc of twice the rack's mass
+has I/r&sup2; = M/2 = m. Here g = 0.4, so the rack falls at 0.2 and
+y(t) = &minus;0.1&thinsp;t&sup2;.</footer>
+<script>
+"use strict";
+const R = 0.6, G_HALF = 0.2, Y0 = 0.0;      // pitch radius, g/2, start height
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 150, OX = 430, OY = 200;          // px per metre, canvas origin
+let worstFall = 0, worstMesh = 0;
+
+const W = (x, y) => [OX + x * SC, OY - y * SC];    // world -> canvas
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  const th = s.theta;                        // wrapped pinion angle
+  const y  = s.bar[1];                       // rack centre height
+
+  // The closed-form fall, from t alone: y = -g/2 * t^2 / 2 elapsed... y = Y0 - 0.5*(g/2)*t^2
+  const yExact = Y0 - 0.5 * G_HALF * s.t * s.t;
+  const fallErr = Math.abs(y - yExact);
+  if (s.t > 0) worstFall = Math.max(worstFall, fallErr);
+
+  // The tooth mesh: the RACK row holds Ds = r*theta up to whole turns.
+  // Wrap the phase into [-pi, pi]; its size, times r, is how far the
+  // teeth are out of register. Aliasing-proof no matter how long the
+  // page was hidden, exactly like the joint's own unwrap.
+  let phase = ((y - Y0) / R - th) % (2 * Math.PI);
+  if (phase >  Math.PI) phase -= 2 * Math.PI;
+  if (phase < -Math.PI) phase += 2 * Math.PI;
+  const meshErr = Math.abs(phase) * R;
+  if (s.t > 0) worstMesh = Math.max(worstMesh, meshErr);
+
+  // guide rails
+  cx.strokeStyle = "#3c4f61"; cx.lineWidth = 3;
+  for (const gx of [0.6 - 0.09, 0.6 + 0.09]) {
+    cx.beginPath(); cx.moveTo(...W(gx, 1.85)); cx.lineTo(...W(gx, -1.85)); cx.stroke();
+  }
+  // pinion disc, rim teeth, and a spoke showing the turn
+  cx.strokeStyle = "#5d84a8"; cx.lineWidth = 2;
+  cx.beginPath(); cx.arc(...W(0, 0), R * SC, 0, 7); cx.stroke();
+  cx.strokeStyle = "#7a94ab"; cx.lineWidth = 2;
+  for (let k = 0; k < 24; k++) {
+    const a = th + k * Math.PI / 12;
+    cx.beginPath();
+    cx.moveTo(...W(R * 0.92 * Math.cos(a), R * 0.92 * Math.sin(a)));
+    cx.lineTo(...W(R * 1.04 * Math.cos(a), R * 1.04 * Math.sin(a)));
+    cx.stroke();
+  }
+  cx.strokeStyle = "#9fb8d0"; cx.lineWidth = 4;
+  cx.beginPath(); cx.moveTo(...W(0, 0));
+  cx.lineTo(...W(R * Math.cos(th), R * Math.sin(th))); cx.stroke();
+  // the rack bar, with tooth marks riding at its own height
+  cx.fillStyle = "#31424f"; cx.strokeStyle = "#d0a95f"; cx.lineWidth = 2;
+  const [bx, by] = W(0.6 - 0.06, y + 1.2);
+  cx.fillRect(bx, by, 0.12 * SC, 2.4 * SC); cx.strokeRect(bx, by, 0.12 * SC, 2.4 * SC);
+  cx.strokeStyle = "#d0a95f";
+  const pitch = R * Math.PI / 12;            // same spacing as the rim teeth
+  for (let k = -Math.ceil(1.2 / pitch); k * pitch < 1.2; k++) {
+    const ty = y + k * pitch;
+    if (ty < -1.85 || ty > 1.85) continue;
+    cx.beginPath(); cx.moveTo(...W(0.6 - 0.06, ty)); cx.lineTo(...W(0.6 - 0.12, ty)); cx.stroke();
+  }
+  // axle pin and mesh point
+  cx.fillStyle = "#e8eef4";
+  cx.beginPath(); cx.arc(...W(0, 0), 5, 0, 7); cx.fill();
+  cx.beginPath(); cx.arc(...W(R, 0), 4, 0, 7); cx.fill();
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">rack y</span> <span class="v">${y.toFixed(6)}</span></div>
+    <div><span class="k">exact &minus;0.1&thinsp;t&sup2;</span> <span class="v">${yExact.toFixed(6)}</span></div>
+    <div><span class="k">|y − exact|</span> <span class="v good">${fallErr.toExponential(2)}</span></div>
+    <div><span class="k">worst fall err</span> <span class="v good">${worstFall ? worstFall.toExponential(2) : "—"}</span></div>
+    <div><span class="k">tooth mesh err</span> <span class="v good">${meshErr.toExponential(2)}</span></div>
+    <div><span class="k">worst |g|</span> <span class="v good">${s.g == null ? "—" : s.g.toExponential(2)}</span></div>
+    <div><span class="k">worst |g_dot|</span> <span class="v good">${s.gdot == null ? "—" : s.gdot.toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset"); worstFall = 0; worstMesh = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>

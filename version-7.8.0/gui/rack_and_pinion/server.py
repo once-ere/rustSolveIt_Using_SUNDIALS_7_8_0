@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""A live GUI for the piston-crankshaft mechanism.
+"""A live GUI for the rack-and-pinion drive.
 
 Standard library only. The server owns one `posim --machine` child — the
-same pure-Rust engine, same model as videos/scenes/piston_crankshaft.posim
+same pure-Rust engine, same model as videos/scenes/rack_and_pinion.posim
 — and steps it with IDA. Nothing here integrates anything: the page only
 draws the states the solver produces.
 
@@ -19,21 +19,19 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]                      # version-7.8.0/
-PORT = 8895
+PORT = 8896
 
 MODEL = [
     "set system.g_constant = 0",
-    "set system.uniform_gravity = [0, 0, 0]",
+    "set system.uniform_gravity = [0, -0.4, 0]",
     "collide off",
     "new point as mount { mass = 1, position = [0, 0, 0], inverse_mass = 0 }",
-    "new cylinder as crank { mass = 2, radius = 0.55, half_height = 0.05, position = [0, 0, 0], angular_velocity = [0, 0, 2] }",
-    "new cuboid as rod { mass = 0.4, half_extents = [0.5, 0.05, 0.05], position = [1.0, 0, 0], angular_velocity = [0, 0, -1], velocity = [0, 0.5, 0] }",
-    "new cuboid as piston { mass = 1, half_extents = [0.5, 0.3, 0.3], position = [2.0, 0, 0] }",
-    "new point as guide { mass = 1, position = [2.0, 0, 0], inverse_mass = 0 }",
-    "hinge mount crank [0, 0, 1]",
-    "ball crank rod",
-    "ball rod piston",
-    "prismatic guide piston [1, 0, 0]",
+    "new cylinder as pinion { mass = 2, radius = 0.6, half_height = 0.05, position = [0, 0, 0] }",
+    "new point as guide { mass = 1, position = [0.6, 0, 0], inverse_mass = 0 }",
+    "new cuboid as bar { mass = 1, half_extents = [0.06, 1.2, 0.06], position = [0.6, 0, 0] }",
+    "hinge mount pinion [0, 0, 1]",
+    "prismatic guide bar [0, 1, 0]",
+    "rack pinion bar [0, 0, 1] [0, 1, 0] 0.6",
     "method ida",
 ]
 
@@ -111,13 +109,12 @@ class Sim:
                       r.get("display") or "")
         if m:
             g, gd = float(m.group(1)), float(m.group(2))
-        q = self._get("crank.orientation")
+        q = self._get("pinion.orientation")
         self.state = {
             "t": self.t,
-            "crank_q": q,
+            "pinion_q": q,
             "theta": 2.0 * math.atan2(q[3], q[0]),
-            "rod": self._get("rod.position"),
-            "piston": self._get("piston.position"),
+            "bar": self._get("bar.position"),
             "running": self.running,
             "dt": self.dt,
             "g": g, "gdot": gd,
@@ -217,5 +214,5 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     srv = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    print(f"piston-crankshaft GUI: http://127.0.0.1:{PORT}/", flush=True)
+    print(f"rack-and-pinion GUI: http://127.0.0.1:{PORT}/", flush=True)
     srv.serve_forever()
