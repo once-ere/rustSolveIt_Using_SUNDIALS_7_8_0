@@ -111,6 +111,16 @@
       "view": "front",
       "title": "Cardan gears, and a straight line",
       "caption": "A wheel of radius r inside a ring of radius 2r: every point on the wheel's rim travels along a straight line, a diameter of the ring. The hypocycloid of ratio 2 is degenerate -- it is not an approximation to a straight line, it IS one. The rolling is a GEAR joint: one row, holding the two bodies' turns about a shared axis in proportion, ratio 1 because the wheel turns once backwards for each forward turn of the carrier. It stacks on the bearing rather than replacing it, so the mechanism is HINGE 5 + HINGE 5 + GEAR 1 = 11 rows on 12 freedoms, leaving the one freedom a gear train has. The ratio must be rational: the honest constraint is on ACCUMULATED angle, which a quaternion cannot report, so the row is sin(q*theta_i + p*theta_j) with the angles wrapped -- which is faithful only because p and q are whole numbers, and an irrational ratio is refused rather than rounded. What the constraint buys, measured on this scene: impose the same relation as an initial condition instead and the rim leaves the line by 1.795e-3 against the gear's 1.059e-8; then lean on the wheel with a torque and the imposed version collapses to 7.468e-1 while the gear holds 1.152e-8. The outer ring is drawn for reference and nothing is attached to it -- the gear row, not any contact, does the rolling."
+    },
+    {
+      "name": "rack_and_pinion",
+      "scene": "videos/scenes/rack_and_pinion.posim",
+      "out": "videos/rack_and_pinion.html",
+      "frames": 200,
+      "dt": 0.02,
+      "view": "front",
+      "title": "A rack and pinion drive",
+      "caption": "A falling weight turning a flywheel, and every joint in it was added for this: mount--HINGE--pinion, guide--PRISMATIC--bar, pinion=RACK=bar. 5 + 5 + 1 = 11 rows on 12 freedoms, leaving one. The RACK ties the pinion's turn to the bar's travel; the PRISMATIC is the guide a rack actually runs in -- drop it and the reaction torque twists the bar 24.3 degrees off square and shoves it 0.68 off its line, while with it the twist is 2.6e-22 degrees and the sideways stray is exactly 0.0. The drive has one degree of freedom, so one equation: a = m g / (m + I/r^2), the flywheel acting not with its mass but with its inertia referred through the pitch radius. For a solid disc I/r^2 = M/2, independent of the radius entirely, so a pinion twice the rack's mass makes that term exactly m and the rack falls at a = g/2 -- exactly half gravity, whatever the pitch radius, because the flywheel it is winding up is, referred through the teeth, exactly as heavy as itself. The pitch radius here is 0.6, and it was 0.4 in an earlier cut with the fall unchanged -- the radius-independence demonstrated rather than asserted. Measured against -a t^2/2 over four seconds and a 1.6 drop: 5.35e-4 across 200 cold restarts, 3.74e-5 for the same four seconds run continuously."
     }
   ]
 }

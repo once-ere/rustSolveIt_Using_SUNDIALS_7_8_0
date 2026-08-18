@@ -3670,7 +3670,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The eleven shipped recordings
+### 12.3 The twelve shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3687,6 +3687,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `1.4e-14`; no centre moves further from the pivot than `1.2e-34` |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.307339` s, measured `1.883426` and `2.313653` |
 | [`videos/cardan_gear.html`](videos/cardan_gear.html) | a wheel inside a ring of twice its radius, rolling on a `GEAR` row: the rim point runs along a **straight line**, the degenerate hypocycloid | the line is held to `1.1e-8`, against `1.8e-3` for the same mechanism with the ratio merely imposed |
+| [`videos/rack_and_pinion.html`](videos/rack_and_pinion.html) | a weight on a `RACK` winding up a flywheel, guided by a `PRISMATIC` — every joint in it added for this | the rack falls at exactly `g/2`, and at the same rate for two different pitch radii |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3900,6 +3901,22 @@ That is enough for the mechanisms this chapter set out to build. A wheel
 rolling *along the ground* is now `PRISMATIC` for the line plus `RACK`
 for the rolling; a piston is `PRISMATIC`; a cam follower is `PRISMATIC`
 against whatever drives it.
+
+`videos/rack_and_pinion.html` is the whole set working at once — a
+weight on a rack winding up a flywheel, `HINGE 5 + PRISMATIC 5 + RACK 1`
+on 12 freedoms, leaving the one a drive has. Its closed form is worth
+knowing on its own account:
+
+```text
+a = m g / (m + I/r²)
+```
+
+The flywheel resists not with its mass but with `I/r²`, its inertia
+**referred through the pitch radius** — and for a solid disc that is
+`M/2`, independent of the radius entirely. A pinion twice the rack's
+mass therefore makes the rack fall at exactly `g/2`, whatever the teeth
+are sized at. The recording checks the radius-independence the honest
+way, by running two different pitch radii and getting the same fall.
 
 **What the exercise taught, which outlasts the list.** The two hard
 joints were the two whose natural coordinate is an angle nobody counted

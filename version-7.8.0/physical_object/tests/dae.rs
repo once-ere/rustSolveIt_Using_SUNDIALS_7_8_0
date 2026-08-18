@@ -576,6 +576,87 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The drive of `videos/rack_and_pinion.html`, against the closed form
+/// for a weight winding up a flywheel.
+///
+/// One degree of freedom, so one equation:
+///
+/// ```text
+/// a = m g / (m + I/r²)
+/// ```
+///
+/// The flywheel does not act with its mass but with `I/r²`, its inertia
+/// referred through the pitch radius. For a solid disc `I = ½Mr²`, so
+/// that term is `M/2` — **independent of the radius entirely**. With a
+/// pinion twice the rack's mass it equals `m`, and the rack falls at
+/// exactly `g/2`.
+///
+/// Both halves are asserted: the fall against the closed form, and the
+/// radius-independence by running two different pitch radii and getting
+/// the same fall out. The second is the interesting one, since it is
+/// the part a reader is most likely to disbelieve.
+#[test]
+fn a_rack_and_pinion_drive_falls_at_half_gravity() {
+    const G: f64 = 0.4;
+    const M_RACK: f64 = 1.0;
+    const M_PINION: f64 = 2.0;
+    let z = Vec3::new(0.0, 0.0, 1.0);
+    let up = Vec3::new(0.0, 1.0, 0.0);
+
+    let drop_after = |r: f64, t: f64| -> f64 {
+        let mut mount = physical_object::new_point(0, 1.0, Vec3::zeros(), Vec3::zeros());
+        mount.set_inverse_mass(0.0);
+        mount.set_inertia_tensor(Mat3::zeros());
+        let pinion = physical_object::new_from_shape(
+            1, M_PINION, 0.0, Vec3::zeros(), Vec3::zeros(), Vec3::zeros(),
+            Boundary::Cylinder { radius: r, half_height: 0.05 },
+        );
+        let mut guide = physical_object::new_point(2, 1.0, Vec3::new(r, 0.0, 0.0), Vec3::zeros());
+        guide.set_inverse_mass(0.0);
+        guide.set_inertia_tensor(Mat3::zeros());
+        let bar = physical_object::new_from_shape(
+            3, M_RACK, 0.0, Vec3::new(r, 0.0, 0.0), Vec3::zeros(), Vec3::zeros(),
+            Boundary::Cuboid { half_extents: [0.06, 1.2, 0.06] },
+        );
+        let mut s = PhysicalObjectSystem::new(vec![mount, pinion, guide, bar], 0.0);
+        s.uniform_gravity = Vec3::new(0.0, -G, 0.0);
+        s.collide_enabled = false;
+        s.method = Method::Ida;
+        let snap = s.clone();
+        s.constraints.add_hinge(&snap, 0, 1, z).unwrap();
+        s.constraints.add_prismatic(&snap, 2, 3, up).unwrap();
+        s.constraints.add_rack(&snap, 1, 3, z, up, r).unwrap();
+        assert_eq!(s.constraints.len(), 11, "hinge 5 + prismatic 5 + rack 1");
+        let report = integrate::run(&mut s, t, 200).expect("drive");
+        assert!(report.constraint_drift.0 < 1e-6, "|g| = {:e}", report.constraint_drift.0);
+        /* The guide is doing its job, exactly. */
+        let p = s.objects[3].get_position();
+        assert!((p.x - r).abs() < 1e-12 && p.z.abs() < 1e-12, "the bar left its line: {p:?}");
+        p.y
+    };
+
+    /* I/r² = M/2 for a disc, so the accelerating mass is m + M/2 and
+     * with M = 2m that is 2m: exactly half gravity. */
+    let a = M_RACK * G / (M_RACK + M_PINION / 2.0);
+    assert!((a - G / 2.0).abs() < 1e-15, "the masses were chosen so a = g/2: {a}");
+
+    let t = 4.0;
+    let expected = -0.5 * a * t * t;
+    let fell = drop_after(0.6, t);
+    assert!(
+        (fell - expected).abs() < 1e-4,
+        "the rack should fall -a t²/2 = {expected}, got {fell}"
+    );
+
+    /* The radius cancels: a different pinion, the same fall. */
+    let fell_small = drop_after(0.25, t);
+    assert!(
+        (fell_small - fell).abs() < 1e-4,
+        "the pitch radius must cancel out of a = mg/(m + I/r²): r = 0.6 fell {fell}, \
+         r = 0.25 fell {fell_small}"
+    );
+}
+
 /// A complete rack-and-pinion drive: the guide the last commit did not
 /// have.
 ///

@@ -1475,7 +1475,7 @@ The recorder drives `posim --machine` and asks it to `step` — **every
 advance is a real SUNDIALS step**. The tool is a camera, not a physics
 engine.
 
-Eleven recordings ship with the repository:
+Twelve recordings ship with the repository:
 
 | file | what to watch | measured over the recording |
 |---|---|---|
@@ -1490,6 +1490,7 @@ Eleven recordings ship with the repository:
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings**, three perpendicular `HINGE` axes | total *L·ŷ* conserved to 1.4 × 10⁻¹⁴; every centre stays on the pivot to 1.2 × 10⁻³⁴ |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same rings with a **pendulous** bowl — a ship's compass, seeking level | periods 1.878587 and 2.307339 s against measured 1.883426 and 2.313653 |
 | [`videos/cardan_gear.html`](videos/cardan_gear.html) | **Cardan gears** — a wheel in a ring of twice its radius, rolling on a `GEAR` row, its rim point tracing a straight line | line held to 1.1 × 10⁻⁸; stroke exactly ±2*r* |
+| [`videos/rack_and_pinion.html`](videos/rack_and_pinion.html) | a weight on a **`RACK`** winding up a flywheel, on a **`PRISMATIC`** guide | falls at exactly *g*/2, and at the same rate for two different pitch radii |
 
 That last one is the one to open if you only open one, because it shows
 a joint doing something a rod cannot. A `UNIVERSAL` holds a shared point

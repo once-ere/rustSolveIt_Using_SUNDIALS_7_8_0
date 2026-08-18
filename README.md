@@ -72,7 +72,7 @@ dependence to find.
 
 ## Browser videos
 
-Eleven recorded runs, openable offline — no server, no CDN, nothing
+Twelve recorded runs, openable offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -89,6 +89,7 @@ frame you stopped on.
 | [`gyroscope_gimbal.html`](version-7.8.0/videos/gyroscope_gimbal.html) — a **gimballed gyroscope** | L·ŷ conserved to 1.4e-14 |
 | [`cardan_compass.html`](version-7.8.0/videos/cardan_compass.html) — a **ship's compass** in gimbals | two pendulum periods matched |
 | [`cardan_gear.html`](version-7.8.0/videos/cardan_gear.html) — **Cardan gears** on a `GEAR` row | line held to 1.1e-8 |
+| [`rack_and_pinion.html`](version-7.8.0/videos/rack_and_pinion.html) — a **rack and pinion drive** | falls at exactly g/2 |
 
 Every advance in a recording is a real SUNDIALS step; the recorder
 (`version-7.8.0/recorder/`) is a camera, not a physics
