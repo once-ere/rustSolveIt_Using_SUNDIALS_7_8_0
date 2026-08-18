@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tumbling Racket — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 1000px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tumbling racket <small>the tennis-racket theorem: a torque-free body
+  spun about its intermediate axis, driven live by the pure-Rust SUNDIALS
+  CVODE Adams solver — the page only draws what the solver returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="540"></canvas>
+<div id="stats"></div>
+<footer>Model: one free cuboid, half-extents (1.6, 0.9, 0.25), so its three
+principal moments are all different — I&#8321; = 0.291, I&#8322; = 0.874,
+I&#8323; = 1.123 — and it is spun almost exactly about the MIDDLE one
+(L = [0.02, 3.0, 0.02]), the one axis about which steady rotation is
+unstable. No joints, no gravity, no torque: this is an ODE on CVODE Adams,
+and the whole story is in the readouts — the body flips end over end, the
+angular VELOCITY direction swings, and the angular MOMENTUM stays exactly
+where it started. L is conserved, &omega; is not.</footer>
+<script>
+"use strict";
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 105, OX = 480, OY = 265;
+const CY = -0.55, CP = -0.32;
+const cy = Math.cos(CY), sy = Math.sin(CY), cp = Math.cos(CP), sp = Math.sin(CP);
+let trail = [], flips = 0, prevSign = 1, worstL = 0;
+
+function quatRot(q, v) {
+  const [w, x, y, z] = q, [vx, vy, vz] = v;
+  const tx = 2 * (y * vz - z * vy), ty = 2 * (z * vx - x * vz), tz = 2 * (x * vy - y * vx);
+  return [vx + w * tx + y * tz - z * ty,
+          vy + w * ty + z * tx - x * tz,
+          vz + w * tz + x * ty - y * tx];
+}
+function proj(v) {
+  const [x0, y0, z0] = v;
+  const x1 = x0 * cy + z0 * sy, z1 = -x0 * sy + z0 * cy;
+  const y2 = y0 * cp - z1 * sp;
+  return [OX + x1 * SC, OY - y2 * SC];
+}
+function line(a, b, color, width) {
+  const p = proj(a), s = proj(b);
+  cx.strokeStyle = color; cx.lineWidth = width; cx.lineCap = "round";
+  cx.beginPath(); cx.moveTo(p[0], p[1]); cx.lineTo(s[0], s[1]); cx.stroke();
+}
+const norm = v => Math.hypot(v[0], v[1], v[2]);
+const unit = v => { const n = norm(v) || 1; return [v[0]/n, v[1]/n, v[2]/n]; };
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  const H = [1.6, 0.9, 0.25];
+
+  // the cuboid as a wireframe: 8 corners, 12 edges, quaternion-rotated
+  const corners = [];
+  for (const sx of [-1, 1]) for (const sy2 of [-1, 1]) for (const sz of [-1, 1])
+    corners.push(quatRot(s.q, [sx * H[0], sy2 * H[1], sz * H[2]]));
+  const edges = [[0,1],[2,3],[4,5],[6,7],[0,2],[1,3],[4,6],[5,7],[0,4],[1,5],[2,6],[3,7]];
+  for (const [i, j] of edges) line(corners[i], corners[j], "#5d84a8", 2);
+  // paint one face edge pair so the flip is unmistakable
+  line(corners[2], corners[3], "#c9524a", 4);
+  line(corners[6], corners[7], "#c9524a", 4);
+
+  // L: fixed for ever. omega: swings. The intermediate axis: flips.
+  const Lu = unit(s.L);
+  const wu = unit(s.w);
+  const mid = quatRot(s.q, [0, 1, 0]);
+  line([0, 0, 0], [Lu[0] * 2.3, Lu[1] * 2.3, Lu[2] * 2.3], "#7fd18b", 3);
+  line([0, 0, 0], [wu[0] * 2.0, wu[1] * 2.0, wu[2] * 2.0], "#e8d49a", 2);
+  line([0, 0, 0], [mid[0] * 1.6, mid[1] * 1.6, mid[2] * 1.6], "#d0a95f", 2);
+
+  // trail of the intermediate-axis tip: the flip path
+  if (s.running) {
+    trail.push(mid);
+    if (trail.length > 1200) trail.shift();
+  }
+  cx.strokeStyle = "#8a6d3a"; cx.lineWidth = 1.2;
+  cx.beginPath();
+  trail.forEach((v, i) => {
+    const p = proj([v[0] * 1.6, v[1] * 1.6, v[2] * 1.6]);
+    i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  });
+  cx.stroke();
+
+  // ---- measurements -------------------------------------------------
+  const dL = Math.hypot(s.L[0]-s.L0[0], s.L[1]-s.L0[1], s.L[2]-s.L0[2]) / norm(s.L0);
+  if (s.running && s.t > 0) worstL = Math.max(worstL, dL);
+  const flipCos = mid[1];                      // body-y against world +y
+  if (s.running) {
+    const sign = flipCos >= 0 ? 1 : -1;
+    if (sign !== prevSign) { flips++; prevSign = sign; }
+  }
+  const wAngle = Math.acos(Math.min(1, Math.max(-1,
+      wu[0]*Lu[0] + wu[1]*Lu[1] + wu[2]*Lu[2]))) * 180 / Math.PI;
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">flips so far</span> <span class="v">${flips}</span></div>
+    <div><span class="k">racket axis &middot; &#375;</span> <span class="v">${flipCos.toFixed(4)}</span>
+         <span class="k">(swings &plusmn;1)</span></div>
+    <div><span class="k">&angle;(&omega;, L)</span> <span class="v">${wAngle.toFixed(2)}&deg;</span>
+         <span class="k">(&omega; wanders, L does not)</span></div>
+    <div><span class="k">|dL|/|L|</span> <span class="v good">${worstL ? worstL.toExponential(2) : "—"}</span></div>
+    <div><span class="k">|dKE/KE|</span>
+         <span class="v good">${Math.abs((s.E - s.E0) / s.E0).toExponential(2)}</span></div>
+    <div><span class="k">| |q| &minus; 1 |</span>
+         <span class="v good">${Math.abs(s.qnorm - 1).toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset"); trail = []; flips = 0; prevSign = 1; worstL = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
