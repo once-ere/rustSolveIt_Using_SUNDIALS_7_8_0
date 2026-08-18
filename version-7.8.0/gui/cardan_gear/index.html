@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cardan Gears — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 1000px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cardan gears <small>a wheel rolling inside a ring of twice its radius —
+  the Tusi couple — driven live by the pure-Rust SUNDIALS IDA solver; the
+  page only draws what the solver returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="560"></canvas>
+<div id="stats"></div>
+<footer>Model: HINGE 5 + HINGE 5 + GEAR 1 = 11 rows on 12 freedoms. The GEAR
+row holds sin(&theta;<sub>planet</sub> + &theta;<sub>crank</sub>) = 0 — the
+1:1 rolling ratio — and it stacks on the bearing rather than replacing it,
+because a gear is not a geometric joint. When the ratio is exactly 2:1 ring
+to wheel, the hypocycloid degenerates: every point on the wheel's rim travels
+a straight DIAMETER of the ring. Watch the two rim markers — each rides its
+own line, and the recording holds the line to 1.06e-8 (impose the ratio as an
+initial condition instead of a GEAR and it drifts to 1.8e-3; add a torque and
+it collapses to 0.75).</footer>
+<script>
+"use strict";
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 240, OX = 480, OY = 265;         // top-down view: world x right, y up
+let trailR = [], trailB = [], worstLine = 0;
+
+function quatRot(q, v) {
+  const [w, x, y, z] = q, [vx, vy, vz] = v;
+  const tx = 2 * (y * vz - z * vy), ty = 2 * (z * vx - x * vz), tz = 2 * (x * vy - y * vx);
+  return [vx + w * tx + y * tz - z * ty,
+          vy + w * ty + z * tx - x * tz,
+          vz + w * tz + x * ty - y * tx];
+}
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const P = v => [OX + v[0] * SC, OY - v[1] * SC];
+function line2(a, b, color, width) {
+  const p = P(a), s = P(b);
+  cx.strokeStyle = color; cx.lineWidth = width; cx.lineCap = "round";
+  cx.beginPath(); cx.moveTo(p[0], p[1]); cx.lineTo(s[0], s[1]); cx.stroke();
+}
+function circle(centre, r, color, width) {
+  cx.strokeStyle = color; cx.lineWidth = width;
+  cx.beginPath(); cx.arc(...P(centre), r * SC, 0, 7); cx.stroke();
+}
+function dotAt(v, r, color) {
+  const p = P(v);
+  cx.fillStyle = color;
+  cx.beginPath(); cx.arc(p[0], p[1], r, 0, 7); cx.fill();
+}
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+
+  // the two diameters the marked rim points must ride
+  line2([-1, 0, 0], [1, 0, 0], "#26303a", 2);                    // red's line
+  line2([-Math.SQRT1_2, Math.SQRT1_2, 0],
+        [Math.SQRT1_2, -Math.SQRT1_2, 0], "#26303a", 2);         // blue's line
+
+  // the reference ring, radius 1
+  circle([0, 0, 0], 1.0, "#3c4f61", 3);
+
+  // the crank arm, origin to the planet's axle
+  line2([0, 0, 0], s.planet_p, "#9fb8d0", 6);
+
+  // the planet wheel with spokes so its counter-rotation shows
+  circle(s.planet_p, 0.5, "#d0a95f", 4);
+  for (let k = 0; k < 4; k++) {
+    const dir = quatRot(s.planet_q, [Math.cos(k * Math.PI / 4), Math.sin(k * Math.PI / 4), 0]);
+    line2(add(s.planet_p, [-0.5 * dir[0], -0.5 * dir[1], 0]),
+          add(s.planet_p, [ 0.5 * dir[0],  0.5 * dir[1], 0]), "#7a6435", 1.5);
+  }
+
+  // the two marked rim points: material points of the wheel, reconstructed
+  // from its live pose. Red started at [1,0,0] (body-frame +x half-radius);
+  // blue started at the wheel's bottom (body-frame -y).
+  const red  = add(s.planet_p, quatRot(s.planet_q, [0.5, 0, 0]));
+  const blue = add(s.planet_p, quatRot(s.planet_q, [0, -0.5, 0]));
+  if (s.running) {
+    trailR.push(red);  if (trailR.length > 900) trailR.shift();
+    trailB.push(blue); if (trailB.length > 900) trailB.shift();
+  }
+  for (const [trail, color] of [[trailR, "#c9524a"], [trailB, "#5d84a8"]]) {
+    cx.strokeStyle = color; cx.lineWidth = 1.5;
+    cx.beginPath();
+    trail.forEach((v, i) => {
+      const p = P(v);
+      i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+    });
+    cx.stroke();
+  }
+  dotAt(red, 5, "#c9524a");
+  dotAt(blue, 5, "#5d84a8");
+  dotAt([0, 0, 0], 3.5, "#e8eef4");
+  dotAt(s.planet_p, 3.5, "#e8eef4");
+
+  // ---- measurements -------------------------------------------------
+  // red must stay on the x-axis: its distance from that line is |y| (and
+  // any |z| would be out-of-plane drift). Blue rides the -45deg diameter.
+  const redErr  = Math.hypot(red[1], red[2]);
+  const blueErr = Math.hypot((red => (red[0] + red[1]) / Math.SQRT2)(blue), blue[2]);
+  if (s.running && s.t > 0) worstLine = Math.max(worstLine, redErr, blueErr);
+  // the gear row itself: theta_planet + theta_crank wraps to zero
+  const thC = 2 * Math.atan2(s.crank_q[3],  s.crank_q[0]);
+  const thP = 2 * Math.atan2(s.planet_q[3], s.planet_q[0]);
+  let ph = (thP + thC) % (2 * Math.PI);
+  if (ph >  Math.PI) ph -= 2 * Math.PI;
+  if (ph < -Math.PI) ph += 2 * Math.PI;
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">crank angle</span> <span class="v">${(thC * 180 / Math.PI).toFixed(2)}&deg;</span></div>
+    <div><span class="k">line error (worst)</span> <span class="v good">${worstLine ? worstLine.toExponential(2) : "—"}</span>
+         <span class="k">(recording: 1.06e-8)</span></div>
+    <div><span class="k">gear row |&theta;<sub>p</sub>+&theta;<sub>c</sub>|</span>
+         <span class="v good">${Math.abs(ph).toExponential(2)}</span></div>
+    <div><span class="k">|dE/E|</span>
+         <span class="v good">${Math.abs((s.E - s.E0) / s.E0).toExponential(2)}</span></div>
+    <div><span class="k">worst |g|</span> <span class="v good">${s.g == null ? "—" : s.g.toExponential(2)}</span></div>
+    <div><span class="k">worst |g_dot|</span> <span class="v good">${s.gdot == null ? "—" : s.gdot.toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset"); trailR = []; trailB = []; worstLine = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
