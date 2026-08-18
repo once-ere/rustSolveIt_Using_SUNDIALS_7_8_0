@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kepler Ellipse — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 1000px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Kepler ellipse <small>a planet on an e = 0.6 orbit, driven live by the
+  pure-Rust SUNDIALS CVODE Adams solver — the page only draws what the solver
+  returns; the dashed ellipse is the analytic answer</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="540"></canvas>
+<div id="stats"></div>
+<footer>Model: two gravitating spheres, mass ratio 10&#8310;:1, G = 1 — no
+joints, an ODE. The start at r = 4 with v = 10 is apoapsis of an exact
+ellipse: a = 2.5, e = 0.6, perihelion 1.0, period &pi;/4 &asymp; 0.7854 s.
+Three conserved quantities watch the orbit: energy, angular momentum, and
+the eccentricity (Laplace-Runge-Lenz) vector e&#8407; = (v&times;h)/&mu;
+&minus; r&#770; — the last is special to the exact 1/r potential, points at
+perihelion with length e, and its drift is the orbit PRECESSING. (It is
+computed from the state here: the engine's LAPLACE command implements the
+legacy m = 1 recipe, and this planet has m = 0.001.) The planet must retrace the dashed analytic ellipse orbit after
+orbit.</footer>
+<script>
+"use strict";
+const MU = 1000.001;                          // G (M + m)
+const A_EXACT = 2.5, E_EXACT = 0.6, T_EXACT = Math.PI / 4;
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 105, OX = 560, OY = 270;           // orbit plane: world x right, z up
+const P = v => [OX + v[0] * SC, OY - v[2] * SC];
+let trail = [], worstEllipse = 0, phiAcc = 0, phiPrev = null, t0 = null, evec0 = null;
+const norm = v => Math.hypot(v[0], v[1], v[2]);
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  // relative coordinates: planet minus sun (the two-body reduction)
+  const r = [s.planet[0] - s.sun[0], s.planet[1] - s.sun[1], s.planet[2] - s.sun[2]];
+
+  // the analytic ellipse, dashed: focus at the sun, apoapsis toward +x
+  cx.setLineDash([5, 5]);
+  cx.strokeStyle = "#3c4f61"; cx.lineWidth = 1.5;
+  cx.beginPath();
+  for (let k = 0; k <= 120; k++) {
+    const th = k * Math.PI / 60;              // true anomaly from PERIHELION (-x)
+    const rr = A_EXACT * (1 - E_EXACT * E_EXACT) / (1 + E_EXACT * Math.cos(th));
+    const p = P([-rr * Math.cos(th) + s.sun[0], 0, rr * Math.sin(th) + s.sun[2]]);
+    k ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  }
+  cx.stroke();
+  cx.setLineDash([]);
+
+  // trail, sun, planet
+  if (s.running) {
+    trail.push([...s.planet]);
+    if (trail.length > 700) trail.shift();
+  }
+  cx.strokeStyle = "#7fd18b"; cx.lineWidth = 1.5;
+  cx.beginPath();
+  trail.forEach((v, i) => {
+    const p = P(v);
+    i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  });
+  cx.stroke();
+  const ps = P(s.sun);
+  cx.fillStyle = "#e8c35a";
+  cx.beginPath(); cx.arc(ps[0], ps[1], 12, 0, 7); cx.fill();
+  const pp = P(s.planet);
+  cx.fillStyle = "#9fb8d0";
+  cx.beginPath(); cx.arc(pp[0], pp[1], 5, 0, 7); cx.fill();
+  // the eccentricity vector, drawn from the sun: length e, aimed at
+  // perihelion — computed from the state, e = (v x h)/mu - r_hat
+  const h = [r[1]*s.v[2]-r[2]*s.v[1], r[2]*s.v[0]-r[0]*s.v[2], r[0]*s.v[1]-r[1]*s.v[0]];
+  const vxh = [s.v[1]*h[2]-s.v[2]*h[1], s.v[2]*h[0]-s.v[0]*h[2], s.v[0]*h[1]-s.v[1]*h[0]];
+  const rn = norm(r);
+  const evec = [vxh[0]/MU - r[0]/rn, vxh[1]/MU - r[1]/rn, vxh[2]/MU - r[2]/rn];
+  if (evec0 === null && !s.running) evec0 = evec;
+  if (evec0 === null) evec0 = evec;
+  const pa = P([s.sun[0] + evec[0] * 2.5, 0, s.sun[2] + evec[2] * 2.5]);
+  cx.strokeStyle = "#c9524a"; cx.lineWidth = 2;
+  cx.beginPath(); cx.moveTo(ps[0], ps[1]); cx.lineTo(pa[0], pa[1]); cx.stroke();
+
+  // ---- measurements -------------------------------------------------
+  const rr = norm(r), vv = norm(s.v);
+  const aMeas = 1 / (2 / rr - vv * vv / MU);          // vis-viva, live
+  const eMeas = norm(evec);                           // |e-vector| IS the eccentricity
+  // how far the planet sits off the analytic ellipse, radially
+  const th = Math.atan2(r[2], -r[0]);                 // true anomaly from perihelion
+  const rExact = A_EXACT * (1 - E_EXACT * E_EXACT) / (1 + E_EXACT * Math.cos(th));
+  const ellErr = Math.abs(rr - rExact);
+  if (s.running && s.t > 0) worstEllipse = Math.max(worstEllipse, ellErr);
+  // the mean motion, from the unwrapped true anomaly
+  let period = null;
+  if (s.running) {
+    if (phiPrev === null) { t0 = s.t; }
+    else {
+      let d = th - phiPrev;
+      if (d >  Math.PI) d -= 2 * Math.PI;
+      if (d < -Math.PI) d += 2 * Math.PI;
+      phiAcc += d;
+    }
+    phiPrev = th;
+  }
+  if (t0 !== null && Math.abs(phiAcc) > 4 * Math.PI)  // after two orbits
+    period = 2 * Math.PI * (s.t - t0) / Math.abs(phiAcc);
+  const dA = Math.hypot(evec[0]-evec0[0], evec[1]-evec0[1], evec[2]-evec0[2]);
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">a measured</span> <span class="v">${aMeas.toFixed(6)}</span>
+         <span class="k">(exact 2.5)</span></div>
+    <div><span class="k">e = |A|</span> <span class="v">${eMeas.toFixed(6)}</span>
+         <span class="k">(exact 0.6)</span></div>
+    <div><span class="k">period</span> <span class="v">${period ? period.toFixed(6) : "—"}</span>
+         <span class="k">(exact ${T_EXACT.toFixed(6)})</span></div>
+    <div><span class="k">off the ellipse (worst)</span>
+         <span class="v good">${worstEllipse ? worstEllipse.toExponential(2) : "—"}</span></div>
+    <div><span class="k">|e&#8407; &minus; e&#8407;&#8320;| (precession)</span>
+         <span class="v good">${dA.toExponential(2)}</span></div>
+    <div><span class="k">|dE/E|</span>
+         <span class="v good">${Math.abs((s.E - s.E0) / s.E0).toExponential(2)}</span></div>
+    <div><span class="k">|dL|/|L|</span>
+         <span class="v good">${(Math.hypot(s.L[0]-s.L0[0], s.L[1]-s.L0[1], s.L[2]-s.L0[2]) / norm(s.L0)).toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset");
+  trail = []; worstEllipse = 0; phiAcc = 0; phiPrev = null; t0 = null; evec0 = null;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
