@@ -72,7 +72,7 @@ dependence to find.
 
 ## Browser videos
 
-Three recorded runs, openable offline — no server, no CDN, nothing
+Five recorded runs, openable offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -82,6 +82,7 @@ frame you stopped on.
 | [`tumbling_racket.html`](version-7.8.0/videos/tumbling_racket.html) — the Dzhanibekov flip | \|d\|L\|\|/\|L\| = **0 exactly** |
 | [`box_of_shapes.html`](version-7.8.0/videos/box_of_shapes.html) — three shapes in a rigid box | 36 collisions, \|dE\|/E = 3.4e-16 |
 | [`double_pendulum_hinges.html`](version-7.8.0/videos/double_pendulum_hinges.html) — **two hinges**, the chaotic linkage | joints hold to \|g\| = 5.6e-8 |
+| [`universal_joint.html`](version-7.8.0/videos/universal_joint.html) — a **universal joint** driving a shaft | bend bounded at cos b = 0.6000004 vs exactly 0.6 |
 
 Every advance in a recording is a real SUNDIALS step; the recorder
 (`version-7.8.0/tools/record_video.py`) is a camera, not a physics

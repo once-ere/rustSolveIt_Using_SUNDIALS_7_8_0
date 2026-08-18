@@ -156,9 +156,13 @@ def frame_of(state: dict) -> dict:
         "c": [
             [c["point"], c["normal"], c["impulse"]] for c in state["contacts"]
         ],
-        # joints: world pivot, and the axis a hinge/universal turns about
+        # joints: world pivot, the axis a hinge/universal turns about, and
+        # the far end. BALL/HINGE/UNIVERSAL hold one shared point, so both
+        # ends coincide; a rod holds two points apart, and the player draws
+        # the strut between them.
         "j": [
-            [jt["point"], jt.get("axis")] for jt in state.get("joints", [])
+            [jt["point"], jt.get("axis"), jt["point_j"]]
+            for jt in state.get("joints", [])
         ],
         # worst |g| over the joint set at this instant
         "gd": state.get("joint_drift", 0.0),
@@ -527,7 +531,13 @@ function draw() {
      about. */
   if (document.getElementById("joints").checked && f.j) {
     const len = HOME.dist / 14;
-    for (const [pt, axis] of f.j) {
+    for (const [pt, axis, far] of f.j) {
+      /* A rod holds two points a fixed distance apart, so its two ends do
+         not coincide: draw the strut itself, else the shaft it braces
+         would look unsupported. */
+      if (far && (far[0]!==pt[0] || far[1]!==pt[1] || far[2]!==pt[2])) {
+        stroke([pt, far], "#e8c46a", 1.4);
+      }
       const pj = project(pt);
       if (pj) {
         ctx.beginPath();

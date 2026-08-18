@@ -557,7 +557,8 @@ fn a_universal_joint_keeps_its_shafts_square() {
     s.collide_enabled = false;
     s.method = Method::Ida;
     /* Driven from REST by a torque on the input shaft — which is what a
-     * Cardan joint is for, and what `spin_gate` supports. */
+     * Cardan joint is for, and a start that is already consistent, so no
+     * initial velocity projection is needed. */
     s.external_torques[0] = Vec3::new(0.4, 0.0, 0.0);
     let snap = s.clone();
     s.constraints
@@ -573,6 +574,99 @@ fn a_universal_joint_keeps_its_shafts_square() {
     // the torque really did spin the input shaft up from rest
     let l = s.objects[0].get_angular_momentum();
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
+}
+
+/// The drive train of `videos/universal_joint.html`:
+///
+/// ```text
+/// bearing --HINGE-- input --UNIVERSAL-- output --ROD-- post
+/// ```
+///
+/// A universal joint holds one shared point and one right angle between
+/// its trunnions. It does **not** hold the two shafts straight, so the
+/// bend angle is free and something else has to bound it — here the rod
+/// to the post, which bounds it at a value pure geometry can predict.
+///
+/// The output shaft's centre must stay `0.3` from the cross at
+/// `[0.9, 0, 0]` and `0.4243` from the post at `[1.5, 0, -0.3]`, so it
+/// rides the circle where those two spheres meet. The shaft therefore
+/// sweeps a cone of half-angle `θ` about the cross-to-post line, which is
+/// itself `θ` off the x axis, with `θ = atan(0.3/0.6) = 26.565°`. The
+/// bend runs from `0` to `2θ = 53.130°` and no further:
+///
+/// ```text
+/// cos 53.130° = 0.6   exactly
+/// ```
+///
+/// That bound is the assertion. It is a closed-form number the integrator
+/// is never told, reached only if the hinge, the universal joint and the
+/// rod all hold at once.
+#[test]
+fn a_universal_joint_bends_no_further_than_its_bracing_allows() {
+    let shaft = |id: usize, x: f64| {
+        physical_object::new_from_shape(
+            id,
+            1.0,
+            0.0,
+            Vec3::new(x, 0.0, 0.0),
+            Vec3::zeros(),
+            Vec3::zeros(),
+            Boundary::Cuboid { half_extents: [0.3, 0.09, 0.09] },
+        )
+    };
+    let anchor = |id: usize, p: Vec3| {
+        let mut a = physical_object::new_point(id, 1.0, p, Vec3::zeros());
+        a.set_inverse_mass(0.0);
+        a
+    };
+    let mut s = PhysicalObjectSystem::new(
+        vec![
+            anchor(0, Vec3::zeros()),
+            shaft(1, 0.6),
+            shaft(2, 1.2),
+            anchor(3, Vec3::new(1.5, 0.0, -0.3)),
+        ],
+        0.0,
+    );
+    s.uniform_gravity = Vec3::new(0.0, -3.0, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    s.external_torques[1] = Vec3::new(0.03, 0.0, 0.0); // drive, from rest
+    let snap = s.clone();
+    s.constraints.add_hinge(&snap, 0, 1, Vec3::new(1.0, 0.0, 0.0)).unwrap();
+    s.constraints
+        .add_universal(&snap, 1, 2, Vec3::new(0.0, 0.0, 1.0), Vec3::new(0.0, 1.0, 0.0))
+        .unwrap();
+    s.constraints.add_distance(&snap, 2, 3, None).unwrap();
+    /* 5 + 4 + 1 = 10 rows on two free bodies. Bracing the output shaft
+     * with a second HINGE instead would be 14 rows on those same 12
+     * freedoms — rank-deficient, and IDA fails at t = 0. The rod is the
+     * one-row support that bounds the bend without over-constraining. */
+    assert_eq!(s.constraints.len(), 10, "hinge 5 + universal 4 + rod 1");
+
+    let axis = |s: &PhysicalObjectSystem, i: usize| {
+        s.objects[i].get_orientation().normalize().rotate(Vec3::new(1.0, 0.0, 0.0))
+    };
+    let (mut worst_g, mut flattest, mut sharpest) = (0.0_f64, -1.0_f64, 1.0_f64);
+    // advanced one frame at a time, exactly as the recorder drives it
+    for k in 1..=180 {
+        let report = integrate::run(&mut s, 0.025 * f64::from(k), 1).expect("driveshaft run");
+        worst_g = worst_g.max(report.constraint_drift.0);
+        let c = axis(&s, 1).dot(axis(&s, 2));
+        flattest = flattest.max(c);
+        sharpest = sharpest.min(c);
+    }
+
+    assert!(worst_g < 1e-5, "the three joints must hold: |g| = {worst_g:e}");
+    /* The bend never passes the geometric bound, and does reach it — so
+     * the rod is genuinely what stops the shaft, not a short run. */
+    assert!(sharpest > 0.6 - 1e-4, "bent past cos 53.130° = 0.6: {sharpest}");
+    assert!(sharpest < 0.6 + 1e-4, "never reached the bound: {sharpest}");
+    assert!(flattest > 1.0 - 1e-4, "must come back straight: {flattest}");
+    /* Rotation really is being transmitted: both shafts turn, and about
+     * their own axes, not merely swinging as a pendulum would. */
+    let spin = |i: usize| s.objects[i].get_angular_velocity().dot(axis(&s, i));
+    assert!(spin(1) > 5.0 && spin(2) > 5.0, "in {} out {}", spin(1), spin(2));
 }
 
 /// Orientation joints are integrated at a tolerance floor, because the

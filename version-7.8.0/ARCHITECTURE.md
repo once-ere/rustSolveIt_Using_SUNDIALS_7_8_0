@@ -840,6 +840,13 @@ Pinned properties:
   `joint_drift`/`joint_rate_drift`. The body-frame arms a `Joint` stores
   are no use to a viewer; resolving them once, on the Rust side, keeps
   every front end honest about what the joint actually is.
+- **A joint's two ends are both carried, and the player compares them.**
+  Each frame's `j` entry is `[point, axis, point_j]`. BALL, HINGE and
+  UNIVERSAL hold *one shared point*, so the two coincide and only the
+  ring and axis are drawn; a rod holds *two points apart*, so they
+  differ and the strut between them is drawn as well. Nothing in the
+  player is keyed on the joint's name — the geometry decides, which is
+  why a new joint kind needs no player change.
 - The camera auto-fit centres on the **content bounding box**, not the
   origin — a pendulum hangs below its pivot — and `--view front` opens
   looking down z for a planar linkage.

@@ -1182,8 +1182,30 @@ $|dL|/|L| = 1.3\times10^{-7}$\\
 \code{box\_of\_shapes.html} & a cylinder, a disk and a cuboid in a rigid
 \kw{box} 4; gold arrows are the analytic contact normals, sized by
 impulse & 36 collisions, $|dE|/E = 3.4\times10^{-16}$\\
+\code{double\_pendulum\_hinges.html} & \textbf{two \kw{hinge} joints}
+assembled into the classic chaotic linkage --- gold rings mark the
+joints, gold lines their axes & the joints hold to
+$|g| = 5.6\times10^{-8}$ through 400 IDA steps\\
+\code{universal\_joint.html} & a \textbf{\kw{universal} joint} carrying
+a driven shaft's rotation across to a second shaft, braced by a rod to
+a post & the bend stops at $\cos\beta = 0.6000004$ against a geometric
+bound of exactly $0.6$; three joints hold to $|g| = 4.0\times10^{-7}$\\
 \end{tabular}
 \end{center}
+
+That last one is the one to open if you only open one, because it shows
+a joint doing something a rod cannot. A \kw{universal} holds a shared
+point and one right angle between its trunnions; it deliberately does
+\emph{not} hold the two shafts straight. Left dangling, the output
+shaft therefore does not transmit rotation at all --- it swings down
+past the joint like a pendulum and folds back at $176^\circ$. Bracing
+it with a second bearing looks right and fails at once, because
+$\kw{hinge}\,5 + \kw{universal}\,4 + \kw{hinge}\,5$ is 14 rows on 12
+freedoms and three of them are redundant, which leaves the constrained
+solve singular. One \kw{constrain} --- a single row --- braces it
+instead, and pins the bend to a closed form: the shaft sweeps a cone,
+and $\cos\beta$ cannot go below $0.6$. The recording touches
+$0.6000004$. Grammar \S12.5 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or
 $\leftarrow\rightarrow$), a scrub bar, speed from $0.25\times$ to

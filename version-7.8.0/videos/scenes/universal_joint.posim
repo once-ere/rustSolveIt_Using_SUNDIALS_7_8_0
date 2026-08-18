@@ -1,0 +1,52 @@
+# A universal (Cardan) joint transmitting rotation between two shafts.
+#
+# The drive train, left to right:
+#
+#   bearing --HINGE-- input shaft --UNIVERSAL-- output shaft --ROD-- post
+#
+# The bearing and the post have inverse_mass = 0, so they are anchors.
+# The HINGE leaves the input shaft one freedom, spin about x. A constant
+# torque on that shaft spins it up from rest, and the UNIVERSAL carries
+# that rotation across to the output shaft.
+#
+# What a UNIVERSAL actually holds is two things: one shared point (the
+# centre of the cross) and one right angle (its two trunnion axes stay
+# perpendicular). It does NOT hold the two shafts straight — the bend
+# angle between them is free, which is the entire point of the joint.
+#
+# That freedom has to be bounded by something, or the output shaft simply
+# swings down past the joint like a pendulum. Here a ROD braces the output
+# shaft to a fixed post. One row, so nothing is over-constrained:
+#
+#     hinge 5 + universal 4 + rod 1 = 10 rows on 2 free bodies = 12 DOF
+#
+# The rod also sets the bend exactly. The output shaft's centre must stay
+# 0.3 from the cross at [0.9, 0, 0] and |[1.5,0,-0.3] - [1.2,0,0]| = 0.4243
+# from the post, so it rides a circle, and the shaft sweeps a cone of
+# half-angle 26.565 degrees about a line itself 26.565 degrees off x.
+# The bend therefore runs from 0 to 53.130 degrees and no further:
+#
+#     cos 53.130 deg = 0.6
+#
+# Watch that number in the recording: the shafts flatten out straight and
+# fold to 0.600 and back, and the speed ratio across the joint swings with
+# it. A Cardan joint is not a constant-velocity joint.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -3.0, 0]
+collide off
+new sphere as bearing { mass = 1, radius = 0.06, position = [0, 0, 0], inverse_mass = 0 }
+new cuboid as input   { mass = 1, half_extents = [0.3, 0.09, 0.09], position = [0.6, 0, 0] }
+new cuboid as output  { mass = 1, half_extents = [0.3, 0.09, 0.09], position = [1.2, 0, 0] }
+new sphere as post    { mass = 1, radius = 0.06, position = [1.5, 0, -0.3], inverse_mass = 0 }
+# Every joint pivots at the MIDPOINT of its pair as it stands now, so the
+# hinge lands at [0.3, 0, 0] and the cross at [0.9, 0, 0] — the ends the
+# two shafts already share.
+hinge bearing input [1, 0, 0]
+# The two trunnion axes, in world coordinates at assembly. They start
+# perpendicular, as UNIVERSAL requires, and stay so for the whole run.
+universal input output [0, 0, 1] [0, 1, 0]
+constrain output post
+method ida
+# From rest. A torque needs no consistent-velocity projection to start,
+# so the run begins exactly on the constraint manifold.
+set input.torque = [0.03, 0, 0]

@@ -3573,7 +3573,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The three shipped recordings
+### 12.3 The five shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3583,6 +3583,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/tumbling_racket.html`](videos/tumbling_racket.html) | the Dzhanibekov flip: a torque-free cuboid spun about its **intermediate** axis turns over, and over | `\|d\|L\|\|/\|L\| = 0` **exactly**; `\|dE\|/E = 6.4e-9` |
 | [`videos/box_of_shapes.html`](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid rattling in a rigid `BOX 4`; the gold arrows are the analytic contact normals, sized by impulse | 36 collision events, `\|dE\|/E = 3.4e-16` |
 | [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | two `HINGE` joints assembled into the chaotic linkage; the gold rings are the joints | the joints hold to `\|g\| = 5.6e-8`; energy wanders 3 parts in 10,000 |
+| [`videos/universal_joint.html`](videos/universal_joint.html) | a `UNIVERSAL` joint carrying a driven shaft's rotation to a second shaft; the bend flattens out straight and folds back, and the speed across the joint swings with it | the bend stops at `cos β = 0.6000004` against a geometric bound of exactly `0.6`; the three joints hold to `\|g\| = 4.0e-7` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3603,3 +3604,64 @@ The lesson generalizes: **a conservation claim carries its system
 settings with it.** When a run's `|dE/E|` surprises you, check `ENERGY`,
 `system.g_constant`, `system.softening` and `system.uniform_gravity`
 before suspecting the integrator.
+
+### 12.5 Count your rows before you brace a mechanism
+
+The universal-joint recording is worth reading as a design exercise,
+because the obvious way to build it does not work.
+
+A `UNIVERSAL` holds two things: one shared point, and one right angle
+between the two trunnion axes. It does **not** hold the two shafts
+straight. The bend between them is free — that is the whole reason the
+joint exists — so if the output shaft is left dangling it does not
+transmit anything, it just swings down past the joint like a pendulum
+and folds back on the input shaft at 176°.
+
+So the output shaft has to be braced. The textbook drawing puts it in a
+second bearing, and a bearing is a `HINGE`. Try it and IDA quits at
+`t = 0`:
+
+```text
+Err: IDASolve failed with retval = -4 at t = 0
+```
+
+Count the rows and the reason is arithmetic, not numerics. Two free
+shafts are 12 freedoms, and
+
+```text
+HINGE 5  +  UNIVERSAL 4  +  HINGE 5  =  14 rows on 12 freedoms
+```
+
+Three of those rows are **redundant**: once both shafts are held in
+bearings whose axes meet, the shared point the universal joint asks for
+is already implied by the geometry. Redundant rows are not merely
+surplus — they make `J M⁻¹ Jᵀ` singular, and the constrained Newton
+solve has no answer to give. posim does no redundant-row elimination, so
+it reports the failure rather than guessing.
+
+The fix is to brace with the **smallest thing that does the job**. A
+`CONSTRAIN` is one row:
+
+```text
+HINGE 5  +  UNIVERSAL 4  +  ROD 1  =  10 rows on 12 freedoms
+```
+
+Two freedoms left, full rank, and the mechanism runs. Better still, the
+rod fixes the bend in closed form. The output shaft's centre stays `0.3`
+from the cross and `0.4243` from the post, so it rides the circle where
+those two spheres meet, sweeping a cone of half-angle
+`atan(0.3/0.6) = 26.565°` about a line itself `26.565°` off the x axis.
+The bend therefore runs from `0` to `53.130°` and no further:
+
+```text
+cos 53.130° = 0.6      exactly
+```
+
+Scrub the recording to the sharpest frame and the shafts are at
+`0.6000004`. That number is never given to the integrator; it comes out
+because the hinge, the universal joint and the rod all held at once.
+
+**The rule.** Before adding a joint, add up the rows it will bring and
+compare with the freedoms actually left. If the total meets or exceeds
+the freedoms, you have either locked the mechanism or made it singular,
+and a fatal return flag is the honest outcome either way.

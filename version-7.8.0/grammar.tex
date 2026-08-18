@@ -3540,7 +3540,7 @@ and $dt$ the recording was made with. \textbf{This is the point of the
 format}: you can stop on the frame where something looks wrong and read
 the conserved quantities off it.
 
-\subsection{The three shipped recordings}
+\subsection{The five shipped recordings}
 
 \begin{center}
 \begin{tabular}{p{3.6cm}p{6.4cm}p{4.2cm}}
@@ -3555,6 +3555,15 @@ and over & $|d|L||/|L| = 0$ \textbf{exactly}; $|dE|/E = 6.4\text{e-}9$\\
 rattling in a rigid \kw{box} 4; gold arrows are the analytic contact
 normals, sized by impulse & 36 collision events,
 $|dE|/E = 3.4\text{e-}16$\\
+\code{videos/double\_pendulum\_hinges.html} & two \kw{hinge} joints
+assembled into the chaotic linkage; the gold rings are the joints &
+the joints hold to $|g| = 5.6\text{e-}8$; energy wanders 3 parts in
+10,000\\
+\code{videos/universal\_joint.html} & a \kw{universal} joint carrying a
+driven shaft's rotation to a second shaft; the bend flattens out
+straight and folds back, and the speed across the joint swings with it
+& the bend stops at $\cos\beta = 0.6000004$ against a geometric bound
+of exactly $0.6$; the three joints hold to $|g| = 4.0\text{e-}7$\\
 \end{tabular}
 \end{center}
 
@@ -3573,5 +3582,57 @@ The lesson generalizes: \textbf{a conservation claim carries its system
 settings with it.} When a run's $|dE/E|$ surprises you, check
 \kw{energy}, \code{system.g\_constant}, \code{system.softening} and
 \code{system.uniform\_gravity} before suspecting the integrator.
+
+\subsection{Count your rows before you brace a mechanism}
+
+The universal-joint recording is worth reading as a design exercise,
+because the obvious way to build it does not work.
+
+A \kw{universal} holds two things: one shared point, and one right
+angle between the two trunnion axes. It does \emph{not} hold the two
+shafts straight. The bend between them is free --- that is the whole
+reason the joint exists --- so if the output shaft is left dangling it
+does not transmit anything, it just swings down past the joint like a
+pendulum and folds back on the input shaft at $176^\circ$.
+
+So the output shaft has to be braced. The textbook drawing puts it in a
+second bearing, and a bearing is a \kw{hinge}. Try it and IDA quits at
+$t=0$ with \code{retval = -4}. Count the rows and the reason is
+arithmetic, not numerics. Two free shafts are 12 freedoms, and
+\[
+  \underbrace{5}_{\kw{hinge}} + \underbrace{4}_{\kw{universal}}
+  + \underbrace{5}_{\kw{hinge}} = 14 \text{ rows on } 12 \text{ freedoms.}
+\]
+Three of those rows are \emph{redundant}: once both shafts are held in
+bearings whose axes meet, the shared point the universal joint asks for
+is already implied by the geometry. Redundant rows are not merely
+surplus --- they make $J M^{-1} J^{\mathsf T}$ singular, and the
+constrained Newton solve has no answer to give. posim does no
+redundant-row elimination, so it reports the failure rather than
+guessing.
+
+The fix is to brace with the \emph{smallest thing that does the job}. A
+\kw{constrain} is one row:
+\[
+  5 + 4 + 1 = 10 \text{ rows on } 12 \text{ freedoms.}
+\]
+Two freedoms left, full rank, and the mechanism runs. Better still, the
+rod fixes the bend in closed form. The output shaft's centre stays
+$0.3$ from the cross and $0.4243$ from the post, so it rides the circle
+where those two spheres meet, sweeping a cone of half-angle
+$\arctan(0.3/0.6) = 26.565^\circ$ about a line itself $26.565^\circ$
+off the $x$ axis. The bend therefore runs from $0$ to $53.130^\circ$
+and no further:
+\[
+  \cos 53.130^\circ = 0.6 \quad\text{exactly.}
+\]
+Scrub the recording to the sharpest frame and the shafts are at
+$0.6000004$. That number is never given to the integrator; it comes out
+because the hinge, the universal joint and the rod all held at once.
+
+\textbf{The rule.} Before adding a joint, add up the rows it will bring
+and compare with the freedoms actually left. If the total meets or
+exceeds the freedoms, you have either locked the mechanism or made it
+singular, and a fatal return flag is the honest outcome either way.
 
 \end{document}
