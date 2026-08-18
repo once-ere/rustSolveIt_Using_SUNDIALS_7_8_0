@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Double Pendulum — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 1000px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Double pendulum on hinges <small>pivot —hinge z— link1 —hinge z— link2,
+  released from horizontal, driven live by the pure-Rust SUNDIALS IDA solver —
+  the page only draws what the solver returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="560"></canvas>
+<div id="stats"></div>
+<footer>Model: two HINGEs about z — 10 rows on 12 freedoms, leaving the two
+swing angles of the classic chaotic double pendulum, assembled from joints
+rather than written out as equations. A hinge fixes an axis as well as a
+point, so this mechanism is trapped in the z = 0 plane for ever — the exact
+opposite of the ball-joint chain, which leaves that plane by more than 1.7.
+Watch the out-of-plane readout: it is not merely small, it stays at
+roundoff.</footer>
+<script>
+"use strict";
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 240, OX = 480, OY = 170;         // plane view: world x right, y up
+let trail = [], worstZ = 0;
+
+function quatRot(q, v) {
+  const [w, x, y, z] = q, [vx, vy, vz] = v;
+  const tx = 2 * (y * vz - z * vy), ty = 2 * (z * vx - x * vz), tz = 2 * (x * vy - y * vx);
+  return [vx + w * tx + y * tz - z * ty,
+          vy + w * ty + z * tx - x * tz,
+          vz + w * tz + x * ty - y * tx];
+}
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const P = v => [OX + v[0] * SC, OY - v[1] * SC];
+function line2(a, b, color, width) {
+  const p = P(a), s = P(b);
+  cx.strokeStyle = color; cx.lineWidth = width; cx.lineCap = "round";
+  cx.beginPath(); cx.moveTo(p[0], p[1]); cx.lineTo(s[0], s[1]); cx.stroke();
+}
+function dotAt(v, r, color) {
+  const p = P(v);
+  cx.fillStyle = color;
+  cx.beginPath(); cx.arc(p[0], p[1], r, 0, 7); cx.fill();
+}
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  // the mount and the vertical through the pivot
+  line2([0, 0.35, 0], [0, 0, 0], "#26303a", 4);
+  line2([0, 0, 0], [0, -2.0, 0], "#1c242c", 1);
+
+  // links, drawn end to end along their live axes; hinge points are the
+  // body-fixed points the joints were assembled at (the midpoint rule):
+  // hinge1 sits at local x = -0.2 in link1, hinge2 at +0.4 in link1 and
+  // -0.4 in link2.
+  const a1 = quatRot(s.q1, [1, 0, 0]), a2 = quatRot(s.q2, [1, 0, 0]);
+  const l1a = add(s.p1, [-0.35 * a1[0], -0.35 * a1[1], -0.35 * a1[2]]);
+  const l1b = add(s.p1, [ 0.35 * a1[0],  0.35 * a1[1],  0.35 * a1[2]]);
+  const l2a = add(s.p2, [-0.35 * a2[0], -0.35 * a2[1], -0.35 * a2[2]]);
+  const l2b = add(s.p2, [ 0.35 * a2[0],  0.35 * a2[1],  0.35 * a2[2]]);
+  const h1 = add(s.p1, [-0.2 * a1[0], -0.2 * a1[1], -0.2 * a1[2]]);
+  const h2 = add(s.p1, [ 0.4 * a1[0],  0.4 * a1[1],  0.4 * a1[2]]);
+  line2(l1a, l1b, "#9fb8d0", 8);
+  line2(l2a, l2b, "#d0a95f", 8);
+  dotAt([0, 0, 0], 4, "#8a97a5");
+  dotAt(h1, 5, "#e8eef4");
+  dotAt(h2, 5, "#e8eef4");
+
+  // trail of the free end
+  if (s.running) {
+    trail.push(l2b);
+    if (trail.length > 1200) trail.shift();
+  }
+  cx.strokeStyle = "#7fd18b"; cx.lineWidth = 1.5;
+  cx.beginPath();
+  trail.forEach((v, i) => {
+    const p = P(v);
+    i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  });
+  cx.stroke();
+
+  // ---- measurements -------------------------------------------------
+  const th1 = 2 * Math.atan2(s.q1[3], s.q1[0]) * 180 / Math.PI;
+  const th2 = 2 * Math.atan2(s.q2[3], s.q2[0]) * 180 / Math.PI;
+  // planarity: hinges about z forbid EVERYTHING out of plane — positions
+  // off z = 0, and any tilt of the link axes out of it
+  const zNow = Math.max(Math.abs(s.p1[2]), Math.abs(s.p2[2]),
+                        Math.abs(a1[2]), Math.abs(a2[2]));
+  if (s.running && s.t > 0) worstZ = Math.max(worstZ, zNow);
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">&theta;&#8321;</span> <span class="v">${th1.toFixed(2)}&deg;</span></div>
+    <div><span class="k">&theta;&#8322;</span> <span class="v">${th2.toFixed(2)}&deg;</span></div>
+    <div><span class="k">out of plane (worst)</span>
+         <span class="v good">${worstZ ? worstZ.toExponential(2) : "—"}</span>
+         <span class="k">(ball chain: 1.7+)</span></div>
+    <div><span class="k">|E &minus; E&#8320;|</span>
+         <span class="v good">${Math.abs(s.E - s.E0).toExponential(2)}</span>
+         <span class="k">(E&#8320; is exactly 0 here)</span></div>
+    <div><span class="k">worst |g|</span> <span class="v good">${s.g == null ? "—" : s.g.toExponential(2)}</span></div>
+    <div><span class="k">worst |g_dot|</span> <span class="v good">${s.gdot == null ? "—" : s.gdot.toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset"); trail = []; worstZ = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
