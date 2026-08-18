@@ -3670,7 +3670,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The twelve shipped recordings
+### 12.3 The thirteen shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3688,6 +3688,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.307339` s, measured `1.883426` and `2.313653` |
 | [`videos/cardan_gear.html`](videos/cardan_gear.html) | a wheel inside a ring of twice its radius, rolling on a `GEAR` row: the rim point runs along a **straight line**, the degenerate hypocycloid | the line is held to `1.1e-8`, against `1.8e-3` for the same mechanism with the ratio merely imposed |
 | [`videos/rack_and_pinion.html`](videos/rack_and_pinion.html) | a weight on a `RACK` winding up a flywheel, guided by a `PRISMATIC` — every joint in it added for this | the rack falls at exactly `g/2`, and at the same rate for two different pitch radii |
+| [`videos/piston_crankshaft.html`](videos/piston_crankshaft.html) | the slider-crank: `HINGE` + two `BALL`s + `PRISMATIC`, free-running | follows `x = a cos θ + √(L² − a² sin²θ)` to `8.4e-8`; stroke exactly `L−a` to `L+a` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3902,7 +3903,32 @@ rolling *along the ground* is now `PRISMATIC` for the line plus `RACK`
 for the rolling; a piston is `PRISMATIC`; a cam follower is `PRISMATIC`
 against whatever drives it.
 
-`videos/rack_and_pinion.html` is the whole set working at once — a
+`videos/piston_crankshaft.html` is the mechanism all of this was for.
+A slider-crank is `HINGE + BALL + BALL + PRISMATIC`, and the two balls
+are not a simplification but the **fix**: four revolutes, one per real
+pin, would be `5+5+5+5 = 20` rows on 18 freedoms, over-constrained by
+two, because a planar linkage made of spatial revolutes has every hinge
+insisting on the same plane. Spherical ends on the connecting rod is
+what real multibody models do, and it leaves two freedoms — the crank
+angle, and the rod's spin about its own length, which nothing torques
+and which measures `0.000°` across the whole recording. It is §12.10's
+arithmetic again, and the same remedy: count the rows first, then pick
+the weakest joint that still says what you mean.
+
+Its closed form is exact, with no small-angle anything:
+
+```text
+x(θ) = a cos θ + √(L² − a² sin²θ)
+```
+
+and the recording tracks it to `8.4e-8` while sweeping the full stroke,
+`L−a` to `L+a`, over 1.59 revolutions. Worth noting *what* is being
+checked: nothing drives the crank, so it swaps inertia with the rod and
+piston and its angle wanders off any uniform `ωt`. The formula relates
+the piston to whatever angle the crank has actually reached, which is
+why a free-running mechanism tests it more honestly than a driven one.
+
+`videos/rack_and_pinion.html` is the other half of the set at once — a
 weight on a rack winding up a flywheel, `HINGE 5 + PRISMATIC 5 + RACK 1`
 on 12 freedoms, leaving the one a drive has. Its closed form is worth
 knowing on its own account:

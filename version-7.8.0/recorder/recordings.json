@@ -121,6 +121,16 @@
       "view": "front",
       "title": "A rack and pinion drive",
       "caption": "A falling weight turning a flywheel, and every joint in it was added for this: mount--HINGE--pinion, guide--PRISMATIC--bar, pinion=RACK=bar. 5 + 5 + 1 = 11 rows on 12 freedoms, leaving one. The RACK ties the pinion's turn to the bar's travel; the PRISMATIC is the guide a rack actually runs in -- drop it and the reaction torque twists the bar 24.3 degrees off square and shoves it 0.68 off its line, while with it the twist is 2.6e-22 degrees and the sideways stray is exactly 0.0. The drive has one degree of freedom, so one equation: a = m g / (m + I/r^2), the flywheel acting not with its mass but with its inertia referred through the pitch radius. For a solid disc I/r^2 = M/2, independent of the radius entirely, so a pinion twice the rack's mass makes that term exactly m and the rack falls at a = g/2 -- exactly half gravity, whatever the pitch radius, because the flywheel it is winding up is, referred through the teeth, exactly as heavy as itself. The pitch radius here is 0.6, and it was 0.4 in an earlier cut with the fall unchanged -- the radius-independence demonstrated rather than asserted. Measured against -a t^2/2 over four seconds and a 1.6 drop: 5.35e-4 across 200 cold restarts, 3.74e-5 for the same four seconds run continuously."
+    },
+    {
+      "name": "piston_crankshaft",
+      "scene": "videos/scenes/piston_crankshaft.posim",
+      "out": "videos/piston_crankshaft.html",
+      "frames": 300,
+      "dt": 0.02,
+      "view": "front",
+      "title": "A piston and crankshaft",
+      "caption": "The slider-crank: mount--HINGE--crank, crank--BALL--rod, rod--BALL--piston, guide--PRISMATIC--piston. 5 + 3 + 3 + 5 = 16 rows on 18 freedoms. Every pin in a real engine is a hinge, and building it that way gives 20 rows on 18 -- over-constrained by two, which IDA will not integrate, because a planar linkage made of spatial revolutes has them all insisting on the same plane. The remedy is the one real multibody models use: spherical ends on the connecting rod. That leaves two freedoms, the crank angle and the rod's passive spin about its own length, which nothing torques. The geometry is not arbitrary either -- the midpoint pivot rule puts the rod's centre at 2a while a rod from crank pin to wrist pin centres at a + L/2, and those agree only when L = 2a, which is why this crank throws 0.5 and this rod is 1.0. Measuring the wrist pin from the crankshaft axis, x = a cos(th) + sqrt(L^2 - a^2 sin^2 th) exactly: the recording sweeps 0.500000 to 1.500000, which is L-a to L+a, and tracks the formula to 8.4e-8 over the 1.59 revolutions it makes. The rod's passive freedom really is passive: its spin about its own length is 0.000 degrees over the whole run. The crank does not turn at a constant rate and should not -- nothing drives it, so it swaps inertia with the rod and piston through the cycle. The closed form is a statement about the linkage, not the timing, which is what makes it worth checking against a free-running mechanism."
     }
   ]
 }

@@ -576,6 +576,120 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The slider-crank of `videos/piston_crankshaft.html`, against its
+/// exact kinematics.
+///
+/// ```text
+/// mount --HINGE-- crank --BALL-- rod --BALL-- piston --PRISMATIC-- guide
+/// 5 + 3 + 3 + 5 = 16 rows on 18 freedoms
+/// ```
+///
+/// **The ball joints are not a simplification, they are the fix.**
+/// Every pin in a real engine is a hinge, and four of them give
+/// `5+5+5+5 = 20` rows on 18 — over-constrained by two, because a
+/// planar linkage made of spatial revolutes has them all insisting on
+/// the same plane. Spherical ends on the connecting rod is what real
+/// multibody models do, and it leaves two freedoms: the crank angle,
+/// and the rod's spin about its own length, which nothing torques.
+///
+/// Measuring the wrist pin from the crankshaft axis,
+///
+/// ```text
+/// x(θ) = a cos θ + √(L² − a² sin²θ)      exactly
+/// ```
+///
+/// and this asserts it frame by frame against a **free-running** crank.
+/// Nothing drives the mechanism, so the crank swaps inertia with the
+/// rod and piston and its angle wanders off any uniform `ωt` — which is
+/// the point: the closed form is a statement about the linkage, not
+/// about the timing, so it must hold at whatever angle the crank
+/// reaches.
+#[test]
+fn a_slider_crank_follows_its_exact_kinematics() {
+    const A: f64 = 0.5; // crank throw
+    const L: f64 = 1.0; // rod; L = 2a is what puts every midpoint pivot on a pin
+    const W: f64 = 2.0;
+    let z = Vec3::new(0.0, 0.0, 1.0);
+
+    let mut mount = physical_object::new_point(0, 1.0, Vec3::zeros(), Vec3::zeros());
+    mount.set_inverse_mass(0.0);
+    mount.set_inertia_tensor(Mat3::zeros());
+    let mut crank = physical_object::new_from_shape(
+        1, 2.0, 0.0, Vec3::zeros(), Vec3::zeros(), Vec3::new(0.0, 0.0, W),
+        Boundary::Cylinder { radius: 0.55, half_height: 0.05 },
+    );
+    crank.set_angular_velocity(Vec3::new(0.0, 0.0, W));
+    /* Started at top dead centre: the piston is momentarily at rest and
+     * the rod turns about the wrist pin, so these are the velocities
+     * that rotation implies and ġ = 0 to roundoff. */
+    let mut rod = physical_object::new_from_shape(
+        2, 0.4, 0.0,
+        Vec3::new(L, 0.0, 0.0),
+        Vec3::new(0.0, A * W / 2.0, 0.0),
+        Vec3::new(0.0, 0.0, -A * W / L),
+        Boundary::Cuboid { half_extents: [0.5, 0.05, 0.05] },
+    );
+    rod.set_angular_velocity(Vec3::new(0.0, 0.0, -A * W / L));
+    let piston = physical_object::new_from_shape(
+        3, 1.0, 0.0, Vec3::new(2.0 * L, 0.0, 0.0), Vec3::zeros(), Vec3::zeros(),
+        Boundary::Cuboid { half_extents: [0.5, 0.3, 0.3] },
+    );
+    let mut guide = physical_object::new_point(4, 1.0, Vec3::new(2.0 * L, 0.0, 0.0), Vec3::zeros());
+    guide.set_inverse_mass(0.0);
+    guide.set_inertia_tensor(Mat3::zeros());
+
+    let mut s = PhysicalObjectSystem::new(vec![mount, crank, rod, piston, guide], 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_hinge(&snap, 0, 1, z).unwrap();
+    s.constraints.add_ball(&snap, 1, 2).unwrap();
+    s.constraints.add_ball(&snap, 2, 3).unwrap();
+    s.constraints.add_prismatic(&snap, 4, 3, Vec3::new(1.0, 0.0, 0.0)).unwrap();
+    assert_eq!(s.constraints.len(), 16, "hinge 5 + ball 3 + ball 3 + prismatic 5");
+
+    let report = integrate::run(&mut s, 0.02, 1).expect("slider-crank start");
+    assert_eq!(report.initial_velocity_projected, 0.0, "top dead centre is consistent");
+
+    let spin0 = s.objects[2].get_orientation().normalize().rotate(z);
+    let (mut worst, mut lo, mut hi, mut worst_g, mut rod_spin) =
+        (0.0_f64, f64::MAX, f64::MIN, 0.0_f64, 0.0_f64);
+    let (mut prev, mut turned) = (0.0_f64, 0.0_f64);
+    for k in 2..=300 {
+        let r = integrate::run(&mut s, 0.02 * f64::from(k), 1).expect("slider-crank");
+        worst_g = worst_g.max(r.constraint_drift.0);
+        let m = s.objects[1].get_orientation().normalize().rotate(Vec3::new(1.0, 0.0, 0.0));
+        let theta = m.y.atan2(m.x);
+        let mut d = theta - prev;
+        while d > std::f64::consts::PI { d -= std::f64::consts::TAU }
+        while d < -std::f64::consts::PI { d += std::f64::consts::TAU }
+        turned += d;
+        prev = theta;
+        // the wrist pin: the piston's near face
+        let x = s.objects[3].get_position().x - 0.5;
+        let exact = A * theta.cos() + (L * L - (A * theta.sin()).powi(2)).sqrt();
+        worst = worst.max((x - exact).abs());
+        lo = lo.min(x);
+        hi = hi.max(x);
+        let spin = s.objects[2].get_orientation().normalize().rotate(z);
+        rod_spin = rod_spin.max((spin - spin0).norm());
+    }
+
+    assert!(worst_g < 1e-6, "the four joints must hold: |g| = {worst_g:e}");
+    assert!(turned.abs() > std::f64::consts::TAU, "the crank must go round: {turned}");
+    assert!(worst < 1e-6, "piston should follow x(θ) exactly: worst {worst:e}");
+    /* The stroke is L−a to L+a. The bound is looser than the closed-form
+     * check above on purpose: the extremes are only ever *sampled*, and
+     * the crank sweeps through dead centre between frames. Near an end
+     * x is quadratic in the angle, so missing it by dt·ω = 0.04 rad
+     * costs about 1e-4 — which is what the numbers below show, and is a
+     * statement about the sampling rather than the mechanism. */
+    assert!((lo - (L - A)).abs() < 1e-3, "bottom dead centre at L-a: {lo}");
+    assert!((hi - (L + A)).abs() < 1e-3, "top dead centre at L+a: {hi}");
+    /* The second freedom is genuinely passive. */
+    assert!(rod_spin < 1e-9, "nothing torques the rod about its own axis: {rod_spin:e}");
+}
+
 /// The drive of `videos/rack_and_pinion.html`, against the closed form
 /// for a weight winding up a flywheel.
 ///

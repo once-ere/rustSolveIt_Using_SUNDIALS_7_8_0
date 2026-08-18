@@ -545,37 +545,44 @@ Overfull \hbox (52.78572pt too wide) in paragraph at lines 3590--3590
 Underfull \hbox (badness 1975) in paragraph at lines 3591--3593
 \T1/lmr/m/n/10.95 for two dif-fer-ent pitch
 
-Overfull \hbox (47.03699pt too wide) in paragraph at lines 3594--3594
+Overfull \hbox (64.28319pt too wide) in paragraph at lines 3593--3593
+[]|\T1/lmtt/m/n/10.95 videos/piston_crankshaft.html| 
+
+Underfull \hbox (badness 1436) in paragraph at lines 3594--3597
+[]|\T1/lmr/m/n/10.95 follows $\OML/lmm/m/it/10.95 x \OT1/lmr/m/n/10.95 = \OML/l
+mm/m/it/10.95 a [] ^^R \OT1/lmr/m/n/10.95 +
+
+Overfull \hbox (47.03699pt too wide) in paragraph at lines 3599--3599
 []|\T1/lmtt/m/n/10.95 videos/cardan_compass.html| 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3596--3598
+Underfull \hbox (badness 10000) in paragraph at lines 3601--3603
 []|\T1/lmr/m/n/10.95 two physical-pendulum
 
-Underfull \hbox (badness 5245) in paragraph at lines 3596--3598
+Underfull \hbox (badness 5245) in paragraph at lines 3601--3603
 \T1/lmr/m/n/10.95 pe-ri-ods, $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT1/lmr
 /m/n/10.95 878587$ \T1/lmr/m/n/10.95 and
 
-Underfull \hbox (badness 10000) in paragraph at lines 3596--3598
+Underfull \hbox (badness 10000) in paragraph at lines 3601--3603
 \OT1/lmr/m/n/10.95 2\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 307339$ \T1/lmr/m/n
 /10.95 s, mea-sured
 [59] [60]
-Overfull \vbox (35.68983pt too high) has occurred while \output is active
+Overfull \vbox (90.08984pt too high) has occurred while \output is active
 [61]
-Overfull \hbox (76.60638pt too wide) in paragraph at lines 3612--3616
+Overfull \hbox (76.60638pt too wide) in paragraph at lines 3617--3621
 \T1/lmr/m/n/10.95 run's $\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95 dE=E\OMS/lmsy
 /m/n/10.95 j$ \T1/lmr/m/n/10.95 sur-prises you, check \T1/lmtt/m/n/10.95 ENERGY
 \T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 system.g_constant\T1/lmr/m/n/10.95 , \T1
 /lmtt/m/n/10.95 system.softening \T1/lmr/m/n/10.95 and \T1/lmtt/m/n/10.95 syste
 m.uniform_gravity
 
-Underfull \hbox (badness 1325) in paragraph at lines 3667--3667
+Underfull \hbox (badness 1325) in paragraph at lines 3672--3672
 []|$\OML/lmm/m/it/10.95 r \OT1/lmr/m/n/10.95 = 0\OML/lmm/m/it/10.95 :\OT1/lmr/m
 /n/10.95 6$ \T1/lmr/bx/n/10.95 from \T1/lmr/m/n/10.95 the
 
-Underfull \hbox (badness 10000) in paragraph at lines 3671--3671
+Underfull \hbox (badness 10000) in paragraph at lines 3676--3676
 []|\T1/lmr/m/n/10.95 steady pre-ces-sion
 
-Underfull \hbox (badness 10000) in paragraph at lines 3671--3672
+Underfull \hbox (badness 10000) in paragraph at lines 3676--3677
 []|\T1/lmr/m/n/10.95 no grav-i-ta-tional
 [62] [63] [64] [65] [66] (./grammar.aux) )
 (see the transcript file for additional information)</usr/share/texmf/fonts/typ
@@ -596,5 +603,5 @@ pfb></usr/share/texmf/fonts/type1/public/lm/lmtt12.pfb></usr/share/texmf/fonts/
 type1/public/lm/lmtt8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on grammar.pdf (66 pages, 693929 bytes).
+Output written on grammar.pdf (66 pages, 694250 bytes).
 Transcript written on grammar.log.

@@ -118,7 +118,7 @@ the worked cases.
 
 ## Browser videos
 
-Twelve recorded runs you can open offline — no server, no CDN, nothing
+Thirteen recorded runs you can open offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -136,6 +136,7 @@ frame you stopped on.
 | [videos/cardan_compass.html](videos/cardan_compass.html) | the same two rings with a **pendulous** bowl: a ship's compass held level by its own weight | two physical-pendulum periods matched, 1.878587 and 2.307339 s |
 | [videos/cardan_gear.html](videos/cardan_gear.html) | **Cardan gears**: a wheel inside a ring of twice its radius rolling on a `GEAR` row, rim point on a straight line | line held to 1.1e-8, against 1.8e-3 with the ratio merely imposed |
 | [videos/rack_and_pinion.html](videos/rack_and_pinion.html) | a weight on a **`RACK`** winding up a flywheel, guided by a **`PRISMATIC`** | falls at exactly `g/2`, independent of the pitch radius |
+| [videos/piston_crankshaft.html](videos/piston_crankshaft.html) | the **slider-crank**: piston, connecting rod and crankshaft, free-running | follows the exact kinematics to 8.4e-8 |
 
 Record your own from any posim script:
 
