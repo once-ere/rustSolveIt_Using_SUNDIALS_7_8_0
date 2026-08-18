@@ -755,8 +755,13 @@ fn a_gimbal_conserves_angular_momentum_about_its_outer_axis() {
     let mut s = PhysicalObjectSystem::new(
         vec![
             base,
-            ring(1, 0.5, 0.9, turn, Quat::new(s2, s2, 0.0, 0.0)),
-            ring(2, 0.4, 0.7, turn, Quat::new(s2, 0.0, s2, 0.0)),
+            /* Each ring lies in the plane holding the axis it swings on
+             * and the axis it carries — a gimbal ring pivots about a
+             * DIAMETER. Outer swings on y and carries x, so plane xy,
+             * symmetry axis z: no turn. Inner swings on x and carries z,
+             * so plane xz, symmetry axis y: a quarter turn about x. */
+            ring(1, 0.5, 0.9, turn, Quat::identity()),
+            ring(2, 0.4, 0.7, turn, Quat::new(s2, s2, 0.0, 0.0)),
             rotor,
         ],
         0.0,

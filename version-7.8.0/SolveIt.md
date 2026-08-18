@@ -1487,7 +1487,7 @@ Ten recordings ship with the repository:
 | [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on **`BALL` joints** — the chain whirls out of the plane it started on, which a hinged chain cannot do | the four joints hold to \|*g*\| = 3.3 × 10⁻⁹; \|*z*\| runs from exactly 0 to 1.7147 |
 | [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four **`CONSTRAIN` rods** — one row each, the cheapest linkage in the language, going chaotic | run continuously at the default tolerance the rods hold to \|*g*\| = 5.4 × 10⁻¹⁵, i.e. roundoff |
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top on a **`BALL` joint**, precessing under gravity | 1.020440 rad/s against the exact Ω = *Mgr*/(*I₃ω₃*) = 1.020408, 3 parts in 10⁵ |
-| [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings**, three perpendicular `HINGE` axes | total *L·ŷ* conserved to 6.4 × 10⁻¹⁵; every centre stays on the pivot to 7 × 10⁻³⁵ |
+| [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings**, three perpendicular `HINGE` axes | total *L·ŷ* conserved to 1.4 × 10⁻¹⁴; every centre stays on the pivot to 1.2 × 10⁻³⁴ |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same rings with a **pendulous** bowl — a ship's compass, seeking level | periods 1.878587 and 2.307339 s against measured 1.883426 and 2.313653 |
 
 That last one is the one to open if you only open one, because it shows

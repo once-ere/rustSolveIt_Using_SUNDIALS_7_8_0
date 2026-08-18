@@ -57,12 +57,19 @@ new point as base { mass = 1, position = [0, 0, 0], inverse_mass = 0 }
 new torus as outer { mass = 0.5, ring_radius = 0.9, tube_radius = 0.04, position = [0, 0, 0] }
 new torus as inner { mass = 0.4, ring_radius = 0.7, tube_radius = 0.04, position = [0, 0, 0] }
 new cylinder as rotor { mass = 2, radius = 0.5, half_height = 0.06, position = [0, 0, 0] }
-# A torus and a cylinder are both symmetric about their LOCAL z, so each
-# ring has to be turned to face the axis it swings about. Quarter turns,
-# as [w, x, y, z]: the outer ring's face onto the vertical, the inner
-# ring's onto x. The rotor already faces z and needs no turn.
-set outer.orientation = [0.7071067811865476, 0.7071067811865476, 0, 0]
-set inner.orientation = [0.7071067811865476, 0, 0.7071067811865476, 0]
+# A torus and a cylinder are both symmetric about their LOCAL z. A
+# gimbal RING pivots about a DIAMETER, so each ring's plane has to
+# contain two axes: the one it swings on, and the one it carries.
+#   outer swings on y, carries x  ->  plane xy  ->  symmetry axis z
+#   inner swings on x, carries z  ->  plane xz  ->  symmetry axis y
+# so the outer ring needs no turn at all and the inner takes a quarter
+# turn about x, as [w, x, y, z]. Face a ring's symmetry axis along the
+# axis it swings on instead and "swinging" becomes a spin of a torus
+# about its own axis of revolution: it neither shows nor does anything.
+# The ROTOR is the opposite case and is meant to be that way — its
+# symmetry axis IS its hinge axis, because that is what a rotor spins
+# about — so it needs no turn either.
+set inner.orientation = [0.7071067811865476, 0.7071067811865476, 0, 0]
 hinge base outer [0, 1, 0]
 hinge outer inner [1, 0, 0]
 hinge inner rotor [0, 0, 1]

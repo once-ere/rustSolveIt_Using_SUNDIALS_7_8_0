@@ -3587,7 +3587,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on `BALL` joints, whirling as they collapse; the chain leaves the plane it started on, which a hinged chain cannot | the four joints hold to `\|g\| = 3.3e-9`; `\|z\|` runs from exactly 0 to 1.7147 |
 | [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four `CONSTRAIN` rods, the cheapest linkage there is at one row each, going chaotic | run continuously at the default tolerance the rods hold to `\|g\| = 5.4e-15`; this recording, 250 cold restarts, holds `\|g\| = 7.8e-8` |
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
-| [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `6.4e-15`; no centre moves further from the pivot than `7e-35` |
+| [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `1.4e-14`; no centre moves further from the pivot than `1.2e-34` |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.307339` s, measured `1.883426` and `2.313653` |
 
 The scripts they were recorded from are in
@@ -3717,7 +3717,7 @@ law, and the gimbal has two:
 ```text
 outermost hinge turns about the vertical
    ⟹ nothing can torque the system about the vertical
-   ⟹ total L·ŷ = 0.6314 is conserved, to 6.4e-15
+   ⟹ total L·ŷ = 0.52688 is conserved, to 1.4e-14
 
 innermost hinge's axis IS the rotor's spin axis
    ⟹ nothing can torque the rotor about it
@@ -3734,13 +3734,13 @@ inherits the tolerance instead.
 each hinge's midpoint pivot lands on the same origin, and the three
 axes meet there — which is what makes this a gimbal rather than a
 linkage. Over the whole recording no centre moves further from that
-origin than `7e-35`. The rings only *look* nested.
+origin than `1.2e-34`. The rings only *look* nested.
 
 **What to watch.** The assembly starts turning about the vertical at
 1 rad/s. Something without a gyroscope in it would simply keep turning.
-This does not: the outer ring never gets more than `11.15°` from where
-it began, and the rotation reappears as a **tilt** — the rotor's axis
-swinging up to `20.06°` away, at right angles to the push. Rotation in
+This does not: the outer ring never swings more than `7.43°` on its
+hinge, and the rotation reappears as a **tilt** — the rotor's axis
+swinging up to `16.33°` away, at right angles to the push. Rotation in
 about one axis, rotation out about another, is the whole of gyroscopic
 behaviour, and here it is a consequence of the two lines above rather
 than a separate rule.
