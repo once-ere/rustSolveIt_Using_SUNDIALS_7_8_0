@@ -72,7 +72,7 @@ dependence to find.
 
 ## Browser videos
 
-Eight recorded runs, openable offline — no server, no CDN, nothing
+Nine recorded runs, openable offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -86,6 +86,7 @@ frame you stopped on.
 | [`ball_joint_chain.html`](version-7.8.0/videos/ball_joint_chain.html) — a **chain on ball joints** | leaves its plane: \|z\| from exactly 0 to 1.7147 |
 | [`rod_pendulum_chain.html`](version-7.8.0/videos/rod_pendulum_chain.html) — **four rods**, the cheapest joint | \|g\| = 5.4e-15 run continuously |
 | [`spinning_top.html`](version-7.8.0/videos/spinning_top.html) — a **precessing top** | 1.020440 rad/s vs the exact 1.020408 |
+| [`gyroscope_gimbal.html`](version-7.8.0/videos/gyroscope_gimbal.html) — a **gimballed gyroscope** | L·ŷ conserved to 6.4e-15 |
 
 Every advance in a recording is a real SUNDIALS step; the recorder
 (`version-7.8.0/recorder/`) is a camera, not a physics

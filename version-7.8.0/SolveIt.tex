@@ -1201,6 +1201,10 @@ tolerance the rods hold to $|g| = 5.4\times10^{-15}$, i.e. roundoff\\
 \code{spinning\_top.html} & a top on a \textbf{\kw{ball} joint},
 precessing under gravity & $1.020440$ rad/s against the exact
 $\Omega = Mgr/(I_3\omega_3) = 1.020408$, 3 parts in $10^{5}$\\
+\code{gyroscope\_gimbal.html} & a rotor in \textbf{two gimbal
+rings}, three perpendicular \kw{hinge} axes & total $L\cdot\hat y$
+conserved to $6.4\times10^{-15}$; every centre stays on the pivot to
+$7\times10^{-35}$\\
 \end{tabular}
 \end{center}
 
@@ -1216,7 +1220,7 @@ freedoms and three of them are redundant, which leaves the constrained
 solve singular. One \kw{constrain} --- a single row --- braces it
 instead, and pins the bend to a closed form: the shaft sweeps a cone,
 and $\cos\beta$ cannot go below $0.6$. The recording touches
-$0.6000004$. Grammar \S12.8 works the arithmetic through.
+$0.6000004$. Grammar \S12.9 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or
 $\leftarrow\rightarrow$), a scrub bar, speed from $0.25\times$ to

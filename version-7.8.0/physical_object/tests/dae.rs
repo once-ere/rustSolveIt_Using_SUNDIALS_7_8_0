@@ -7,7 +7,7 @@
 use ::physical_object::constrain::ConstraintSet;
 use ::physical_object::equilibrium;
 use ::physical_object::integrate::{self, Method};
-use ::physical_object::linalg::Vec3;
+use ::physical_object::linalg::{Quat, Vec3};
 use ::physical_object::sensitivity::{self, SensParam};
 use ::physical_object::system::PhysicalObjectSystem;
 use physical_object::physical_object::physical_object;
@@ -576,6 +576,112 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The gimbal of `videos/gyroscope_gimbal.html`, and the conservation
+/// law a hinge hands you for free.
+///
+/// ```text
+/// base --HINGE y-- outer --HINGE x-- inner --HINGE z-- rotor
+/// ```
+///
+/// Three hinges on three perpendicular axes: 15 rows on 18 freedoms,
+/// leaving exactly the three gimbal angles. Every body is concentric,
+/// so all three axes pass through one point — which is what makes it a
+/// gimbal rather than a linkage.
+///
+/// **A hinge transmits no torque about its own axis.** That is the
+/// freedom it grants, and it is also a conservation law:
+///
+/// - the outermost hinge turns about the vertical, so nothing can
+///   torque the assembly about the vertical, and total `L·ŷ` is
+///   conserved — *exactly*, because the angular momenta are integrated
+///   state rather than a derived quantity;
+/// - every centre of mass sits **on** the pivot, so gravity has no
+///   lever arm and adds no torque either. That is the whole difference
+///   from `a_spinning_top_precesses_at_the_closed_form_rate`, where the
+///   arm `r` is what drives the precession.
+#[test]
+fn a_gimbal_conserves_angular_momentum_about_its_outer_axis() {
+    let ring = |id: usize, mass: f64, r: f64, spin: Vec3, q: Quat| {
+        let mut b = physical_object::new_from_shape(
+            id,
+            mass,
+            0.0,
+            Vec3::zeros(), // concentric: every pivot lands on the origin
+            Vec3::zeros(),
+            spin,
+            Boundary::Torus { ring_radius: r, tube_radius: 0.04 },
+        );
+        b.set_orientation(q);
+        b.set_angular_velocity(spin);
+        b
+    };
+    let s2 = std::f64::consts::FRAC_1_SQRT_2;
+    let mut base = physical_object::new_point(0, 1.0, Vec3::zeros(), Vec3::zeros());
+    base.set_inverse_mass(0.0);
+    base.set_inertia_tensor(Mat3::zeros());
+
+    // started as a rigid turn about the vertical, plus the rotor's spin
+    let turn = Vec3::new(0.0, 1.0, 0.0);
+    let mut rotor = physical_object::new_from_shape(
+        3,
+        2.0,
+        0.0,
+        Vec3::zeros(),
+        Vec3::zeros(),
+        Vec3::new(0.0, 1.0, 15.0),
+        Boundary::Cylinder { radius: 0.5, half_height: 0.06 },
+    );
+    rotor.set_angular_velocity(Vec3::new(0.0, 1.0, 15.0));
+
+    let mut s = PhysicalObjectSystem::new(
+        vec![
+            base,
+            ring(1, 0.5, 0.9, turn, Quat::new(s2, s2, 0.0, 0.0)),
+            ring(2, 0.4, 0.7, turn, Quat::new(s2, 0.0, s2, 0.0)),
+            rotor,
+        ],
+        0.0,
+    );
+    s.uniform_gravity = Vec3::new(0.0, -3.0, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_hinge(&snap, 0, 1, Vec3::new(0.0, 1.0, 0.0)).unwrap();
+    s.constraints.add_hinge(&snap, 1, 2, Vec3::new(1.0, 0.0, 0.0)).unwrap();
+    s.constraints.add_hinge(&snap, 2, 3, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+    assert_eq!(s.constraints.len(), 15, "three hinges are five rows each");
+
+    let l_y = |s: &PhysicalObjectSystem| -> f64 {
+        s.objects[1..].iter().map(|o| o.get_angular_momentum().y).sum()
+    };
+    let axis = |s: &PhysicalObjectSystem| {
+        s.objects[3].get_orientation().normalize().rotate(Vec3::new(0.0, 0.0, 1.0))
+    };
+    let (l0, a0) = (l_y(&s), axis(&s));
+
+    let report = integrate::run(&mut s, 0.02, 1).expect("gimbal start");
+    assert_eq!(report.initial_velocity_projected, 0.0, "the start is consistent");
+
+    let (mut worst_l, mut worst_g, mut tilt, mut drift) = (0.0_f64, 0.0_f64, 0.0_f64, 0.0_f64);
+    for k in 2..=315 {
+        let r = integrate::run(&mut s, 0.02 * f64::from(k), 1).expect("gimbal run");
+        worst_g = worst_g.max(r.constraint_drift.0);
+        worst_l = worst_l.max((l_y(&s) - l0).abs());
+        tilt = tilt.max(axis(&s).dot(a0).clamp(-1.0, 1.0).acos().to_degrees());
+        for b in &s.objects {
+            drift = drift.max(b.get_position().norm());
+        }
+    }
+
+    assert!(worst_g < 1e-6, "the three hinges must hold: |g| = {worst_g:e}");
+    /* The invariant, and it is not approximate. */
+    assert!(worst_l < 1e-12, "L.y must be conserved exactly: drifted {worst_l:e}");
+    /* A gimbal holds a point: nothing translates, at all. */
+    assert!(drift < 1e-20, "every centre stays on the pivot: {drift:e}");
+    /* And the gyroscope turned the push into a tilt at right angles. */
+    assert!(tilt > 5.0, "the rotor axis should be driven off its start: {tilt}");
+}
+
 /// The gyroscope of `videos/spinning_top.html`, against the closed form
 /// for steady precession.
 ///
@@ -679,7 +785,7 @@ fn a_spinning_top_precesses_at_the_closed_form_rate() {
 /// multiplier seed and no BDF history. At the default tolerance these
 /// same four rods fail on the *second* restart, which is why the scene
 /// asks for the floor values by hand. That is a statement about
-/// restarting, not about accuracy; the scene file and grammar §12.7
+/// restarting, not about accuracy; the scene file and grammar §12.8
 /// record it.
 #[test]
 fn a_rod_chain_is_the_cheapest_joint_and_holds_to_roundoff() {

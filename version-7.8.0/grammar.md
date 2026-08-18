@@ -3573,7 +3573,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The eight shipped recordings
+### 12.3 The nine shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3587,6 +3587,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on `BALL` joints, whirling as they collapse; the chain leaves the plane it started on, which a hinged chain cannot | the four joints hold to `\|g\| = 3.3e-9`; `\|z\|` runs from exactly 0 to 1.7147 |
 | [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four `CONSTRAIN` rods, the cheapest linkage there is at one row each, going chaotic | run continuously at the default tolerance the rods hold to `\|g\| = 5.4e-15`; this recording, 250 cold restarts, holds `\|g\| = 7.8e-8` |
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
+| [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `6.4e-15`; no centre moves further from the pivot than `7e-35` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3648,7 +3649,60 @@ exactly on the plane `z = 0`, and the chain reaches `|z| = 1.7147`. A
 hinged chain would still be at exactly zero, for ever, because that is
 what fixing an axis means.
 
-### 12.6 A closed form that is exact, and how to actually hit it
+### 12.6 A hinge hands you a conservation law
+
+Two of the recordings are the same object under different mounts, and
+the pair is worth reading together.
+
+| | `spinning_top.html` | `gyroscope_gimbal.html` |
+|---|---|---|
+| mount | one `BALL` at the tip | three `HINGE`s, perpendicular axes |
+| rows | 3 on 6 freedoms | 15 on 18 freedoms |
+| centre of mass | a distance `r = 0.6` from the pivot | **on** the pivot |
+| gravity | lever arm `r`, so a torque | lever arm zero, so none |
+| what happens | steady precession at `Mgr/(I₃ω₃)` | no gravitational precession at all |
+
+The gimbal scene keeps the same `uniform_gravity` as the top, and it
+does nothing. That is not a setting to notice; it is the point. A
+gimballed gyroscope is not balancing against gravity, it is free of it,
+because a lever arm of zero produces a torque of zero.
+
+**And a hinge cannot torque about its own axis.** That is precisely the
+freedom it grants — but read the other way round it is a conservation
+law, and the gimbal has two:
+
+```text
+outermost hinge turns about the vertical
+   ⟹ nothing can torque the system about the vertical
+   ⟹ total L·ŷ = 0.6314 is conserved, to 6.4e-15
+
+innermost hinge's axis IS the rotor's spin axis
+   ⟹ nothing can torque the rotor about it
+   ⟹ its axial spin I₃ω₃ = 3.75 is conserved, to 1 part in 100,000
+```
+
+The first of those is held to machine precision rather than to solver
+tolerance, and the reason is structural: angular momentum is integrated
+*state* in the 13N packing (§3.2), not a quantity derived afterwards
+from positions. The second involves the orientation as well, so it
+inherits the tolerance instead.
+
+**A gimbal holds a point, exactly.** All four bodies are concentric, so
+each hinge's midpoint pivot lands on the same origin, and the three
+axes meet there — which is what makes this a gimbal rather than a
+linkage. Over the whole recording no centre moves further from that
+origin than `7e-35`. The rings only *look* nested.
+
+**What to watch.** The assembly starts turning about the vertical at
+1 rad/s. Something without a gyroscope in it would simply keep turning.
+This does not: the outer ring never gets more than `11.15°` from where
+it began, and the rotation reappears as a **tilt** — the rotor's axis
+swinging up to `20.06°` away, at right angles to the push. Rotation in
+about one axis, rotation out about another, is the whole of gyroscopic
+behaviour, and here it is a consequence of the two lines above rather
+than a separate rule.
+
+### 12.7 A closed form that is exact, and how to actually hit it
 
 The spinning-top recording is the one place in this chapter where the
 answer is a formula you can look up, so it is worth being precise about
@@ -3704,7 +3758,7 @@ not just the position level**, and a closed form that assumes a
 particular steady state has to be started in that state or it is not
 the thing you are measuring.
 
-### 12.7 A restart is not a continuation
+### 12.8 A restart is not a continuation
 
 The rod-chain recording exists to document a trap that costs an
 afternoon if you meet it without warning.
@@ -3761,7 +3815,7 @@ robust either way, which is why the scene ships with four and writes
 its coordinates out in full. If a constrained run's success depends on
 how you rounded the input, you are on a knife edge, not on a result.
 
-### 12.8 Count your rows before you brace a mechanism
+### 12.9 Count your rows before you brace a mechanism
 
 The universal-joint recording is worth reading as a design exercise,
 because the obvious way to build it does not work.
