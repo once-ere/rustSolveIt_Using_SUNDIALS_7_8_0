@@ -83,6 +83,9 @@ including which donor sources were deliberately not carried over — is in
   the video recorder in `recorder/` (also outside the Rust constraints).
 - `videos/`, `videos/scenes/` — recorded browser videos and the posim
   scripts that produced them.
+- `gui/` — thirteen live GUI web pages, one per recorded video scene:
+  a stdlib-Python server owning a `posim --machine` child plus a
+  vanilla-JS canvas page with live physics readouts (`gui/README.md`).
 - `notebooks/` — one executed Jupyter notebook per example, 109 in all
   (13 video scenes, 6 Rust examples, 12 collision scripts, 19 SolveIt
   scripts, 59 dynamic notebooks). Python notebooks driving

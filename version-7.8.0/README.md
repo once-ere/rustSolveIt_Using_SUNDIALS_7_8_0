@@ -59,6 +59,10 @@ and L); 605 passed workspace-wide (40 physical_object lib +
 - `posim/` — the simulator front end: lexer → grammar compiler → stack
   machine, a notebook REPL (`In[n]`/`Out[n]` cells), script batch mode,
   and a JSON machine mode.
+- `gui/` — thirteen live GUI web pages, one per recorded video scene:
+  each a standard-library Python server driving the engine over the
+  machine protocol plus a canvas page with Start/Pause/Reset and live
+  readouts verifying that scene's closed forms (`gui/README.md`).
 - `notebooks/` — one executed Jupyter notebook per example — 109 in
   all, one per video scene, Rust example, collision script, SolveIt
   script and dynamic notebook. Each is a stand-alone Python notebook
