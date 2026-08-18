@@ -576,6 +576,91 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The gyroscope of `videos/spinning_top.html`, against the closed form
+/// for steady precession.
+///
+/// A symmetric top spinning at `ω₃` about its own axis, its centre of
+/// mass a distance `r` from the pivot, precesses about the vertical at
+/// `Ω = M g r / (I₃ ω₃)`. That is normally quoted as the *fast-top*
+/// approximation, but the exact steady-precession condition is
+///
+/// ```text
+/// M g r = Ω I₃ ω₃ − I₁ Ω² cos θ
+/// ```
+///
+/// and this top is mounted with its axis **horizontal**, `θ = 90°`, so
+/// the correction carries a `cos θ` that is exactly zero. The simple
+/// formula is therefore exact here, which is what makes it worth
+/// asserting rather than merely plotting.
+///
+/// The check is closed-loop: run for exactly one predicted period and
+/// the symmetry axis must come back to where it started. Nothing about
+/// drift can fake that.
+#[test]
+fn a_spinning_top_precesses_at_the_closed_form_rate() {
+    const M: f64 = 1.0;
+    const GRAV: f64 = 3.0;
+    const R: f64 = 0.42; // flywheel radius
+    const ARM: f64 = 0.6; // pivot to centre of mass
+    const W3: f64 = 20.0; // spin about the symmetry axis
+
+    let i3 = 0.5 * M * R * R; // a cylinder about its symmetry axis
+    let omega = M * GRAV * ARM / (i3 * W3);
+    let period = 2.0 * std::f64::consts::PI / omega;
+
+    /* A POINT support: its inertia is the zero matrix, so it cannot turn.
+     * A sphere with inverse_mass = 0 would still be free to spin, and the
+     * ball joint would drive it. */
+    let mut pivot = physical_object::new_point(0, 1.0, Vec3::new(0.0, 0.0, -ARM), Vec3::zeros());
+    pivot.set_inverse_mass(0.0);
+    pivot.set_inertia_tensor(Mat3::zeros());
+
+    /* Started ON the steady solution, which takes BOTH velocities: the
+     * body turns about the vertical through the pivot at Ω *and* spins
+     * at ω₃ about its own axis. Each is a rigid motion that leaves the
+     * pivot point still, so ġ = J·u = 0 exactly. */
+    let top = physical_object::new_from_shape(
+        1,
+        M,
+        0.0,
+        Vec3::new(0.0, 0.0, ARM),
+        Vec3::new(omega * ARM, 0.0, 0.0),
+        Vec3::new(0.0, omega, W3),
+        Boundary::Cylinder { radius: R, half_height: 0.06 },
+    );
+    let mut s = PhysicalObjectSystem::new(vec![pivot, top], 0.0);
+    s.uniform_gravity = Vec3::new(0.0, -GRAV, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    s.constraints.add_ball(&snap, 0, 1).unwrap();
+    assert_eq!(s.constraints.len(), 3, "a ball joint is three rows");
+
+    // the inertia the formula assumes is the inertia the body actually has
+    let izz = s.objects[1].get_inertia_tensor().0[2][2];
+    assert!((izz - i3).abs() < 1e-12, "I3 = {izz}, expected {i3}");
+
+    let axis = |s: &PhysicalObjectSystem| {
+        s.objects[1].get_orientation().normalize().rotate(Vec3::new(0.0, 0.0, 1.0))
+    };
+    let start = axis(&s);
+
+    let report = integrate::run(&mut s, period, 200).expect("top run");
+    assert_eq!(report.initial_velocity_projected, 0.0, "the start is already steady");
+    assert!(report.constraint_drift.0 < 1e-7, "|g| = {:e}", report.constraint_drift.0);
+
+    /* One full precession later, the axis is back where it began. */
+    let end = axis(&s);
+    let closure = (end - start).norm();
+    assert!(
+        closure < 5e-3,
+        "after one period {period} the axis should close: {start:?} -> {end:?} (|Δ| = {closure:e})"
+    );
+    /* And it never left the horizontal on the way — steady precession,
+     * not nutation. The tilt out of the plane is the y component. */
+    assert!(end.y.abs() < 1e-3, "the axis should stay horizontal: y = {}", end.y);
+}
+
 /// The chain of `videos/rod_pendulum_chain.html`: four bobs on four
 /// rods, and the two facts that make a rod the joint to reach for.
 ///
@@ -594,7 +679,7 @@ fn a_universal_joint_keeps_its_shafts_square() {
 /// multiplier seed and no BDF history. At the default tolerance these
 /// same four rods fail on the *second* restart, which is why the scene
 /// asks for the floor values by hand. That is a statement about
-/// restarting, not about accuracy; the scene file and grammar §12.6
+/// restarting, not about accuracy; the scene file and grammar §12.7
 /// record it.
 #[test]
 fn a_rod_chain_is_the_cheapest_joint_and_holds_to_roundoff() {

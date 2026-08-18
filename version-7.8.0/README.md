@@ -118,7 +118,7 @@ the worked cases.
 
 ## Browser videos
 
-Seven recorded runs you can open offline — no server, no CDN, nothing
+Eight recorded runs you can open offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -131,6 +131,7 @@ frame you stopped on.
 | [videos/universal_joint.html](videos/universal_joint.html) | a **`UNIVERSAL` joint** carrying a driven shaft's rotation to a second shaft; the bend flattens straight and folds back, and the speed across the joint swings with it | the bend stops at cos b = 0.6000004 against a geometric bound of exactly 0.6; joints hold to \|g\| = 4.0e-7 |
 | [videos/ball_joint_chain.html](videos/ball_joint_chain.html) | four links on **`BALL` joints**, whirling as they collapse out of the plane they started on | joints hold to \|g\| = 3.3e-9; \|z\| runs from exactly 0 to 1.7147 |
 | [videos/rod_pendulum_chain.html](videos/rod_pendulum_chain.html) | four bobs on four **`CONSTRAIN` rods** — one row each, the cheapest linkage there is — going chaotic | run continuously at the default tolerance, \|g\| = 5.4e-15 |
+| [videos/spinning_top.html](videos/spinning_top.html) | a top held at its tip by a **`BALL` joint**, precessing under gravity | 1.020440 rad/s vs the exact 1.020408 — 3 parts in 10⁵ |
 
 Record your own from any posim script:
 

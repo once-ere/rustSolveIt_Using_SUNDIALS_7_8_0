@@ -3573,7 +3573,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The seven shipped recordings
+### 12.3 The eight shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3586,6 +3586,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/universal_joint.html`](videos/universal_joint.html) | a `UNIVERSAL` joint carrying a driven shaft's rotation to a second shaft; the bend flattens out straight and folds back, and the speed across the joint swings with it | the bend stops at `cos β = 0.6000004` against a geometric bound of exactly `0.6`; the three joints hold to `\|g\| = 4.0e-7` |
 | [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on `BALL` joints, whirling as they collapse; the chain leaves the plane it started on, which a hinged chain cannot | the four joints hold to `\|g\| = 3.3e-9`; `\|z\|` runs from exactly 0 to 1.7147 |
 | [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four `CONSTRAIN` rods, the cheapest linkage there is at one row each, going chaotic | run continuously at the default tolerance the rods hold to `\|g\| = 5.4e-15`; this recording, 250 cold restarts, holds `\|g\| = 7.8e-8` |
+| [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3647,7 +3648,63 @@ exactly on the plane `z = 0`, and the chain reaches `|z| = 1.7147`. A
 hinged chain would still be at exactly zero, for ever, because that is
 what fixing an axis means.
 
-### 12.6 A restart is not a continuation
+### 12.6 A closed form that is exact, and how to actually hit it
+
+The spinning-top recording is the one place in this chapter where the
+answer is a formula you can look up, so it is worth being precise about
+what is being checked.
+
+A symmetric top spinning at `ω₃` about its own axis, with its centre of
+mass a distance `r` from the pivot, precesses about the vertical at
+
+```text
+Ω = M g r / (I₃ ω₃)
+```
+
+Textbooks label this the **fast-top approximation**. The exact
+condition for steady precession at tilt `θ` from the vertical is
+
+```text
+M g r = Ω I₃ ω₃ − I₁ Ω² cos θ
+```
+
+so the shortcut is exact whenever `cos θ = 0` — a top whose axis is
+**horizontal**. That is why this scene mounts the gyroscope on its
+side, with the axis along z and gravity along −y: not for the look of
+it, but so the thing being asserted is an identity rather than a limit.
+
+| | |
+|---|---|
+| `M = 1`, `r = 0.6`, `g = 3`, radius `0.42` | `I₃ = MR²/2 = 0.0882` |
+| `ω₃ = 20` | `Ω = 1.0204081632653061` rad/s |
+| measured over the recording | `1.020440` rad/s, **3 parts in 100,000** |
+| tilt out of horizontal | `4.3e-5` — it does not nutate |
+
+**Hitting it takes both velocities.** This is the part that catches
+people. A steady precession is not "spin it and let go": give the top
+only its spin and it is not on the steady orbit at all. It dips and
+bobs its way round instead, and at this spin rate the *average*
+precession misses the formula by **7.8 %**. Steady means the whole body
+is already turning about the vertical through the pivot as well as
+spinning about its own axis:
+
+```text
+angular_velocity = [0, Ω, ω₃]      spin, plus precession
+velocity         = [Ω * r, 0, 0]   the centre of mass, on its circle
+```
+
+Both are rigid motions that leave the pivot point still, so `ġ = 0`
+exactly and nothing is projected (§12.5). Omit the `VELOCITY` line and
+the joint would drag the centre of mass back onto its circle, which is
+a different experiment.
+
+The general lesson is the one §12.5 makes from the other side: **an
+initial condition has to satisfy the constraints at the velocity level,
+not just the position level**, and a closed form that assumes a
+particular steady state has to be started in that state or it is not
+the thing you are measuring.
+
+### 12.7 A restart is not a continuation
 
 The rod-chain recording exists to document a trap that costs an
 afternoon if you meet it without warning.
@@ -3704,7 +3761,7 @@ robust either way, which is why the scene ships with four and writes
 its coordinates out in full. If a constrained run's success depends on
 how you rounded the input, you are on a knife edge, not on a result.
 
-### 12.7 Count your rows before you brace a mechanism
+### 12.8 Count your rows before you brace a mechanism
 
 The universal-joint recording is worth reading as a design exercise,
 because the obvious way to build it does not work.

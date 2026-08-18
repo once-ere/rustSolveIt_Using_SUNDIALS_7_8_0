@@ -71,6 +71,16 @@
       "view": "iso",
       "title": "Four bobs on four rods",
       "caption": "A CONSTRAIN is the smallest joint there is: one row, holding one scalar fact, g = |d| - L. Four rods on four free bobs is 4 rows on 24 freedoms, against 3 rows per BALL, 4 per UNIVERSAL and 5 per HINGE. It is also the best conditioned joint -- one well-scaled scalar equation, with none of the index-2 orientation coupling that forces a tolerance floor on the other three -- so run this chain as ONE integration at the default 1e-10/1e-12 and the rods hold to |g| = 5.4e-15, which is roundoff. This recording is not one integration, though. It is 250 cold restarts, one per frame, and the tolerance a continuous run sustains is not the tolerance a restart sustains: at the default these same four rods fail on the SECOND restart. So the scene asks for 1e-6/1e-8 by hand -- exactly the floor an orientation joint gets automatically and never has to request. Measured over this recording: the four rods hold to |g| = 7.8e-8. Released from rest, so the start is on the constraint manifold with nothing to project."
+    },
+    {
+      "name": "spinning_top",
+      "scene": "videos/scenes/spinning_top.posim",
+      "out": "videos/spinning_top.html",
+      "frames": 310,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "A spinning top, precessing",
+      "caption": "A top held at its tip by a BALL joint -- one point held, all three rotations free, which is exactly what the tip of a top is. A symmetric top spinning at w3 about its own axis, its centre of mass a distance r from the pivot, precesses at Omega = Mgr/(I3 w3). That is usually the fast-top APPROXIMATION, but this top is mounted with its axis horizontal, and at 90 degrees the correction term carries a cos(theta) that is exactly zero -- so the formula is exact here. With M = 1, r = 0.6, g = 3 and I3 = 0.0882, spinning at 20 rad/s, it predicts 1.0204081632653061 rad/s and a period of 6.1575 s. Measured over this recording: 1.020440 rad/s, three parts in 100,000, with the axis staying horizontal to 4.3e-5 -- it does not nutate at all, because it was started ON the steady solution, which takes the precession velocity as well as the spin. Released with only its spin it misses the formula by 7.8%. The joint holds to |g| = 4.3e-7."
     }
   ]
 }

@@ -3540,7 +3540,7 @@ and $dt$ the recording was made with. \textbf{This is the point of the
 format}: you can stop on the frame where something looks wrong and read
 the conserved quantities off it.
 
-\subsection{The seven shipped recordings}
+\subsection{The eight shipped recordings}
 
 \begin{center}
 \begin{tabular}{p{3.6cm}p{6.4cm}p{4.2cm}}
@@ -3573,6 +3573,10 @@ $|g| = 3.3\text{e-}9$; $|z|$ runs from exactly $0$ to $1.7147$\\
 going chaotic & run continuously at the default tolerance the rods
 hold to $|g| = 5.4\text{e-}15$; this recording, 250 cold restarts,
 holds $|g| = 7.8\text{e-}8$\\
+\code{videos/spinning\_top.html} & a top held at its tip by a
+\kw{ball} joint, precessing under gravity & precesses at $1.020440$
+rad/s against a closed form of $1.020408$, three parts in $100{,}000$,
+without nutating\\
 \end{tabular}
 \end{center}
 
@@ -3630,6 +3634,52 @@ Watch the recording's $z$ axis for the consequence. Every link starts
 exactly on the plane $z = 0$, and the chain reaches $|z| = 1.7147$. A
 hinged chain would still be at exactly zero, for ever, because that is
 what fixing an axis means.
+
+\subsection{A closed form that is exact, and how to actually hit it}
+
+The spinning-top recording is the one place in this chapter where the
+answer is a formula you can look up, so it is worth being precise about
+what is being checked.
+
+A symmetric top spinning at $\omega_3$ about its own axis, with its
+centre of mass a distance $r$ from the pivot, precesses about the
+vertical at $\Omega = M g r / (I_3 \omega_3)$. Textbooks label this the
+\textbf{fast-top approximation}. The exact condition for steady
+precession at tilt $\theta$ from the vertical is
+\[
+  M g r = \Omega I_3 \omega_3 - I_1 \Omega^2 \cos\theta,
+\]
+so the shortcut is exact whenever $\cos\theta = 0$ --- a top whose axis
+is \textbf{horizontal}. That is why this scene mounts the gyroscope on
+its side, with the axis along $z$ and gravity along $-y$: not for the
+look of it, but so the thing being asserted is an identity rather than
+a limit.
+
+\begin{center}
+\begin{tabular}{p{7.0cm}p{7.0cm}}
+$M = 1$, $r = 0.6$, $g = 3$, radius $0.42$ & $I_3 = MR^2/2 = 0.0882$\\
+$\omega_3 = 20$ & $\Omega = 1.0204081632653061$ rad/s\\
+measured over the recording & $1.020440$ rad/s, \textbf{3 parts in
+$100{,}000$}\\
+tilt out of horizontal & $4.3\times10^{-5}$ --- it does not nutate\\
+\end{tabular}
+\end{center}
+
+\textbf{Hitting it takes both velocities.} A steady precession is not
+``spin it and let go'': give the top only its spin and it is not on the
+steady orbit at all. It dips and bobs its way round instead, and at
+this spin rate the \emph{average} precession misses the formula by
+\textbf{7.8\,\%}. Steady means the whole body is already turning about
+the vertical through the pivot as well as spinning about its own axis,
+so \code{angular\_velocity} carries $[0, \Omega, \omega_3]$ and
+\code{velocity} carries $[\Omega r, 0, 0]$. Both are rigid motions that
+leave the pivot point still, so $\dot g = 0$ exactly and nothing is
+projected.
+
+The general lesson: \textbf{an initial condition has to satisfy the
+constraints at the velocity level, not just the position level}, and a
+closed form that assumes a particular steady state has to be started in
+that state or it is not the thing you are measuring.
 
 \subsection{A restart is not a continuation}
 
