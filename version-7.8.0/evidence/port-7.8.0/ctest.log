@@ -1,0 +1,9 @@
+Test project /tmp/claude-1000/-home-nsh-Developer-github-rustSolveIt-Using-SUNDIALS-7-8-0/6467ce1a-5c49-42d4-8495-1e194bf3b563/scratchpad/build
+    Start 1: recorder-units
+1/2 Test #1: recorder-units ...................   Passed    0.04 sec
+    Start 2: recorder-e2e
+2/2 Test #2: recorder-e2e .....................   Passed    4.11 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   4.15 sec

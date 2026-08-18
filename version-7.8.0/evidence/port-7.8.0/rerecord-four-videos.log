@@ -1,0 +1,4 @@
+videos/kepler_ellipse.html: 361 frames, 2 bodies, 139 kB, dt = 0.02
+videos/tumbling_racket.html: 401 frames, 1 bodies, 115 kB, dt = 0.01
+videos/box_of_shapes.html: 301 frames, 9 bodies, 281 kB, dt = 0.01
+videos/double_pendulum_hinges.html: 401 frames, 3 bodies, 278 kB, dt = 0.01

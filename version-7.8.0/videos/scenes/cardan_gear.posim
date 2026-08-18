@@ -1,0 +1,84 @@
+# Cardan gears: a wheel of radius r inside a ring of radius 2r, and the
+# straight line that falls out of it.
+#
+#   centre --HINGE z-- crank --HINGE z-- planet        ring: reference only
+#
+# When a wheel rolls inside a ring of exactly twice its radius, every
+# point on the wheel's rim travels along a straight line — a diameter of
+# the ring. It is the Tusi couple, and it is the reason Cardan gears
+# were used to convert rotation into straight-line motion before the
+# slider-crank was common. The hypocycloid of ratio 2 is degenerate: it
+# is not an approximation to a straight line, it IS one.
+#
+# THE ROLLING IS A GEAR JOINT. A GEAR holds one row: the two bodies'
+# turns about a shared axis, locked in proportion. For a wheel rolling
+# inside a ring of twice its radius the wheel turns once backwards for
+# each forward turn of the carrier, so the ratio is 1:
+#
+#     gear planet crank [0, 0, 1] 1
+#
+# It stacks on the bearing rather than replacing it — the hinge supports
+# the wheel, the gear sets the ratio — because a gear is not a geometric
+# joint and the two are not redundant:
+#
+#     HINGE 5 + HINGE 5 + GEAR 1 = 11 rows on 12 freedoms
+#
+# leaving the one freedom a Cardan gear train has.
+#
+# WHY THE RATIO MUST BE RATIONAL. The honest constraint is on
+# ACCUMULATED angle, q*theta_i + p*theta_j = 0, and accumulated angle is
+# not a function of the state: a quaternion does not know how many turns
+# came before it. What is a function of the state is
+#
+#     g = sin(q*theta_i + p*theta_j)
+#
+# with the angles wrapped — and that works only because p and q are
+# WHOLE NUMBERS, so wrapping either angle shifts the argument by a
+# multiple of 2*pi, which the sine cannot see. An irrational ratio has
+# no such form and GEAR refuses it rather than rounding quietly.
+#
+# WHAT THE CONSTRAINT BUYS, measured on this very scene. Impose the same
+# 2:1 relation as an initial condition instead — equal and opposite
+# rates, no gear — and the rates are conserved, so the line still comes
+# out. It is just not held:
+#
+#     ratio as an initial condition   rim leaves the line by 1.795e-3
+#     ratio enforced by GEAR                                 1.059e-8
+#
+# and then lean on the wheel with a torque:
+#
+#     initial condition, plus torque                         7.468e-1
+#     GEAR, plus the same torque                             1.152e-8
+#
+# The imposed version does not bend, it collapses: the line is gone. A
+# constraint you can only fake with initial conditions gives the right
+# motion and the wrong mechanism, and a disturbance tells them apart.
+#
+# The outer ring is drawn for reference and nothing is attached to it;
+# the gear row, not any contact, is what does the rolling.
+set system.g_constant = 0
+set system.uniform_gravity = [0, 0, 0]
+collide off
+# Every joint pivots at the MIDPOINT of its pair, so the anchor sits one
+# crank-radius the far side of the centre, and the crank and planet
+# share a centre: that puts the first pivot on the origin and the second
+# exactly on the planet's axle at [0.5, 0, 0].
+new point as centre { mass = 1, position = [-0.5, 0, 0], inverse_mass = 0 }
+new cuboid as crank { mass = 0.3, half_extents = [0.5, 0.04, 0.02], position = [0.5, 0, 0] }
+# The planet is a cylinder, symmetric about its LOCAL z, hinged about z:
+# here that IS correct, because a gear wheel turns about its own axis.
+new cylinder as planet { mass = 1, radius = 0.5, half_height = 0.03, position = [0.5, 0, 0] }
+# Reference only — no joint attaches to this.
+new torus as ring { mass = 1, ring_radius = 1.0, tube_radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+hinge centre crank [0, 0, 1]
+hinge crank planet [0, 0, 1]
+# The rolling itself: one row, stacked on the bearing above.
+gear planet crank [0, 0, 1] 1
+method ida
+# Consistent by construction: each body's material point at its pivot has
+# the velocity the other gives it, and the rates already satisfy the gear
+# row, so g_dot = J u = 0 to roundoff and nothing is projected.
+set crank.angular_velocity = [0, 0, 1]
+set crank.velocity = [0, 0.5, 0]
+set planet.angular_velocity = [0, 0, -1]
+set planet.velocity = [0, 0.5, 0]

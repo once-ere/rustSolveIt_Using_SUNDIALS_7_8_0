@@ -9,5 +9,9 @@ description = "Unique union of PointParticle, RigidBody and RigidBody3D — pure
 sundials_core = { path = "../sundials_rs/crates/sundials_core" }
 cvode_rs = { path = "../sundials_rs/crates/cvode_rs" }
 arkode_rs = { path = "../sundials_rs/crates/arkode_rs" }
+ida_rs = { path = "../sundials_rs/crates/ida_rs" }
+idas_rs = { path = "../sundials_rs/crates/idas_rs" }
+cvodes_rs = { path = "../sundials_rs/crates/cvodes_rs" }
+kinsol_rs = { path = "../sundials_rs/crates/kinsol_rs" }
 
 # examples/*.rs are auto-discovered by cargo

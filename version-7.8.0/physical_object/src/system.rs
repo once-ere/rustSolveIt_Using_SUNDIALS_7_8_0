@@ -58,6 +58,10 @@ pub struct PhysicalObjectSystem {
     /// (cleared at the start of each; capped at
     /// [`crate::collide::CONTACTS_CAP`], oldest dropped).
     pub contacts: Vec<Contact>,
+    /// Rigid holonomic constraints (`CONSTRAIN`). Non-empty means the
+    /// system is a DAE, and `Method::Ida` is the only integrator that can
+    /// honour it — see `constrain.rs` and ARCHITECTURE §3.9.
+    pub constraints: crate::constrain::ConstraintSet,
     /// Running total of resolved collision impulses this session.
     pub collision_count: u64,
 }
@@ -89,6 +93,7 @@ impl PhysicalObjectSystem {
             restitution_threshold: 1e-3,
             contact_slop: 1e-9,
             contacts: Vec::new(),
+            constraints: crate::constrain::ConstraintSet::default(),
             collision_count: 0,
         }
     }

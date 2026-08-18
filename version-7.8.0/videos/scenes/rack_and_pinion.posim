@@ -1,0 +1,65 @@
+# A rack and pinion drive: a falling weight turning a flywheel.
+#
+#   mount --HINGE-- pinion        the flywheel, on its bearing
+#   guide --PRISMATIC-- bar       the rack, on its slide
+#   pinion =RACK= bar             the teeth
+#
+#   5 + 5 + 1 = 11 rows on 12 freedoms, leaving one — the drive.
+#
+# Every joint in this scene was added for it. The HINGE was always here;
+# the RACK ties the pinion's turn to the bar's travel, Ds = r*theta; and
+# the PRISMATIC is the guide, which is what a rack actually runs in.
+# Drop the guide and the reaction torque twists the bar 24.3 degrees off
+# square and shoves it 0.68 off its line. With it, both are ZERO — the
+# twist below reads 2.6e-22 degrees and the sideways stray is exactly
+# 0.0, not merely small.
+#
+# THE CLOSED FORM. The rack has nothing holding it up but the pinion, so
+# it falls — and the pinion's inertia resists through the teeth. One
+# degree of freedom, so one equation:
+#
+#     a = m g / (m + I/r^2)
+#
+# The flywheel does not act with its mass but with I/r^2, its inertia
+# referred through the pitch radius. For a solid disc I = M r^2 / 2, so
+#
+#     I/r^2 = M/2       — independent of the radius entirely
+#
+# and with a pinion twice the rack's mass that term is exactly m. The
+# rack therefore falls at
+#
+#     a = g/2      exactly, whatever the pitch radius
+#
+# which is the number to watch: the weight falls at half gravity because
+# the flywheel it is winding up is, referred through the teeth, exactly
+# as heavy as itself.
+#
+# Measured here, against -a t^2 / 2 over four seconds and a 1.6 drop:
+#
+#     200 cold restarts, one per frame        5.35e-4
+#     the same four seconds run continuously  3.74e-5
+#
+# a factor of 14, and the same restart-versus-continuation effect as
+# every other recording (grammar §12.9).
+set system.g_constant = 0
+set system.uniform_gravity = [0, -0.4, 0]
+collide off
+# The bearing: a POINT at the pinion's own centre, so the midpoint pivot
+# lands there and the flywheel turns about its axle.
+new point as mount { mass = 1, position = [0, 0, 0], inverse_mass = 0 }
+new cylinder as pinion { mass = 2, radius = 0.6, half_height = 0.05, position = [0, 0, 0] }
+# The guide fixes the line the rack slides on. A PRISMATIC holds no
+# pivot — it holds the offset ACROSS the axis at whatever it is when the
+# joint is made — so the guide sits where the bar starts.
+new point as guide { mass = 1, position = [0.6, 0, 0], inverse_mass = 0 }
+new cuboid as bar { mass = 1, half_extents = [0.06, 1.2, 0.06], position = [0.6, 0, 0] }
+hinge mount pinion [0, 0, 1]
+prismatic guide bar [0, 1, 0]
+# Pitch radius 0.6: the bar travels 0.6 per radian of pinion, and the
+# bar's line stands exactly that far from the axle, which is what makes
+# the picture a rack meshing with a pinion rather than two loose parts.
+# The radius was 0.4 in an earlier cut of this scene and the fall is
+# unchanged, which is the radius-independence above, demonstrated rather
+# than asserted.
+rack pinion bar [0, 0, 1] [0, 1, 0] 0.6
+method ida

@@ -23,12 +23,17 @@ How it works, end to end:
 
 Usage:
 
-    tools/record_video.py SETUP.posim -o out.html [--frames N] [--dt DT]
-                          [--title "..."] [--caption "..."]
+    record_video.py SETUP.posim -o out.html [--frames N] [--dt DT]
+                    [--title "..."] [--caption "..."]
 
 The setup script is ordinary posim source.  Anything it prints is
 ignored; only the state dumps become frames.  A `STEP`/`RUN` inside the
 setup script is fine — it just means the recording starts later.
+
+This tool lives in its own directory, apart from the Rust workspace it
+records, so it has to *find* that workspace rather than assume it sits
+one level up.  See `find_workspace`; `--workspace` and `--posim` override
+the search when the layout is unusual.
 """
 
 import argparse
@@ -39,26 +44,83 @@ import subprocess
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-ROOT = HERE.parent
+
+#: Where a built posim can be, relative to a cargo workspace root.
+BIN_CANDIDATES = ("target/release/posim", "target/debug/posim")
 
 
-def find_posim() -> str:
-    """Prefer the release binary, fall back to debug, else explain."""
-    for rel in ("target/release/posim", "target/debug/posim"):
-        p = ROOT / rel
+def _binary_in(root: pathlib.Path):
+    """The built posim under `root`, release preferred, or None."""
+    for rel in BIN_CANDIDATES:
+        p = root / rel
         if p.is_file() and os.access(p, os.X_OK):
-            return str(p)
+            return p
+    return None
+
+
+def find_workspace(explicit=None, near=None) -> pathlib.Path:
+    """Locate the cargo workspace whose posim we should drive.
+
+    Searched in order, first hit wins:
+
+    1. `--workspace`, or `$POSIM_WORKSPACE`.
+    2. The scene script's directory and each of its ancestors.
+    3. The current directory and each of its ancestors.
+
+    Only *ancestors* are searched, never siblings.  An earlier version
+    also scanned each ancestor's immediate children, so that a recorder
+    living in `recorder/` would find a release in `version-7.8.0/`
+    without configuration.  That is exactly the search that goes wrong:
+    a checkout holding more than one posim workspace — the port next to
+    the upstream it was ported from — resolves to whichever name sorts
+    first, which is silently the wrong engine.  Three of the five
+    shipped scenes still recorded byte-identically against it, because
+    the two engines agree to the bit; the fourth failed only because it
+    uses a joint the older grammar has not got.  A recording must never
+    depend on which sibling sorts first, so the scene decides: it lives
+    inside the workspace it belongs to.
+    """
+    if explicit is None:
+        explicit = os.environ.get("POSIM_WORKSPACE")
+    if explicit:
+        root = pathlib.Path(explicit).resolve()
+        if _binary_in(root) is None:
+            sys.exit(
+                f"no built posim under {root}\n"
+                "Build it first:  cargo build --release -p posim"
+            )
+        return root
+
+    starts = []
+    if near is not None:
+        starts.append(pathlib.Path(near).resolve().parent)
+    starts.append(pathlib.Path.cwd())
+    for start in starts:
+        for d in (start, *start.parents):
+            if _binary_in(d) is not None:
+                return d
     sys.exit(
         "posim binary not found.\n"
         "Build it first:  cargo build --release -p posim\n"
-        f"(looked in {ROOT}/target/release and {ROOT}/target/debug)"
+        "or point the recorder at the workspace:  --workspace DIR\n"
+        "(searched upward from "
+        + " and from ".join(str(s) for s in starts)
+        + ")"
     )
+
+
+def find_posim(root: pathlib.Path) -> str:
+    """The built posim under an already-located workspace."""
+    p = _binary_in(root)
+    if p is None:
+        sys.exit(f"no built posim under {root}")
+    return str(p)
 
 
 class Posim:
     """One `posim --machine` child process, spoken to in JSONL."""
 
-    def __init__(self, binary: str):
+    def __init__(self, binary: str, cwd=None):
         env = dict(os.environ, POSIM_NO_BROWSER="1")
         self.proc = subprocess.Popen(
             [binary, "--machine"],
@@ -66,7 +128,10 @@ class Posim:
             stdout=subprocess.PIPE,
             text=True,
             bufsize=1,
-            cwd=str(ROOT),
+            # posim resolves relative paths against its own cwd, so it is
+            # started in the workspace it belongs to, not in whatever
+            # directory the recorder happened to be invoked from.
+            cwd=str(cwd) if cwd else None,
             env=env,
         )
 
@@ -105,6 +170,14 @@ class Posim:
         except (BrokenPipeError, ValueError):
             pass
         self.proc.wait(timeout=30)
+        # Closing the pipes is not optional once several recordings run
+        # in one process: the child exits either way, but its pipe ends
+        # stay open until the garbage collector gets to them.
+        for pipe in (self.proc.stdin, self.proc.stdout):
+            try:
+                pipe.close()
+            except (BrokenPipeError, ValueError, OSError):
+                pass
 
 
 def setup_lines(path: pathlib.Path):
@@ -156,11 +229,22 @@ def frame_of(state: dict) -> dict:
         "c": [
             [c["point"], c["normal"], c["impulse"]] for c in state["contacts"]
         ],
+        # joints: world pivot, the axis a hinge/universal turns about, and
+        # the far end. BALL/HINGE/UNIVERSAL hold one shared point, so both
+        # ends coincide; a rod holds two points apart, and the player draws
+        # the strut between them.
+        "j": [
+            [jt["point"], jt.get("axis"), jt["point_j"]]
+            for jt in state.get("joints", [])
+        ],
+        # worst |g| over the joint set at this instant
+        "gd": state.get("joint_drift", 0.0),
     }
 
 
-def record(script: pathlib.Path, frames: int, dt: float):
-    posim = Posim(find_posim())
+def record(script: pathlib.Path, frames: int, dt: float, workspace=None):
+    workspace = workspace or find_workspace(near=script)
+    posim = Posim(find_posim(workspace), cwd=workspace)
     try:
         for line in setup_lines(script):
             posim.exec_line(line)
@@ -181,6 +265,10 @@ def record(script: pathlib.Path, frames: int, dt: float):
             posim.exec_line(f"step {dt!r}")
             out.append(frame_of(posim.state()))
         meta = {
+            "joints": [
+                {"kind": jt["kind"], "rows": int(jt["rows"])}
+                for jt in first.get("joints", [])
+            ],
             "method": first["method"],
             "box": first["box"],
             "gravity": first["uniform_gravity"],
@@ -250,6 +338,7 @@ PAGE = r"""<!doctype html>
     <label><input id="trails" type="checkbox" checked> trails</label>
     <label><input id="labels" type="checkbox" checked> labels</label>
     <label><input id="arrows" type="checkbox" checked> contacts</label>
+    <label><input id="joints" type="checkbox" checked> joints</label>
   </footer>
 </div>
 <script>
@@ -287,26 +376,50 @@ BODIES.forEach((b,i) => b.color = b.wall ? "#3b4450" : HUES[i % HUES.length]);
    Orbit camera: yaw/pitch about a target, perspective divide.  Same
    controls as the live scene window (drag to orbit, wheel to zoom,
    arrows to pan). */
-const HOME = {yaw:0.6, pitch:0.35, dist:0, tx:0, ty:0};
-let cam = Object.assign({}, HOME);
+/* A planar linkage — every hinge axis along z — reads as the mechanism
+   it is only when you look straight down that axis. An isometric view is
+   the better default for a 3-D scene, so the recorder picks. */
+const HOME = "__VIEW__" === "front"
+  ? {yaw:0, pitch:0, dist:0, tx:0, ty:0, target:[0,0,0]}
+  : {yaw:0.6, pitch:0.35, dist:0, tx:0, ty:0, target:[0,0,0]};
+let cam = Object.assign({}, HOME, {target: HOME.target.slice()});
 
 function autoFit() {
-  /* Frame the bodies the reader came to watch. Wall slabs are excluded:
-     they are half-space-sized and would push the camera out to nothing. */
-  let max = 1e-9;
-  for (const f of FRAMES) f.o.forEach((o, i) => {
-    if (BODIES[i] && BODIES[i].wall) return;
-    const p = o[0];
-    max = Math.max(max, Math.abs(p[0]), Math.abs(p[1]), Math.abs(p[2]));
-  });
+  /* Frame the bodies the reader came to watch, CENTRED ON THEM rather
+     than on the origin — a pendulum hangs below its pivot, and centring
+     on (0,0,0) wastes half the picture on empty sky. Wall slabs are
+     excluded: they are half-space-sized and would push the camera out to
+     nothing. */
+  const lo = [ Infinity,  Infinity,  Infinity];
+  const hi = [-Infinity, -Infinity, -Infinity];
+  let pad = 0;
   for (const b of BODIES) {
     if (b.wall) continue;
     const g = b.geom;
-    max = Math.max(max, g.r||0, g.ring||0, g.len||0,
+    pad = Math.max(pad, g.r||0, g.ring||0, (g.len||0)/2,
                    g.he ? Math.max.apply(null, g.he) : 0);
   }
-  if (META.box) max = Math.max(max, META.box / 2);
-  HOME.dist = cam.dist = max * 3.2;
+  for (const f of FRAMES) f.o.forEach((o, i) => {
+    if (BODIES[i] && BODIES[i].wall) return;
+    for (let k = 0; k < 3; k++) {
+      lo[k] = Math.min(lo[k], o[0][k]);
+      hi[k] = Math.max(hi[k], o[0][k]);
+    }
+  });
+  if (!isFinite(lo[0])) { lo.fill(-1); hi.fill(1); }
+  if (META.box) {
+    const h = META.box / 2;
+    for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], -h); hi[k] = Math.max(hi[k], h); }
+  }
+  let half = 1e-9;
+  for (let k = 0; k < 3; k++) {
+    HOME.target[k] = 0.5 * (lo[k] + hi[k]);
+    half = Math.max(half, 0.5 * (hi[k] - lo[k]) + pad);
+  }
+  cam.target = HOME.target.slice();
+  /* 2.4 rather than a timid 3.2: the content should fill the frame,
+     and the wheel is right there if the viewer wants to pull back. */
+  HOME.dist = cam.dist = half * 2.4;
 }
 autoFit();
 
@@ -329,10 +442,12 @@ function project(p) {
      which is what the sphere radii are drawn with. */
   const cy = Math.cos(cam.yaw),   sy = Math.sin(cam.yaw);
   const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
-  const x1 =  p[0] * cy + p[2] * sy;
-  const z1 = -p[0] * sy + p[2] * cy;
-  const y  =  p[1] * cp - z1 * sp;
-  const z  =  p[1] * sp + z1 * cp;
+  /* about the camera TARGET, not the world origin */
+  const px = p[0] - cam.target[0], py = p[1] - cam.target[1], pz = p[2] - cam.target[2];
+  const x1 =  px * cy + pz * sy;
+  const z1 = -px * sy + pz * cy;
+  const y  =  py * cp - z1 * sp;
+  const z  =  py * sp + z1 * cp;
   const d = cam.dist - z;
   if (d <= 1e-6) return null;          // behind the camera
   const s = (H * 0.9) / d;
@@ -484,6 +599,36 @@ function draw() {
     }
   }
 
+  /* Joints: a ring at the shared point, and for a hinge the axis it
+     turns about. Drawn AFTER the bodies so the pivot is never hidden
+     inside the link it belongs to — the joint is the thing this video is
+     about. */
+  if (document.getElementById("joints").checked && f.j) {
+    const len = HOME.dist / 14;
+    for (const [pt, axis, far] of f.j) {
+      /* A rod holds two points a fixed distance apart, so its two ends do
+         not coincide: draw the strut itself, else the shaft it braces
+         would look unsupported. */
+      if (far && (far[0]!==pt[0] || far[1]!==pt[1] || far[2]!==pt[2])) {
+        stroke([pt, far], "#e8c46a", 1.4);
+      }
+      const pj = project(pt);
+      if (pj) {
+        ctx.beginPath();
+        ctx.arc(pj.x, pj.y, 5, 0, Math.PI*2);
+        ctx.strokeStyle = "#e8c46a"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(pj.x, pj.y, 1.6, 0, Math.PI*2);
+        ctx.fillStyle = "#e8c46a"; ctx.fill();
+      }
+      if (axis) {
+        stroke([[pt[0]-axis[0]*len, pt[1]-axis[1]*len, pt[2]-axis[2]*len],
+                [pt[0]+axis[0]*len, pt[1]+axis[1]*len, pt[2]+axis[2]*len]],
+               "#e8c46a", 1.4);
+      }
+    }
+  }
+
   if (document.getElementById("arrows").checked) {
     /* Contact normals of the step that produced THIS frame: the arrow
        runs along the exact analytic normal (i -> j) and its length is
@@ -507,6 +652,10 @@ function draw() {
     `<br>|P| = <b>${fx(Math.hypot(f.P[0],f.P[1],f.P[2]))}</b>` +
     `<br>|L| = <b>${fx(Math.hypot(f.L[0],f.L[1],f.L[2]))}</b>` +
     `<br>collisions <b>${f.n}</b>` +
+    (META.joints && META.joints.length
+      ? `<br>joints <b>${META.joints.map(j => j.kind).join(", ")}</b>` +
+        `<br>worst |g| = <b>${(f.gd || 0).toExponential(2)}</b>`
+      : "") +
     `<br><span style="color:#8b949e">${META.method}, dt = ${META.dt}</span>`;
 }
 
@@ -523,7 +672,10 @@ scrub.max = FRAMES.length - 1;
 scrub.addEventListener("input", () => seek(+scrub.value));
 document.getElementById("back").onclick = () => seek(idx - 1);
 document.getElementById("fwd").onclick  = () => seek(idx + 1);
-document.getElementById("rst").onclick  = () => { cam = Object.assign({}, HOME); draw(); };
+document.getElementById("rst").onclick  = () => {
+  cam = Object.assign({}, HOME, {target: HOME.target.slice()});
+  draw();
+};
 const playBtn = document.getElementById("play");
 playBtn.onclick = () => {
   playing = !playing;
@@ -531,7 +683,7 @@ playBtn.onclick = () => {
   lastTick = performance.now();
   if (playing) requestAnimationFrame(tick);
 };
-for (const id of ["trails","labels","arrows"])
+for (const id of ["trails","labels","arrows","joints"])
   document.getElementById(id).addEventListener("change", draw);
 
 function tick(now) {
@@ -588,16 +740,33 @@ def main():
     ap.add_argument("--dt", type=float, default=0.02)
     ap.add_argument("--title", default=None)
     ap.add_argument("--caption", default="")
+    ap.add_argument(
+        "--view",
+        choices=["iso", "front"],
+        default="iso",
+        help="opening camera: 'iso' looks down on the scene, 'front' looks "
+        "straight along -z, which is what a planar linkage wants",
+    )
+    ap.add_argument(
+        "--workspace",
+        type=pathlib.Path,
+        default=None,
+        help="the cargo workspace holding the posim to drive; found "
+        "automatically, or from $POSIM_WORKSPACE, when not given",
+    )
     args = ap.parse_args()
 
-    bodies, frames, meta = record(args.script, args.frames, args.dt)
+    bodies, frames, meta = record(
+        args.script, args.frames, args.dt, workspace=args.workspace
+    )
     title = args.title or args.script.stem.replace("_", " ")
     html = (PAGE
             .replace("__TITLE__", title)
             .replace("__CAPTION__", args.caption)
             .replace("__BODIES__", json.dumps(bodies))
             .replace("__FRAMES__", json.dumps(frames))
-            .replace("__META__", json.dumps(meta)))
+            .replace("__META__", json.dumps(meta))
+            .replace("__VIEW__", args.view))
     args.out.write_text(html)
     print(f"{args.out}: {len(frames)} frames, {len(bodies)} bodies, "
           f"{len(html)/1024:.0f} kB, dt = {args.dt}")

@@ -17,11 +17,43 @@ dependencies = [
 ]
 
 [[package]]
+name = "cvodes_rs"
+version = "7.8.0"
+dependencies = [
+ "sundials_core",
+]
+
+[[package]]
+name = "ida_rs"
+version = "7.8.0"
+dependencies = [
+ "sundials_core",
+]
+
+[[package]]
+name = "idas_rs"
+version = "7.8.0"
+dependencies = [
+ "sundials_core",
+]
+
+[[package]]
+name = "kinsol_rs"
+version = "7.8.0"
+dependencies = [
+ "sundials_core",
+]
+
+[[package]]
 name = "physical_object"
 version = "0.1.0"
 dependencies = [
  "arkode_rs",
  "cvode_rs",
+ "cvodes_rs",
+ "ida_rs",
+ "idas_rs",
+ "kinsol_rs",
  "sundials_core",
 ]
 

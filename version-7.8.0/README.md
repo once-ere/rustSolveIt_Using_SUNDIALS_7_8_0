@@ -48,7 +48,7 @@ rod as ONE rigid body, exact part-wise collisions conserving E, P and
 L through real solver events); the scene window gains a permanent
 Reset button (with `SCENE RESET` — bit-identical re-initialization,
 Start re-runs) and a live labeled conserved-quantities readout (E, P
-and L); 568 passed workspace-wide (40 physical_object lib +
+and L); 605 passed workspace-wide (40 physical_object lib +
 19 collision + 9 conservation + 109 posim + 92 quantum +
 233 special_functions + 11 vendored identities + 55 doctests).
 
@@ -66,6 +66,26 @@ and L); 568 passed workspace-wide (40 physical_object lib +
   self-contained workspace (read-only; upstream any changes).
 - `PLAN.md` — the integration plan / design record (union mapping,
   grammar, solver mapping, verification results).
+
+## Six solver families, four questions
+
+| you type | question | solver |
+|---|---|---|
+| `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
+| `CONSTRAIN` / `GEAR` / `RACK` / `BALL` / `HINGE` / `UNIVERSAL` / `PRISMATIC` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
+| `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
+| `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES / IDAS |
+
+A rod is a geometric fact, not a stiff spring, so `CONSTRAIN` turns the
+equations of motion into a differential-algebraic equation. Over a full
+pendulum period IDA holds the rod to `1.0000000000000082` — one bit —
+and the bob closes to 3.7e-10. `EQUILIBRIUM` hangs the same pendulum
+straight down to 13 digits. `SENSITIVITY` returns `∂y/∂g = T²/2` on free
+fall to 1.3 parts in 10⁸, and **exactly zero** for `∂y/∂mass`, because
+in uniform gravity there is no dependence to find.
+
+See grammar.md §5.13 for the commands and SolveIt.md examples 17–18 for
+the worked cases.
 
 ## Documentation
 
@@ -98,7 +118,7 @@ and L); 568 passed workspace-wide (40 physical_object lib +
 
 ## Browser videos
 
-Three recorded runs you can open offline — no server, no CDN, nothing
+Thirteen recorded runs you can open offline — no server, no CDN, nothing
 fetched. Scrub, orbit, and read the conserved quantities off whichever
 frame you stopped on.
 
@@ -107,12 +127,22 @@ frame you stopped on.
 | [videos/kepler_ellipse.html](videos/kepler_ellipse.html) | the speed swinging between perihelion and aphelion on an `e = 0.6` ellipse | \|dE\|/E = 9.8e-8, \|dL\|/\|L\| = 1.3e-7 |
 | [videos/tumbling_racket.html](videos/tumbling_racket.html) | the Dzhanibekov flip: a torque-free cuboid spun about its **intermediate** axis turns over, and over | \|d\|L\|\|/\|L\| = **0 exactly**; \|dE\|/E = 6.4e-9 |
 | [videos/box_of_shapes.html](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid rattling in a rigid `BOX 4`; gold arrows are the analytic contact normals, sized by impulse | 36 collision events, \|dE\|/E = 3.4e-16 |
+| [videos/double_pendulum_hinges.html](videos/double_pendulum_hinges.html) | **two `HINGE` joints** made into the chaotic double pendulum; gold rings are the joints | the joints hold to \|g\| = 5.6e-8 |
+| [videos/universal_joint.html](videos/universal_joint.html) | a **`UNIVERSAL` joint** carrying a driven shaft's rotation to a second shaft; the bend flattens straight and folds back, and the speed across the joint swings with it | the bend stops at cos b = 0.6000004 against a geometric bound of exactly 0.6; joints hold to \|g\| = 4.0e-7 |
+| [videos/ball_joint_chain.html](videos/ball_joint_chain.html) | four links on **`BALL` joints**, whirling as they collapse out of the plane they started on | joints hold to \|g\| = 3.3e-9; \|z\| runs from exactly 0 to 1.7147 |
+| [videos/rod_pendulum_chain.html](videos/rod_pendulum_chain.html) | four bobs on four **`CONSTRAIN` rods** — one row each, the cheapest linkage there is — going chaotic | run continuously at the default tolerance, \|g\| = 5.4e-15 |
+| [videos/spinning_top.html](videos/spinning_top.html) | a top held at its tip by a **`BALL` joint**, precessing under gravity | 1.020440 rad/s vs the exact 1.020408 — 3 parts in 10⁵ |
+| [videos/gyroscope_gimbal.html](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings** on three perpendicular `HINGE` axes; push it one way, it moves another | `L·ŷ` conserved to 1.4e-14 |
+| [videos/cardan_compass.html](videos/cardan_compass.html) | the same two rings with a **pendulous** bowl: a ship's compass held level by its own weight | two physical-pendulum periods matched, 1.878587 and 2.307339 s |
+| [videos/cardan_gear.html](videos/cardan_gear.html) | **Cardan gears**: a wheel inside a ring of twice its radius rolling on a `GEAR` row, rim point on a straight line | line held to 1.1e-8, against 1.8e-3 with the ratio merely imposed |
+| [videos/rack_and_pinion.html](videos/rack_and_pinion.html) | a weight on a **`RACK`** winding up a flywheel, guided by a **`PRISMATIC`** | falls at exactly `g/2`, independent of the pitch radius |
+| [videos/piston_crankshaft.html](videos/piston_crankshaft.html) | the **slider-crank**: piston, connecting rod and crankshaft, free-running | follows the exact kinematics to 8.4e-8 |
 
 Record your own from any posim script:
 
 ```bash
 cargo build --release -p posim
-tools/record_video.py videos/scenes/kepler_ellipse.posim \
+recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
      -o /tmp/mine.html --frames 360 --dt 0.02 --title "..."
 ```
 
@@ -213,7 +243,7 @@ catalogue is [dynamic_notebooks/README.md](dynamic_notebooks/README.md).
 ## The Index of Functions
 
 `index_of_entities.html` is a browsable catalog of **every named entity in this
-repository** — 6,276 of them — with a definition, the `file:line` where it is
+repository** — 6,309 of them — with a definition, the `file:line` where it is
 defined, its complete syntax, and examples you can paste into a notebook and
 run. Open it directly; it needs no server and fetches nothing.
 

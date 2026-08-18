@@ -74,6 +74,19 @@ and, for rigid-body collisions (§5.7):
 
 `COLLIDE CONTACTS ON OFF`
 
+and, for constrained dynamics, equilibrium and sensitivity (§5.13):
+
+`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL GEAR RACK
+PRISMATIC`
+
+(`BALL`, `HINGE`, `UNIVERSAL`, `GEAR`, `RACK` and `PRISMATIC` are **contextual**: they are commands
+only at the start of a line. Anywhere else they are ordinary
+identifiers, so `new sphere as ball` and `get ball.mass` keep working —
+`ball` is exactly what a physics user calls a sphere, and reserving it
+outright would have broken existing notebooks.)
+
+(`EQUIL` is an alias for `EQUILIBRIUM`, `SENS` for `SENSITIVITY`.)
+
 and, for the quantum families (§5.10, §5.11, §5.12):
 
 `QM QM2 QM3`
@@ -132,13 +145,23 @@ command  := "NEW" shape [ "AS" (IDENT | STRING) ]
           | "LIST"
           | "STEP" expr                       (* advance by dt      *)
           | "RUN" expr [ "STEPS" NUMBER ]     (* advance by t, n outs *)
-          | "METHOD" ( "ADAMS" | "BDF" | "SPRK" IDENT [ NUMBER ] )
+          | "METHOD" ( "ADAMS" | "BDF" | "SPRK" IDENT [ NUMBER ]
+                      | "IDA" )               (* constrained DAE      *)
           | "ENERGY" | "COM" | "MOMENTUM" | "ANGMOM"
           | "LAPLACE" NUMBER
           | "RESET" | "HELP"
           | "SCENE" scenecmd                  (* graphical scene     *)
           | "COLLIDE" [ "ON" | "OFF" ]        (* bare: report status *)
           | "CONTACTS"                        (* list last contacts  *)
+          | "CONSTRAIN" ( "OFF" | IDENT IDENT [ expr ] )
+                                              (* rigid rod; no length
+                                                 = freeze the current
+                                                 separation          *)
+          | "CONSTRAINTS"                     (* list rods + drift   *)
+          | "EQUILIBRIUM"                     (* KINSOL rest state   *)
+          | "SENSITIVITY" expr STRING { STRING }
+                                              (* run, and report
+                                                 d(state)/d(param)   *)
           | "LET" IDENT "=" expr              (* session variable    *)
           | "FUNCS"                           (* list user functions *)
           | "SHOW" IDENT                      (* print a function    *)
@@ -1279,6 +1302,8 @@ METHOD ADAMS                 (default; CVODE Adams–Moulton, adaptive)
 METHOD BDF                   (CVODE BDF — for stiff problems, e.g. fast
                               magnetic gyration)
 METHOD SPRK <table> [dt]     (ARKODE symplectic, fixed step; default dt 0.01)
+METHOD IDA                   (IDA on the constrained DAE — required as
+                              soon as a CONSTRAIN rod exists, §5.13)
 ```
 
 SPRK table names may be abbreviated: `leapfrog_2_2` becomes
@@ -1608,6 +1633,307 @@ refused, a missing non-default argument fails as
 `name(): missing argument `p` (it has no default)`, too many
 arguments fail naming the signature, and the depth cap fails as
 `function call depth limit (32) exceeded`.
+
+### 5.13 `CONSTRAIN`, `EQUILIBRIUM`, `SENSITIVITY` — the other three questions
+
+Everything so far answers *"what happens next?"*. These three commands
+ask different questions, and each is answered by a different solver in
+the SUNDIALS suite.
+
+| you type | question | solver |
+|---|---|---|
+| `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
+| `CONSTRAIN` + `METHOD IDA` + `RUN` | …with this geometry held exactly | **IDA** |
+| `EQUILIBRIUM` | where does it come to rest? | **KINSOL** |
+| `SENSITIVITY` | how much does the answer depend on an input? | **CVODES** / **IDAS** |
+
+#### The seven joints
+
+| command | rows | holds | freedoms left |
+|---|---|---|---|
+| `CONSTRAIN a b [len]` | 1 | a fixed distance | 5 |
+| `GEAR a b <axis> <ratio>` | 1 | a **proportion** between two turns | 5 |
+| `RACK p b <axis> <dir> <r>` | 1 | a turn tied to a **slide**, `Δs = r θ` | 5 |
+| `BALL a b` | 3 | a shared point | 3 (any rotation about it) |
+| `UNIVERSAL a b <u> <w>` | 4 | a shared point, two shafts kept square | 2 |
+| `HINGE a b <axis>` | 5 | a shared point and a shared axis | 1 (the swing) |
+| `PRISMATIC a b <axis>` | 5 | a line to slide along, and no turning | 1 (the slide) |
+
+`HINGE` and `PRISMATIC` are the pair worth seeing together: both take an
+axis, both cost five rows, and both leave exactly one freedom — a hinge
+leaves the **rotation** about its axis, a prismatic joint leaves the
+**translation** along it. Two of the prismatic rows kill the offset
+across the axis and three lock the relative orientation, so a slider
+cannot turn at all. It is what a rack runs in, what a piston runs in,
+and what holds a cam follower to its line.
+
+`RACK` is the one that crosses between rotation and translation: the
+pinion turns about `axis`, the rack slides along `dir`, and the pitch
+radius `r` is how far the rack travels per radian. The direction must be
+perpendicular to the axis, as it is on any real rack, and is refused
+otherwise rather than quietly projected.
+
+`GEAR` is the odd one out and the only one that couples a rotation to
+another rotation rather than to a position. It holds no point and no
+direction, only `θ_a = −ratio · θ_b` about the axis, so it is what a
+gear train, a chain drive or a rolling wheel is made of. Two shafts on a
+2:1 pair take `ratio = 2`; a wheel rolling inside a ring of twice its
+radius takes `ratio = 1`, turning once backwards for each forward turn
+of its carrier.
+
+**A `GEAR` stacks on a bearing.** Every other pair of joints on the same
+two bodies would duplicate rows and go singular, so it is refused — but
+a gear is not geometric, and a wheel needs both: a `HINGE` to hold it
+and a `GEAR` to drive it. `HINGE 5 + GEAR 1` on one pair is the normal
+arrangement, and only a second `GEAR` on the same pair is refused.
+
+**The ratio must be rational**, and `GEAR` says so rather than rounding:
+
+```text
+Err: GEAR needs a rational ratio with denominator at most 12;
+     0.3183098861837907 is not one.
+```
+
+The reason is worth knowing, because it is a real limit and not a
+fussiness. The honest constraint is on **accumulated** angle,
+`q θ_a + p θ_b = 0`, and accumulated angle is not a function of the
+state: a quaternion does not know how many turns came before it. What
+*is* a function of the state is
+
+```text
+g = sin(q θ_a + p θ_b)
+```
+
+with the angles wrapped into `(−π, π]` — and that is a faithful stand-in
+**only because `p` and `q` are whole numbers**, so wrapping either angle
+shifts the argument by a multiple of `2π`, which the sine cannot see.
+Held at zero from a start that satisfies it, the relation cannot slip to
+another branch without passing through `g ≠ 0`, so it holds exactly. An
+irrational ratio has no such single-valued form at all.
+
+**A `RACK` has no such limit, and the reason is instructive.** It faces
+the same wrapping problem — the pinion's angle is just as unrecoverable
+— but it has something the gear has not: a coordinate that is *already*
+unbounded. The rack's travel is read straight off the state with no
+ambiguity, and the constraint says the pinion must have turned `Δs / r`,
+so that number says which turn the wrapped angle belongs to:
+
+```text
+k = round( (Δs/r − θ_wrapped) / 2π )
+g = Δs − r · (θ_wrapped + 2πk)
+```
+
+`k` is locally constant, so `g` is smooth and its derivative is the
+plain one. The travel is unlimited and the radius need not be rational.
+The unwrapping only misreads if the joint is already violated by half a
+turn, `πr` of travel, by which point it has been lost anyway. **Two
+coordinates of the same mechanism resolved each other**, which is worth
+remembering the next time a constraint looks unrepresentable.
+
+**A rack wants a guide, and `PRISMATIC` is it.** A real rack sits in a
+slider that absorbs the reaction torque, and without one the bar simply
+takes that torque: over four seconds of cranking, an unguided rack
+twists `24.3°` off square and is shoved `0.68` off its line. Add the
+guide and both go to zero exactly, with the travel unchanged:
+
+| driving the same rack for 4 s | twist | strayed off line | travelled |
+|---|---|---|---|
+| rack alone | `24.343°` | `6.82e-1` | `3.861` |
+| with a `PRISMATIC` guide | **`0.000°`** | **`0.00e+00`** | `3.904` |
+
+The complete drive is
+
+```text
+mount --HINGE-- pinion,  guide --PRISMATIC-- bar,  pinion =RACK= bar
+5 + 5 + 1 = 11 rows on 12 freedoms
+```
+
+leaving the one freedom a rack-and-pinion has. The rack row is written
+against the pinion's turn **relative to the rack**, which is why it
+stayed exact even while the unguided bar was turning.
+
+Every joint but `CONSTRAIN` grips **orientation** as well as position,
+so they need orientation in the solver's state — which is why
+`METHOD IDA` carries the full 13-numbers-per-object packing (§4) rather
+than positions alone.
+
+**The pivot is the midpoint of the two bodies as they stand when you
+make the joint**, carried into each body's own frame. That is the same
+"freeze what you have" rule a bare `CONSTRAIN` follows, and it means the
+joint is satisfied the instant it is made. Place the bodies where you
+want the pivot.
+
+A door is an anchor, a slab and a hinge:
+
+```
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2], position = [0.0199986666933331, -0.9998000066665778, 0] }
+In[6]:= hinge jamb door [0, 0, 1]
+Out[6]= constraint0: hinge obj0 <-> obj1 about [0, 0, 1], 5 row(s) — one freedom left (METHOD IDA is required to integrate it)
+In[7]:= constraints
+Out[7]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 0e0, worst |g_dot| = 0e0
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]
+```
+
+The door swings about **z and nothing else** — the two extra rows a
+hinge has over a ball joint are exactly the ones that forbid the other
+two axes. And the joint is held to 2.7 × 10⁻¹⁰ after 70 solver steps.
+
+A hinged rigid body is a *compound* pendulum: its small-amplitude period
+is `T = 2π√(I_pivot/(mgd))` with `I_pivot = I_com + md²`, not the
+point-mass `2π√(d/g)`. The simulator reproduces that period to about
+`3 × 10⁻⁸` of a full swing — see SolveIt.md, Example 19.
+
+**One limit, and one thing the simulator does for you.**
+
+*A joint constrains velocity as well as position.* A ball joint says the
+two bodies share a point, so at the velocity level it says
+`v_i + ω_i×r_i = v_j + ω_j×r_j` — **a body turning about a pivot offset
+from its centre must have its centre moving.** Hand it a spin and leave
+its velocity at zero and the state is not on the constraint manifold at
+all. Rather than refuse, the run **projects** the starting velocities
+onto the manifold — the smallest mass-weighted change that satisfies the
+joint, which is exactly the impulse a real coupling delivers when you
+clutch it onto a spinning shaft — and reports how big that change was.
+A state that is already consistent is left exactly alone.
+
+(A rod has no angular Jacobian, so spin never enters its `ġ`. That is
+why rods carried spinning bodies from the start, and why the missing
+projection stayed hidden until the first hinge.)
+
+*And they carry a tolerance floor.* The differential-algebraic system a
+hinge produces is *index 2*, and such systems have an accuracy ceiling no
+tolerance can push past. Asking for `rtol` below `1e-6` gets `1e-6`;
+looser is honoured. `RUN` says when the floor was applied.
+
+#### `CONSTRAIN` — a rod, not a spring
+
+```
+CONSTRAIN <a> <b> [length]   rigid rod between two objects
+CONSTRAIN OFF                drop every rod
+CONSTRAINTS                  list them, and how well they are being held
+```
+
+`<a>` and `<b>` are objects, written either positionally (`obj0`) or by
+a name registered with `NEW … AS`. **With no length, the rod freezes the
+separation the two bodies already have** — which is always consistent,
+and is what you almost always want.
+
+You could model a rod as a very stiff spring. That is not the same
+thing: a stiff spring is an approximation that vibrates, needs a tiny
+step, and still lets the length wander. A constraint is an *algebraic
+equation* the motion must satisfy exactly. Adding one changes the
+problem from an ODE into a **differential-algebraic equation**, and IDA
+is the solver for those — so a constrained system refuses every other
+method, by name:
+
+```
+In[7]:= run 1 steps 5
+Err[7]: this system has 1 rigid constraint(s), which only the DAE integrator
+        can hold: use METHOD IDA (or remove them with CONSTRAIN OFF).
+        The current method is Adams
+```
+
+**A body with `inverse_mass = 0` is an anchor.** It never moves and it
+absorbs the rod's reaction. Anchor + bob + rod is a pendulum — see
+Example 19.
+
+**What is held, and how well.** `CONSTRAINTS` reports the worst `|g|`
+(how far the rod is from its length) and `|ġ|` (how fast that is
+changing). Both stay at roundoff for the whole run, because the
+formulation carries them *both* as equations. A cheaper scheme that only
+constrains the acceleration lets `g` drift quadratically, and by the
+time you notice, the answer is quietly wrong.
+
+**Scope.** Constraints act on positions. A spinning rigid body, or an
+external torque, is refused with a message naming it — the same contract
+the SPRK separability gate follows (§5.4).
+
+#### `EQUILIBRIUM` — where does it come to rest?
+
+```
+EQUILIBRIUM                  (alias: EQUIL)
+```
+
+Finds a configuration where every free body has zero net force, every
+anchor is where it started, and every rod is the right length. It moves
+the bodies there and stops them; `system.time` is untouched, because
+this is not an integration.
+
+```
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual evaluation(s);
+        largest net force on any free body = 7.459152323898993e-13,
+        worst |g| = 1.9317880628477724e-14
+```
+
+The starting guess is wherever the bodies already are, so it finds *the
+nearby* rest state, not a global one. Drop a chain roughly into place
+and let it settle.
+
+**It says nothing about stability.** A pencil balanced on its point is
+an equilibrium. The honest test is to perturb the answer and `RUN`: a
+stable rest state comes back, an unstable one runs away.
+
+**A system where every body is free has no isolated equilibrium at all**
+— translate the whole thing and nothing changes — and the refusal says
+exactly that, and tells you to pin one body with
+`set objN.inverse_mass = 0`.
+
+#### `SENSITIVITY` — how much does the answer depend on the input?
+
+```
+SENSITIVITY <t> "<param>" ["<param>" ...]      (alias: SENS)
+```
+
+Runs for `<t>` **and** reports `∂(state)/∂(param)` for each parameter.
+Parameter names are quoted strings because `mass 0` is two tokens:
+
+| spelling | meaning |
+|---|---|
+| `"g_constant"` | the gravitational constant |
+| `"mass 0"`, `"charge 1"` | one body's mass or charge (`"mass obj0"` also works) |
+| `"gravity.y"` | a component of `system.uniform_gravity` |
+| `"e_field.x"`, `"b_field.z"` | a component of either field |
+
+The naive way to get such a derivative is to run twice with slightly
+different inputs and subtract. That answer is the difference of two
+nearly equal numbers and loses most of its digits. `SENSITIVITY`
+integrates the derivative *alongside* the state instead, so it is as
+accurate as the trajectory is.
+
+The solver is chosen for you: **CVODES** normally, **IDAS** when the
+system is constrained, because only then are the equations a DAE.
+
+Free fall is the case where you can check it by hand — `y(T) = ½gT²`
+gives `∂y/∂g = T²/2`, which at `T = 3` is exactly 4.5:
+
+```
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+```
+
+The second answer is worth a moment. In uniform gravity every mass
+accelerates equally, so the trajectory does not depend on the mass **at
+all** — and the derivative comes back as exactly zero, not as a small
+number. That is the difference between a real sensitivity calculation
+and a finite difference.
+
+Like `CONSTRAIN`, this runs the translational dynamics; a spinning body
+is refused by name.
 
 ### 5.10 `QM` — one-dimensional quantum mechanics
 
@@ -3239,25 +3565,24 @@ float. Nothing about the output cadence produced that: the run asked for
 100 snapshots, and none of them falls anywhere near `0.894…`. The
 solver interpolated to the crossing.
 
-### 11.3 The four families you are not using yet
+### 11.3 All six families, and what reaches each
 
-The 7.8.0 vendoring brings the whole suite, not only the two solvers
-the simulator drives:
+| crate | solves | reached by |
+|---|---|---|
+| `cvode_rs` | ODE initial-value problems (Adams / BDF) | `METHOD ADAMS`, `METHOD BDF` |
+| `arkode_rs` | Runge–Kutta: explicit, implicit, IMEX, multirate, symplectic | `METHOD SPRK` |
+| `ida_rs` | **differential-algebraic** systems `F(t, y, ẏ) = 0` | `CONSTRAIN` + `METHOD IDA` (§5.13) |
+| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration | `EQUILIBRIUM` (§5.13) |
+| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis | `SENSITIVITY` (§5.13) |
+| `idas_rs` | IDA plus sensitivity analysis | `SENSITIVITY` on a constrained system (§5.13) |
 
-| crate | solves |
-|---|---|
-| `cvode_rs` | ODE initial-value problems (Adams / BDF) — **used** |
-| `arkode_rs` | Runge–Kutta: explicit, implicit, IMEX, multirate, symplectic — **used** |
-| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis |
-| `ida_rs` | **differential-algebraic** systems `F(t, y, ẏ) = 0` |
-| `idas_rs` | IDA plus sensitivity analysis |
-| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration |
+Every one of them is diffed against the upstream C reference output —
+see `sundials_rs/VERIFICATION.md`.
 
-They build, they carry their own examples, and each of those examples is
-diffed against the upstream C reference output — see
-`sundials_rs/VERIFICATION.md`. Nothing in the command language reaches
-them today. If you add a constrained mechanism (a pendulum written as a
-rod constraint rather than a force), `ida_rs` is where it would go.
+The last four arrived with the 7.8.0 engine and were wired into the
+language afterwards; the shape of that wiring — the GGL index-2
+formulation, the anchor rule, the parameter vector — is in
+ARCHITECTURE.md §3.9.
 
 ### 11.4 The one rule that changed for anyone reading the Rust
 
@@ -3290,11 +3615,11 @@ posim behind it. The other thing you often want is a file — something
 you can mail to a colleague, open next year on a laptop with no Rust
 toolchain, and still scrub frame by frame.
 
-`tools/record_video.py` makes one:
+`recorder/src/record_video.py` makes one:
 
 ```bash
 cargo build --release -p posim          # once
-tools/record_video.py videos/scenes/kepler_ellipse.posim \
+recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
      -o videos/kepler_ellipse.html \
      --frames 360 --dt 0.02 \
      --title "Kepler orbit, e = 0.6" \
@@ -3310,6 +3635,10 @@ tools/record_video.py videos/scenes/kepler_ellipse.posim \
    `step <dt>`, repeat.
 4. It writes one HTML file with those frames embedded and a plain
    canvas player around them.
+
+Pass `--view front` for a planar linkage: it opens looking straight down
+the z axis, which is what a mechanism whose hinges all turn about z wants.
+The default `--view iso` looks down on the scene from a corner.
 
 **Every advance in step 3 is a real SUNDIALS step.** The tool has no
 integrator of its own; it is a camera, not a physics engine. And the
@@ -3328,7 +3657,7 @@ Open it with `file://` on a machine with no network and it works.
 | **wheel**, or **+ / −** | zoom |
 | **↑ ↓** | pan |
 | **↺ Reset view** | back to the framing it opened with |
-| **trails / labels / contacts** | toggle the motion trails, the body names, the gold contact-normal arrows |
+| **trails / labels / contacts / joints** | toggle the motion trails, the body names, the gold contact-normal arrows, the joint rings and axes |
 
 The readout in the corner is live per frame: the frame number, `t`, the
 total energy, `|P|`, `|L|`, the running collision count, and the method
@@ -3341,7 +3670,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The three shipped recordings
+### 12.3 The thirteen shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3350,6 +3679,16 @@ Open any of these directly; they are ordinary files.
 | [`videos/kepler_ellipse.html`](videos/kepler_ellipse.html) | the speed swinging between perihelion and aphelion on an `e = 0.6` ellipse | `\|dE\|/E = 9.8e-8`, `\|dL\|/\|L\| = 1.3e-7` |
 | [`videos/tumbling_racket.html`](videos/tumbling_racket.html) | the Dzhanibekov flip: a torque-free cuboid spun about its **intermediate** axis turns over, and over | `\|d\|L\|\|/\|L\| = 0` **exactly**; `\|dE\|/E = 6.4e-9` |
 | [`videos/box_of_shapes.html`](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid rattling in a rigid `BOX 4`; the gold arrows are the analytic contact normals, sized by impulse | 36 collision events, `\|dE\|/E = 3.4e-16` |
+| [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | two `HINGE` joints assembled into the chaotic linkage; the gold rings are the joints | the joints hold to `\|g\| = 5.6e-8`; energy wanders 3 parts in 10,000 |
+| [`videos/universal_joint.html`](videos/universal_joint.html) | a `UNIVERSAL` joint carrying a driven shaft's rotation to a second shaft; the bend flattens out straight and folds back, and the speed across the joint swings with it | the bend stops at `cos β = 0.6000004` against a geometric bound of exactly `0.6`; the three joints hold to `\|g\| = 4.0e-7` |
+| [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on `BALL` joints, whirling as they collapse; the chain leaves the plane it started on, which a hinged chain cannot | the four joints hold to `\|g\| = 3.3e-9`; `\|z\|` runs from exactly 0 to 1.7147 |
+| [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four `CONSTRAIN` rods, the cheapest linkage there is at one row each, going chaotic | run continuously at the default tolerance the rods hold to `\|g\| = 5.4e-15`; this recording, 250 cold restarts, holds `\|g\| = 7.8e-8` |
+| [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
+| [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `1.4e-14`; no centre moves further from the pivot than `1.2e-34` |
+| [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.307339` s, measured `1.883426` and `2.313653` |
+| [`videos/cardan_gear.html`](videos/cardan_gear.html) | a wheel inside a ring of twice its radius, rolling on a `GEAR` row: the rim point runs along a **straight line**, the degenerate hypocycloid | the line is held to `1.1e-8`, against `1.8e-3` for the same mechanism with the ratio merely imposed |
+| [`videos/rack_and_pinion.html`](videos/rack_and_pinion.html) | a weight on a `RACK` winding up a flywheel, guided by a `PRISMATIC` — every joint in it added for this | the rack falls at exactly `g/2`, and at the same rate for two different pitch radii |
+| [`videos/piston_crankshaft.html`](videos/piston_crankshaft.html) | the slider-crank: `HINGE` + two `BALL`s + `PRISMATIC`, free-running | follows `x = a cos θ + √(L² − a² sin²θ)` to `8.4e-8`; stroke exactly `L−a` to `L+a` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3370,3 +3709,427 @@ The lesson generalizes: **a conservation claim carries its system
 settings with it.** When a run's `|dE/E|` surprises you, check `ENERGY`,
 `system.g_constant`, `system.softening` and `system.uniform_gravity`
 before suspecting the integrator.
+
+### 12.5 What a BALL joint buys, measured exactly
+
+`BALL` and `HINGE` are easy to describe and easy to confuse: both hold a
+point, and a hinge additionally holds an axis. The ball-chain recording
+turns that sentence into a number.
+
+Take four links laid end to end and start them as a **rigid rotation**
+of the whole assembly about the vertical:
+
+```text
+v = ω × r,  with  ω = [0, 1.5, 0]     so  v = [0, 0, -1.5 x]
+```
+
+A rigid motion moves nothing relative to anything, so it violates no
+joint of any kind — as a *position* constraint. The velocity constraint
+is where the two joints part company. `CONSTRAINTS` reports the worst
+`|ġ|` over the joint set, and for the identical starting state:
+
+| the same four links, joined by | worst \|g\| | worst \|ġ\| |
+|---|---|---|
+| four `BALL` joints | `0` exactly | **`0` exactly** |
+| four `HINGE` joints about z | `0` exactly | **`1.5`** |
+
+`1.5` is not approximately anything. It is Ω, the whirl rate, because
+the whirl is precisely the component a hinge about z forbids, and the
+velocity residual of a forbidden motion is its own magnitude.
+
+**What follows from it.** A start with `|ġ| ≠ 0` is not on the
+constraint manifold, so before integrating anything the solver must
+project the velocities onto it (§11.4) — and that projection *changes
+the motion you asked for*. The hinge chain cannot be given this whirl;
+it can only be given whatever remains after the whirl is removed. The
+ball chain takes it untouched, and `RunReport.initial_velocity_projected`
+is `0`.
+
+Watch the recording's z axis for the consequence. Every link starts
+exactly on the plane `z = 0`, and the chain reaches `|z| = 1.7147`. A
+hinged chain would still be at exactly zero, for ever, because that is
+what fixing an axis means.
+
+### 12.6 One number decides what a suspension does
+
+Three of the recordings hang a rotor in a mount, and the only thing
+that really differs between them is where the centre of mass sits
+relative to the pivot. Read them as one experiment with one dial.
+
+| | `spinning_top` | `gyroscope_gimbal` | `cardan_compass` |
+|---|---|---|---|
+| mount | one `BALL` at the tip | three `HINGE`s | two `HINGE`s |
+| rows | 3 on 6 freedoms | 15 on 18 | 10 on 12 |
+| centre of mass | `r = 0.6` **from** the pivot | **on** the pivot | `d = 0.12` **below** it |
+| gravity | lever arm `r`: a torque | lever arm 0: none | lever arm `d`: a *restoring* torque |
+| result | steady precession, `Mgr/(I₃ω₃)` | no gravitational precession at all | swings back to level, `2π√(I/Mgd)` |
+
+All three carry a `uniform_gravity`. In the middle column it does
+nothing whatever, and that is the point rather than an oversight: a
+lever arm of zero produces a torque of zero, so a gimballed gyroscope
+is not balancing against gravity, it is free of it. Move the centre of
+mass off the pivot and gravity comes back — *above* the pivot it would
+tip the thing over, *below* it, it rights it. That last case is the
+whole of a ship's compass: it is not held level by its bearings, it is
+held level by its own weight, and the bearings only get out of the way.
+
+**The compass periods.** With the bowl pendulous, each axis is an
+ordinary physical pendulum:
+
+```text
+pitch, inner hinge — only the bowl swings
+   I = M(3R² + 4h²)/12 + M d² = 0.21046667      T = 1.878587 s
+roll, outer hinge — ring and bowl swing together
+   I = 0.28574980,  restoring (M_b − M_r) g d   T = 2.307339 s
+```
+
+measured `1.883426` and `2.313653`. The `2.8e-3` excess is not solver
+error: halve the kick and it falls by `4.01` and `4.02`, which is the
+signature of a term in `θ²`. Drive one axis alone and the attribution
+is exact — the pitch period comes out `4.99e-4` long against a
+predicted `θ²/16 = 5.02e-4`.
+
+**Both rings lie flat, and that is not a styling choice.** A gimbal
+ring pivots about a **diameter** — a line in its own plane — so its
+plane has to contain both hinge axes. Orient it instead so its symmetry
+axis *is* the hinge axis and "swinging" becomes a spin about its own
+axis of revolution: a torus turned that way neither shows anything nor
+does anything, and the roll inertia silently becomes the axial
+`M_r(c² + 3a²/4)` instead of the diametral `M_r(c²/2 + 5a²/8)`. That is
+a factor of two in the ring's contribution, and it moves the roll period
+from `2.307339` to `2.582727` s. The recording caught it: the ring sat
+there visibly inert while the bowl rocked.
+
+**A cost of the midpoint pivot, worth seeing once.** Two hinges sharing
+one point force `p_frame = p_bowl = −p_ring` (§12.10), so hanging the
+bowl `d` below the centre puts the *ring's* centre `d` above it. That
+is not cosmetic: the ring is then top-heavy and **subtracts** from the
+restoring torque, which is why the roll period carries `(M_b − M_r)`
+and not `(M_b + M_r)`, and why the ring is made light. The net first
+moment stays downward, so the suspension is stable — but the arithmetic
+had to account for a body the geometry put where nobody would have
+chosen to.
+
+**And a hinge cannot torque about its own axis.** That is precisely the
+freedom it grants — but read the other way round it is a conservation
+law, and the gimbal has two:
+
+```text
+outermost hinge turns about the vertical
+   ⟹ nothing can torque the system about the vertical
+   ⟹ total L·ŷ = 0.52688 is conserved, to 1.4e-14
+
+innermost hinge's axis IS the rotor's spin axis
+   ⟹ nothing can torque the rotor about it
+   ⟹ its axial spin I₃ω₃ = 3.75 is conserved, to 1 part in 100,000
+```
+
+The first of those is held to machine precision rather than to solver
+tolerance, and the reason is structural: angular momentum is integrated
+*state* in the 13N packing (§3.2), not a quantity derived afterwards
+from positions. The second involves the orientation as well, so it
+inherits the tolerance instead.
+
+**A gimbal holds a point, exactly.** All four bodies are concentric, so
+each hinge's midpoint pivot lands on the same origin, and the three
+axes meet there — which is what makes this a gimbal rather than a
+linkage. Over the whole recording no centre moves further from that
+origin than `1.2e-34`. The rings only *look* nested.
+
+**What to watch.** The assembly starts turning about the vertical at
+1 rad/s. Something without a gyroscope in it would simply keep turning.
+This does not: the outer ring never swings more than `7.43°` on its
+hinge, and the rotation reappears as a **tilt** — the rotor's axis
+swinging up to `16.33°` away, at right angles to the push. Rotation in
+about one axis, rotation out about another, is the whole of gyroscopic
+behaviour, and here it is a consequence of the two lines above rather
+than a separate rule.
+
+### 12.7 The difference between the right motion and the right mechanism
+
+The Cardan-gear recording exists to make one distinction concrete, and
+it is the distinction the `GEAR` joint was added for.
+
+A wheel of radius `r` rolling inside a ring of radius `2r` sends every
+point of its rim along a straight line — a diameter of the ring. The
+hypocycloid of ratio 2 does not approximate a line, it **is** one, and
+the rim point sits at `P = (2r cos θ, 0)`.
+
+**You can get that motion without a constraint.** Set the carrier
+turning one way and the wheel the other at the same rate — which for
+this radius ratio is exactly the rolling condition — and both rates are
+conserved, because the wheel's reaction on the carrier is purely
+centripetal and the wheel's centre of mass sits on its own hinge. The
+ratio persists, the line comes out, and nothing in the picture tells you
+it was never enforced.
+
+**Then disturb it.** The same scene, measured four ways:
+
+| | rim point off the line |
+|---|---|
+| ratio as an initial condition | `1.795e-3` |
+| ratio enforced by `GEAR` | `1.059e-8` |
+| initial condition, plus a torque on the wheel | **`7.468e-1`** |
+| `GEAR`, plus the same torque | `1.152e-8` |
+
+Undisturbed, the constraint is worth five orders of magnitude — the
+imposed version drifts because integration error accumulates in a
+relation nothing is holding. Disturbed, it is worth everything: the
+imposed version does not degrade, it **collapses**, and the straight
+line is simply gone.
+
+**That is the general point.** A relation you can only set up in the
+initial conditions gives you the right motion and the wrong mechanism.
+The two are indistinguishable while nothing happens, and a single
+disturbance separates them. If a scene appears to show rolling, gearing
+or meshing, the thing to check is whether a row is holding it or whether
+it was merely started that way — and `CONSTRAINTS` will tell you, since
+a `GEAR` shows up in the list and an initial condition does not.
+
+**Where the joint set now stands.**
+
+```text
+CONSTRAIN  1 row   a distance
+GEAR       1 row   a proportion between two turns
+RACK       1 row   a turn tied to a slide
+BALL       3 rows  a point
+UNIVERSAL  4 rows  a point and a right angle
+HINGE      5 rows  a point and an axis         one rotation left
+PRISMATIC  5 rows  a line, and no turning      one translation left
+```
+
+That is enough for the mechanisms this chapter set out to build. A wheel
+rolling *along the ground* is now `PRISMATIC` for the line plus `RACK`
+for the rolling; a piston is `PRISMATIC`; a cam follower is `PRISMATIC`
+against whatever drives it.
+
+`videos/piston_crankshaft.html` is the mechanism all of this was for.
+A slider-crank is `HINGE + BALL + BALL + PRISMATIC`, and the two balls
+are not a simplification but the **fix**: four revolutes, one per real
+pin, would be `5+5+5+5 = 20` rows on 18 freedoms, over-constrained by
+two, because a planar linkage made of spatial revolutes has every hinge
+insisting on the same plane. Spherical ends on the connecting rod is
+what real multibody models do, and it leaves two freedoms — the crank
+angle, and the rod's spin about its own length, which nothing torques
+and which measures `0.000°` across the whole recording. It is §12.10's
+arithmetic again, and the same remedy: count the rows first, then pick
+the weakest joint that still says what you mean.
+
+Its closed form is exact, with no small-angle anything:
+
+```text
+x(θ) = a cos θ + √(L² − a² sin²θ)
+```
+
+and the recording tracks it to `8.4e-8` while sweeping the full stroke,
+`L−a` to `L+a`, over 1.59 revolutions. Worth noting *what* is being
+checked: nothing drives the crank, so it swaps inertia with the rod and
+piston and its angle wanders off any uniform `ωt`. The formula relates
+the piston to whatever angle the crank has actually reached, which is
+why a free-running mechanism tests it more honestly than a driven one.
+
+`videos/rack_and_pinion.html` is the other half of the set at once — a
+weight on a rack winding up a flywheel, `HINGE 5 + PRISMATIC 5 + RACK 1`
+on 12 freedoms, leaving the one a drive has. Its closed form is worth
+knowing on its own account:
+
+```text
+a = m g / (m + I/r²)
+```
+
+The flywheel resists not with its mass but with `I/r²`, its inertia
+**referred through the pitch radius** — and for a solid disc that is
+`M/2`, independent of the radius entirely. A pinion twice the rack's
+mass therefore makes the rack fall at exactly `g/2`, whatever the teeth
+are sized at. The recording checks the radius-independence the honest
+way, by running two different pitch radii and getting the same fall.
+
+**What the exercise taught, which outlasts the list.** The two hard
+joints were the two whose natural coordinate is an angle nobody counted
+— and each needed a different trick, chosen by what else was to hand:
+
+- `GEAR` has two angles and nothing else, so it hides the wrapping
+  inside `sin(q θ_i + p θ_j)` and pays with a **rational ratio**.
+- `RACK` has an angle *and an unbounded distance*, so it unwraps the
+  angle from the distance and pays nothing at all.
+- `PRISMATIC` has no angle in its statement, so it needed neither: five
+  ordinary dot products.
+
+The difficulty was never the mechanism. It was whether the constraint
+could be written as a function of the state — and when it could not
+directly, whether some other coordinate of the same mechanism could say
+what the state had forgotten.
+
+### 12.8 A closed form that is exact, and how to actually hit it
+
+The spinning-top recording is the one place in this chapter where the
+answer is a formula you can look up, so it is worth being precise about
+what is being checked.
+
+A symmetric top spinning at `ω₃` about its own axis, with its centre of
+mass a distance `r` from the pivot, precesses about the vertical at
+
+```text
+Ω = M g r / (I₃ ω₃)
+```
+
+Textbooks label this the **fast-top approximation**. The exact
+condition for steady precession at tilt `θ` from the vertical is
+
+```text
+M g r = Ω I₃ ω₃ − I₁ Ω² cos θ
+```
+
+so the shortcut is exact whenever `cos θ = 0` — a top whose axis is
+**horizontal**. That is why this scene mounts the gyroscope on its
+side, with the axis along z and gravity along −y: not for the look of
+it, but so the thing being asserted is an identity rather than a limit.
+
+| | |
+|---|---|
+| `M = 1`, `r = 0.6`, `g = 3`, radius `0.42` | `I₃ = MR²/2 = 0.0882` |
+| `ω₃ = 20` | `Ω = 1.0204081632653061` rad/s |
+| measured over the recording | `1.020440` rad/s, **3 parts in 100,000** |
+| tilt out of horizontal | `4.3e-5` — it does not nutate |
+
+**Hitting it takes both velocities.** This is the part that catches
+people. A steady precession is not "spin it and let go": give the top
+only its spin and it is not on the steady orbit at all. It dips and
+bobs its way round instead, and at this spin rate the *average*
+precession misses the formula by **7.8 %**. Steady means the whole body
+is already turning about the vertical through the pivot as well as
+spinning about its own axis:
+
+```text
+angular_velocity = [0, Ω, ω₃]      spin, plus precession
+velocity         = [Ω * r, 0, 0]   the centre of mass, on its circle
+```
+
+Both are rigid motions that leave the pivot point still, so `ġ = 0`
+exactly and nothing is projected (§12.5). Omit the `VELOCITY` line and
+the joint would drag the centre of mass back onto its circle, which is
+a different experiment.
+
+The general lesson is the one §12.5 makes from the other side: **an
+initial condition has to satisfy the constraints at the velocity level,
+not just the position level**, and a closed form that assumes a
+particular steady state has to be started in that state or it is not
+the thing you are measuring.
+
+### 12.9 A restart is not a continuation
+
+The rod-chain recording exists to document a trap that costs an
+afternoon if you meet it without warning.
+
+`CONSTRAIN` is the best-conditioned joint in the language — one
+well-scaled scalar equation, `g = |d| − L`, with none of the index-2
+orientation coupling that forces a tolerance floor on `BALL`, `HINGE`
+and `UNIVERSAL`. So a rod-only system is correctly **not** floored, and
+runs at whatever you asked for. Four rods, five seconds, default
+`rtol = 1e-10`, `atol = 1e-12`:
+
+```text
+worst |g| = 5.4e-15
+```
+
+Roundoff. Now record the same chain, and it fails on the second frame:
+
+```text
+Err: IDASolve failed with retval = -4
+```
+
+Nothing about the physics changed. What changed is that **a recording
+is not one integration.** It is one `STEP` per frame, and every `STEP`
+is a *cold restart* — a fresh solver, a fresh multiplier seed, no BDF
+history to lean on. The tolerance a continuous run sustains is not the
+tolerance a restart sustains, and for this chain the gap is four orders
+of magnitude:
+
+| four rods, five seconds | continuous `RUN` | 250 `STEP`s |
+|---|---|---|
+| default `1e-10 / 1e-12` | `\|g\| = 5.4e-15` | fails on restart 2 |
+| floor `1e-6 / 1e-8` | fine | `\|g\| = 7.8e-8` |
+
+`BALL`, `HINGE` and `UNIVERSAL` never meet this, and now the reason is
+visible: they are floored to exactly `1e-6 / 1e-8` **automatically**,
+so every orientation-joint recording has been asking for restart-safe
+tolerances without knowing it. The floor those joints get for *accuracy*
+is also what makes them recordable frame by frame. A rod-only scene has
+to ask by hand, which is why `videos/scenes/rod_pendulum_chain.posim`
+opens with two `SET` lines.
+
+**How to recognize it.** A `RUN` that succeeds and a loop of `STEP`s
+that fails, at the same tolerance, on the same system, is this and not
+a physics bug. Loosen the tolerance, or do not chop the integration up.
+§11.5 has the same lesson from the accuracy side: the double pendulum
+run as one 4-second integration holds energy 60 times better than the
+same 4 seconds cut into 400 steps.
+
+**A related sharp edge.** This chain is chaotic, and its margin at the
+default tolerance is thin enough to be moved by *rounding the initial
+positions*. Written to six decimals, a five-rod version survives the
+continuous run; written exactly, it fails at `t = 0.43`. Four rods is
+robust either way, which is why the scene ships with four and writes
+its coordinates out in full. If a constrained run's success depends on
+how you rounded the input, you are on a knife edge, not on a result.
+
+### 12.10 Count your rows before you brace a mechanism
+
+The universal-joint recording is worth reading as a design exercise,
+because the obvious way to build it does not work.
+
+A `UNIVERSAL` holds two things: one shared point, and one right angle
+between the two trunnion axes. It does **not** hold the two shafts
+straight. The bend between them is free — that is the whole reason the
+joint exists — so if the output shaft is left dangling it does not
+transmit anything, it just swings down past the joint like a pendulum
+and folds back on the input shaft at 176°.
+
+So the output shaft has to be braced. The textbook drawing puts it in a
+second bearing, and a bearing is a `HINGE`. Try it and IDA quits at
+`t = 0`:
+
+```text
+Err: IDASolve failed with retval = -4 at t = 0
+```
+
+Count the rows and the reason is arithmetic, not numerics. Two free
+shafts are 12 freedoms, and
+
+```text
+HINGE 5  +  UNIVERSAL 4  +  HINGE 5  =  14 rows on 12 freedoms
+```
+
+Three of those rows are **redundant**: once both shafts are held in
+bearings whose axes meet, the shared point the universal joint asks for
+is already implied by the geometry. Redundant rows are not merely
+surplus — they make `J M⁻¹ Jᵀ` singular, and the constrained Newton
+solve has no answer to give. posim does no redundant-row elimination, so
+it reports the failure rather than guessing.
+
+The fix is to brace with the **smallest thing that does the job**. A
+`CONSTRAIN` is one row:
+
+```text
+HINGE 5  +  UNIVERSAL 4  +  ROD 1  =  10 rows on 12 freedoms
+```
+
+Two freedoms left, full rank, and the mechanism runs. Better still, the
+rod fixes the bend in closed form. The output shaft's centre stays `0.3`
+from the cross and `0.4243` from the post, so it rides the circle where
+those two spheres meet, sweeping a cone of half-angle
+`atan(0.3/0.6) = 26.565°` about a line itself `26.565°` off the x axis.
+The bend therefore runs from `0` to `53.130°` and no further:
+
+```text
+cos 53.130° = 0.6      exactly
+```
+
+Scrub the recording to the sharpest frame and the shafts are at
+`0.6000004`. That number is never given to the integrator; it comes out
+because the hinge, the universal joint and the rod all held at once.
+
+**The rule.** Before adding a joint, add up the rows it will bring and
+compare with the freedoms actually left. If the total meets or exceeds
+the freedoms, you have either locked the mechanism or made it singular,
+and a fatal return flag is the honest outcome either way.

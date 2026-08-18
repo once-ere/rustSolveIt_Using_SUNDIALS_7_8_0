@@ -614,6 +614,152 @@ crate root (module/type namespace collision) — do not try.
   silently making it a sphere
   (`torus_pair_is_order_independent_and_new_is_transactional`).
 
+### 3.9 Constrained dynamics, equilibrium and sensitivity (constrain.rs ↔ integrate.rs ↔ equilibrium.rs ↔ sensitivity.rs)
+
+The four solver families the 7.8.0 engine added, and the contracts that
+bind them.
+
+**Four joints, one abstraction.** `Joint::{Distance, Ball, Hinge,
+Universal}` — 1, 3, 5 and 4 scalar rows, i.e. degrees of freedom removed
+from the pair's six. Everything is expressed as a **velocity Jacobian**
+`J` with `ġ = J·u`, `u = [v₀ ω₀ v₁ ω₁ …]`, walked by
+`ConstraintSet::for_each_block`. The constraint wrench is `Jᵀλ`: `J_vᵀλ`
+a force, `J_ωᵀλ` a torque. Blocks: distance `J_v = ∓d̂`; ball
+`J_v = ±I`, `J_ω = ∓[r]ₓ` (because `e_k·(ω×r) = ω·(r×e_k)`); axis
+alignment `J_ω = ±(a×b)`. A hinge is a ball plus two alignment rows, a
+universal joint a ball plus one. `constrain.rs`'s
+`the_velocity_jacobian_matches_a_finite_difference_of_g` is what keeps
+every block honest.
+
+**The GGL projection is MASS-WEIGHTED: `q̇ = v - M⁻¹Jᵀμ`.** Not
+`v - Jᵀμ`. `J_v` is dimensionless but `J_ω` carries the attachment arm,
+so `J_ωᵀμ` has units of length × μ and subtracting it from an angular
+velocity is dimensionally wrong by length². For translation alone `M⁻¹`
+is one scalar and omitting it merely rescales μ — which is exactly why
+rods never revealed the error. Add a hinge and it breaks the
+integration outright.
+
+**Consistent initial velocities are PROJECTED, not assumed.**
+`project_initial_velocities` is the answer to what looked for a long time
+like an index-2 wall. A joint constrains velocity as well as position: a
+ball joint's `ġ = 0` reads `v_i + ω_i×r_i = v_j + ω_j×r_j`, so a body
+turning about an offset pivot must have its centre moving. A caller who
+sets `ω` and leaves `v` at zero hands in a state **off the manifold**,
+and IDA fails on the first step at every tolerance — which is exactly
+what was observed and misdiagnosed. The fix is the standard impulsive
+projection,
+
+```text
+  minimise ½ δuᵀ M δu  subject to  J(u + δu) = 0
+  ⟹  (J M⁻¹ Jᵀ) ν = J·u,   δu = -M⁻¹Jᵀν,   δ(p, L) = -Jᵀν
+```
+
+reusing the same `S = J M⁻¹ Jᵀ` the multiplier seed builds. It is
+reported via `RunReport::initial_velocity_projected` rather than done
+silently, because it changes the state the caller handed in. A rod has
+`J_ω = 0`, so spin never enters its `ġ` — which is why rods carried
+spinning bodies from the start and hid this for so long.
+
+**`ROT_JOINT_RTOL_FLOOR = 1e-6`** floors the tolerance, because the
+index-2 system has a real accuracy ceiling: across twelve compound
+pendulums `1e-6` converges in every one and `1e-8` in none.
+`RunReport::tolerance_floored` reports when it bit. (Before the velocity
+projection this boundary was *erratic* in the release angle, which is
+what first suggested a conditioning problem. It was not.)
+
+**EQUILIBRIUM and SENSITIVITY stay translational** and refuse
+orientation joints by name: solving for a mechanism's rest *pose* means
+solving for orientations too, which they do not do.
+
+**The constraint function is NOT squared.** `g = |d| - L` with
+`∂g/∂q_j = -∂g/∂q_i = d̂`. The squared form `|d|² - L²` is a polynomial
+and needs no division, and it was tried first: its gradient is `2d`, of
+magnitude `2L`, and its value is in units of length *squared*, so the
+constraint rows of the DAE's iteration matrix are scaled by `L` relative
+to the differential rows. At `L = 1` that is invisible; at `L = 1.3` the
+index-2 corrector stops converging and the step collapses to `1e-17`.
+The unsquared form has a unit gradient everywhere. **Do not "simplify"
+it back.**
+
+**GGL index-2, not acceleration-level index-1.** State is the ordinary
+13-per-object packing plus multipliers,
+`y = [pos, momentum, quat, angmom]ⁿ ⧺ λ(m) ⧺ μ(m)`, `neq = 13N + 2m` —
+the same packing `system.rs` defines, which is what lets joints grip
+orientation and lets a rod carry a spinning body:
+
+```text
+  0 = q̇ - v + Gᵀμ         (position, projected by the GGL multiplier)
+  0 = M v̇ - F(q,v) + Gᵀλ   (momentum balance with the constraint force)
+  0 = g(q)                 (the constraint)
+  0 = G v                  (and its derivative)
+```
+
+Carrying **both** `g` and `ġ` as algebraic equations is what pins them at
+roundoff; index-1 lets `g` drift quadratically. Same shape as the
+reference mechanism example `sundials_rs/crates/ida_rs/examples/idaSlCrank_dns.rs`.
+`id` marks `q, v` differential (1) and `λ, μ` algebraic (0);
+`IDASetSuppressAlg(true)` keeps the multipliers out of the error test.
+
+**Anchors.** `inverse_mass == 0` ⇒ the body receives no multiplier force
+(`ConstraintSet::add_jacobian_transpose` skips it) and gets `0 = v̇`
+instead of the momentum balance. A rod to an anchor is a pin joint to
+the world. `equilibrium::solve` additionally restores anchor positions
+**exactly** after the solve rather than accepting the pin row's ~1e-27
+residual — "a wall never moves" is relied on bit-for-bit.
+
+**Initial conditions: `IDACalcIC` cannot help, and is not called.**
+Every joint is built from the pose the bodies are already in, so `g = 0`
+and `J·u = 0` hold at t₀. The multipliers are then solved for directly
+by `seed_multipliers`, from `g̈ = 0`:
+
+```text
+  (J M⁻¹ Jᵀ) λ = J u̇_applied + (dJ/dt) u
+```
+
+with `M⁻¹` block-diagonal (`1/m`, and `A = R I⁻¹ Rᵀ`), the angular
+acceleration `ω̇ = A(L̇ - ω × L)` (differentiating `ω = A L` gives
+`Ȧ = [ω]ₓA - A[ω]ₓ`; the `ω × L` term is the gyroscopic one), and
+`(dJ/dt)u` as a central difference of `J·u` along the motion. The dense
+`m × m` solve is `solve_dense`.
+
+**This is required, not an optimisation.** The GGL system carries `g`
+and `ġ` but *not* `g̈`, so at an instant where everything is at rest
+`ġ = 0` holds whatever the accelerations are — free fall satisfies the
+residual exactly with `λ = 0`. `IDACalcIC` therefore has nothing to
+solve and leaves the derivative in free fall, after which BDF spends its
+first step discovering that a hinge is attached and the step collapses
+to `1e-15`.
+
+**Which solver, and the gates.**
+
+| entry point | solver | refuses |
+|---|---|---|
+| `integrate::run` with `Method::Ida` | `ida_rs` | spinning bodies, external torques (`ConstraintSet::gate`) |
+| `integrate::run` with any other method and `!constraints.is_empty()` | — | names `METHOD IDA` |
+| `equilibrium::solve` | `kinsol_rs`, `KIN_LINESEARCH` | all-anchor systems; a fully-free system gets the translation-invariance hint |
+| `sensitivity::run`, unconstrained | `cvodes_rs` | spinning bodies (`sensitivity::gate`) |
+| `sensitivity::run`, constrained | `idas_rs` | as above, plus the constraint gate |
+
+**The sensitivity parameter vector is shared, not captured.**
+`SensParams = Rc<RefCell<Vec<f64>>>` laid out
+`[g | gravity(3) | e_field(3) | b_field(3) | mass(N) | charge(N)]`. The
+right-hand side reads **every** value out of that vector on every call;
+`plist` selects which entries are differentiated. That indirection is
+what makes `fS: None` (internal difference quotients) correct — the
+solver perturbs an entry and re-calls the same RHS. A right-hand side
+that captured a copy would silently return zero sensitivities.
+
+**All three paths are translational.** Positions and velocities, no
+orientation, no 13N packing — deliberately narrower than
+`integrate::rhs_full`, and gated rather than silently different. The
+force block is byte-for-byte the same arithmetic order as `rhs_full`'s
+(hard rule 3).
+
+**Grammar.** `CONSTRAIN`/`CONSTRAINTS`/`EQUILIBRIUM`/`SENSITIVITY` and
+`METHOD IDA` follow the §3.4 lockstep. `SENSITIVITY` takes its parameter
+names as **STRING** tokens because `mass 0` is two tokens and would be
+ambiguous against a duration followed by a number.
+
 ## 4. Error-handling policy
 
 Library and VM return `Result<_, String>` with human-readable,
@@ -660,19 +806,44 @@ queues an event.
 | wire/kernel | `jupyter/test_protocol.py`, `jupyter/test_kernel.py` | machine protocol incl. the scene command family and the `events` op; full Jupyter ZMQ path |
 | real-browser gestures | scratchpad `verify_gestures.py` (headless Chrome CDP; not committed) | genuine key/mouse/wheel input: arrows translate right/left/up/down, left-drag rotates, wheel and +/- zoom, toolbar Start/Pause/Reverse, statusbar reporting |
 
-Regression invariant: `cargo test --workspace` green (**568 tests**:
-40 physical_object lib + 19 collision + 9 conservation + 109 posim +
-92 quantum + 233 special_functions + 11 vendored identities +
-55 doctests) and `cargo build --workspace --all-targets` warning-free at
+Regression invariant: `cargo test --workspace` green (**605 tests**:
+52 physical_object lib + 19 collision + 9 conservation +
+25 constrained/DAE + 113 posim + 92 quantum + 233 special_functions +
+11 vendored identities + 55 doctests) and `cargo build --workspace --all-targets` warning-free at
 every commit.
 
-## 7. The video recorder (`tools/record_video.py`)
+## 7. The video recorder (`recorder/`)
 
-Outside the Rust constraint boundary, like `jupyter/`. It drives
-`posim --machine` over the §3.5 protocol: run the setup script line by
-line, then alternate `{"op":"state"}` and `{"op":"exec","code":"step
-<dt>"}`, and emit one self-contained HTML page with the frames embedded
-and a vanilla-JS canvas player around them.
+Outside the Rust constraint boundary, like `jupyter/`, but a **package
+rather than a script**: it has its own CMake build, tests and
+documentation ([`recorder/README.md`](recorder/README.md),
+[`recorder/docs/FRAME_FORMAT.md`](recorder/docs/FRAME_FORMAT.md)), and
+nothing in the cargo workspace refers to it. It drives `posim --machine`
+over the §3.5 protocol: run the setup script line by line, then alternate
+`{"op":"state"}` and `{"op":"exec","code":"step <dt>"}`, and emit one
+self-contained HTML page with the frames embedded and a vanilla-JS canvas
+player around them.
+
+Two properties it keeps regardless of where the package sits, both
+pinned:
+
+- **The workspace is never inferred from what sits beside what.** The
+  recorder does not assume the workspace is its own parent, because a
+  checkout can hold more than one posim workspace — this port beside the
+  upstream it came from — and the two agree bit for bit on everything the
+  older grammar can express, so recording against the wrong one is
+  silent. Resolution order is `--workspace` / `$POSIM_WORKSPACE`, then
+  the manifest's `workspace` key, then the **scene script's** own
+  ancestors, then the current directory's. Ancestors only, never
+  siblings: the scene lives inside the workspace it belongs to. This is
+  what lets the package be moved without editing any code.
+- **The parameters of every shipped recording are recorded, not
+  remembered.** `recorder/recordings.json` holds each one's scene,
+  frame count, `dt`, opening camera, title and caption, because none of
+  that is recoverable from a finished recording without picking the HTML
+  apart. `record_all.py --check` re-records every entry into a temporary
+  directory and compares byte for byte; that check is CTest test
+  `recorder-e2e`.
 
 Pinned properties:
 
@@ -688,6 +859,50 @@ Pinned properties:
   what makes spin visible.
 - Contact arrows carry the exact analytic normal from the frame's
   contact records, scaled by the applied impulse.
+- **Joints are drawn from the machine protocol, not re-derived.** The
+  `{"op":"state"}` dump carries a `joints` array with each joint's kind,
+  bodies, row count and *world-frame* pivot and axis, plus
+  `joint_drift`/`joint_rate_drift`. The body-frame arms a `Joint` stores
+  are no use to a viewer; resolving them once, on the Rust side, keeps
+  every front end honest about what the joint actually is.
+- **A joint's two ends are both carried, and the player compares them.**
+  Each frame's `j` entry is `[point, axis, point_j]`. BALL, HINGE and
+  UNIVERSAL hold *one shared point*, so the two coincide and only the
+  ring and axis are drawn; a rod holds *two points apart*, so they
+  differ and the strut between them is drawn as well. Nothing in the
+  player is keyed on the joint's name — the geometry decides, which is
+  why a new joint kind needs no player change.
+- **`PRISMATIC` is the mirror of `HINGE`**: same argument, same five
+  rows, one freedom left — a rotation for the hinge, a translation for
+  the slider. Two rows kill the offset across the axis and three lock
+  the relative orientation. Its two translational rows have `R_i c`
+  and the normal both riding on body `i`, and the contributions
+  collapse to `δ_i·(n̂ × Δ)` with body `j`'s orientation dropping out
+  entirely — checked by central differences rather than assumed.
+- **A `RACK` solves the same wrapping problem the other way**, and the
+  contrast is the point. A gear hides the wrapping in a sine and pays
+  with a rational ratio; a rack has an unbounded coordinate — the
+  travel — so it unwraps the angle *from the travel*,
+  `k = round((Δs/r − θ_w)/2π)`, and needs no restriction on the
+  radius. `k` is locally constant, so the Jacobian is the plain one.
+  It misreads only once the joint is violated by `πr`. `RACK` stacks
+  on bearings like `GEAR`, and is written against the pinion's turn
+  **relative to the rack**, since the joint set has no prismatic
+  constraint to hold an unguided rack square.
+- **A `GEAR` is the one joint that is not geometric**, and two rules
+  follow from it. It may **stack on a bearing** — `check_pair` refuses a
+  second geometric joint on a pair but allows `HINGE 5 + GEAR 1`,
+  because a wheel needs a bearing to hold it and a gear to drive it, and
+  the rows are independent. And its ratio must be **rational**: the
+  position-level row is `sin(q θ_i + p θ_j)` on wrapped angles, which is
+  faithful only for integer `p, q`, since wrapping then moves the
+  argument by a multiple of `2π`. A trivial `g ≡ 0` row was not an
+  option — the DAE carries `g` and `J·u` as separate blocks (§3.3), so a
+  row that is identically zero leaves its multiplier undetermined and
+  the Jacobian singular.
+- The camera auto-fit centres on the **content bounding box**, not the
+  origin — a pendulum hangs below its pivot — and `--view front` opens
+  looking down z for a planar linkage.
 
 Recordings live in `videos/`, the scripts that produced them in
 `videos/scenes/`.

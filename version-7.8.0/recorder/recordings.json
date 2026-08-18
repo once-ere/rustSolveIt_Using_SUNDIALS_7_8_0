@@ -1,0 +1,136 @@
+{
+  "base": "..",
+  "workspace": "..",
+  "recordings": [
+    {
+      "name": "kepler_ellipse",
+      "scene": "videos/scenes/kepler_ellipse.posim",
+      "out": "videos/kepler_ellipse.html",
+      "frames": 360,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "Kepler orbit, e = 0.6",
+      "caption": "One planet round a heavy sun, CVODE Adams, 360 frames of dt = 0.02 (t = 7.2, about two orbits). Watch the speed swing between perihelion and aphelion. Measured over the recording: |dE|/E = 9.8e-8, |dL|/|L| = 1.3e-7."
+    },
+    {
+      "name": "tumbling_racket",
+      "scene": "videos/scenes/tumbling_racket.posim",
+      "out": "videos/tumbling_racket.html",
+      "frames": 400,
+      "dt": 0.01,
+      "view": "iso",
+      "title": "The tennis-racket theorem",
+      "caption": "A torque-free cuboid (half-extents 1.6, 0.9, 0.25) spun about its INTERMEDIATE principal axis. It flips end over end \u2014 the Dzhanibekov effect \u2014 while the angular momentum stays put: measured |d|L||/|L| = 0 exactly, |dE|/E = 6.4e-9 over t = 4."
+    },
+    {
+      "name": "box_of_shapes",
+      "scene": "videos/scenes/box_of_shapes.posim",
+      "out": "videos/box_of_shapes.html",
+      "frames": 300,
+      "dt": 0.01,
+      "view": "iso",
+      "title": "Mixed shapes in a rigid box",
+      "caption": "The regression scenario mixed_shapes_rattle_in_the_box_conserving_energy: a cylinder, a disk and a cuboid inside a rigid BOX 4 whose six wall slabs have inverse_mass = 0, with G = 0. 36 real CVODE rootfinding events in t = 3; measured |dE|/E = 3.4e-16, i.e. exact to the last bit. Gold arrows are the analytic contact normals, scaled by the applied impulse. |L| about the origin is NOT conserved here, and should not be: the immovable walls supply outside torque."
+    },
+    {
+      "name": "double_pendulum_hinges",
+      "scene": "videos/scenes/double_pendulum_hinges.posim",
+      "out": "videos/double_pendulum_hinges.html",
+      "frames": 400,
+      "dt": 0.01,
+      "view": "front",
+      "title": "Double pendulum on two hinges",
+      "caption": "Two HINGE joints \u2014 each fixing a point and an axis, each leaving one freedom \u2014 assembled into the classic chaotic linkage. 400 frames of dt = 0.01 (t = 4), every one a real IDA step on the constrained DAE. The gold rings are the joints; their axes run along z, straight at you in this opening view, so drag to see them. Measured: the joints hold to |g| = 5.6e-8 over the whole recording. Energy wanders by 4.5e-3 against a scale of mgL = 14.7 \u2014 3 parts in 10,000 \u2014 and the same mechanism run as ONE continuous 4 s integration instead of 400 separate steps holds it to 7.4e-5, because each step restarts the multistep solver at order one."
+    },
+    {
+      "name": "universal_joint",
+      "scene": "videos/scenes/universal_joint.posim",
+      "out": "videos/universal_joint.html",
+      "frames": 180,
+      "dt": 0.025,
+      "view": "iso",
+      "title": "A universal joint transmitting rotation",
+      "caption": "A torque spins the input shaft up from rest; the Cardan joint carries the rotation across to the output shaft, which a rod braces to a post. The bend runs from straight to cos-inverse 0.6 = 53.130 degrees and back, and the speed ratio across the joint swings with it \u2014 a Cardan joint is not a constant-velocity joint."
+    },
+    {
+      "name": "ball_joint_chain",
+      "scene": "videos/scenes/ball_joint_chain.posim",
+      "out": "videos/ball_joint_chain.html",
+      "frames": 250,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "A chain on ball joints",
+      "caption": "Four links hung on BALL joints. A ball joint holds one point and frees all three rotations, so unlike the hinged double pendulum this chain is not trapped in a plane. The start is a rigid rotation of the whole assembly about the vertical at 1.5 rad/s, which satisfies every joint exactly, so the run begins on the constraint manifold: |g| = 0 and |g_dot| = 0, both exactly, with no consistent-velocity projection. Give the identical start to the same chain built from HINGE joints and |g_dot| = 1.5 -- exactly the whirl rate, because the whirl is the one thing a hinge forbids. Watch the z axis: every link starts exactly on the plane z = 0 and the chain reaches |z| = 1.7147, where a hinge chain would still be at exactly zero. Measured over this recording: the four joints hold to |g| = 3.3e-9, and |dE|/E = 2.8e-4 across 250 separate IDA restarts, one per frame."
+    },
+    {
+      "name": "rod_pendulum_chain",
+      "scene": "videos/scenes/rod_pendulum_chain.posim",
+      "out": "videos/rod_pendulum_chain.html",
+      "frames": 250,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "Four bobs on four rods",
+      "caption": "A CONSTRAIN is the smallest joint there is: one row, holding one scalar fact, g = |d| - L. Four rods on four free bobs is 4 rows on 24 freedoms, against 3 rows per BALL, 4 per UNIVERSAL and 5 per HINGE. It is also the best conditioned joint -- one well-scaled scalar equation, with none of the index-2 orientation coupling that forces a tolerance floor on the other three -- so run this chain as ONE integration at the default 1e-10/1e-12 and the rods hold to |g| = 5.4e-15, which is roundoff. This recording is not one integration, though. It is 250 cold restarts, one per frame, and the tolerance a continuous run sustains is not the tolerance a restart sustains: at the default these same four rods fail on the SECOND restart. So the scene asks for 1e-6/1e-8 by hand -- exactly the floor an orientation joint gets automatically and never has to request. Measured over this recording: the four rods hold to |g| = 7.8e-8. Released from rest, so the start is on the constraint manifold with nothing to project."
+    },
+    {
+      "name": "spinning_top",
+      "scene": "videos/scenes/spinning_top.posim",
+      "out": "videos/spinning_top.html",
+      "frames": 310,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "A spinning top, precessing",
+      "caption": "A top held at its tip by a BALL joint -- one point held, all three rotations free, which is exactly what the tip of a top is. A symmetric top spinning at w3 about its own axis, its centre of mass a distance r from the pivot, precesses at Omega = Mgr/(I3 w3). That is usually the fast-top APPROXIMATION, but this top is mounted with its axis horizontal, and at 90 degrees the correction term carries a cos(theta) that is exactly zero -- so the formula is exact here. With M = 1, r = 0.6, g = 3 and I3 = 0.0882, spinning at 20 rad/s, it predicts 1.0204081632653061 rad/s and a period of 6.1575 s. Measured over this recording: 1.020440 rad/s, three parts in 100,000, with the axis staying horizontal to 4.3e-5 -- it does not nutate at all, because it was started ON the steady solution, which takes the precession velocity as well as the spin. Released with only its spin it misses the formula by 7.8%. The joint holds to |g| = 4.3e-7."
+    },
+    {
+      "name": "gyroscope_gimbal",
+      "scene": "videos/scenes/gyroscope_gimbal.posim",
+      "out": "videos/gyroscope_gimbal.html",
+      "frames": 315,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "A gyroscope in a gimbal",
+      "caption": "Three HINGE joints on three mutually perpendicular axes: 15 rows on 18 freedoms, leaving exactly the three gimbal angles. Every body is concentric, so all three hinge axes pass through one point -- the rings only LOOK nested, and no centre moves further from the origin than 1.2e-34. Each RING lies in the plane containing the axis it swings on and the axis it carries, because a gimbal ring pivots about a DIAMETER; the rotor is the opposite case and is meant to be, its symmetry axis being what it spins about. Unlike the spinning top, gravity does nothing here: there the centre of mass hung a distance r from the pivot and weight had a lever arm, while here every centre of mass sits ON the pivot, so the arm is zero. A hinge transmits no torque about its own axis, which gives two exact invariants: nothing can torque the system about the vertical, so total L.y = 0.52688 is held to 1.4e-14; and the innermost hinge IS the rotor's spin axis, so its axial spin I3 w3 = 3.75 is held to 1 part in 100,000. Watch what the gyroscope does with the push: the whole assembly is started turning about the vertical at 1 rad/s, yet the outer ring never swings more than 7.43 degrees -- the rotation comes back out as a TILT, the rotor's axis swinging up to 16.33 degrees away at right angles to the push. The three joints hold to |g| = 5.0e-8."
+    },
+    {
+      "name": "cardan_compass",
+      "scene": "videos/scenes/cardan_compass.posim",
+      "out": "videos/cardan_compass.html",
+      "frames": 320,
+      "dt": 0.025,
+      "view": "iso",
+      "title": "A compass in a Cardan suspension",
+      "caption": "Two HINGE joints on two perpendicular horizontal axes: 10 rows on 12 freedoms, leaving the roll and pitch the suspension exists to give. Both rings lie FLAT, because a gimbal ring pivots about a DIAMETER -- a line in its own plane -- so its plane must contain both hinge axes. The difference from the gyroscope gimbal is one number. There every centre of mass sat ON the pivot, the lever arm was zero and gravity did nothing; here the bowl is PENDULOUS, its centre of mass hanging d = 0.12 below the pivot, and that is the whole mechanism. A ship's compass is not held level by its bearings -- it is held level by its own weight, and the bearings only get out of the way. So each axis is a physical pendulum with a period you can write down, T = 2 pi sqrt(I/(Mgd)): 1.878587 s in pitch, where only the bowl swings, and 2.307339 s in roll, where ring and bowl swing together. Measured off this recording: 1.883426 s and 2.313653 s. The 2.6e-3 excess is not solver error but finite amplitude -- halve the kick and it falls by 4.01 and 4.02, the signature of a theta-squared term. Excited on one axis alone the attribution is exact: the pitch period comes out 4.99e-4 long against a predicted theta^2/16 = 5.02e-4. The two hinges hold to |g| = 3.4e-9; the card never tilts more than 7.34 degrees off level and the ring swings 5.26 degrees about its hinge."
+    },
+    {
+      "name": "cardan_gear",
+      "scene": "videos/scenes/cardan_gear.posim",
+      "out": "videos/cardan_gear.html",
+      "frames": 315,
+      "dt": 0.02,
+      "view": "front",
+      "title": "Cardan gears, and a straight line",
+      "caption": "A wheel of radius r inside a ring of radius 2r: every point on the wheel's rim travels along a straight line, a diameter of the ring. The hypocycloid of ratio 2 is degenerate -- it is not an approximation to a straight line, it IS one. The rolling is a GEAR joint: one row, holding the two bodies' turns about a shared axis in proportion, ratio 1 because the wheel turns once backwards for each forward turn of the carrier. It stacks on the bearing rather than replacing it, so the mechanism is HINGE 5 + HINGE 5 + GEAR 1 = 11 rows on 12 freedoms, leaving the one freedom a gear train has. The ratio must be rational: the honest constraint is on ACCUMULATED angle, which a quaternion cannot report, so the row is sin(q*theta_i + p*theta_j) with the angles wrapped -- which is faithful only because p and q are whole numbers, and an irrational ratio is refused rather than rounded. What the constraint buys, measured on this scene: impose the same relation as an initial condition instead and the rim leaves the line by 1.795e-3 against the gear's 1.059e-8; then lean on the wheel with a torque and the imposed version collapses to 7.468e-1 while the gear holds 1.152e-8. The outer ring is drawn for reference and nothing is attached to it -- the gear row, not any contact, does the rolling."
+    },
+    {
+      "name": "rack_and_pinion",
+      "scene": "videos/scenes/rack_and_pinion.posim",
+      "out": "videos/rack_and_pinion.html",
+      "frames": 200,
+      "dt": 0.02,
+      "view": "front",
+      "title": "A rack and pinion drive",
+      "caption": "A falling weight turning a flywheel, and every joint in it was added for this: mount--HINGE--pinion, guide--PRISMATIC--bar, pinion=RACK=bar. 5 + 5 + 1 = 11 rows on 12 freedoms, leaving one. The RACK ties the pinion's turn to the bar's travel; the PRISMATIC is the guide a rack actually runs in -- drop it and the reaction torque twists the bar 24.3 degrees off square and shoves it 0.68 off its line, while with it the twist is 2.6e-22 degrees and the sideways stray is exactly 0.0. The drive has one degree of freedom, so one equation: a = m g / (m + I/r^2), the flywheel acting not with its mass but with its inertia referred through the pitch radius. For a solid disc I/r^2 = M/2, independent of the radius entirely, so a pinion twice the rack's mass makes that term exactly m and the rack falls at a = g/2 -- exactly half gravity, whatever the pitch radius, because the flywheel it is winding up is, referred through the teeth, exactly as heavy as itself. The pitch radius here is 0.6, and it was 0.4 in an earlier cut with the fall unchanged -- the radius-independence demonstrated rather than asserted. Measured against -a t^2/2 over four seconds and a 1.6 drop: 5.35e-4 across 200 cold restarts, 3.74e-5 for the same four seconds run continuously."
+    },
+    {
+      "name": "piston_crankshaft",
+      "scene": "videos/scenes/piston_crankshaft.posim",
+      "out": "videos/piston_crankshaft.html",
+      "frames": 300,
+      "dt": 0.02,
+      "view": "front",
+      "title": "A piston and crankshaft",
+      "caption": "The slider-crank: mount--HINGE--crank, crank--BALL--rod, rod--BALL--piston, guide--PRISMATIC--piston. 5 + 3 + 3 + 5 = 16 rows on 18 freedoms. Every pin in a real engine is a hinge, and building it that way gives 20 rows on 18 -- over-constrained by two, which IDA will not integrate, because a planar linkage made of spatial revolutes has them all insisting on the same plane. The remedy is the one real multibody models use: spherical ends on the connecting rod. That leaves two freedoms, the crank angle and the rod's passive spin about its own length, which nothing torques. The geometry is not arbitrary either -- the midpoint pivot rule puts the rod's centre at 2a while a rod from crank pin to wrist pin centres at a + L/2, and those agree only when L = 2a, which is why this crank throws 0.5 and this rod is 1.0. Measuring the wrist pin from the crankshaft axis, x = a cos(th) + sqrt(L^2 - a^2 sin^2 th) exactly: the recording sweeps 0.500000 to 1.500000, which is L-a to L+a, and tracks the formula to 8.4e-8 over the 1.59 revolutions it makes. The rod's passive freedom really is passive: its spin about its own length is 0.000 degrees over the whole run. The crank does not turn at a constant rate and should not -- nothing drives it, so it swaps inertia with the rod and piston through the cycle. The closed form is a statement about the linkage, not the timing, which is what makes it worth checking against a free-running mechanism."
+    }
+  ]
+}

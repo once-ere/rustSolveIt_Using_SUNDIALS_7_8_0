@@ -1,0 +1,35 @@
+   Compiling physical_object v0.1.0 (/home/nsh/Developer/github/rustSolveIt_Using_SUNDIALS_7_8_0/version-7.8.0/physical_object)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running tests/dae.rs (target/debug/deps/dae-ebdf56c722279fab)
+
+running 26 tests
+[ERROR][rank 0][sundials_rs/crates/kinsol_rs/src/kinsol.rs:852][KINSol] The linear solver's setup function failed in an unrecoverable manner.
+test a_constrained_system_refuses_the_wrong_method ... ok
+test a_rod_between_two_anchors_is_refused_up_front ... ok
+test a_fully_free_system_is_refused_with_the_reason ... ok
+test sensitivity_refusals_are_actionable ... ok
+test kinsol_hangs_the_pendulum_straight_down ... ok
+test kinsol_balances_a_body_against_its_rod ... ok
+test the_translational_solvers_refuse_orientation_joints ... ok
+test a_bare_constrain_is_immediately_consistent ... ok
+test the_equilibrium_kinsol_finds_is_actually_stationary ... ok
+test idas_differentiates_a_constrained_fall ... ok
+test an_orientation_joint_reports_its_tolerance_floor ... ok
+test cvodes_sensitivity_scales_as_the_square_of_the_horizon ... ok
+test cvodes_differentiates_free_fall_against_the_closed_form ... ok
+test ida_pendulum_returns_after_one_small_amplitude_period ... ok
+test a_spinning_body_is_projected_onto_the_constraint_manifold ... ok
+test spin_about_the_joint_arm_needs_no_projection ... ok
+test a_hinged_body_turns_only_about_its_axis ... ok
+test a_universal_joint_keeps_its_shafts_square ... ok
+test a_rod_carries_a_spinning_rigid_body ... ok
+test a_consistent_start_is_not_projected ... ok
+test a_hinge_gives_the_compound_pendulum_period ... ok
+test a_ball_joint_holds_the_point_and_frees_the_rotation ... ok
+test ida_agrees_with_adams_when_nothing_is_constrained ... ok
+test ida_pendulum_conserves_energy ... ok
+test ida_holds_the_constraint_at_roundoff_over_many_swings ... ok
+test a_universal_joint_bends_no_further_than_its_bracing_allows ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.01s
+

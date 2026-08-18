@@ -12,3 +12,8 @@
 
 # Build output of any workspace beneath this root
 target/
+
+# Out-of-source CMake build tree, if the recorder is configured from
+# here rather than from version-7.8.0/. Python bytecode is already
+# covered by version-7.8.0/.gitignore, which the recorder now sits under.
+/build/

@@ -437,6 +437,79 @@ fn state_dump(state: &SimState) -> Json {
             None => Json::Null,
         },
     );
+    /* Rigid joints, with their world-frame geometry resolved at this
+     * instant: the attachment point every front end wants to draw, and
+     * the hinge axis it turns about. The body-frame arms the joint
+     * stores are not directly useful to a viewer. */
+    let mut joints = Vec::new();
+    for (k, joint) in state.system.constraints.joints.iter().enumerate() {
+        let (i, j) = joint.bodies();
+        let mut jm = BTreeMap::new();
+        jm.insert("index".to_string(), Json::Num(k as f64));
+        jm.insert("kind".to_string(), Json::Str(joint.kind().to_string()));
+        jm.insert("i".to_string(), Json::Num(i as f64));
+        jm.insert("j".to_string(), Json::Num(j as f64));
+        jm.insert("rows".to_string(), Json::Num(joint.rows() as f64));
+        let world = |body: usize, local: ::physical_object::linalg::Vec3| {
+            s.objects[body].get_position()
+                + s.objects[body].get_orientation().normalize().rotate(local)
+        };
+        let dir = |body: usize, local: ::physical_object::linalg::Vec3| {
+            s.objects[body].get_orientation().normalize().rotate(local)
+        };
+        use ::physical_object::constrain::Joint;
+        match *joint {
+            Joint::Distance { .. } => {
+                jm.insert("point".to_string(), vec3(s.objects[i].get_position()));
+                jm.insert("point_j".to_string(), vec3(s.objects[j].get_position()));
+            }
+            Joint::Ball { a_i, a_j, .. } => {
+                jm.insert("point".to_string(), vec3(world(i, a_i)));
+                jm.insert("point_j".to_string(), vec3(world(j, a_j)));
+            }
+            Joint::Hinge { a_i, a_j, h_i, .. } => {
+                jm.insert("point".to_string(), vec3(world(i, a_i)));
+                jm.insert("point_j".to_string(), vec3(world(j, a_j)));
+                jm.insert("axis".to_string(), vec3(dir(i, h_i)));
+            }
+            Joint::Universal { a_i, a_j, u_i, u_j, .. } => {
+                jm.insert("point".to_string(), vec3(world(i, a_i)));
+                jm.insert("point_j".to_string(), vec3(world(j, a_j)));
+                jm.insert("axis".to_string(), vec3(dir(i, u_i)));
+                jm.insert("axis_j".to_string(), vec3(dir(j, u_j)));
+            }
+            /* A gear holds no point at all — only a proportion — so it
+             * has no pivot to report. Each body's own centre is given,
+             * which is where a viewer would draw the wheels, and the
+             * shared axis and the ratio go alongside. */
+            /* A rack holds no pivot either. The pinion's centre and
+             * the rack's are given, with the axis it turns about, the
+             * direction it slides along, and the pitch radius. */
+            Joint::Prismatic { d_i, .. } => {
+                jm.insert("point".to_string(), vec3(s.objects[i].get_position()));
+                jm.insert("point_j".to_string(), vec3(s.objects[j].get_position()));
+                jm.insert("axis".to_string(), vec3(dir(i, d_i)));
+            }
+            Joint::Rack { h_i, d_j, radius, .. } => {
+                jm.insert("point".to_string(), vec3(s.objects[i].get_position()));
+                jm.insert("point_j".to_string(), vec3(s.objects[j].get_position()));
+                jm.insert("axis".to_string(), vec3(dir(i, h_i)));
+                jm.insert("axis_j".to_string(), vec3(dir(j, d_j)));
+                jm.insert("radius".to_string(), Json::Num(radius));
+            }
+            Joint::Gear { axis, p, q, .. } => {
+                jm.insert("point".to_string(), vec3(s.objects[i].get_position()));
+                jm.insert("point_j".to_string(), vec3(s.objects[j].get_position()));
+                jm.insert("axis".to_string(), vec3(axis));
+                jm.insert("ratio".to_string(), Json::Num(f64::from(p) / f64::from(q)));
+            }
+        }
+        joints.push(Json::Obj(jm));
+    }
+    let (gdrift, gddrift) = state.system.constraints.drift(&state.system);
+    m.insert("joints".to_string(), Json::Arr(joints));
+    m.insert("joint_drift".to_string(), Json::Num(gdrift));
+    m.insert("joint_rate_drift".to_string(), Json::Num(gddrift));
     m.insert("contacts".to_string(), Json::Arr(contacts));
     m.insert("objects".to_string(), Json::Arr(objs));
     Json::Obj(m)

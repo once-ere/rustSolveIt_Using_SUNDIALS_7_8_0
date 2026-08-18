@@ -1,0 +1,83 @@
+# A gyroscope slung in a two-ring gimbal.
+#
+#   base --HINGE y-- outer ring --HINGE x-- inner ring --HINGE z-- rotor
+#
+# Three hinges on three mutually perpendicular axes. A HINGE is 5 rows
+# and leaves one freedom, so three of them on three free bodies is
+#
+#     15 rows on 18 freedoms = 3 left
+#
+# and those three are exactly the gimbal angles. Full rank, nothing
+# over-constrained, nothing locked.
+#
+# EVERY BODY IS CONCENTRIC. Each joint pivots at the MIDPOINT of its
+# pair, so putting all four at the origin puts all three hinge axes
+# through one common point — which is what a gimbal is. The rings only
+# LOOK nested; their centres coincide exactly, and they stay coincident:
+# over the whole recording no centre moves further from the origin than
+# 7e-35.
+#
+# WHY GRAVITY DOES NOTHING HERE, unlike the spinning top. In that scene
+# the centre of mass hung a distance r from the pivot, so weight had a
+# lever arm and produced the precession. Here every centre of mass sits
+# ON the pivot. The lever arm is zero, so gravity exerts no torque at
+# all — the same `uniform_gravity` as the top recording, doing nothing.
+# A gimballed gyroscope is not holding itself up against gravity; it is
+# simply free.
+#
+# TWO EXACT INVARIANTS, and both are worth watching for.
+#
+# 1. A hinge transmits no torque about its OWN axis — that is the
+#    freedom it grants. The outermost hinge turns about the vertical,
+#    so nothing can torque this system about the vertical, and the
+#    total angular momentum along y is conserved:
+#
+#        L.y = 0.6314    held to 6.4e-15 over the whole run
+#
+# 2. The innermost hinge's axis IS the rotor's spin axis, so nothing can
+#    torque the rotor about it either. Its axial spin is conserved:
+#
+#        I3 w3 = 0.25 * 15 = 3.75    held to 1 part in 100,000
+#
+# WHAT TO WATCH. The whole assembly is started turning about the
+# vertical at 1 rad/s. A body with no gyroscope in it would simply keep
+# turning that way. This one does not: over 6.3 seconds the outer ring
+# never gets more than 11.15 degrees from where it began, and the
+# rotation put in comes back out as a TILT — the rotor's axis swings up
+# to 20.06 degrees away from its starting direction, at right angles to
+# the push. Rotation in about one axis, rotation out about another, is
+# the whole of gyroscopic behaviour.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -3.0, 0]
+collide off
+# A POINT support: its inertia is the zero matrix, so it genuinely
+# cannot turn. A sphere with inverse_mass = 0 would still be free to
+# spin and the first hinge would drive it.
+new point as base { mass = 1, position = [0, 0, 0], inverse_mass = 0 }
+new torus as outer { mass = 0.5, ring_radius = 0.9, tube_radius = 0.04, position = [0, 0, 0] }
+new torus as inner { mass = 0.4, ring_radius = 0.7, tube_radius = 0.04, position = [0, 0, 0] }
+new cylinder as rotor { mass = 2, radius = 0.5, half_height = 0.06, position = [0, 0, 0] }
+# A torus and a cylinder are both symmetric about their LOCAL z. A
+# gimbal RING pivots about a DIAMETER, so each ring's plane has to
+# contain two axes: the one it swings on, and the one it carries.
+#   outer swings on y, carries x  ->  plane xy  ->  symmetry axis z
+#   inner swings on x, carries z  ->  plane xz  ->  symmetry axis y
+# so the outer ring needs no turn at all and the inner takes a quarter
+# turn about x, as [w, x, y, z]. Face a ring's symmetry axis along the
+# axis it swings on instead and "swinging" becomes a spin of a torus
+# about its own axis of revolution: it neither shows nor does anything.
+# The ROTOR is the opposite case and is meant to be that way — its
+# symmetry axis IS its hinge axis, because that is what a rotor spins
+# about — so it needs no turn either.
+set inner.orientation = [0.7071067811865476, 0.7071067811865476, 0, 0]
+hinge base outer [0, 1, 0]
+hinge outer inner [1, 0, 0]
+hinge inner rotor [0, 0, 1]
+method ida
+# The start is a rigid rotation of the whole gimbal about the vertical,
+# plus the rotor's own spin about its axis. Every hinge permits both, so
+# g_dot = J u = 0 to roundoff and nothing is projected: the run begins
+# on the constraint manifold.
+set outer.angular_velocity = [0, 1.0, 0]
+set inner.angular_velocity = [0, 1.0, 0]
+set rotor.angular_velocity = [0, 1.0, 15]

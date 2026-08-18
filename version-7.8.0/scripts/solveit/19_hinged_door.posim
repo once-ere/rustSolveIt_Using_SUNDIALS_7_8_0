@@ -1,0 +1,21 @@
+# 19. A door on a hinge: an ORIENTATION constraint.
+# A rod fixes a distance. A hinge fixes a point AND an axis, leaving
+# exactly one freedom — the swing. That needs orientation in the DAE
+# state, which is why METHOD IDA carries the full 13-per-object packing.
+#
+# The jamb has inverse_mass = 0, so it is an anchor: immovable, and it
+# absorbs whatever the hinge pulls with. Anchor + slab + hinge = a door.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -9.81, 0]
+collide off
+new sphere as jamb { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2], position = [0.0199986666933331, -0.9998000066665778, 0] }
+# The pivot is the MIDPOINT of the two bodies as they stand now, so the
+# joint is satisfied the instant it is made.
+hinge jamb door [0, 0, 1]
+constraints
+method ida
+run 1 steps 10
+constraints
+# it swings about z and about nothing else
+get door.angular_momentum

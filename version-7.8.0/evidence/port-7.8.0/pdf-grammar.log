@@ -1,0 +1,607 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./grammar.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo))
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty)
+(/usr/share/texmf/tex/latex/lm/lmodern.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstpatch.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg))
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/share/texlive/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+(/usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/share/texlive/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/parskip/parskip.sty)
+(/usr/share/texmf/tex/latex/lm/t1lmr.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+(./grammar.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (./grammar.out) (./grammar.out) (/usr/share/texmf/tex/latex/lm/t1lmtt.fd)
+(/usr/share/texmf/tex/latex/lm/ot1lmr.fd)
+(/usr/share/texmf/tex/latex/lm/omllmm.fd)
+(/usr/share/texmf/tex/latex/lm/omslmsy.fd)
+(/usr/share/texmf/tex/latex/lm/omxlmex.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd) (./grammar.toc
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/en
+c/dvips/lm/lm-ec.enc}]) [2]
+Overfull \hbox (29.98479pt too wide) in paragraph at lines 60--67
+ [] 
+[3]
+Overfull \hbox (16.55327pt too wide) in paragraph at lines 99--100
+\T1/lmtt/m/n/10.95 NEW SET GET DEL DELETE LIST STEP RUN STEPS METHOD ADAMS BDF 
+SPRK ENERGY COM MOMENTUM
+
+Overfull \hbox (28.05074pt too wide) in paragraph at lines 106--107
+[]\T1/lmtt/m/n/10.95 SCENE CREATE CLOSE DESTROY TRANSLATE ROTATE ZOOM IN OUT HI
+DE SHOW REFRESH REDRAW START
+[4] [5] [6{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/font
+s/enc/dvips/lm/lm-mathsy.enc}]
+Underfull \hbox (badness 10000) in paragraph at lines 295--296
+[]|\T1/lmr/m/n/10.95 number$\OMS/lmsy/m/n/10.95 ^^A$\T1/lmr/m/n/10.95 number, n
+umber$\OMS/lmsy/m/n/10.95 ^^A$\T1/lmr/m/n/10.95 vec3, number$\OMS/lmsy/m/n/10.9
+5 ^^A$\T1/lmr/m/n/10.95 quat,
+
+Underfull \hbox (badness 10000) in paragraph at lines 329--331
+[]|\T1/lmtt/m/n/10.95 sph_j(n,x)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 sph_y(n,
+x)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 sph_j_prime(n,x)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 331--333
+[]|\T1/lmtt/m/n/10.95 legendre_p(n,x)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 leg
+endre_p_prime(n,x)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 331--333
+\T1/lmtt/m/n/10.95 assoc_legendre_p(l,m,x)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 333--335
+[]|\T1/lmtt/m/n/10.95 sph_harm(l,m,theta,phi) $\OMS/lmsy/m/n/10.95 !$ \T1/lmtt/
+m/n/10.95 [re, im]\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--339
+\T1/lmtt/m/n/10.95 laguerre_l_assoc(n,alpha,x)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/
+10.95 chebyshev_t(n,x)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--339
+\T1/lmtt/m/n/10.95 chebyshev_u(n,x)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 gegen
+bauer_c(n,alpha,x)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 342--344
+[]|\T1/lmtt/m/n/10.95 bessel_j_z(n,z)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 bes
+sel_i_z(n,z)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 345--347
+[]|\T1/lmtt/m/n/10.95 bessel_j_nu(nu,z)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 b
+essel_i_nu(nu,z)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 348--350
+[]|\T1/lmtt/m/n/10.95 hankel_h1_z(n,z)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 ha
+nkel_h2_z(n,z)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 351--354
+\T1/lmtt/m/n/10.95 hankel_h1_prime_nu(nu,z)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--358
+[]|\T1/lmtt/m/n/10.95 sph_hankel_h1(n,x)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 
+sph_hankel_h2(n,x)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--358
+\T1/lmtt/m/n/10.95 sph_hankel_h1_prime(n,x)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 359--362
+[]|\T1/lmtt/m/n/10.95 bessel_j_scaled(nu,z)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.
+95 bessel_y_scaled(nu,z)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 359--362
+\T1/lmtt/m/n/10.95 bessel_i_scaled(nu,z)\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 
+bessel_k_scaled(nu,z)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 369--373
+[]|\T1/lmtt/m/n/10.95 wigner_3j(j1,j2,j3,m1,m2,m3)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 369--373
+\T1/lmtt/m/n/10.95 wigner_6j(j1,j2,j3,j4,j5,j6)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 369--373
+\T1/lmtt/m/n/10.95 wigner_9j(a,b,c,d,e,f,g,h,i)\T1/lmr/m/n/10.95 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 373--376
+[]|\T1/lmtt/m/n/10.95 solve_tridiag(sub, diag, sup, rhs) $\OMS/lmsy/m/n/10.95 !
+$
+
+Underfull \hbox (badness 10000) in paragraph at lines 373--376
+\T1/lmr/m/n/10.95 list, \T1/lmtt/m/n/10.95 solve_tridiag_c(...) $\OMS/lmsy/m/n/
+10.95 !$ \T1/lmr/m/n/10.95 list,
+
+Underfull \hbox (badness 10000) in paragraph at lines 373--376
+\T1/lmtt/m/n/10.95 solve_cyclic_tridiag_c(sub, diag, sup, rhs,
+
+Overfull \hbox (16.13872pt too wide) in paragraph at lines 326--378
+ [] 
+[7{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}] [8]
+(/usr/share/texmf/tex/latex/lm/ts1lmr.fd) [9{/usr/share/texmf/fonts/enc/dvips/l
+m/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}]
+Overfull \hbox (17.62447pt too wide) in paragraph at lines 519--524
+\T1/lmr/m/n/10.95 comes from the as-cend-ing se-ries (DLMF 10.8.1) for $\OML/lm
+m/m/it/10.95 Y[]$ \T1/lmr/m/n/10.95 and $\OML/lmm/m/it/10.95 Y[]$ \T1/lmr/m/n/1
+0.95 --- the one car-ry-ing the $\OT1/lmr/m/n/10.95 (2\OML/lmm/m/it/10.95 =^^Y\
+OT1/lmr/m/n/10.95 ) [](\OML/lmm/m/it/10.95 z=\OT1/lmr/m/n/10.95 2)\OML/lmm/m/it
+/10.95 J[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 z\OT1/lmr/m/n/10.95 )$
+[10] [11] [12] [13] [14] [15] [16] [17] [18]
+Overfull \hbox (84.03781pt too wide) in paragraph at lines 1148--1153
+[]\T1/lmr/m/n/10.95 This is what makes the com-plex Crank--Nicolson solvers rea
+ch-able. \T1/lmtt/m/n/10.95 solve_tridiag_c \T1/lmr/m/n/10.95 and \T1/lmtt/m/n/
+10.95 solve_cyclic_tridiag_c
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1165.
+
+[19]
+Overfull \hbox (39.15282pt too wide) in paragraph at lines 1188--1197
+[]\T1/lmr/m/n/10.95 Initializer fields: \T1/lmtt/m/n/10.95 mass, charge, positi
+on, velocity, momentum, orientation, angular_velocity,
+
+Overfull \hbox (7.76366pt too wide) in paragraph at lines 1188--1197
+\T1/lmtt/m/n/10.95 tube_radius \T1/lmr/m/n/10.95 (tori --- or the \T1/lmtt/m/n/
+10.95 inner_radius \T1/lmr/m/n/10.95 + \T1/lmtt/m/n/10.95 outer_radius \T1/lmr/
+m/n/10.95 pair, see be-low), \T1/lmtt/m/n/10.95 height, half_height
+
+Overfull \hbox (45.29665pt too wide) in paragraph at lines 1188--1197
+\T1/lmtt/m/n/10.95 length \T1/lmr/m/n/10.95 (dumb-bells, see be-low), \T1/lmtt/
+m/n/10.95 inertia_tensor, inverse_inertia_tensor, magnetic_moment_tensor,
+[20]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1285.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1285.
+
+
+Underfull \hbox (badness 1127) in paragraph at lines 1304--1305
+[]|\T1/lmr/m/n/10.95 writing also up-dates \T1/lmtt/m/n/10.95 inverse_mass
+(/usr/share/texmf/tex/latex/lm/ot1lmss.fd)
+Underfull \hbox (badness 1127) in paragraph at lines 1316--1317
+[]|\T1/lmr/m/n/10.95 spheres, disks, cylin-ders; write re-
+
+Underfull \hbox (badness 3907) in paragraph at lines 1316--1317
+\T1/lmr/m/n/10.95 com-putes in-er-tia and \T1/lmr/bx/n/10.95 keeps the
+
+Underfull \hbox (badness 10000) in paragraph at lines 1316--1317
+\T1/lmr/m/n/10.95 is \T1/lmr/bx/n/10.95 re-fused \T1/lmr/m/n/10.95 --- \T1/lmtt
+/m/n/10.95 obj6 is a torus
+
+Underfull \hbox (badness 10000) in paragraph at lines 1316--1317
+\T1/lmtt/m/n/10.95 ^^V set ring_radius/tube_radius
+
+Underfull \hbox (badness 10000) in paragraph at lines 1316--1317
+\T1/lmtt/m/n/10.95 or inner_radius/outer_radius
+
+Underfull \hbox (badness 1629) in paragraph at lines 1320--1321
+[]|\T1/lmr/m/n/10.95 cylinders only; \T1/lmtt/m/n/10.95 height \T1/lmr/m/n/10.9
+5 is the full
+
+Underfull \hbox (badness 10000) in paragraph at lines 1324--1325
+[]|\T1/lmr/m/n/10.95 every ob-ject: short-hands for
+
+Underfull \hbox (badness 10000) in paragraph at lines 1325--1326
+[]|\T1/lmr/m/n/10.95 every ob-ject: short-hands for
+
+Underfull \hbox (badness 10000) in paragraph at lines 1328--1329
+[]|\T1/lmr/m/n/10.95 constant ex-ter-nal force dur-ing
+ignored error: Infinite glue shrinkage found in box being split [21]
+ignored error: Infinite glue shrinkage found in box being split [22]
+Underfull \hbox (badness 1028) in paragraph at lines 1339--1340
+[]|\T1/lmr/m/n/10.95 Plummer length $\OML/lmm/m/it/10.95 "$ \T1/lmr/m/n/10.95 (
+de-fault $\OT1/lmr/m/n/10.95 10[]$\T1/lmr/m/n/10.95 );
+
+Underfull \hbox (badness 2478) in paragraph at lines 1347--1348
+[]|\T1/lmr/m/n/10.95 1 when col-li-sion de-tec-tion is on
+
+Underfull \hbox (badness 10000) in paragraph at lines 1348--1349
+[]|\T1/lmr/m/n/10.95 contacts recorded by the last
+
+Underfull \hbox (badness 1221) in paragraph at lines 1351--1352
+[]|\T1/lmr/m/n/10.95 tolerated over-lap be-fore po-si-tional
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1356.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1356.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1366.
+
+[23]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1403.
+
+
+Underfull \hbox (badness 4013) in paragraph at lines 1449--1450
+[]|\T1/lmr/m/n/10.95 a four-line re-port: URL + con-nected win-dows;
+ignored error: Infinite glue shrinkage found in box being split [24] [25]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1493.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1493.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1542.
+
+[26]
+Overfull \hbox (1.30434pt too wide) in paragraph at lines 1587--1601
+\T1/lmtt/m/n/10.95 tracked slab(s) remain ^^V BOX <size> replaces them, BOX OFF
+ removes them)\T1/lmr/m/n/10.95 . The
+
+Overfull \hbox (8.52638pt too wide) in paragraph at lines 1587--1601
+\T1/lmr/m/n/10.95 next \T1/lmtt/m/n/10.95 BOX <size> \T1/lmr/m/n/10.95 re-moves
+ the sur-vivors \T1/lmr/m/it/10.95 be-fore \T1/lmr/m/n/10.95 build-ing the new 
+box (the re-ply notes \T1/lmtt/m/n/10.95 (replacing
+
+Overfull \hbox (15.33696pt too wide) in paragraph at lines 1601--1605
+[]\T1/lmtt/m/n/10.95 BOX OFF \T1/lmr/m/n/10.95 replies \T1/lmtt/m/n/10.95 box r
+emoved (6 wall(s) deleted, indices renumbered) \T1/lmr/m/n/10.95 --- or \T1/lmt
+t/m/n/10.95 box: none
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1614.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1614.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1614.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1614.
+
+[27] [28]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1720.
+
+
+Overfull \hbox (24.9867pt too wide) in paragraph at lines 1728--1756
+ [] 
+[29] [30] [31]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 1888.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1905--1906
+[]|\T1/lmr/m/n/10.95 observables (\T1/lmtt/m/n/10.95 CENTROID \T1/lmr/m/n/10.95
+ also spells
+
+Overfull \hbox (3.96622pt too wide) in paragraph at lines 1895--1912
+ [] 
+[32] [33]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 2006.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2019--2020
+[]|\T1/lmr/m/n/10.95 observables (\T1/lmtt/m/n/10.95 CENTROID \T1/lmr/m/n/10.95
+ also spells
+
+Overfull \hbox (4.14104pt too wide) in paragraph at lines 2011--2027
+ [] 
+[34] [35] [36]
+Overfull \hbox (4.03052pt too wide) in paragraph at lines 2210--2229
+\T1/lmtt/m/n/10.95 LoadIdent \T1/lmr/m/n/10.95 (a bare iden-ti-fier --- pa-ram-
+e-ter or \T1/lmtt/m/n/10.95 LET \T1/lmr/m/n/10.95 vari-able, re-solved at ex-e-
+cu-tion, Ÿ[]5.9[]), \T1/lmtt/m/n/10.95 StoreGlobal
+
+Overfull \hbox (88.73193pt too wide) in paragraph at lines 2210--2229
+\T1/lmr/m/n/10.95 each body line through this same compile-and-execute pipeline
+ in-side a call frame), \T1/lmtt/m/n/10.95 NewObject\T1/lmr/m/n/10.95 /\T1/lmtt
+/m/n/10.95 InitField\T1/lmr/m/n/10.95 /\T1/lmtt/m/n/10.95 FinishNew
+
+Overfull \hbox (7.88446pt too wide) in paragraph at lines 2210--2229
+\T1/lmtt/m/n/10.95 Run\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 SetMethod\T1/lmr/m
+/n/10.95 , \T1/lmtt/m/n/10.95 Energy\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 Cent
+erOfMass\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 TotalMomentum\T1/lmr/m/n/10.95 ,
+ \T1/lmtt/m/n/10.95 TotalAngularMomentum\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 
+Laplace\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 Reset\T1/lmr/m/n/10.95 ,
+[37] [38] [39]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 2372.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 2408.
+
+[40] [41] [42] [43] [44] [45] [46]
+Overfull \hbox (101.38461pt too wide) in paragraph at lines 2782--2789
+\T1/lmr/m/it/10.95 all three \T1/lmr/m/n/10.95 con-served quan-ti-ties must sur
+-vive the col-li-sions. The script is \T1/lmtt/m/n/10.95 scripts/collisions/12_
+two_dumbbells.posim\T1/lmr/m/n/10.95 ;
+[47]
+Overfull \hbox (35.91837pt too wide) in paragraph at lines 2827--2850
+\OT1/lmr/m/n/10.95 7\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 865310611020375$ \T
+1/lmr/m/n/10.95 --- the run ban-ner prints \T1/lmtt/m/n/10.95 |dE/E| = 9.463e-1
+1\T1/lmr/m/n/10.95 . Mo-men-tum: \T1/lmtt/m/n/10.95 [0.15000000000000036,
+[48] [49]
+Overfull \hbox (66.49527pt too wide) in paragraph at lines 3005--3009
+\T1/lmr/m/n/10.95 canon-i-cal 1-D quan-tum prob-lem writ-ten that way, and it i
+s the note-book \T1/lmtt/m/n/10.95 dynamic_notebooks/tunneling.posim\T1/lmr/m/n
+/10.95 . 
+[50] [51] [52]
+Underfull \hbox (badness 10000) in paragraph at lines 3168--3169
+[]|\T1/lmtt/m/n/10.95 unknown object field `bogus' --- see HELP for
+
+Underfull \hbox (badness 10000) in paragraph at lines 3169--3170
+[]|\T1/lmtt/m/n/10.95 cannot multiply vec3 by vec3 (for vec3*vec3
+
+Underfull \hbox (badness 10000) in paragraph at lines 3170--3171
+[]|\T1/lmtt/m/n/10.95 parse error at column 5: expected a path
+
+Underfull \hbox (badness 10000) in paragraph at lines 3171--3172
+[]|\T1/lmtt/m/n/10.95 SPRK method requires a separable Hamiltonian:
+
+Underfull \hbox (badness 10000) in paragraph at lines 3171--3172
+\T1/lmtt/m/n/10.95 magnetic field B must be zero ... use METHOD
+
+Underfull \hbox (badness 10000) in paragraph at lines 3172--3173
+[]|\T1/lmtt/m/n/10.95 unknown name `bogusname` (define it with
+
+Underfull \hbox (badness 10000) in paragraph at lines 3172--3173
+\T1/lmtt/m/n/10.95 LET, pass it as a function parameter, or use
+
+Underfull \hbox (badness 10000) in paragraph at lines 3173--3174
+[]|\T1/lmtt/m/n/10.95 no object named `d` (registered names:
+
+Underfull \hbox (badness 10000) in paragraph at lines 3173--3174
+\T1/lmtt/m/n/10.95 ["ball"]; NEW ... AS <name> creates
+
+Underfull \hbox (badness 10000) in paragraph at lines 3173--3174
+\T1/lmtt/m/n/10.95 one; positional paths are objN.field,
+
+Underfull \hbox (badness 10000) in paragraph at lines 3174--3175
+[]|\T1/lmtt/m/n/10.95 the name `d` already refers to obj0 --- DEL it
+
+Underfull \hbox (badness 10000) in paragraph at lines 3176--3177
+[]|\T1/lmtt/m/n/10.95 no user function `nosuch` --- FUNCS lists the
+[53]
+Underfull \hbox (badness 10000) in paragraph at lines 3202--3203
+[]|\T1/lmr/m/n/10.95 CVODE, variable-order variable-step
+
+Underfull \hbox (badness 3271) in paragraph at lines 3207--3208
+[]|\T1/lmr/m/n/10.95 ARKODE SPRK-Step, sym-plec-tic par-ti-
+
+Overfull \hbox (12.13757pt too wide) in paragraph at lines 3212--3213
+[]|\T1/lmtt/m/n/10.95 CVodeRootInit| 
+[54]
+Underfull \hbox (badness 10000) in paragraph at lines 3268--3269
+[]|\T1/lmtt/m/n/10.95 METHOD ADAMS\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 METHOD
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3270--3270
+[]|\T1/lmr/m/n/10.95 differential-algebraic sys-tems
+
+Underfull \hbox (badness 7415) in paragraph at lines 3273--3274
+[]|\T1/lmtt/m/n/10.95 SENSITIVITY \T1/lmr/m/n/10.95 while con-
+
+Overfull \hbox (38.57408pt too wide) in paragraph at lines 3277--3281
+[]\T1/lmr/m/n/10.95 Every one of them is diffed against the up-stream C ref-er-
+ence out-put --- see \T1/lmtt/m/n/10.95 sundials_rs/VERIFICATION.md\T1/lmr/m/n/
+10.95 .
+
+Underfull \hbox (badness 10000) in paragraph at lines 3290--3291
+[]|\T1/lmr/m/n/10.95 CVODE /
+
+Underfull \hbox (badness 10000) in paragraph at lines 3293--3294
+[]|\T1/lmr/m/n/10.95 CVODES /
+[55]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 3365.
+
+[56]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 3408.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 3429.
+
+
+Overfull \hbox (2.68362pt too wide) in paragraph at lines 3435--3439
+\T1/lmtt/m/n/10.95 0 \T1/lmr/m/n/10.95 is two to-kens: \T1/lmtt/m/n/10.95 "g_co
+nstant"\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 "mass 0"\T1/lmr/m/n/10.95 , \T1/l
+mtt/m/n/10.95 "charge 1"\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 "gravity.y"\T1/l
+mr/m/n/10.95 , \T1/lmtt/m/n/10.95 "e_field.x"\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/1
+0.95 "b_field.z"\T1/lmr/m/n/10.95 . 
+[57] [58]
+Overfull \hbox (47.03699pt too wide) in paragraph at lines 3548--3548
+[]|\T1/lmtt/m/n/10.95 videos/kepler_ellipse.html| 
+
+Underfull \hbox (badness 10000) in paragraph at lines 3550--3551
+[]|$\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95 dE\OMS/lmsy/m/n/10.95 j\OML/lmm/m/
+it/10.95 =E \OT1/lmr/m/n/10.95 = 9\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 8[]8$
+\T1/lmr/m/n/10.95 ,
+
+Overfull \hbox (52.78572pt too wide) in paragraph at lines 3551--3551
+[]|\T1/lmtt/m/n/10.95 videos/tumbling_racket.html| 
+
+Overfull \hbox (41.28825pt too wide) in paragraph at lines 3554--3554
+[]|\T1/lmtt/m/n/10.95 videos/box_of_shapes.html| 
+
+Underfull \hbox (badness 10000) in paragraph at lines 3556--3558
+[]|\T1/lmr/m/n/10.95 36 col-li-sion events,
+
+Overfull \hbox (93.02686pt too wide) in paragraph at lines 3558--3558
+[]|\T1/lmtt/m/n/10.95 videos/double_pendulum_hinges.html| 
+
+Overfull \hbox (52.78572pt too wide) in paragraph at lines 3562--3562
+[]|\T1/lmtt/m/n/10.95 videos/universal_joint.html| 
+
+Overfull \hbox (58.53445pt too wide) in paragraph at lines 3567--3567
+[]|\T1/lmtt/m/n/10.95 videos/ball_joint_chain.html| 
+
+Overfull \hbox (70.03192pt too wide) in paragraph at lines 3571--3571
+[]|\T1/lmtt/m/n/10.95 videos/rod_pendulum_chain.html| 
+
+Underfull \hbox (badness 4181) in paragraph at lines 3573--3576
+\T1/lmr/m/n/10.95 restarts, holds $\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95 g\O
+MS/lmsy/m/n/10.95 j \OT1/lmr/m/n/10.95 =
+
+Overfull \hbox (35.53952pt too wide) in paragraph at lines 3576--3576
+[]|\T1/lmtt/m/n/10.95 videos/spinning_top.html| 
+
+Underfull \hbox (badness 10000) in paragraph at lines 3577--3580
+[]|\T1/lmr/m/n/10.95 precesses at $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT
+1/lmr/m/n/10.95 020440$
+
+Underfull \hbox (badness 1910) in paragraph at lines 3577--3580
+\T1/lmr/m/n/10.95 rad/s against a closed
+
+Overfull \hbox (58.53445pt too wide) in paragraph at lines 3580--3580
+[]|\T1/lmtt/m/n/10.95 videos/gyroscope_gimbal.html| 
+
+Underfull \hbox (badness 1515) in paragraph at lines 3582--3585
+\T1/lmr/m/n/10.95 fur-ther from the pivot
+
+Overfull \hbox (29.79079pt too wide) in paragraph at lines 3585--3585
+[]|\T1/lmtt/m/n/10.95 videos/cardan_gear.html| 
+
+Underfull \hbox (badness 3623) in paragraph at lines 3587--3590
+\T1/lmr/m/n/10.95 against $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT1/lmr/m/
+n/10.95 8[]3$ \T1/lmr/m/n/10.95 for the
+
+Underfull \hbox (badness 6188) in paragraph at lines 3587--3590
+\T1/lmr/m/n/10.95 same mech-a-nism with
+
+Overfull \hbox (52.78572pt too wide) in paragraph at lines 3590--3590
+[]|\T1/lmtt/m/n/10.95 videos/rack_and_pinion.html| 
+
+Underfull \hbox (badness 1975) in paragraph at lines 3591--3593
+\T1/lmr/m/n/10.95 for two dif-fer-ent pitch
+
+Overfull \hbox (64.28319pt too wide) in paragraph at lines 3593--3593
+[]|\T1/lmtt/m/n/10.95 videos/piston_crankshaft.html| 
+
+Underfull \hbox (badness 1436) in paragraph at lines 3594--3597
+[]|\T1/lmr/m/n/10.95 follows $\OML/lmm/m/it/10.95 x \OT1/lmr/m/n/10.95 = \OML/l
+mm/m/it/10.95 a [] ^^R \OT1/lmr/m/n/10.95 +
+
+Overfull \hbox (47.03699pt too wide) in paragraph at lines 3599--3599
+[]|\T1/lmtt/m/n/10.95 videos/cardan_compass.html| 
+
+Underfull \hbox (badness 10000) in paragraph at lines 3601--3603
+[]|\T1/lmr/m/n/10.95 two physical-pendulum
+
+Underfull \hbox (badness 5245) in paragraph at lines 3601--3603
+\T1/lmr/m/n/10.95 pe-ri-ods, $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT1/lmr
+/m/n/10.95 878587$ \T1/lmr/m/n/10.95 and
+
+Underfull \hbox (badness 10000) in paragraph at lines 3601--3603
+\OT1/lmr/m/n/10.95 2\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 307339$ \T1/lmr/m/n
+/10.95 s, mea-sured
+[59] [60]
+Overfull \vbox (90.08984pt too high) has occurred while \output is active
+[61]
+Overfull \hbox (76.60638pt too wide) in paragraph at lines 3617--3621
+\T1/lmr/m/n/10.95 run's $\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95 dE=E\OMS/lmsy
+/m/n/10.95 j$ \T1/lmr/m/n/10.95 sur-prises you, check \T1/lmtt/m/n/10.95 ENERGY
+\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 system.g_constant\T1/lmr/m/n/10.95 , \T1
+/lmtt/m/n/10.95 system.softening \T1/lmr/m/n/10.95 and \T1/lmtt/m/n/10.95 syste
+m.uniform_gravity
+
+Underfull \hbox (badness 1325) in paragraph at lines 3672--3672
+[]|$\OML/lmm/m/it/10.95 r \OT1/lmr/m/n/10.95 = 0\OML/lmm/m/it/10.95 :\OT1/lmr/m
+/n/10.95 6$ \T1/lmr/bx/n/10.95 from \T1/lmr/m/n/10.95 the
+
+Underfull \hbox (badness 10000) in paragraph at lines 3676--3676
+[]|\T1/lmr/m/n/10.95 steady pre-ces-sion
+
+Underfull \hbox (badness 10000) in paragraph at lines 3676--3677
+[]|\T1/lmr/m/n/10.95 no grav-i-ta-tional
+[62] [63] [64] [65] [66] (./grammar.aux) )
+(see the transcript file for additional information)</usr/share/texmf/fonts/typ
+e1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></us
+r/share/texmf/fonts/type1/public/lm/lmbx8.pfb></usr/share/texmf/fonts/type1/pub
+lic/lm/lmbxi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/sha
+re/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/
+lm/lmmi6.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi8.pfb></usr/share/texm
+f/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12
+.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/
+type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr
+/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/pub
+lic/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share
+/texmf/fonts/type1/public/lm/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/
+lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/f
+onts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
+pfb></usr/share/texmf/fonts/type1/public/lm/lmtt12.pfb></usr/share/texmf/fonts/
+type1/public/lm/lmtt8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on grammar.pdf (66 pages, 694250 bytes).
+Transcript written on grammar.log.

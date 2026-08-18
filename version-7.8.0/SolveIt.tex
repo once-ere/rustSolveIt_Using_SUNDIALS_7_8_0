@@ -146,7 +146,7 @@ A ``script'' is just a text file of the same commands you would type.
 Comments start with \code{\#}. Every example in \S\ref{sec:examples} is a
 script in \code{scripts/solveit/}.
 
-Checking your build: \code{cargo test -{}-workspace} --- 568 tests should
+Checking your build: \code{cargo test -{}-workspace} --- 605 tests should
 pass.
 
 \section{The five things you need to know}
@@ -302,16 +302,46 @@ replaced by the 7.8.0 one. Two things came with it.
 \textbf{crate} & \textbf{solves} & \textbf{used here?}\\\hline
 \code{cvode\_rs}  & ordinary differential equations (Adams / BDF) & yes\\
 \code{arkode\_rs} & Runge--Kutta: explicit, implicit, IMEX, multirate, symplectic & yes\\
-\code{cvodes\_rs} & CVODE plus forward and adjoint sensitivity analysis & not yet\\
-\code{ida\_rs}    & differential-algebraic systems $F(t,y,\dot y)=0$ & not yet\\
-\code{idas\_rs}   & IDA plus sensitivity analysis & not yet\\
-\code{kinsol\_rs} & nonlinear algebraic systems, Anderson acceleration & not yet\\
+\code{ida\_rs}    & differential-algebraic systems $F(t,y,\dot y)=0$ & yes --- \kw{constrain} + \kw{method ida}\\
+\code{kinsol\_rs} & nonlinear algebraic systems, Anderson acceleration & yes --- \kw{equilibrium}\\
+\code{cvodes\_rs} & CVODE plus forward and adjoint sensitivity analysis & yes --- \kw{sensitivity}\\
+\code{idas\_rs}   & IDA plus sensitivity analysis & yes --- \kw{sensitivity} while constrained\\
 \end{tabular}
 \end{center}
 
-The four unused ones build, carry their own examples, and each of those
-examples is compared byte-for-byte against the output of the original C
-program.
+All six are compared byte-for-byte against the output of the original C
+programs.
+
+\subsection{The three questions that are not ``what happens next''}
+
+\textbf{Four joints.} \kw{constrain} \emph{a b} is a rod (1 row, 5
+freedoms left); \kw{ball} \emph{a b} shares a point (3 rows);
+\kw{universal} \emph{a b u w} shares a point and keeps two shafts square,
+a Cardan joint (4 rows); \kw{hinge} \emph{a b axis} shares a point
+\emph{and} an axis, leaving exactly one freedom (5 rows) --- a door, a
+knee, a pendulum. The last three grip orientation, which is why
+\kw{method ida} carries the full 13-numbers-per-object state.
+
+\textbf{A rigid rod, held exactly} --- \kw{constrain} \emph{a b} then
+\kw{method ida}. A rod is a geometric fact, not a very stiff spring: the
+bob is \emph{exactly} $L$ from the pivot, always. Saying so turns the
+equations of motion from an ODE into a differential-algebraic equation,
+which is what IDA solves. A body with \code{inverse\_mass = 0} becomes
+an \textbf{anchor} --- it never moves and absorbs the reaction --- so
+anchor + bob + rod is a pendulum. \kw{constraints} reports how far the
+rod has strayed; over a 20-second swing it stays at roundoff.
+
+\textbf{Where it comes to rest} --- \kw{equilibrium}. Not an
+integration: KINSOL solves for a configuration where every free body has
+zero net force, every anchor is where it started and every rod is the
+right length, then puts the bodies there and stops them. It says nothing
+about \emph{stability} --- a pencil on its point is an equilibrium too.
+
+\textbf{How much the answer depends on an input} ---
+\kw{sensitivity} 3 \code{"gravity.y"}. Running twice with slightly
+different inputs and subtracting throws away most of your digits. This
+integrates the derivative alongside the state instead. CVODES for an
+ordinary system; IDAS when a \kw{constrain} is active.
 
 \textbf{A more faithful API.} The 7.8.0 translation models C's opaque
 pointers directly rather than smoothing them into idiomatic Rust. Vector
@@ -381,7 +411,7 @@ counting is per-burst rather than per-output-interval, because
 per-interval counting made the physics depend on how often you asked for
 output.
 
-\section{Sixteen worked examples}\label{sec:examples}
+\section{Nineteen worked examples}\label{sec:examples}
 
 Every transcript below is genuine program output. The scripts are in
 \code{scripts/solveit/}:
@@ -965,6 +995,139 @@ you to notice. Angular momenta, on the other hand, \emph{may} be
 half-integers, so the Wigner and Clebsch--Gordan routines take plain
 numbers.
 
+\subsection{A pendulum as a constraint, not a force}
+
+The small-amplitude period is $T = 2\pi\sqrt{L/g}$; released 0.02\,rad
+off vertical with $L=1$, $g=9.81$ that is $2.0060666807106475$\,s, and
+after exactly one period the bob must be back where it started. The rod
+is not a force but a geometric condition, and the only way to hold it
+exactly is to solve the DAE.
+
+\begin{lstlisting}
+In[4]:= new sphere as pivot { mass = 1, radius = 0.02,
+                              position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new sphere as bob   { mass = 1, radius = 0.05,
+          position = [0.019998666693333084, -0.9998000066665778, 0] }
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1
+        (METHOD IDA is required to integrate it)
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 2.0060666807106475 steps 200
+Out[9]= t = 2.0060666807106475 (339 solver steps, 200 snapshots,
+        |dE/E| = 2.530e-12)
+In[10]:= get bob.position
+Out[10]= [0.019998666320588818, -0.9998000066740419, 0]
+In[11]:= constraints
+Out[11]= constraint0: obj0 <-> obj1 length 1
+         (currently 1.0000000000000082)
+\end{lstlisting}
+
+The bob came back to within $3.7\times10^{-10}$ after a full period, and
+the rod reads $1.0000000000000082$ --- eight parts in $10^{15}$, one
+bit, after 339 solver steps. That is not luck: the formulation carries
+\emph{both} the rod's length and its rate of change as equations. The
+cheaper scheme that constrains only the acceleration lets the length
+drift quadratically, and you find out much later.
+
+The \code{inverse\_mass = 0} on the pivot is what makes it a pendulum
+rather than two bodies tumbling about their shared centre of mass joined
+by a stick.
+
+\subsection{Where it rests, and what the answer depends on}
+
+A pendulum released anywhere comes to rest hanging straight down, one
+rod-length below the pivot:
+
+\begin{lstlisting}
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual
+        evaluation(s); largest net force on any free body =
+        7.459152323898993e-13, worst |g| = 1.9317880628477724e-14
+In[8]:= get bob.position
+Out[8]= [0.0000000000000735262479725006, -0.9999999999999807, 0]
+\end{lstlisting}
+
+Released $57^\circ$ off vertical, the bob lands straight down to 13
+digits. Now the derivative, on a free body, where
+$\partial y/\partial g = T^2/2 = 4.5$ at $T=3$:
+
+\begin{lstlisting}
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+In[16]:= get stone.position
+Out[16]= [3.000000000000001, -44.14500000000045, 0]
+\end{lstlisting}
+
+$4.500000056696235$ against an analytic $4.5$ --- 1.3 parts in $10^8$,
+carried alongside a trajectory that itself landed on
+$-44.14500000000045$ where $-\tfrac12\cdot 9.81\cdot 9 = -44.145$.
+
+And the second derivative is \textbf{exactly zero}. In uniform gravity
+every mass accelerates equally, so the trajectory does not depend on the
+mass at all. A finite-difference estimate would have returned some small
+number and left you guessing whether it was noise or physics. The
+sensitivity equations return the zero.
+
+\subsection{A door on a hinge}
+
+A hinge fixes a point \emph{and} an axis, leaving one freedom. A hinged
+rigid body is a \textbf{compound} pendulum: its small-amplitude period is
+$T = 2\pi\sqrt{I_{\text{pivot}}/(mgd)}$ with
+$I_{\text{pivot}} = I_{\text{com}} + md^2$ --- the moment of inertia
+about the pivot, not just the distance to the centre of mass. The
+point-mass formula is wrong by 15\,\% for the slab below.
+
+\begin{lstlisting}
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02,
+                             position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2],
+          position = [0.0199986666933331, -0.9998000066665778, 0] }
+In[6]:= hinge jamb door [0, 0, 1]
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]
+\end{lstlisting}
+
+The angular momentum is $[0, 0, 0.0037]$ --- \emph{exactly} zero on $x$
+and $y$. The two rows a hinge has over a ball joint are the ones that
+forbid those axes, and they are doing their job to the last bit. The
+joint is held to $2.7\times10^{-10}$ after 70 solver steps, and energy to
+1.6 parts in $10^{9}$; run one compound period and the slab returns to
+within $3\times10^{-8}$.
+
+The \code{inverse\_mass = 0} on the jamb is what makes it a door: an
+anchor, immovable, absorbing whatever the hinge pulls with.
+
+\textbf{A joint constrains velocity, not just position.} A ball joint
+says the two bodies share a point, so at the velocity level
+$v_i + \omega_i\times r_i = v_j + \omega_j\times r_j$: a body turning
+about a pivot offset from its centre \emph{must have its centre moving}.
+Give it a spin and leave its velocity at zero and the state is not on the
+constraint manifold. The run projects the starting velocities onto it ---
+the smallest mass-weighted change that satisfies the joint, which is
+precisely the impulse a real coupling delivers when clutched onto a
+spinning shaft --- and reports how big that change was. For a cube spun
+at 3\,rad/s on a half-metre arm the projection leaves the turn nearly
+untouched and sets the \emph{centre} moving instead: the pivot was
+running at 1.5\,m/s, and giving a 1\,kg body some velocity is cheaper
+than fighting the spin.
+
+\textbf{One real limit.} Orientation joints carry a tolerance floor of
+$\texttt{rtol}=10^{-6}$: the index-2 system has an accuracy ceiling, and
+across twelve compound pendulums the boundary is sharp --- $10^{-6}$
+converges in every one, $10^{-8}$ in none.
+
 \section{Watching it: the scene window and browser videos}
 
 \subsection{The live window}
@@ -996,7 +1159,7 @@ someone else, record it:
 
 \begin{lstlisting}
 cargo build --release -p posim
-tools/record_video.py videos/scenes/kepler_ellipse.posim \
+recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
      -o videos/kepler_ellipse.html --frames 360 --dt 0.02 \
      --title "Kepler orbit, e = 0.6"
 \end{lstlisting}
@@ -1019,8 +1182,60 @@ $|dL|/|L| = 1.3\times10^{-7}$\\
 \code{box\_of\_shapes.html} & a cylinder, a disk and a cuboid in a rigid
 \kw{box} 4; gold arrows are the analytic contact normals, sized by
 impulse & 36 collisions, $|dE|/E = 3.4\times10^{-16}$\\
+\code{double\_pendulum\_hinges.html} & \textbf{two \kw{hinge} joints}
+assembled into the classic chaotic linkage --- gold rings mark the
+joints, gold lines their axes & the joints hold to
+$|g| = 5.6\times10^{-8}$ through 400 IDA steps\\
+\code{universal\_joint.html} & a \textbf{\kw{universal} joint} carrying
+a driven shaft's rotation across to a second shaft, braced by a rod to
+a post & the bend stops at $\cos\beta = 0.6000004$ against a geometric
+bound of exactly $0.6$; three joints hold to $|g| = 4.0\times10^{-7}$\\
+\code{ball\_joint\_chain.html} & four links on \textbf{\kw{ball} joints}
+--- the chain whirls out of the plane it started on, which a hinged
+chain cannot do & the four joints hold to $|g| = 3.3\times10^{-9}$;
+$|z|$ runs from exactly $0$ to $1.7147$\\
+\code{rod\_pendulum\_chain.html} & four bobs on four
+\textbf{\kw{constrain} rods} --- one row each, the cheapest linkage
+in the language, going chaotic & run continuously at the default
+tolerance the rods hold to $|g| = 5.4\times10^{-15}$, i.e. roundoff\\
+\code{spinning\_top.html} & a top on a \textbf{\kw{ball} joint},
+precessing under gravity & $1.020440$ rad/s against the exact
+$\Omega = Mgr/(I_3\omega_3) = 1.020408$, 3 parts in $10^{5}$\\
+\code{gyroscope\_gimbal.html} & a rotor in \textbf{two gimbal
+rings}, three perpendicular \kw{hinge} axes & total $L\cdot\hat y$
+conserved to $1.4\times10^{-14}$; every centre stays on the pivot to
+$1.2\times10^{-34}$\\
+\code{cardan\_gear.html} & \textbf{Cardan gears} --- a wheel in a
+ring of twice its radius, rolling on a \kw{gear} row, its rim point
+tracing a straight line & line held to $1.1\times10^{-8}$; stroke
+exactly $\pm 2r$\\
+\code{rack\_and\_pinion.html} & a weight on a \textbf{\kw{rack}}
+winding up a flywheel, on a \textbf{\kw{prismatic}} guide & falls at
+exactly $g/2$, and at the same rate for two different pitch radii\\
+\code{piston\_crankshaft.html} & the \textbf{slider-crank} --- a
+piston, a connecting rod and a crankshaft & follows the exact
+kinematics to $8.4\times10^{-8}$; stroke exactly $L-a$ to $L+a$\\
+
+\code{cardan\_compass.html} & the same rings with a
+\textbf{pendulous} bowl --- a ship's compass, seeking level &
+periods $1.878587$ and $2.307339$ s against measured $1.883426$ and
+$2.313653$\\
 \end{tabular}
 \end{center}
+
+That last one is the one to open if you only open one, because it shows
+a joint doing something a rod cannot. A \kw{universal} holds a shared
+point and one right angle between its trunnions; it deliberately does
+\emph{not} hold the two shafts straight. Left dangling, the output
+shaft therefore does not transmit rotation at all --- it swings down
+past the joint like a pendulum and folds back at $176^\circ$. Bracing
+it with a second bearing looks right and fails at once, because
+$\kw{hinge}\,5 + \kw{universal}\,4 + \kw{hinge}\,5$ is 14 rows on 12
+freedoms and three of them are redundant, which leaves the constrained
+solve singular. One \kw{constrain} --- a single row --- braces it
+instead, and pins the bend to a closed form: the shaft sweeps a cone,
+and $\cos\beta$ cannot go below $0.6$. The recording touches
+$0.6000004$. Grammar \S12.10 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or
 $\leftarrow\rightarrow$), a scrub bar, speed from $0.25\times$ to
@@ -1057,7 +1272,7 @@ exiting nonzero if it fails: \code{kepler\_orbit},
 
 \subsection{The test suite}
 
-568 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
+605 tests: 40 library, 19 collision, 9 conservation, 109 language, 92
 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written. The
 collision tests in particular are analytic rather than
@@ -1131,7 +1346,7 @@ grammar and a further eighteen worked examples.
 \code{sundials\_rs/} & the pure-Rust SUNDIALS 7.8.0 engine (vendored, read-only)\\
 \code{jupyter/} & the JupyterLab kernel\\
 \code{dynamic\_notebooks/} & 59 runnable sessions, incl.\ 34 Routh problems\\
-\code{scripts/solveit/} & the sixteen examples in \S\ref{sec:examples}\\
+\code{scripts/solveit/} & the eighteen examples in \S\ref{sec:examples}\\
 \code{scripts/collisions/} & twelve documented collision scripts\\
 \code{videos/} & recorded browser videos; \code{videos/scenes/} the scripts behind them\\
 \code{tools/} & the index builder, the verifiers, \code{record\_video.py}\\

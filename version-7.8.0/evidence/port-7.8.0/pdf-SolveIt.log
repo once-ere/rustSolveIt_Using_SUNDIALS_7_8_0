@@ -1,0 +1,239 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./SolveIt.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo))
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty)
+(/usr/share/texmf/tex/latex/lm/lmodern.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstpatch.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg))
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/share/texlive/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+(/usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/share/texlive/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/parskip/parskip.sty)
+(/usr/share/texmf/tex/latex/lm/t1lmr.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+(./SolveIt.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (./SolveIt.out) (./SolveIt.out) (/usr/share/texmf/tex/latex/lm/ot1lmr.fd)
+(/usr/share/texmf/tex/latex/lm/omllmm.fd)
+(/usr/share/texmf/tex/latex/lm/omslmsy.fd)
+(/usr/share/texmf/tex/latex/lm/omxlmex.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd) (./SolveIt.toc
+(/usr/share/texmf/tex/latex/lm/t1lmtt.fd) [1{/var/lib/texmf/fonts/map/pdftex/up
+dmap/pdftex.map}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texm
+f/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-math
+it.enc}]) [2] [3{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}]
+Underfull \hbox (badness 10000) in paragraph at lines 134--134
+[]|\T1/lmr/m/n/10.95 interactive note-
+
+Underfull \hbox (badness 10000) in paragraph at lines 135--135
+[]|\T1/lmtt/m/n/10.95 cargo run -p posim -- --script
+
+Underfull \hbox (badness 2213) in paragraph at lines 136--137
+[]|\T1/lmr/m/n/10.95 you want it re-pro-
+
+Underfull \hbox (badness 10000) in paragraph at lines 138--138
+[]|\T1/lmtt/m/n/10.95 cargo run -p posim
+
+Underfull \hbox (badness 10000) in paragraph at lines 138--138
+\T1/lmtt/m/n/10.95 --release -- --notebook
+
+Underfull \hbox (badness 2753) in paragraph at lines 140--142
+[]|\T1/lmr/m/n/10.95 another pro-gram is
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\uppercase' on input line 154.
+
+[4]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 198.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 198.
+
+
+Overfull \hbox (6.67975pt too wide) in paragraph at lines 219--219
+[]|\T1/lmtt/m/n/10.95 special_functions| 
+[5]
+Overfull \hbox (99.44572pt too wide) in paragraph at lines 301--310
+ [] 
+[6] [7] [8] [9] [10{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}]
+[11] [12] [13] [14] [15] [16] [17] [18] [19]
+Overfull \hbox (6.79585pt too wide) in paragraph at lines 1177--1177
+[]|\T1/lmtt/m/n/10.95 kepler_ellipse.html| 
+
+Underfull \hbox (badness 3884) in paragraph at lines 1178--1180
+[]|$\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95 dE\OMS/lmsy/m/n/10.95 j\OML/lmm/m/
+it/10.95 =E \OT1/lmr/m/n/10.95 = 9\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 8 \OM
+S/lmsy/m/n/10.95 ^^B \OT1/lmr/m/n/10.95 10[]$\T1/lmr/m/n/10.95 ,
+
+Overfull \hbox (12.54459pt too wide) in paragraph at lines 1180--1180
+[]|\T1/lmtt/m/n/10.95 tumbling_racket.html| 
+
+Underfull \hbox (badness 1762) in paragraph at lines 1181--1182
+[]|$\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95 d\OMS/lmsy/m/n/10.95 j\OML/lmm/m/i
+t/10.95 L\OMS/lmsy/m/n/10.95 jj\OML/lmm/m/it/10.95 =\OMS/lmsy/m/n/10.95 j\OML/l
+mm/m/it/10.95 L\OMS/lmsy/m/n/10.95 j \OT1/lmr/m/n/10.95 = 0$ \T1/lmr/bx/n/10.95
+ ex-actly\T1/lmr/m/n/10.95 ;
+
+Overfull \hbox (1.04712pt too wide) in paragraph at lines 1182--1182
+[]|\T1/lmtt/m/n/10.95 box_of_shapes.html| 
+
+Underfull \hbox (badness 2401) in paragraph at lines 1184--1185
+[]|\T1/lmr/m/n/10.95 36 col-li-sions, $\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95
+ dE\OMS/lmsy/m/n/10.95 j\OML/lmm/m/it/10.95 =E \OT1/lmr/m/n/10.95 =
+
+Overfull \hbox (52.78572pt too wide) in paragraph at lines 1185--1185
+[]|\T1/lmtt/m/n/10.95 double_pendulum_hinges.html| 
+
+Overfull \hbox (12.54459pt too wide) in paragraph at lines 1189--1189
+[]|\T1/lmtt/m/n/10.95 universal_joint.html| 
+
+Underfull \hbox (badness 1675) in paragraph at lines 1191--1193
+\OT1/lmr/m/n/10.95 0\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 6000004$ \T1/lmr/m/
+n/10.95 against a ge-o-
+
+Overfull \hbox (18.29332pt too wide) in paragraph at lines 1193--1193
+[]|\T1/lmtt/m/n/10.95 ball_joint_chain.html| 
+
+Overfull \hbox (29.79079pt too wide) in paragraph at lines 1197--1197
+[]|\T1/lmtt/m/n/10.95 rod_pendulum_chain.html| 
+
+Underfull \hbox (badness 3884) in paragraph at lines 1199--1201
+[]|\T1/lmr/m/n/10.95 run con-tin-u-ously at the
+
+Overfull \hbox (18.29332pt too wide) in paragraph at lines 1204--1204
+[]|\T1/lmtt/m/n/10.95 gyroscope_gimbal.html| 
+
+Underfull \hbox (badness 1701) in paragraph at lines 1210--1212
+[]|\T1/lmr/m/n/10.95 line held to $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT
+1/lmr/m/n/10.95 1 \OMS/lmsy/m/n/10.95 ^^B \OT1/lmr/m/n/10.95 10[]$\T1/lmr/m/n/1
+0.95 ;
+
+Overfull \hbox (12.54459pt too wide) in paragraph at lines 1212--1212
+[]|\T1/lmtt/m/n/10.95 rack_and_pinion.html| 
+
+Overfull \hbox (24.04205pt too wide) in paragraph at lines 1215--1215
+[]|\T1/lmtt/m/n/10.95 piston_crankshaft.html| 
+
+Overfull \hbox (6.79585pt too wide) in paragraph at lines 1219--1219
+[]|\T1/lmtt/m/n/10.95 cardan_compass.html| 
+
+Underfull \hbox (badness 10000) in paragraph at lines 1221--1223
+[]|\T1/lmr/m/n/10.95 periods $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT1/lmr
+/m/n/10.95 878587$ \T1/lmr/m/n/10.95 and
+
+Underfull \hbox (badness 10000) in paragraph at lines 1221--1223
+\OT1/lmr/m/n/10.95 2\OML/lmm/m/it/10.95 :\OT1/lmr/m/n/10.95 307339$ \T1/lmr/m/n
+/10.95 s against
+
+Underfull \hbox (badness 10000) in paragraph at lines 1221--1223
+\T1/lmr/m/n/10.95 mea-sured $\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 :\OT1/lmr/
+m/n/10.95 883426$ \T1/lmr/m/n/10.95 and
+[20] [21]
+Overfull \hbox (16.23592pt too wide) in paragraph at lines 1267--1272
+\T1/lmr/m/n/10.95 Six ex-am-ple pro-grams, each print-ing \T1/lmtt/m/n/10.95 SU
+CCESS \T1/lmr/m/n/10.95 or \T1/lmtt/m/n/10.95 FAILURE \T1/lmr/m/n/10.95 and ex-
+it-ing nonzero if it fails: \T1/lmtt/m/n/10.95 kepler_orbit\T1/lmr/m/n/10.95 ,
+
+Overfull \hbox (65.46307pt too wide) in paragraph at lines 1267--1272
+\T1/lmtt/m/n/10.95 outer_solar_system\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 tum
+bling_body\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95 charged_in_b_field\T1/lmr/m/n/
+10.95 , \T1/lmtt/m/n/10.95 newtons_cradle\T1/lmr/m/n/10.95 , \T1/lmtt/m/n/10.95
+ bouncing_ball_restitution\T1/lmr/m/n/10.95 . 
+
+Overfull \hbox (18.23682pt too wide) in paragraph at lines 1292--1296
+\T1/lmr/m/n/10.95 diffed. They are iden-ti-cal byte for byte. See \T1/lmtt/m/n/
+10.95 PORT_7.8.0_PROVENANCE.md \T1/lmr/m/n/10.95 and \T1/lmtt/m/n/10.95 evidenc
+e/port-7.8.0/\T1/lmr/m/n/10.95 . 
+[22]
+Underfull \hbox (badness 4168) in paragraph at lines 1308--1308
+[]|\T1/lmtt/m/n/10.95 RUN \T1/lmr/m/n/10.95 over-shoots where you
+
+Underfull \hbox (badness 6396) in paragraph at lines 1310--1310
+[]|\T1/lmr/m/n/10.95 bodies pass through each
+
+Underfull \hbox (badness 10000) in paragraph at lines 1311--1311
+[]|\T1/lmtt/m/n/10.95 SPRK method requires a
+
+Underfull \hbox (badness 10000) in paragraph at lines 1324--1324
+[]|\T1/lmtt/m/n/10.95 probability accumulating
+
+Underfull \hbox (badness 10000) in paragraph at lines 1364--1364
+[]|\T1/lmtt/m/n/10.95 collision_detection.md \T1/lmr/m/n/10.95 /
+
+Overfull \hbox (13.0103pt too wide) in paragraph at lines 1366--1366
+[]|\T1/lmtt/m/n/10.95 physical_object_simulator.md
+[23] [24] (./SolveIt.aux) )
+(see the transcript file for additional information)</usr/share/texmf/fonts/typ
+e1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></us
+r/share/texmf/fonts/type1/public/lm/lmbxi10.pfb></usr/share/texmf/fonts/type1/p
+ublic/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/sh
+are/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/type1/public
+/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/tex
+mf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr1
+7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/
+type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb><
+/usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/
+public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on SolveIt.pdf (24 pages, 399788 bytes).
+Transcript written on SolveIt.log.

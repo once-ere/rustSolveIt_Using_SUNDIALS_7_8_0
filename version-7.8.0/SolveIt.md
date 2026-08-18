@@ -125,7 +125,7 @@ Comments start with `#`. Every example in section 7 is a script in
 cargo test --workspace
 ```
 
-568 tests should pass. If they do, your build is the same build this
+605 tests should pass. If they do, your build is the same build this
 documentation was written against.
 
 ---
@@ -291,16 +291,51 @@ ARKODE. 7.8.0 brings the whole suite:
 |---|---|---|
 | `cvode_rs` | ordinary differential equations (Adams / BDF) | yes |
 | `arkode_rs` | Runge–Kutta: explicit, implicit, IMEX, multirate, symplectic | yes |
-| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis | not yet |
-| `ida_rs` | **differential-algebraic** systems, `F(t, y, ẏ) = 0` | not yet |
-| `idas_rs` | IDA plus sensitivity analysis | not yet |
-| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration | not yet |
+| `ida_rs` | **differential-algebraic** systems, `F(t, y, ẏ) = 0` | yes — `CONSTRAIN` + `METHOD IDA` |
+| `kinsol_rs` | **nonlinear algebraic** systems, with Anderson acceleration | yes — `EQUILIBRIUM` |
+| `cvodes_rs` | CVODE plus forward and adjoint **sensitivity** analysis | yes — `SENSITIVITY` |
+| `idas_rs` | IDA plus sensitivity analysis | yes — `SENSITIVITY` while constrained |
 
-The four unused ones build, carry their own examples, and each of those
-examples is compared byte-for-byte against the output of the original C
-program. They are there for the next person who needs a constrained
-mechanism (that is `ida_rs`) or a parameter derivative (that is
-`cvodes_rs`).
+All six are compared byte-for-byte against the output of the original C
+programs. The last four arrived with the 7.8.0 engine, and §5.4 is what
+they do for you.
+
+### 5.4 The three questions that are not "what happens next"
+
+`STEP` and `RUN` answer one question. The four families above answer
+three more.
+
+**Four joints.** `CONSTRAIN a b` is a rod (1 row, 5 freedoms left).
+`GEAR a b axis ratio` locks two turns in proportion (1 row), and `RACK pinion bar axis dir radius` ties a turn to a slide (1 row) — between them the two joints that cross from rotation to rotation and from rotation to translation, which is what a gear train, a chain drive or a steering rack is made of. `PRISMATIC a b axis` is the slider (5 rows): the mirror of a hinge, leaving one translation instead of one rotation, and what a rack or a piston runs in. `BALL a b` shares a point (3 rows). `UNIVERSAL a b u w` shares a point
+and keeps two shafts square — a Cardan joint (4 rows). `HINGE a b axis`
+shares a point *and* an axis, leaving exactly one freedom (5 rows): a
+door, a knee, a pendulum. The last three grip orientation, which is why
+`METHOD IDA` carries the full 13-numbers-per-object state.
+
+**A rigid rod, held exactly** — `CONSTRAIN a b` then `METHOD IDA`. A rod
+is a geometric fact, not a very stiff spring: the bob is *exactly* `L`
+from the pivot, always. Saying so turns the equations of motion from an
+ODE into a differential-algebraic equation, which is what IDA solves. A
+body with `inverse_mass = 0` becomes an **anchor** — it never moves and
+absorbs the reaction — so anchor + bob + rod is a pendulum. `CONSTRAINTS`
+reports how far the rod has strayed from its length; over a 20-second
+swing it stays at roundoff.
+
+**Where it comes to rest** — `EQUILIBRIUM`. Not an integration: KINSOL
+solves for a configuration where every free body has zero net force,
+every anchor is where it started and every rod is the right length, then
+puts the bodies there and stops them. It says nothing about *stability* —
+a pencil on its point is an equilibrium too — so perturb the answer and
+`RUN` if you need to know.
+
+**How much the answer depends on an input** — `SENSITIVITY 3 "gravity.y"`.
+Running twice with slightly different inputs and subtracting throws away
+most of your digits. This integrates the derivative alongside the state
+instead. CVODES does it for an ordinary system; IDAS does it when a
+`CONSTRAIN` is active, because only then are the equations a DAE.
+
+Examples 17 and 18 in §7 work all three, with the closed forms to check
+them against.
 
 **A more faithful API.** The 7.8.0 translation models C's opaque
 pointers directly rather than smoothing them into idiomatic Rust. Vector
@@ -395,7 +430,7 @@ output, which is exactly the property section 5.2 promises you have.
 
 ---
 
-## 7. Sixteen worked examples
+## 7. Nineteen worked examples
 
 Every transcript below is genuine program output. The scripts are in
 [`scripts/solveit/`](scripts/solveit) and you can run any of them:
@@ -1217,6 +1252,179 @@ numbers.
 
 ---
 
+---
+
+### Example 17 — a pendulum as a constraint, not a force
+
+**The physics.** A pendulum bob hangs on a rigid rod. The small-amplitude
+period is `T = 2π√(L/g)`. Released 0.02 rad off vertical with `L = 1` and
+`g = 9.81`, that is `T = 2.0060666807106475` s, and after exactly one
+period the bob must be back where it started.
+
+**Why it is a real test.** The rod is not a force, it is a geometric
+condition — and the *only* way to hold it exactly is to solve the
+differential-algebraic equation. The test has two independent halves: the
+period must come out right (physics) and the rod must not stretch
+(numerics).
+
+```
+In[4]:= new sphere as pivot { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+Out[4]= obj0 as pivot
+In[5]:= new sphere as bob { mass = 1, radius = 0.05, position = [0.019998666693333084, -0.9998000066665778, 0] }
+Out[5]= obj1 as bob
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1 (METHOD IDA is required to integrate it)
+In[7]:= constraints
+Out[7]= constraint0: obj0 <-> obj1 length 1 (currently 1)
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 2.0060666807106475 steps 200
+Out[9]= t = 2.0060666807106475 (339 solver steps, 200 snapshots, |dE/E| = 2.530e-12)
+In[10]:= get bob.position
+Out[10]= [0.019998666320588818, -0.9998000066740419, 0]
+In[11]:= constraints
+Out[11]= constraint0: obj0 <-> obj1 length 1 (currently 1.0000000000000082)
+```
+
+**What to notice.** The bob started at `(0.019998666693333084,
+−0.9998000066665778)` and came back to `(0.019998666320588818,
+−0.9998000066740419)` — a closure of **3.7 × 10⁻¹⁰** after a full
+period. Energy held to 2.5 parts in 10¹².
+
+And the rod: `1.0000000000000082`. Eight parts in 10¹⁵ — one bit — after
+339 solver steps. That is not luck. The formulation carries *both* the
+rod's length and its rate of change as equations; the cheaper scheme that
+constrains only the acceleration lets the length drift quadratically, and
+you find out much later.
+
+**The `inverse_mass = 0` on the pivot is what makes it a pendulum.** It
+marks the pivot as an anchor: immovable, and absorbing whatever the rod
+pulls with. Without it you would have two bodies tumbling around their
+shared centre of mass, joined by a stick — also a perfectly good
+simulation, just not a pendulum.
+
+---
+
+### Example 18 — where it rests, and what the answer depends on
+
+**The physics.** Two questions that integration does not answer. A
+pendulum released anywhere comes to rest hanging straight down, one
+rod-length below the pivot. And free fall, `y(T) = y₀ + v₀T + ½gT²`, has
+the exact derivative `∂y/∂g = T²/2`, which at `T = 3` is 4.5.
+
+**Why it is a real test.** Both answers are exact, and the second one has
+a second exact answer hiding in it.
+
+```
+In[6]:= constrain pivot bob
+Out[6]= constraint0: obj0 <-> obj1 held at 1 (METHOD IDA is required to integrate it)
+In[7]:= equilibrium
+Out[7]= equilibrium found in 17 Newton iteration(s), 67 residual evaluation(s);
+        largest net force on any free body = 7.459152323898993e-13,
+        worst |g| = 1.9317880628477724e-14
+In[8]:= get bob.position
+Out[8]= [0.0000000000000735262479725006, -0.9999999999999807, 0]
+```
+
+Released 57° off vertical, the bob lands at `x = 7.4 × 10⁻¹⁴`,
+`y = −0.9999999999999807`. Straight down, one rod-length, to 13 digits —
+and the largest net force left anywhere is 7 × 10⁻¹³.
+
+Now the derivative, on a free body:
+
+```
+In[15]:= sensitivity 3 "gravity.y" "mass 0"
+Out[15]= t = 3 (CVODES, 129 solver steps)
+d/d(gravity.y):
+  obj0 position [0, 4.500000056696235, 0]
+d/d(mass 0):
+  obj0 position [0, 0, 0]
+In[16]:= get stone.position
+Out[16]= [3.000000000000001, -44.14500000000045, 0]
+```
+
+**What to notice.** `4.500000056696235` against an analytic `4.5` — 1.3
+parts in 10⁸, carried alongside a trajectory that itself landed on
+`−44.14500000000045` where `−½ · 9.81 · 9 = −44.145`.
+
+And the second derivative is **exactly zero**. In uniform gravity every
+mass accelerates equally, so the trajectory does not depend on the mass
+at all. A finite-difference estimate would have returned some small
+number and left you guessing whether it was noise or physics. The
+sensitivity equations return the zero.
+
+---
+
+---
+
+### Example 19 — a door on a hinge
+
+**The physics.** A hinge fixes a point *and* an axis, leaving one
+freedom. A hinged rigid body is a **compound** pendulum: its
+small-amplitude period is
+
+*T = 2π√(I_pivot/(mgd))*,  *I_pivot = I_com + md²*
+
+— the moment of inertia about the pivot, not just the distance to the
+centre of mass. Using the point-mass formula instead is wrong by 15 %
+for the slab below.
+
+**Why it is a real test.** Three independent things must come out right:
+the period (physics), the rod-and-axis holding (numerics), and the fact
+that the body turns about the hinge axis and *nothing else*.
+
+```
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2], position = [0.0199986666933331, -0.9998000066665778, 0] }
+In[6]:= hinge jamb door [0, 0, 1]
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]
+```
+
+**What to notice.** The angular momentum is `[0, 0, 0.0037]` — *exactly*
+zero on x and y. The two rows a hinge has over a ball joint are the ones
+that forbid those axes, and they are doing their job to the last bit.
+
+The joint itself is held to `2.7 × 10⁻¹⁰` after 70 solver steps, and
+energy to 1.6 parts in 10⁹. Run the same thing for one compound-pendulum
+period and the slab returns to where it started to about `3 × 10⁻⁸`.
+
+**The `inverse_mass = 0` on the jamb is what makes it a door.** It marks
+the jamb as an anchor: immovable, and absorbing whatever the hinge pulls
+with. Without it you would have two slabs tumbling about their shared
+centre of mass, hinged together — a perfectly good simulation, just not
+a door.
+
+**A joint constrains velocity, not just position.** A ball joint says
+the two bodies share a point, so at the velocity level it says
+`v_i + ω_i×r_i = v_j + ω_j×r_j`: a body turning about a pivot offset from
+its centre **must have its centre moving**. Give it a spin and leave its
+velocity at zero and the state is not on the constraint manifold. The run
+projects the starting velocities onto it — the smallest mass-weighted
+change that satisfies the joint, which is precisely the impulse a real
+coupling delivers when clutched onto a spinning shaft — and reports how
+big that change was. An already-consistent state is left exactly alone.
+
+For a cube spun at 3 rad/s on a half-metre arm, the projection leaves the
+turn nearly untouched and sets the *centre* moving instead: the pivot was
+running at 1.5 m/s and giving a 1 kg body some velocity is cheaper than
+fighting the spin.
+
+**One real limit.** Orientation joints carry a tolerance floor of
+`rtol = 1e-6`, because the differential-algebraic system a hinge produces
+is *index 2* and has an accuracy ceiling no tolerance can push past.
+Measured across twelve compound pendulums the boundary is sharp: `1e-6`
+converges in every one, `1e-8` in none. `RUN` says when the floor bit.
+
+---
+
 ## 8. Watching it: the scene window and browser videos
 
 ### 8.1 The live window
@@ -1254,7 +1462,7 @@ someone else, record it:
 
 ```bash
 cargo build --release -p posim
-tools/record_video.py videos/scenes/kepler_ellipse.posim \
+recorder/src/record_video.py videos/scenes/kepler_ellipse.posim \
      -o videos/kepler_ellipse.html --frames 360 --dt 0.02 \
      --title "Kepler orbit, e = 0.6"
 ```
@@ -1267,17 +1475,42 @@ The recorder drives `posim --machine` and asks it to `step` — **every
 advance is a real SUNDIALS step**. The tool is a camera, not a physics
 engine.
 
-Three recordings ship with the repository:
+Thirteen recordings ship with the repository:
 
 | file | what to watch | measured over the recording |
 |---|---|---|
 | [`videos/kepler_ellipse.html`](videos/kepler_ellipse.html) | the speed swinging between perihelion and aphelion | \|d*E*\|/*E* = 9.8 × 10⁻⁸, \|d*L*\|/\|*L*\| = 1.3 × 10⁻⁷ |
 | [`videos/tumbling_racket.html`](videos/tumbling_racket.html) | example 7's flip, seen from outside | \|d\|*L*\|\|/\|*L*\| = **0 exactly**; \|d*E*\|/*E* = 6.4 × 10⁻⁹ |
 | [`videos/box_of_shapes.html`](videos/box_of_shapes.html) | a cylinder, a disk and a cuboid in a rigid `BOX 4`; gold arrows are the analytic contact normals, sized by impulse | 36 collisions, \|d*E*\|/*E* = 3.4 × 10⁻¹⁶ |
+| [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | **two `HINGE` joints** assembled into the classic chaotic linkage — gold rings mark the joints, gold lines their axes | the joints hold to \|*g*\| = 5.6 × 10⁻⁸ through 400 IDA steps |
+| [`videos/universal_joint.html`](videos/universal_joint.html) | a **`UNIVERSAL` joint** carrying a driven shaft's rotation across to a second shaft, braced by a rod to a post | the bend stops at cos *β* = 0.6000004 against a geometric bound of exactly 0.6; three joints hold to \|*g*\| = 4.0 × 10⁻⁷ |
+| [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on **`BALL` joints** — the chain whirls out of the plane it started on, which a hinged chain cannot do | the four joints hold to \|*g*\| = 3.3 × 10⁻⁹; \|*z*\| runs from exactly 0 to 1.7147 |
+| [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four **`CONSTRAIN` rods** — one row each, the cheapest linkage in the language, going chaotic | run continuously at the default tolerance the rods hold to \|*g*\| = 5.4 × 10⁻¹⁵, i.e. roundoff |
+| [`videos/spinning_top.html`](videos/spinning_top.html) | a top on a **`BALL` joint**, precessing under gravity | 1.020440 rad/s against the exact Ω = *Mgr*/(*I₃ω₃*) = 1.020408, 3 parts in 10⁵ |
+| [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings**, three perpendicular `HINGE` axes | total *L·ŷ* conserved to 1.4 × 10⁻¹⁴; every centre stays on the pivot to 1.2 × 10⁻³⁴ |
+| [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same rings with a **pendulous** bowl — a ship's compass, seeking level | periods 1.878587 and 2.307339 s against measured 1.883426 and 2.313653 |
+| [`videos/cardan_gear.html`](videos/cardan_gear.html) | **Cardan gears** — a wheel in a ring of twice its radius, rolling on a `GEAR` row, its rim point tracing a straight line | line held to 1.1 × 10⁻⁸; stroke exactly ±2*r* |
+| [`videos/rack_and_pinion.html`](videos/rack_and_pinion.html) | a weight on a **`RACK`** winding up a flywheel, on a **`PRISMATIC`** guide | falls at exactly *g*/2, and at the same rate for two different pitch radii |
+| [`videos/piston_crankshaft.html`](videos/piston_crankshaft.html) | the **slider-crank** — a piston, a connecting rod and a crankshaft | follows the exact kinematics to 8.4 × 10⁻⁸; stroke exactly *L*−*a* to *L*+*a* |
+
+That last one is the one to open if you only open one, because it shows
+a joint doing something a rod cannot. A `UNIVERSAL` holds a shared point
+and one right angle between its trunnions; it deliberately does **not**
+hold the two shafts straight. Left dangling, the output shaft therefore
+does not transmit rotation at all — it swings down past the joint like a
+pendulum and folds back at 176°. Bracing it with a second bearing looks
+right and fails at once, because `HINGE 5 + UNIVERSAL 4 + HINGE 5` is 14
+rows on 12 freedoms and three of them are redundant, which leaves the
+constrained solve singular. One `CONSTRAIN` — a single row — braces it
+instead, and pins the bend to a closed form: the shaft sweeps a cone,
+and cos *β* cannot go below 0.6. The recording touches 0.6000004.
+Grammar §12.10 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or ← →), a scrub
 bar, speed from 0.25× to 4×, drag to orbit, wheel to zoom, and toggles
-for trails, labels and contact arrows. The corner readout shows the
+for trails, labels, contact arrows and joints. A mechanism gets its
+joints drawn — a ring at each shared point and a line along each hinge
+axis — because that is the thing the video is about. The corner readout shows the
 frame number, *t*, *E*, \|*P*\|, \|*L*\| and the collision count **for the
 frame you are on** — so you can stop on the moment something looks
 wrong and read the conserved quantities off it.
@@ -1319,7 +1552,7 @@ cargo run -p physical_object --release --example bouncing_ball_restitution
 
 ### 9.3 The test suite
 
-568 tests: 40 library, 19 collision, 9 conservation, 109 language,
+605 tests: 40 library, 19 collision, 9 conservation, 109 language,
 92 quantum, 233 special-function, 11 vendored identities and 55
 documentation examples that are compiled and run as written.
 
@@ -1379,10 +1612,10 @@ with the complete EBNF grammar and a further eighteen worked examples.
 | `sundials_rs/` | the pure-Rust SUNDIALS 7.8.0 engine (vendored, read-only) |
 | `jupyter/` | the JupyterLab kernel |
 | `dynamic_notebooks/` | 59 runnable sessions, incl. 34 Routh problems |
-| `scripts/solveit/` | the sixteen examples in section 7 |
+| `scripts/solveit/` | the nineteen examples in section 7 |
 | `scripts/collisions/` | twelve documented collision scripts |
 | `videos/` | recorded browser videos; `videos/scenes/` the scripts behind them |
-| `tools/` | the index builder, the verifiers, `record_video.py` |
+| `tools/` | the index builder and the verifiers (the video recorder is its own package, `recorder/`) |
 | `evidence/port-7.8.0/` | the logs behind every claim in section 9.5 |
 
 ### The documents

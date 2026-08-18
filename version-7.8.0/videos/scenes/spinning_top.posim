@@ -1,0 +1,72 @@
+# A spinning top, held at its tip and precessing under gravity.
+#
+#   pivot --BALL-- top
+#
+# A BALL joint holds one point and frees all three rotations, which is
+# exactly what the tip of a top is. Three rows on one free body: six
+# freedoms in, three left, and they are the three the top needs.
+#
+# THE CLOSED FORM. A symmetric top spinning at w3 about its own axis,
+# with its centre of mass a distance r from the pivot, precesses about
+# the vertical at
+#
+#     Omega = M g r / (I3 w3)
+#
+# This is usually quoted as the FAST-TOP approximation, good when the
+# spin swamps the precession. It is not an approximation here. The
+# exact condition for steady precession at tilt theta from the vertical
+# is
+#
+#     M g r = Omega I3 w3 - I1 Omega^2 cos(theta)
+#
+# and this top is mounted with its axis HORIZONTAL, theta = 90 degrees,
+# so the cos(theta) term is exactly zero and the simple formula is
+# exact. That is why the axis lies along z and gravity along -y.
+#
+# The numbers, all of them chosen so the answer is checkable:
+#
+#     M = 1, r = 0.6, g = 3, radius 0.42  ->  I3 = M R^2 / 2 = 0.0882
+#     w3 = 20                             ->  Omega = 1.0204081632653061
+#     precession period = 2 pi / Omega    =  6.1575 s
+#
+# The recording runs 6.2 s, so you see one full turn and a little more.
+# Measured over it: the precession comes out 1.020440 rad/s against the
+# exact 1.020408, three parts in 100,000, and the axis stays horizontal
+# to 4.3e-5 -- it does not nutate at all.
+#
+# IT DOES NOT NUTATE BECAUSE IT WAS STARTED ON THE STEADY SOLUTION, and
+# that takes both velocities, not just the spin. Give the top only its
+# spin and release it, and it is not on the steady orbit: it dips and
+# bobs its way around, and the AVERAGE precession misses the formula by
+# 7.8% at this spin rate. To start it steady, the whole body must also
+# be turning about the vertical through the pivot:
+#
+#     angular_velocity = [0, Omega, w3]      spin, plus precession
+#     velocity         = [Omega * r, 0, 0]   the centre of mass on its circle
+#
+# Both together are a rigid rotation about the pivot plus a spin about
+# the symmetry axis, and the pivot itself stays still under both, so
+# g_dot = J u = 0 exactly and nothing is projected at the start.
+#
+# THE TOLERANCE. As in the rod-chain recording (grammar §12.9), a
+# recording is one `step` per frame and every `step` is a cold restart.
+# A gyroscope turning at 20 rad/s is the most demanding scene here: the
+# automatic orientation-joint floor of 1e-6 / 1e-8 is NOT enough, and
+# the restarts fail at t = 1.12. This is the one scene that has to go
+# looser than the floor, which the solver's own error message suggests.
+set system.rtol = 1e-5
+set system.atol = 1e-7
+set system.g_constant = 0
+set system.uniform_gravity = [0, -3.0, 0]
+collide off
+# The pivot is a POINT, so its inertia is the zero matrix and it cannot
+# turn: a genuine fixed support. A sphere with inverse_mass = 0 would
+# still be free to spin, and the ball joint would drive it.
+new point as pivot { mass = 1, position = [0, 0, -0.6], inverse_mass = 0 }
+# The joint pivots at the MIDPOINT of the pair, so the support at
+# -0.6 and the centre of mass at +0.6 put the tip exactly at the origin.
+# A cylinder is symmetric about its LOCAL Z axis, so body z is the
+# symmetry axis and no rotation has to be applied to aim it.
+new cylinder as top { mass = 1, radius = 0.42, half_height = 0.06, position = [0, 0, 0.6], velocity = [0.6122448979591837, 0, 0], angular_velocity = [0, 1.0204081632653061, 20] }
+ball pivot top
+method ida

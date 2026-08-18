@@ -1,0 +1,79 @@
+# A compass in a Cardan suspension, rocking back towards level.
+#
+#   frame --HINGE x-- ring --HINGE z-- bowl
+#
+# Two hinges on two perpendicular HORIZONTAL axes: 10 rows on 12
+# freedoms, leaving the two the suspension exists to give — roll and
+# pitch. Both axes pass through one point, so the bowl can tilt either
+# way without its centre going anywhere.
+#
+# THE DIFFERENCE FROM THE GYROSCOPE GIMBAL is one number: d. There every
+# centre of mass sat ON the pivot, the lever arm was zero, and gravity
+# did nothing at all. Here the bowl is PENDULOUS — its centre of mass
+# hangs d = 0.12 BELOW the pivot — and that is the whole mechanism. A
+# ship's compass is not held level by its bearings; it is held level by
+# its own weight, and the bearings only get out of the way.
+#
+# So gravity is the restoring torque, and each axis is a physical
+# pendulum with a period you can write down:
+#
+#     T = 2 pi sqrt( I / (M g d) )
+#
+# pitch, about the inner hinge (z): only the bowl swings.
+#     I = M(3R^2 + 4h^2)/12 + M d^2 = 0.21046667
+#     T = 1.878587 s
+#
+# roll, about the outer hinge (x): ring and bowl swing together, and the
+# ring swings about a DIAMETER of itself.
+#     I = 0.21046667 + [ Mr(c^2/2 + 5a^2/8) + Mr d^2 ] = 0.28574980
+#     restoring = (Mb - Mr) g d = 2.11896
+#     T = 2.307339 s
+#
+# Measured off this recording: 1.883426 s and 2.313653 s, each about
+# 2.7e-3 high. That excess is NOT solver error, it is the finite
+# amplitude: halve the kick and it falls by 4.01 and 4.02, the signature
+# of a term in theta^2. Excited on one axis alone the attribution is
+# exact — the pitch period comes out 4.99e-4 long against a predicted
+# theta^2/16 = 5.02e-4. With both axes swinging each period is pushed up
+# by the other's swing as well, so the coefficient is larger.
+#
+# WHY THE RING SITS ABOVE CENTRE. Every joint pivots at the MIDPOINT of
+# its pair, so two hinges sharing one point force
+#
+#     p_frame = p_bowl = -p_ring
+#
+# and a bowl hung d below the centre puts the ring's own centre d above
+# it. That is what the midpoint rule costs, and it is not cosmetic: the
+# ring is then top-heavy and SUBTRACTS from the restoring torque, which
+# is why the roll formula carries (Mb - Mr) and not (Mb + Mr), and why
+# the ring is made light. Net first moment 2(0.12) - 0.2(0.12) > 0, so
+# the suspension is still stable, and it seeks level.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -9.81, 0]
+collide off
+new point as frame { mass = 1, position = [0, -0.12, 0], inverse_mass = 0 }
+new torus as ring { mass = 0.2, ring_radius = 0.85, tube_radius = 0.035, position = [0, 0.12, 0] }
+new cylinder as bowl { mass = 2, radius = 0.6, half_height = 0.05, position = [0, -0.12, 0] }
+# A torus and a cylinder are both symmetric about their LOCAL z, so both
+# are turned to lie FLAT — face onto the vertical. The ring lying flat is
+# not a detail: a gimbal ring pivots about a DIAMETER, a line in its own
+# plane, so its plane must contain both hinge axes, x and z. Orient it
+# instead so its symmetry axis IS the hinge axis and "swinging" becomes a
+# spin about its own axis of revolution — which neither shows nor does
+# anything, and changes the roll inertia from the diametral
+# Mr(c^2/2 + 5a^2/8) to the axial Mr(c^2 + 3a^2/4).
+set ring.orientation = [0.7071067811865476, 0.7071067811865476, 0, 0]
+set bowl.orientation = [0.7071067811865476, 0.7071067811865476, 0, 0]
+hinge frame ring [1, 0, 0]
+hinge ring bowl [0, 0, 1]
+method ida
+# The jolt: a rotation about each hinge axis, which is exactly the
+# motion each hinge permits. The linear velocities are the ones those
+# rotations imply about a pivot at the origin, v = omega x r, so the
+# shared point stays still and g_dot = J u = 0 to roundoff. Set the
+# angular velocities without them and the start would be off the
+# manifold and would have to be projected first.
+set ring.angular_velocity = [0.25, 0, 0]
+set ring.velocity = [0, 0, 0.03]
+set bowl.angular_velocity = [0.25, 0, 0.3]
+set bowl.velocity = [0.036, 0, -0.03]

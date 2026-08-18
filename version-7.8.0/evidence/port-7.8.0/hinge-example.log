@@ -1,0 +1,22 @@
+In[1]:= set system.g_constant = 0
+In[2]:= set system.uniform_gravity = [0, -9.81, 0]
+In[3]:= collide off
+Out[3]= collisions OFF (0 collidable pair(s); 0 impulse(s) so far)
+In[4]:= new sphere as jamb { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+Out[4]= obj0 as jamb
+In[5]:= new cuboid as door { mass = 1, half_extents = [0.2, 0.4, 0.2], position = [0.0199986666933331, -0.9998000066665778, 0] }
+Out[5]= obj1 as door
+In[6]:= hinge jamb door [0, 0, 1]
+Out[6]= constraint0: hinge obj0 <-> obj1 about [0, 0, 1], 5 row(s) — one freedom left (METHOD IDA is required to integrate it)
+In[7]:= constraints
+Out[7]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 0e0, worst |g_dot| = 0e0
+In[8]:= method ida
+Out[8]= method = IDA (constrained DAE, GGL index-2)
+In[9]:= run 1 steps 10
+Out[9]= t = 1 (70 solver steps, 10 snapshots, |dE/E| = 1.613e-9)
+In[10]:= constraints
+Out[10]= constraint0: hinge obj0 <-> obj1, 5 row(s)
+worst |g| = 2.73750133672479e-10, worst |g_dot| = 2.3769240437118873e-9
+In[11]:= get door.angular_momentum
+Out[11]= [0, 0, 0.003742219622967182]

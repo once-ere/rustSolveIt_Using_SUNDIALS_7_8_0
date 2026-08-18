@@ -1,0 +1,21 @@
+# 17. A pendulum as a CONSTRAINT, not a force.
+# A rod is a geometric fact: the bob is exactly L from the pivot, always.
+# Writing that as a stiff spring only approximates it. Writing it as an
+# algebraic equation turns the problem into a DAE, which is what IDA is
+# for. The small-amplitude period is T = 2*pi*sqrt(L/g).
+set system.g_constant = 0
+set system.uniform_gravity = [0, -9.81, 0]
+collide off
+# inverse_mass = 0 makes the pivot an ANCHOR: it never moves, and it
+# absorbs the rod's reaction.
+new sphere as pivot { mass = 1, radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
+# start 0.02 rad off vertical, so the linear period applies
+new sphere as bob { mass = 1, radius = 0.05, position = [0.019998666693333084, -0.9998000066665778, 0] }
+# no length given: freeze the separation they already have
+constrain pivot bob
+constraints
+method ida
+# one small-amplitude period: 2*pi*sqrt(1/9.81)
+run 2.0060666807106475 steps 200
+get bob.position
+constraints

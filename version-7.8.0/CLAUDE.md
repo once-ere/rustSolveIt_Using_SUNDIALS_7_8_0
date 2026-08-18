@@ -24,7 +24,7 @@ including which donor sources were deliberately not carried over — is in
 ## Commands
 
 - Build: `cargo build --workspace --all-targets 2>&1 | tee /tmp/build.log`
-- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (568 expected)
+- Tests: `cargo test --workspace 2>&1 | tee /tmp/test.log` (605 expected)
 - Notebook: `cargo run` (type `HELP`); batch: `cargo run -p posim -- --script <f>`
 - Dynamic notebook (loads a file, opens its scene window, stays
   interactive): `cargo run -p posim --release -- --notebook
@@ -43,7 +43,7 @@ including which donor sources were deliberately not carried over — is in
   --script scripts/solveit/NN_name.posim` (01–16; documented with
   captured output in `SolveIt.md` §7)
 - Browser video: `cargo build --release -p posim` then
-  `tools/record_video.py videos/scenes/<x>.posim -o videos/<x>.html
+  `recorder/src/record_video.py videos/scenes/<x>.posim -o videos/<x>.html
   --frames N --dt DT --title "..." --caption "..."`
 - Wire protocol test: `python3 jupyter/test_protocol.py` (needs
   `cargo build --release` first — it prefers `target/release/posim`,
@@ -58,7 +58,9 @@ including which donor sources were deliberately not carried over — is in
 
 ## Layout
 
-- `physical_object/` — library: `linalg` (Vec3/Mat3/Quat + skew/outer),
+- `physical_object/` — library: `constrain` (rigid rods + the constraint
+  Jacobian), `equilibrium` (KINSOL rest states), `sensitivity` (CVODES /
+  IDAS derivatives), `linalg` (Vec3/Mat3/Quat + skew/outer),
   `boundary` (enum + `Sdf` trait; **every round shape is symmetric
   about its local z axis**), `physical_object` (the union struct,
   get/set), `system` (collection + 13N pack/unpack), `integrate`
@@ -78,7 +80,7 @@ including which donor sources were deliberately not carried over — is in
   a reader thread streams async `{"event":...}` lines to the notebook;
   `.venv/` and `.kernels/` are gitignored scratch.
 - `tools/` — the index pipeline, the example verifiers, and
-  `record_video.py` (also outside the Rust constraints).
+  the video recorder in `recorder/` (also outside the Rust constraints).
 - `videos/`, `videos/scenes/` — recorded browser videos and the posim
   scripts that produced them.
 - `evidence/port-7.8.0/` — the logs behind every claim in
@@ -101,7 +103,7 @@ including which donor sources were deliberately not carried over — is in
 1. **Sundials-only integration.** All stepping goes through
    `physical_object/src/integrate.rs` calling `cvode_rs`/`arkode_rs`.
    Never add a hand-rolled Euler/Verlet/RK stepper anywhere — including
-   in examples, docs, tooling (`tools/record_video.py` drives `step`;
+   in examples, docs, tooling (`recorder/` drives `step`;
    it does not integrate), and the scene playback thread (it calls
    `integrate::step`; reverse is snapshot replay from the history ring,
    never negative-dt integration).
@@ -180,10 +182,10 @@ that will bite you:
   output. ≤2 attempts per failing command, then switch strategy.
 - Commit after every coherent file group; keep
   `cargo build --workspace --all-targets` warning-free and
-  `cargo test --workspace` green at every commit (**568 tests**:
-  40 physical_object lib + 19 collision + 9 conservation + 109 posim +
-  92 quantum + 233 special_functions + 11 vendored identities +
-  55 doctests).
+  `cargo test --workspace` green at every commit (**605 tests**:
+  46 physical_object lib + 19 collision + 9 conservation +
+  16 constrained/DAE + 111 posim + 92 quantum + 233 special_functions +
+  11 vendored identities + 55 doctests).
 - New solver features need: a unit or conservation test with an
   **analytic** expectation (not a golden-output snapshot), a grammar
   hook if user-facing (lexer keyword → parser production → VM
@@ -203,6 +205,33 @@ that will bite you:
   `evidence/port-7.8.0/`. If you change something that moves a number,
   re-run and re-paste; do not adjust the prose to fit.
 
+## The constrained / equilibrium / sensitivity paths
+
+Read ARCHITECTURE §3.9 before touching `constrain.rs`, `equilibrium.rs`
+or `sensitivity.rs`. Four things that already cost a day:
+
+- **The GGL projection is mass-weighted: `q̇ = v - M⁻¹Jᵀμ`.** Dropping
+  `M⁻¹` is dimensionally wrong the moment a joint grips orientation
+  (`J_ω` carries the attachment arm), and *invisible* for rods, where it
+  is only a rescaling of μ. This cost a day; do not undo it.
+- **`IDACalcIC` cannot find the multipliers and is not called.** The
+  index-2 residual is satisfied by free fall with λ = 0, so there is
+  nothing for it to solve. `seed_multipliers` solves `g̈ = 0` directly.
+- **`g = |d| - L`, not `|d|² - L²`.** The squared form is better
+  behaved algebraically and *worse* numerically: its gradient scales
+  with `L`, and the index-2 corrector stops converging for `L ≠ 1`. Do
+  not "simplify" it back.
+- **GGL index-2, not index-1.** Both `g` and `ġ` are carried as
+  algebraic equations. Dropping `μ` gives an index-1 system whose `g`
+  drifts quadratically — and nothing fails loudly when it does.
+- **Do not call `IDACalcIC` when the ICs are already consistent.** A
+  bare `CONSTRAIN` guarantees they are, and `seed_multipliers` supplies
+  the exact tension; asking IDA to re-derive it at trajectory tolerance
+  fails with `IDA_CONV_FAIL`.
+- **The sensitivity parameter vector is shared (`Rc<RefCell<Vec<f64>>>`),
+  and the RHS must read every value out of it.** Capture a copy and the
+  difference-quotient sensitivities come back as zeros, silently.
+
 ## Traps that have already cost time
 
 - **`RUN` takes a duration, not an absolute time.** `run 1.7` then
@@ -217,6 +246,22 @@ that will bite you:
 - **A magnetic moment tensor's third column is what a B along z can
   grip.** `[[0, 0.5, 0], [-0.5, 0, 0], [0, 0, 0]]` looks like a
   reasonable antisymmetric tensor and produces exactly zero torque.
+- **`BALL`, `HINGE`, `UNIVERSAL`, `GEAR`, `RACK` and `PRISMATIC` are CONTEXTUAL keywords** — commands
+  only at the start of a line. `ball` is exactly what a physics user
+  calls a sphere, and `new sphere as ball` / `get ball.mass` were already
+  in the tests and docs; reserving it outright broke them.
+- **A joint constrains velocity, so starting velocities are PROJECTED**
+  (`project_initial_velocities`). A body turning about an offset pivot
+  must have its centre moving; a caller who sets ω and leaves v at zero
+  is off the manifold, and IDA then fails on the first step at every
+  tolerance. Reported via `RunReport::initial_velocity_projected`.
+  A rod has `J_ω = 0` and never needed it — which is why this hid.
+- **Orientation joints carry a tolerance floor** of `rtol = 1e-6`
+  (`ROT_JOINT_RTOL_FLOOR`): the index-2 accuracy ceiling is real, and
+  measured sharp across twelve pendulums.
+- **A constrained system refuses every method but `METHOD IDA`**, and a
+  fully-free system has no isolated equilibrium at all (translate it and
+  nothing changes) — `EQUILIBRIUM` says so and tells you to pin a body.
 - **Quantum discretisation error converges; a bug does not.** Before
   calling a QM disagreement a defect, refine the grid and check the
   ratio: the square-barrier transmission at E = 2 goes 0.069368 →
@@ -336,7 +381,7 @@ dumbbell impact; entity labels show the registered user names
 two shaded spheres at their rotated COM offsets joined by the rod's four
 silhouette lines.
 
-The recorded video player (`tools/record_video.py`) follows the same
+The recorded video player (`recorder/src/record_video.py`) follows the same
 rules: wall slabs excluded from both the draw list and the camera
 auto-fit, round shapes rotated about their local z axis, contact arrows
 along the exact analytic normal scaled by impulse.
