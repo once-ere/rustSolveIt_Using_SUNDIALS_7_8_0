@@ -15,7 +15,7 @@
 # through one common point — which is what a gimbal is. The rings only
 # LOOK nested; their centres coincide exactly, and they stay coincident:
 # over the whole recording no centre moves further from the origin than
-# 7e-35.
+# 1.2e-34.
 #
 # WHY GRAVITY DOES NOTHING HERE, unlike the spinning top. In that scene
 # the centre of mass hung a distance r from the pivot, so weight had a
@@ -32,7 +32,7 @@
 #    so nothing can torque this system about the vertical, and the
 #    total angular momentum along y is conserved:
 #
-#        L.y = 0.6314    held to 6.4e-15 over the whole run
+#        L.y = 0.52688    held to 1.4e-14 over the whole run
 #
 # 2. The innermost hinge's axis IS the rotor's spin axis, so nothing can
 #    torque the rotor about it either. Its axial spin is conserved:
@@ -42,9 +42,9 @@
 # WHAT TO WATCH. The whole assembly is started turning about the
 # vertical at 1 rad/s. A body with no gyroscope in it would simply keep
 # turning that way. This one does not: over 6.3 seconds the outer ring
-# never gets more than 11.15 degrees from where it began, and the
+# never gets more than 7.43 degrees from where it began, and the
 # rotation put in comes back out as a TILT — the rotor's axis swings up
-# to 20.06 degrees away from its starting direction, at right angles to
+# to 16.33 degrees away from its starting direction, at right angles to
 # the push. Rotation in about one axis, rotation out about another, is
 # the whole of gyroscopic behaviour.
 set system.g_constant = 0
