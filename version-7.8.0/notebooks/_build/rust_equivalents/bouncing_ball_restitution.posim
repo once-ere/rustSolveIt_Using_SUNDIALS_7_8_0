@@ -1,0 +1,22 @@
+# A ball dropped on a slab, rebounding to e^2 of its drop height.
+# The point of the example is the IMPACT TIME. Contact is not found by
+# noticing an overlap after a step; the separation between ball and slab
+# is registered with SUNDIALS as a ROOT FUNCTION, and the integrator
+# stops exactly where it crosses zero. So the time of impact comes out at
+# solver tolerance, sqrt(2h/g), rather than to within one step -- and a
+# fast ball cannot pass through a thin plate between samples.
+#
+# Drop height of the centre above rest is h = 4.5, g = 10, e = 0.8, so
+# the analytic impact time is sqrt(2*4.5/10) = 0.9486832980505138 and the
+# rebound apex is 0.5 + e^2 h = 3.38.
+set system.g_constant = 0
+set system.uniform_gravity = [0, -10, 0]
+new cuboid as floor { mass = 1, half_extents = [5, 0.5, 5], position = [0, -0.5, 0], inverse_mass = 0 }
+set floor.inverse_inertia_tensor = [[0,0,0],[0,0,0],[0,0,0]]
+new sphere as ball { mass = 1, radius = 0.5, position = [0, 5, 0], restitution = 0.8 }
+collide
+run 1.8 steps 360
+contacts
+get contact0.t
+get contact0.normal
+get ball.position

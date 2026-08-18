@@ -83,6 +83,12 @@ including which donor sources were deliberately not carried over — is in
   the video recorder in `recorder/` (also outside the Rust constraints).
 - `videos/`, `videos/scenes/` — recorded browser videos and the posim
   scripts that produced them.
+- `notebooks/` — one executed Jupyter notebook per example, 109 in all
+  (13 video scenes, 6 Rust examples, 12 collision scripts, 19 SolveIt
+  scripts, 59 dynamic notebooks). Python notebooks driving
+  `posim --machine`; stand-alone by design — every explanation is
+  repeated in full in every notebook. Machinery and re-verification
+  loop in `notebooks/_build/` (see `notebooks/README.md`).
 - `evidence/port-7.8.0/` — the logs behind every claim in
   `PORT_7.8.0_PROVENANCE.md`.
 - `ARCHITECTURE.md` — pinned cross-module contracts (state layout,

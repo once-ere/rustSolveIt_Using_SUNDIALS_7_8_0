@@ -1,0 +1,24 @@
+# A charged sphere gyrating in a uniform magnetic field.
+# The Lorentz force F = q v x B depends on the VELOCITY, which makes the
+# right-hand side non-separable and is why this exercises the CVODE BDF
+# path rather than a symplectic one. With v perpendicular to B the motion
+# is an exact circle:
+#
+#     gyroradius  r = m |v| / (|q| B) = 2*3/(1.5*4) = 1
+#     period      T = 2 pi m / (|q| B) = 2 pi * 2 / 6 = 2.0943951023931953
+#
+# A magnetic force does no work, so the SPEED must be conserved exactly
+# even though the velocity is turning the whole time -- and after one
+# full period the orbit must close back on the origin.
+set system.g_constant = 0
+set system.b_field = [0, 0, 4]
+set system.rtol = 1e-10
+set system.atol = 1e-12
+collide off
+new sphere as ion { mass = 2, charge = -1.5, radius = 0.1, position = [0, 0, 0], velocity = [3, 0, 0] }
+method bdf
+norm(ion.velocity)
+run 2.0943951023931953 steps 200
+get ion.position
+norm(ion.position)
+norm(ion.velocity)

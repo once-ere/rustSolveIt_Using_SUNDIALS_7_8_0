@@ -1,0 +1,50 @@
+{
+ "key": "solveit_16_special_functions",
+ "title": "The special-function library, reached through ordinary calls",
+ "source": "version-7.8.0/scripts/solveit/16_special_functions.posim",
+ "category": "solveit",
+ "howtorun": "cargo run --release -p posim -- --script scripts/solveit/16_special_functions.posim",
+ "abstract": "16. The special-function library, reached through ordinary calls. Five identities that a wrong implementation cannot accidentally pass. (a) J_0 vanishes at its first zero, j_{0,1} = 2.404825557695773",
+ "situation": "### The objects\n\nThis example creates no rigid bodies. It exercises a part of the system that works on fields or on numbers rather than on moving objects.\n\n### The interactions\n\n- **Mutual gravity is at its default `G = 1`**, so every pair of bodies attracts every other by `F = G m1 m2 / r^2`.\n- **Contact is OFF**. Nothing here is meant to touch anything else, so the rootfinder is not armed.",
+ "eom": "There are 0 bodies. Each obeys Newton's and Euler's equations, both of which are **second order**:\n\n```\nm_i * d2(x_i)/dt2 = F_grav_i\n\nI_i * d(omega_i)/dt + omega_i x (I_i omega_i) = T_i\n```\n\nThe `omega x (I omega)` term in Euler's equation is the gyroscopic term. It is what makes a tumbling body's spin axis wander even with no torque at all, and it is why rigid-body motion cannot be reduced to three independent rotations.\n\nThe forces on the right are:\n\n- `F_grav_i = sum over j != i of G m_i m_j (x_j - x_i) / |x_j - x_i|^3` \u2014 the mutual attraction, softened at short range if `softening` is set",
+ "constraints": "**This model has no joints.** Nothing algebraic relates the coordinates, so the system is an ordinary differential equation rather than a differential-algebraic one, and it needs no Lagrange multipliers and no constraint Jacobian.\n\nThat does not mean nothing is conserved. Energy, linear momentum and angular momentum are still exact consequences of the equations of motion, and comparing them before and after a run is the honest way to judge the integration.",
+ "reduction": "**Sizing this particular problem.** There are 0 bodies, so the state vector `y` has\n\n```\n0 bodies x 13 numbers = 0 components\n```\n\nlaid out as consecutive 13-number blocks in creation order, each holding position (3), linear momentum (3), orientation quaternion w-first (4), and angular momentum (3).\n\n**What is handed to the Rust SUNDIALS translation.**\n\nThere are no algebraic constraints, so the whole of the mechanics above is one first-order system\n\n```\ndy/dt = f(t, y),   y in R^0\n```\n\nhanded to the pure-Rust translation of **CVODE** in Adams-Moulton mode: a variable-order, variable-step explicit-family method for non-stiff problems. This is the default, and it is the right choice for orbits and for anything smooth.\n\nThe right-hand side `f` unpacks `y` into bodies, computes every force and torque, and packs the derivatives back in the same 13-per-body order.",
+ "steps": [
+  {
+   "title": "Measure",
+   "explain": "The next cell sends this command to the simulator. Here is exactly what it expects:\n\n---\n\n`bessel_j(0, 2.404825557695773)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.",
+   "code": "sim.do(\"bessel_j(0, 2.404825557695773)\")"
+  },
+  {
+   "title": "Measure (2)",
+   "explain": "**A note carried over from the example this notebook pairs with:**\n\n> (b) the Wronskian identity for any real order nu:\n> J_{nu+1}(x) Y_nu(x) - J_nu(x) Y_{nu+1}(x) = 2 / (pi x)\n\nThe next cell sends these 2 commands to the simulator. Here is exactly what each one expects:\n\n---\n\n`bessel_j_nu(1, 3) * bessel_y_nu(0, 3) - bessel_j_nu(0, 3) * bessel_y_nu(1, 3)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.\n\n---\n\n`2 / (pi * 3)` \u2014 a command of the simulator's language. Sent as typed; the simulator prints whatever it has to say about it.",
+   "code": "sim.do(\"bessel_j_nu(1, 3) * bessel_y_nu(0, 3) - bessel_j_nu(0, 3) * bessel_y_nu(1, 3)\")\nsim.do(\"2 / (pi * 3)\")"
+  },
+  {
+   "title": "Measure (3)",
+   "explain": "**A note carried over from the example this notebook pairs with:**\n\n> (c) Legendre: P_5(1) = 1 exactly, and 0.906179845938664 is a root\n\nThe next cell sends these 2 commands to the simulator. Here is exactly what each one expects:\n\n---\n\n`legendre_p(5, 1)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.\n\n---\n\n`legendre_p(5, 0.906179845938664)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.",
+   "code": "sim.do(\"legendre_p(5, 1)\")\nsim.do(\"legendre_p(5, 0.906179845938664)\")"
+  },
+  {
+   "title": "Measure (4)",
+   "explain": "**A note carried over from the example this notebook pairs with:**\n\n> (d) the reflection formula in the complex gamma:\n> Gamma(1/2)^2 = pi. gamma_z takes and returns [re, im].\n\nThe next cell sends these 2 commands to the simulator. Here is exactly what each one expects:\n\n---\n\n`gamma_z(0.5) * gamma_z(0.5)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.\n\n---\n\n`pi` \u2014 a command of the simulator's language. Sent as typed; the simulator prints whatever it has to say about it.",
+   "code": "sim.do(\"gamma_z(0.5) * gamma_z(0.5)\")\nsim.do(\"pi\")"
+  },
+  {
+   "title": "Measure (5)",
+   "explain": "**A note carried over from the example this notebook pairs with:**\n\n> (e) spherical harmonics are orthonormal; |Y_1^0(theta,phi)|^2 at\n> theta = 0 is 3/(4 pi) = 0.238732414637843\n\nThe next cell sends these 2 commands to the simulator. Here is exactly what each one expects:\n\n---\n\n`sph_harm_real(1, 0, 0, 0)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.\n\n---\n\n`sqrt(3 / (4 * pi))` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.",
+   "code": "sim.do(\"sph_harm_real(1, 0, 0, 0)\")\nsim.do(\"sqrt(3 / (4 * pi))\")"
+  },
+  {
+   "title": "Measure (6)",
+   "explain": "**A note carried over from the example this notebook pairs with:**\n\n> (f) Wigner 3j: two spin-1/2 coupling to a triplet, via Clebsch-Gordan\n\nThe next cell sends these 2 commands to the simulator. Here is exactly what each one expects:\n\n---\n\n`clebsch_gordan(0.5, 0.5, 0.5, -0.5, 1, 0)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.\n\n---\n\n`sqrt(0.5)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.",
+   "code": "sim.do(\"clebsch_gordan(0.5, 0.5, 0.5, -0.5, 1, 0)\")\nsim.do(\"sqrt(0.5)\")"
+  },
+  {
+   "title": "Measure (7)",
+   "explain": "**A note carried over from the example this notebook pairs with:**\n\n> (g) 15-point Gauss-Legendre nodes and weights sum to 2 on [-1, 1]\n\nThe next cell sends this command to the simulator. Here is exactly what it expects:\n\n---\n\n`gauss_legendre(4)` calls a previously defined function with the arguments given. A call that fails part way through leaves no half-built body behind.",
+   "code": "sim.do(\"gauss_legendre(4)\")"
+  }
+ ],
+ "discussion": "**What the cells above actually established.**\n\n- The values printed above are the result. Read them against the physical expectations set out earlier in this notebook.\n\n**How to judge a number here.** A disagreement with theory is only a defect if it fails to shrink when you ask for more accuracy. Tighten `system.rtol` and `system.atol` and re-run: a discretisation error converges, and a bug does not. The one place this does not apply is a model with orientation-gripping joints, where `rtol` is floored at `1e-6` and tightening past it buys nothing.\n\n**The full note from the example this notebook pairs with**, which sets out why it was built this way:\n\n16. The special-function library, reached through ordinary calls.\nFive identities that a wrong implementation cannot accidentally pass.\n(a) J_0 vanishes at its first zero, j_{0,1} = 2.404825557695773"
+}

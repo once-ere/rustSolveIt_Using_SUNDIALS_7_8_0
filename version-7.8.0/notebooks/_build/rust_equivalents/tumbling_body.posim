@@ -1,0 +1,28 @@
+# The Dzhanibekov effect: a torque-free brick spun about its INTERMEDIATE
+# axis, which is the one axis of the three about which steady rotation is
+# unstable.
+#
+# A cuboid of half-extents (0.5, 1, 2) has three distinct principal
+# moments, so all three of Euler's equations are coupled. Spin it almost
+# exactly about the middle one -- w = (1e-4, 3, 1e-4), a spin of 3 with a
+# perturbation ten thousand times smaller -- and the perturbation does
+# not stay small. The body periodically flips end over end.
+#
+# Nothing about that violates conservation. WITH NO TORQUE THE ANGULAR
+# MOMENTUM L IS EXACTLY CONSTANT, and so is the rotational energy; it is
+# the angular VELOCITY that swings around, because for a body whose three
+# moments differ, w and L do not point the same way. This is the clearest
+# case where carrying L in the state vector rather than w is what makes
+# the conservation exact rather than approximate.
+set system.g_constant = 0
+collide off
+new cuboid as brick { mass = 3, half_extents = [0.5, 1, 2], position = [0, 0, 0], angular_velocity = [1e-4, 3, 1e-4] }
+method adams
+energy
+angmom
+get brick.angular_velocity
+run 25 steps 25
+angmom
+energy
+get brick.angular_velocity
+norm(brick.orientation)

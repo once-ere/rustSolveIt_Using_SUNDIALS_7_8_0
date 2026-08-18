@@ -1,0 +1,31 @@
+# A Kepler two-body orbit at eccentricity 0.6, checked against the three
+# quantities an exact inverse-square law conserves.
+#
+# A heavy central point of mass 1e9 and a unit-mass orbiter, with G
+# scaled so that G * M_total = 1. That reproduces the reduced central-
+# force form used by the SUNDIALS ark_kepler example. At eccentricity
+# e = 0.6 the orbiter starts at perihelion, x = 1 - e = 0.4, with the
+# speed that closes the ellipse, v = sqrt((1+e)/(1-e)) = 2. The period is
+# 2 pi, so t = 100 is about 15.9 orbits.
+#
+# ENERGY and ANGULAR MOMENTUM are conserved by any central force. The
+# LAPLACE-RUNGE-LENZ vector is not: it is conserved only for an exact 1/r
+# potential, it points along the major axis toward perihelion, and its
+# length is the eccentricity. So watching it drift is watching the orbit
+# PRECESS, and it is the sharpest test of the three.
+set system.g_constant = 9.99999999e-10
+set system.softening = 0
+set system.rtol = 1e-10
+set system.atol = 1e-12
+collide off
+new point as central { mass = 1e9, position = [0, 0, 0], velocity = [0, 0, 0] }
+new point as orbiter { mass = 1, position = [0.4, 0, 0], velocity = [0, 2, 0] }
+method adams
+energy
+angmom
+laplace 1
+run 100 steps 10
+energy
+angmom
+laplace 1
+get orbiter.position

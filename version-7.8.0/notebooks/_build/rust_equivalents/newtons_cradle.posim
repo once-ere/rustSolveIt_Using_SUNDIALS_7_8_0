@@ -1,0 +1,30 @@
+# Newton's cradle: one incomer into a chain of four touching spheres.
+# Only the FAR sphere leaves, at the incomer's speed, and the four it
+# passed through stay exactly where they were.
+#
+# That result is not a special rule about cradles. It is what momentum
+# and energy conservation force when the impacts are elastic and resolved
+# pairwise along the line of centres -- here by the collision solver's
+# Gauss-Seidel pass over the simultaneous contacts, with every impulse
+# applied equal and opposite so the total momentum is untouched.
+#
+# Five unit spheres of radius 0.5. Four sit touching at x = 0, 1, 2, 3;
+# the incomer starts back at x = -3 moving at v = 1.
+set system.g_constant = 0
+new sphere as incomer { mass = 1, radius = 0.5, position = [-3, 0, 0], velocity = [1, 0, 0] }
+new sphere as s1 { mass = 1, radius = 0.5, position = [0, 0, 0] }
+new sphere as s2 { mass = 1, radius = 0.5, position = [1, 0, 0] }
+new sphere as s3 { mass = 1, radius = 0.5, position = [2, 0, 0] }
+new sphere as s4 { mass = 1, radius = 0.5, position = [3, 0, 0] }
+collide
+momentum
+energy
+run 4 steps 1
+get incomer.velocity.x
+get s1.velocity.x
+get s2.velocity.x
+get s3.velocity.x
+get s4.velocity.x
+momentum
+energy
+contacts

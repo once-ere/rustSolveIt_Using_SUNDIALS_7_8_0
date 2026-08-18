@@ -59,6 +59,12 @@ and L); 605 passed workspace-wide (40 physical_object lib +
 - `posim/` — the simulator front end: lexer → grammar compiler → stack
   machine, a notebook REPL (`In[n]`/`Out[n]` cells), script batch mode,
   and a JSON machine mode.
+- `notebooks/` — one executed Jupyter notebook per example — 109 in
+  all, one per video scene, Rust example, collision script, SolveIt
+  script and dynamic notebook. Each is a stand-alone Python notebook
+  that starts the simulator in machine mode, explains every command it
+  sends, derives the equations of motion and constraint equations, and
+  carries real outputs (`notebooks/README.md`).
 - `jupyter/` — JupyterLab wrapper kernel so notebooks can get/set the
   simulator's data (see `jupyter/README.md`).
 - `sundials_rs/` — the numerical engine: a pure-Rust, zero-`unsafe`,
