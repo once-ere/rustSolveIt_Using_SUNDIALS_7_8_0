@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Piston &amp; Crankshaft — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 980px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Piston &amp; crankshaft <small>slider-crank driven live by the pure-Rust
+  SUNDIALS IDA solver — the page only draws what the solver returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="420"></canvas>
+<div id="stats"></div>
+<footer>Model: HINGE 5 + BALL 3 + BALL 3 + PRISMATIC 5 = 16 rows on 18 freedoms.
+Exact kinematics: x(&theta;) = a&thinsp;cos&theta; + &radic;(L&sup2; &minus; a&sup2;sin&sup2;&theta;),
+a = 0.5, L = 1.0.</footer>
+<script>
+"use strict";
+const A = 0.5, L = 1.0, OFF = 0.5;          // crank throw, rod length, piston-centre offset
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 170, OX = 240, OY = 210;          // px per metre, origin of the drawing
+let turns = 0, prevTheta = null, worst = 0;
+
+const W = (x, y) => [OX + x * SC, OY - y * SC];    // world -> canvas
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  const th = s.theta;
+  if (prevTheta === null) {
+    turns = th;                 // seed the counter at the true current angle
+  } else {
+    let d = th - prevTheta;
+    if (d >  Math.PI) d -= 2 * Math.PI;
+    if (d < -Math.PI) d += 2 * Math.PI;
+    turns += d;
+  }
+  prevTheta = th;
+
+  const pinX = A * Math.cos(th), pinY = A * Math.sin(th);   // crank pin
+  const wx = s.piston[0] - OFF;                             // wrist pin
+  // x(theta) is 2pi-periodic, so the WRAPPED angle gives the exact value
+  // no matter when this page was opened or how long it was hidden.
+  const exact = A * Math.cos(th) + Math.sqrt(L * L - A * A * Math.sin(th) ** 2);
+  const err = Math.abs(wx - exact);
+  if (s.t > 0) worst = Math.max(worst, err);
+
+  // the bore
+  cx.strokeStyle = "#3c4f61"; cx.lineWidth = 3;
+  for (const sgn of [1, -1]) {
+    cx.beginPath();
+    cx.moveTo(...W(0.85,  sgn * 0.34));
+    cx.lineTo(...W(2.75,  sgn * 0.34));
+    cx.stroke();
+  }
+  // crank disc + throw
+  cx.strokeStyle = "#5d84a8"; cx.lineWidth = 2;
+  cx.beginPath(); cx.arc(...W(0, 0), 0.55 * SC, 0, 7); cx.stroke();
+  cx.strokeStyle = "#9fb8d0"; cx.lineWidth = 4;
+  cx.beginPath(); cx.moveTo(...W(0, 0)); cx.lineTo(...W(pinX, pinY)); cx.stroke();
+  // connecting rod: crank pin to wrist pin (held coincident by the two BALL joints)
+  cx.strokeStyle = "#d0a95f"; cx.lineWidth = 7; cx.lineCap = "round";
+  cx.beginPath(); cx.moveTo(...W(pinX, pinY)); cx.lineTo(...W(wx, 0)); cx.stroke();
+  // piston
+  cx.fillStyle = "#31424f";
+  cx.strokeStyle = "#7a94ab"; cx.lineWidth = 2;
+  const [px, py] = W(s.piston[0] - 0.5, 0.3);
+  cx.fillRect(px, py, SC, 0.6 * SC); cx.strokeRect(px, py, SC, 0.6 * SC);
+  // pins
+  cx.fillStyle = "#e8eef4";
+  for (const [x, y] of [[0, 0], [pinX, pinY], [wx, 0]]) {
+    cx.beginPath(); cx.arc(...W(x, y), 5, 0, 7); cx.fill();
+  }
+
+  const st = document.getElementById("stats");
+  const fmt = (x, n=6) => x == null ? "—" : x.toFixed ? x.toFixed(n) : x;
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${fmt(s.t, 3)} s</span></div>
+    <div><span class="k">crank</span> <span class="v">${(turns / (2*Math.PI)).toFixed(4)} rev</span></div>
+    <div><span class="k">piston x</span> <span class="v">${fmt(wx)}</span></div>
+    <div><span class="k">exact x(&theta;)</span> <span class="v">${fmt(exact)}</span></div>
+    <div><span class="k">|x − x(&theta;)|</span> <span class="v good">${err.toExponential(2)}</span></div>
+    <div><span class="k">worst so far</span> <span class="v good">${worst ? worst.toExponential(2) : "—"}</span></div>
+    <div><span class="k">worst |g|</span> <span class="v good">${s.g == null ? "—" : s.g.toExponential(2)}</span></div>
+    <div><span class="k">worst |g_dot|</span> <span class="v good">${s.gdot == null ? "—" : s.gdot.toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset"); turns = 0; prevTheta = null; worst = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
