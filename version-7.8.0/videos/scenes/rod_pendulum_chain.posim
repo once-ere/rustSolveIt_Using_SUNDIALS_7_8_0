@@ -1,0 +1,62 @@
+# Four bobs on four rods, released from rest and left to go chaotic.
+#
+#   anchor --ROD-- bob1 --ROD-- bob2 --ROD-- bob3 --ROD-- bob4
+#
+# A CONSTRAIN is the smallest joint there is: ONE row, holding one
+# scalar fact, g = |d| - L. It fixes no point and no axis, only a
+# distance, so four rods on four free bobs is 4 rows on 24 freedoms.
+# Compare the other joint recordings — BALL is 3 rows, UNIVERSAL 4,
+# HINGE 5 — and this is the cheapest linkage in the language.
+#
+# It is also the best conditioned. Run this chain as ONE continuous
+# integration at the DEFAULT tolerance and the rods hold to
+#
+#     |g| = 5.4e-15      1e-10 / 1e-12, five seconds
+#
+# which is roundoff. A rod is a single well-scaled scalar equation with
+# none of the index-2 orientation coupling that forces a tolerance floor
+# on BALL, HINGE and UNIVERSAL (grammar §11.4), so it needs no floor.
+#
+# THE TOLERANCE BELOW IS NOT DECORATION, and it is the trap this scene
+# exists to document. A recording is not one integration. It is one
+# `step` per frame, and every `step` is a COLD RESTART: fresh solver,
+# fresh multiplier seed, no BDF history. The tolerance a continuous run
+# sustains is not the tolerance a restart sustains. At the default
+# 1e-10 / 1e-12 these same four rods fail on the SECOND restart, with
+# IDASolve returning -4 and the corrector refusing to converge — while
+# the identical system, integrated continuously, holds to 5.4e-15.
+#
+# BALL, HINGE and UNIVERSAL never meet this, because an orientation
+# joint is floored to exactly the two numbers below automatically
+# (ROT_JOINT_RTOL_FLOOR, ROT_JOINT_ATOL_FLOOR). A rod-only system is
+# correctly NOT floored, so here the same tolerance has to be asked for
+# by hand. That is the lesson: the floor those joints get for accuracy
+# is also what makes them recordable frame by frame.
+#
+# A note on why the positions below are written to full precision.
+# Rounding them to six decimals moves the chain onto a nearby
+# trajectory that happens to survive 5 rods at the default tolerance —
+# a knife-edge, not a property. Four rods is robust either way, and the
+# exact coordinates are written out so nothing rests on a rounding.
+set system.rtol = 1e-6
+set system.atol = 1e-8
+set system.g_constant = 0
+set system.uniform_gravity = [0, -9.81, 0]
+collide off
+# Released from REST, so g_dot = J u = 0 exactly and the start is on the
+# constraint manifold with nothing to project. The bobs are laid out in
+# a zigzag lying in no single plane, so a release from rest is still
+# fully three-dimensional: gravity is along y, the chain spans x and z,
+# and the rod tensions do the rest.
+new sphere as anchor { mass = 1, radius = 0.05, position = [0, 0, 0], inverse_mass = 0 }
+new sphere as bob1 { mass = 1, radius = 0.06, position = [0.4, 0.0, 0.0] }
+new sphere as bob2 { mass = 1, radius = 0.06, position = [0.7200000000000001, 0.0, 0.24] }
+new sphere as bob3 { mass = 1, radius = 0.06, position = [0.9601109568990547, -0.0800369856330182, -0.06974313439978042] }
+new sphere as bob4 { mass = 1, radius = 0.06, position = [1.3200936781431152, -0.25442861503569636, -0.06974313439978042] }
+# Each rod takes the length the pair already has, so the chain is
+# assembled exactly where it stands: every one of these is 0.4.
+constrain anchor bob1
+constrain bob1 bob2
+constrain bob2 bob3
+constrain bob3 bob4
+method ida

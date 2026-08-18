@@ -61,6 +61,16 @@
       "view": "iso",
       "title": "A chain on ball joints",
       "caption": "Four links hung on BALL joints. A ball joint holds one point and frees all three rotations, so unlike the hinged double pendulum this chain is not trapped in a plane. The start is a rigid rotation of the whole assembly about the vertical at 1.5 rad/s, which satisfies every joint exactly, so the run begins on the constraint manifold: |g| = 0 and |g_dot| = 0, both exactly, with no consistent-velocity projection. Give the identical start to the same chain built from HINGE joints and |g_dot| = 1.5 -- exactly the whirl rate, because the whirl is the one thing a hinge forbids. Watch the z axis: every link starts exactly on the plane z = 0 and the chain reaches |z| = 1.7147, where a hinge chain would still be at exactly zero. Measured over this recording: the four joints hold to |g| = 3.3e-9, and |dE|/E = 2.8e-4 across 250 separate IDA restarts, one per frame."
+    },
+    {
+      "name": "rod_pendulum_chain",
+      "scene": "videos/scenes/rod_pendulum_chain.posim",
+      "out": "videos/rod_pendulum_chain.html",
+      "frames": 250,
+      "dt": 0.02,
+      "view": "iso",
+      "title": "Four bobs on four rods",
+      "caption": "A CONSTRAIN is the smallest joint there is: one row, holding one scalar fact, g = |d| - L. Four rods on four free bobs is 4 rows on 24 freedoms, against 3 rows per BALL, 4 per UNIVERSAL and 5 per HINGE. It is also the best conditioned joint -- one well-scaled scalar equation, with none of the index-2 orientation coupling that forces a tolerance floor on the other three -- so run this chain as ONE integration at the default 1e-10/1e-12 and the rods hold to |g| = 5.4e-15, which is roundoff. This recording is not one integration, though. It is 250 cold restarts, one per frame, and the tolerance a continuous run sustains is not the tolerance a restart sustains: at the default these same four rods fail on the SECOND restart. So the scene asks for 1e-6/1e-8 by hand -- exactly the floor an orientation joint gets automatically and never has to request. Measured over this recording: the four rods hold to |g| = 7.8e-8. Released from rest, so the start is on the constraint manifold with nothing to project."
     }
   ]
 }

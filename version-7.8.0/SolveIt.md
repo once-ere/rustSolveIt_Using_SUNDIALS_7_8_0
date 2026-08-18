@@ -1475,7 +1475,7 @@ The recorder drives `posim --machine` and asks it to `step` — **every
 advance is a real SUNDIALS step**. The tool is a camera, not a physics
 engine.
 
-Six recordings ship with the repository:
+Seven recordings ship with the repository:
 
 | file | what to watch | measured over the recording |
 |---|---|---|
@@ -1485,6 +1485,7 @@ Six recordings ship with the repository:
 | [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | **two `HINGE` joints** assembled into the classic chaotic linkage — gold rings mark the joints, gold lines their axes | the joints hold to \|*g*\| = 5.6 × 10⁻⁸ through 400 IDA steps |
 | [`videos/universal_joint.html`](videos/universal_joint.html) | a **`UNIVERSAL` joint** carrying a driven shaft's rotation across to a second shaft, braced by a rod to a post | the bend stops at cos *β* = 0.6000004 against a geometric bound of exactly 0.6; three joints hold to \|*g*\| = 4.0 × 10⁻⁷ |
 | [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on **`BALL` joints** — the chain whirls out of the plane it started on, which a hinged chain cannot do | the four joints hold to \|*g*\| = 3.3 × 10⁻⁹; \|*z*\| runs from exactly 0 to 1.7147 |
+| [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four **`CONSTRAIN` rods** — one row each, the cheapest linkage in the language, going chaotic | run continuously at the default tolerance the rods hold to \|*g*\| = 5.4 × 10⁻¹⁵, i.e. roundoff |
 
 That last one is the one to open if you only open one, because it shows
 a joint doing something a rod cannot. A `UNIVERSAL` holds a shared point
@@ -1497,7 +1498,7 @@ rows on 12 freedoms and three of them are redundant, which leaves the
 constrained solve singular. One `CONSTRAIN` — a single row — braces it
 instead, and pins the bend to a closed form: the shaft sweeps a cone,
 and cos *β* cannot go below 0.6. The recording touches 0.6000004.
-Grammar §12.6 works the arithmetic through.
+Grammar §12.7 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or ← →), a scrub
 bar, speed from 0.25× to 4×, drag to orbit, wheel to zoom, and toggles

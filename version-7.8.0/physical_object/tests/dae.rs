@@ -576,6 +576,101 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// The chain of `videos/rod_pendulum_chain.html`: four bobs on four
+/// rods, and the two facts that make a rod the joint to reach for.
+///
+/// **It is the cheapest.** A `CONSTRAIN` is one row holding one scalar,
+/// `g = |d| − L`. Four rods on four free bobs is 4 rows on 24 freedoms,
+/// against 3 rows for a `BALL`, 4 for a `UNIVERSAL`, 5 for a `HINGE`.
+///
+/// **It is the best conditioned.** One well-scaled scalar equation per
+/// joint, with none of the index-2 orientation coupling that forces a
+/// tolerance floor on the other three — so a rod-only system is *not*
+/// floored, and run continuously at the default `1e-10 / 1e-12` the
+/// chain holds to roundoff.
+///
+/// The recording is a different demand and gets a different tolerance:
+/// it is one `step` per frame, and each is a cold restart with a fresh
+/// multiplier seed and no BDF history. At the default tolerance these
+/// same four rods fail on the *second* restart, which is why the scene
+/// asks for the floor values by hand. That is a statement about
+/// restarting, not about accuracy; the scene file and grammar §12.6
+/// record it.
+#[test]
+fn a_rod_chain_is_the_cheapest_joint_and_holds_to_roundoff() {
+    const L: f64 = 0.4;
+    // a zigzag lying in no single plane, so a release from rest is 3-D
+    let dirs = [
+        Vec3::new(1.0, 0.0, 0.0),
+        Vec3::new(0.8, 0.0, 0.6),
+        Vec3::new(0.6, -0.2, -0.774),
+        Vec3::new(0.9, -0.436, 0.0),
+    ];
+    /* The anchor is a sphere held still by inverse_mass = 0, exactly as
+     * the scene builds it — not a zero-inertia point. A rod exerts no
+     * torque, so its rotation is decoupled either way, but the DAE is
+     * the one the recording actually integrates. */
+    let mut anchor = physical_object::new_from_shape(
+        0,
+        1.0,
+        0.0,
+        Vec3::zeros(),
+        Vec3::zeros(),
+        Vec3::zeros(),
+        Boundary::Sphere { radius: 0.05 },
+    );
+    anchor.set_inverse_mass(0.0);
+    let mut objs = vec![anchor];
+    let mut p = Vec3::zeros();
+    for (k, d) in dirs.iter().enumerate() {
+        p += d.normalize() * L;
+        /* Spheres, matching the recorded scene. A rod constrains only the
+         * distance between centres, so the bobs' rotation is entirely
+         * free — and a point mass, whose inertia is the zero matrix, is
+         * the harder problem here, not the simpler one. */
+        objs.push(physical_object::new_from_shape(
+            k + 1,
+            1.0,
+            0.0,
+            p,
+            Vec3::zeros(),
+            Vec3::zeros(),
+            Boundary::Sphere { radius: 0.06 },
+        ));
+    }
+    let mut s = PhysicalObjectSystem::new(objs, 0.0);
+    s.uniform_gravity = Vec3::new(0.0, -G, 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    let snap = s.clone();
+    for k in 0..dirs.len() {
+        s.constraints.add_distance(&snap, k, k + 1, None).unwrap();
+    }
+    assert_eq!(s.constraints.len(), 4, "four rods are one row each");
+
+    /* Released from rest, so ġ = J·u = 0 exactly: nothing to project. */
+    let report = integrate::run(&mut s, 5.0, 50).expect("rod chain");
+    assert_eq!(report.initial_velocity_projected, 0.0, "released from rest");
+
+    /* A rod needs no tolerance floor, so the default was honoured — and
+     * at the default the rods hold to roundoff, which is the claim. */
+    assert!(!report.tolerance_floored, "a rod-only chain takes no floor");
+    let (g, gdot) = report.constraint_drift;
+    assert!(g < 1e-13, "rods should hold to roundoff: |g| = {g:e}");
+    assert!(gdot < 1e-11, "|g_dot| = {gdot:e}");
+
+    /* Measured directly, not merely reported: every rod is still 0.4. */
+    for k in 0..dirs.len() {
+        let d = (s.objects[k + 1].get_position() - s.objects[k].get_position()).norm();
+        assert!((d - L).abs() < 1e-13, "rod {k} is {d}, not {L}");
+    }
+    /* It really did move, and out of any one plane. */
+    let tip = dirs.len();
+    let moved = (s.objects[tip].get_position() - snap.objects[tip].get_position()).norm();
+    assert!(moved > 0.5, "the chain should have swung: {moved}");
+    assert!(s.objects[tip].get_position().z.abs() > 1e-3, "not confined to a plane");
+}
+
 /// The chain of `videos/ball_joint_chain.html`, and the one thing a
 /// ball joint does that a hinge cannot.
 ///

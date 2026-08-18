@@ -1194,6 +1194,10 @@ bound of exactly $0.6$; three joints hold to $|g| = 4.0\times10^{-7}$\\
 --- the chain whirls out of the plane it started on, which a hinged
 chain cannot do & the four joints hold to $|g| = 3.3\times10^{-9}$;
 $|z|$ runs from exactly $0$ to $1.7147$\\
+\code{rod\_pendulum\_chain.html} & four bobs on four
+\textbf{\kw{constrain} rods} --- one row each, the cheapest linkage
+in the language, going chaotic & run continuously at the default
+tolerance the rods hold to $|g| = 5.4\times10^{-15}$, i.e. roundoff\\
 \end{tabular}
 \end{center}
 
@@ -1209,7 +1213,7 @@ freedoms and three of them are redundant, which leaves the constrained
 solve singular. One \kw{constrain} --- a single row --- braces it
 instead, and pins the bend to a closed form: the shaft sweeps a cone,
 and $\cos\beta$ cannot go below $0.6$. The recording touches
-$0.6000004$. Grammar \S12.6 works the arithmetic through.
+$0.6000004$. Grammar \S12.7 works the arithmetic through.
 
 The player has Play/Pause (or Space), frame stepping (or
 $\leftarrow\rightarrow$), a scrub bar, speed from $0.25\times$ to

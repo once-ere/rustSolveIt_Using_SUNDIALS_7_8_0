@@ -3573,7 +3573,7 @@ everything else as a quaternion-rotated wireframe so spin is visible,
 `BOX` as a dashed interior wireframe with its six immovable wall slabs
 never drawn as bodies.
 
-### 12.3 The six shipped recordings
+### 12.3 The seven shipped recordings
 
 Open any of these directly; they are ordinary files.
 
@@ -3585,6 +3585,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/double_pendulum_hinges.html`](videos/double_pendulum_hinges.html) | two `HINGE` joints assembled into the chaotic linkage; the gold rings are the joints | the joints hold to `\|g\| = 5.6e-8`; energy wanders 3 parts in 10,000 |
 | [`videos/universal_joint.html`](videos/universal_joint.html) | a `UNIVERSAL` joint carrying a driven shaft's rotation to a second shaft; the bend flattens out straight and folds back, and the speed across the joint swings with it | the bend stops at `cos β = 0.6000004` against a geometric bound of exactly `0.6`; the three joints hold to `\|g\| = 4.0e-7` |
 | [`videos/ball_joint_chain.html`](videos/ball_joint_chain.html) | four links on `BALL` joints, whirling as they collapse; the chain leaves the plane it started on, which a hinged chain cannot | the four joints hold to `\|g\| = 3.3e-9`; `\|z\|` runs from exactly 0 to 1.7147 |
+| [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four `CONSTRAIN` rods, the cheapest linkage there is at one row each, going chaotic | run continuously at the default tolerance the rods hold to `\|g\| = 5.4e-15`; this recording, 250 cold restarts, holds `\|g\| = 7.8e-8` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3646,7 +3647,64 @@ exactly on the plane `z = 0`, and the chain reaches `|z| = 1.7147`. A
 hinged chain would still be at exactly zero, for ever, because that is
 what fixing an axis means.
 
-### 12.6 Count your rows before you brace a mechanism
+### 12.6 A restart is not a continuation
+
+The rod-chain recording exists to document a trap that costs an
+afternoon if you meet it without warning.
+
+`CONSTRAIN` is the best-conditioned joint in the language — one
+well-scaled scalar equation, `g = |d| − L`, with none of the index-2
+orientation coupling that forces a tolerance floor on `BALL`, `HINGE`
+and `UNIVERSAL`. So a rod-only system is correctly **not** floored, and
+runs at whatever you asked for. Four rods, five seconds, default
+`rtol = 1e-10`, `atol = 1e-12`:
+
+```text
+worst |g| = 5.4e-15
+```
+
+Roundoff. Now record the same chain, and it fails on the second frame:
+
+```text
+Err: IDASolve failed with retval = -4
+```
+
+Nothing about the physics changed. What changed is that **a recording
+is not one integration.** It is one `STEP` per frame, and every `STEP`
+is a *cold restart* — a fresh solver, a fresh multiplier seed, no BDF
+history to lean on. The tolerance a continuous run sustains is not the
+tolerance a restart sustains, and for this chain the gap is four orders
+of magnitude:
+
+| four rods, five seconds | continuous `RUN` | 250 `STEP`s |
+|---|---|---|
+| default `1e-10 / 1e-12` | `\|g\| = 5.4e-15` | fails on restart 2 |
+| floor `1e-6 / 1e-8` | fine | `\|g\| = 7.8e-8` |
+
+`BALL`, `HINGE` and `UNIVERSAL` never meet this, and now the reason is
+visible: they are floored to exactly `1e-6 / 1e-8` **automatically**,
+so every orientation-joint recording has been asking for restart-safe
+tolerances without knowing it. The floor those joints get for *accuracy*
+is also what makes them recordable frame by frame. A rod-only scene has
+to ask by hand, which is why `videos/scenes/rod_pendulum_chain.posim`
+opens with two `SET` lines.
+
+**How to recognize it.** A `RUN` that succeeds and a loop of `STEP`s
+that fails, at the same tolerance, on the same system, is this and not
+a physics bug. Loosen the tolerance, or do not chop the integration up.
+§11.5 has the same lesson from the accuracy side: the double pendulum
+run as one 4-second integration holds energy 60 times better than the
+same 4 seconds cut into 400 steps.
+
+**A related sharp edge.** This chain is chaotic, and its margin at the
+default tolerance is thin enough to be moved by *rounding the initial
+positions*. Written to six decimals, a five-rod version survives the
+continuous run; written exactly, it fails at `t = 0.43`. Four rods is
+robust either way, which is why the scene ships with four and writes
+its coordinates out in full. If a constrained run's success depends on
+how you rounded the input, you are on a knife edge, not on a result.
+
+### 12.7 Count your rows before you brace a mechanism
 
 The universal-joint recording is worth reading as a design exercise,
 because the obvious way to build it does not work.

@@ -3540,7 +3540,7 @@ and $dt$ the recording was made with. \textbf{This is the point of the
 format}: you can stop on the frame where something looks wrong and read
 the conserved quantities off it.
 
-\subsection{The six shipped recordings}
+\subsection{The seven shipped recordings}
 
 \begin{center}
 \begin{tabular}{p{3.6cm}p{6.4cm}p{4.2cm}}
@@ -3568,6 +3568,11 @@ of exactly $0.6$; the three joints hold to $|g| = 4.0\text{e-}7$\\
 joints, whirling as they collapse; the chain leaves the plane it
 started on, which a hinged chain cannot & the four joints hold to
 $|g| = 3.3\text{e-}9$; $|z|$ runs from exactly $0$ to $1.7147$\\
+\code{videos/rod\_pendulum\_chain.html} & four bobs on four
+\kw{constrain} rods, the cheapest linkage there is at one row each,
+going chaotic & run continuously at the default tolerance the rods
+hold to $|g| = 5.4\text{e-}15$; this recording, 250 cold restarts,
+holds $|g| = 7.8\text{e-}8$\\
 \end{tabular}
 \end{center}
 
@@ -3625,6 +3630,59 @@ Watch the recording's $z$ axis for the consequence. Every link starts
 exactly on the plane $z = 0$, and the chain reaches $|z| = 1.7147$. A
 hinged chain would still be at exactly zero, for ever, because that is
 what fixing an axis means.
+
+\subsection{A restart is not a continuation}
+
+The rod-chain recording exists to document a trap that costs an
+afternoon if you meet it without warning.
+
+\kw{constrain} is the best-conditioned joint in the language --- one
+well-scaled scalar equation, $g = |d| - L$, with none of the index-2
+orientation coupling that forces a tolerance floor on \kw{ball},
+\kw{hinge} and \kw{universal}. So a rod-only system is correctly
+\emph{not} floored, and runs at whatever you asked for. Four rods, five
+seconds, default $\mathrm{rtol} = 10^{-10}$, $\mathrm{atol} =
+10^{-12}$, give a worst $|g|$ of $5.4\times10^{-15}$: roundoff. Record
+the same chain and it fails on the second frame, with \code{IDASolve}
+returning $-4$.
+
+Nothing about the physics changed. What changed is that \textbf{a
+recording is not one integration.} It is one \kw{step} per frame, and
+every \kw{step} is a \emph{cold restart} --- a fresh solver, a fresh
+multiplier seed, no BDF history to lean on. The tolerance a continuous
+run sustains is not the tolerance a restart sustains, and for this
+chain the gap is four orders of magnitude:
+
+\begin{center}
+\begin{tabular}{p{5.0cm}p{3.6cm}p{4.0cm}}
+\textbf{four rods, five seconds} & \textbf{continuous \kw{run}} &
+\textbf{250 \kw{step}s}\\\hline
+default $10^{-10} / 10^{-12}$ & $|g| = 5.4\times10^{-15}$ & fails on
+restart 2\\
+floor $10^{-6} / 10^{-8}$ & fine & $|g| = 7.8\times10^{-8}$\\
+\end{tabular}
+\end{center}
+
+\kw{ball}, \kw{hinge} and \kw{universal} never meet this, and now the
+reason is visible: they are floored to exactly $10^{-6} / 10^{-8}$
+\emph{automatically}, so every orientation-joint recording has been
+asking for restart-safe tolerances without knowing it. The floor those
+joints get for \emph{accuracy} is also what makes them recordable frame
+by frame. A rod-only scene has to ask by hand.
+
+\textbf{How to recognize it.} A \kw{run} that succeeds and a loop of
+\kw{step}s that fails, at the same tolerance on the same system, is
+this and not a physics bug. Loosen the tolerance, or do not chop the
+integration up.
+
+\textbf{A related sharp edge.} This chain is chaotic, and its margin at
+the default tolerance is thin enough to be moved by \emph{rounding the
+initial positions}. Written to six decimals, a five-rod version
+survives the continuous run; written exactly, it fails at $t = 0.43$.
+Four rods is robust either way, which is why the scene ships with four
+and writes its coordinates out in full. If a constrained run's success
+depends on how you rounded the input, you are on a knife edge, not on a
+result.
 
 \subsection{Count your rows before you brace a mechanism}
 
