@@ -76,9 +76,9 @@ and, for rigid-body collisions (§5.7):
 
 and, for constrained dynamics, equilibrium and sensitivity (§5.13):
 
-`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL GEAR`
+`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL GEAR RACK`
 
-(`BALL`, `HINGE`, `UNIVERSAL` and `GEAR` are **contextual**: they are commands
+(`BALL`, `HINGE`, `UNIVERSAL`, `GEAR` and `RACK` are **contextual**: they are commands
 only at the start of a line. Anywhere else they are ordinary
 identifiers, so `new sphere as ball` and `get ball.mass` keep working —
 `ball` is exactly what a physics user calls a sphere, and reserving it
@@ -1646,15 +1646,22 @@ the SUNDIALS suite.
 | `EQUILIBRIUM` | where does it come to rest? | **KINSOL** |
 | `SENSITIVITY` | how much does the answer depend on an input? | **CVODES** / **IDAS** |
 
-#### The five joints
+#### The six joints
 
 | command | rows | holds | freedoms left |
 |---|---|---|---|
 | `CONSTRAIN a b [len]` | 1 | a fixed distance | 5 |
 | `GEAR a b <axis> <ratio>` | 1 | a **proportion** between two turns | 5 |
+| `RACK p b <axis> <dir> <r>` | 1 | a turn tied to a **slide**, `Δs = r θ` | 5 |
 | `BALL a b` | 3 | a shared point | 3 (any rotation about it) |
 | `UNIVERSAL a b <u> <w>` | 4 | a shared point, two shafts kept square | 2 |
 | `HINGE a b <axis>` | 5 | a shared point and a shared axis | 1 (the swing) |
+
+`RACK` is the one that crosses between rotation and translation: the
+pinion turns about `axis`, the rack slides along `dir`, and the pitch
+radius `r` is how far the rack travels per radian. The direction must be
+perpendicular to the axis, as it is on any real rack, and is refused
+otherwise rather than quietly projected.
 
 `GEAR` is the odd one out and the only one that couples a rotation to
 another rotation rather than to a position. It holds no point and no
@@ -1694,7 +1701,34 @@ Held at zero from a start that satisfies it, the relation cannot slip to
 another branch without passing through `g ≠ 0`, so it holds exactly. An
 irrational ratio has no such single-valued form at all.
 
-`BALL`, `HINGE`, `UNIVERSAL` and `GEAR` grip **orientation** as well as position,
+**A `RACK` has no such limit, and the reason is instructive.** It faces
+the same wrapping problem — the pinion's angle is just as unrecoverable
+— but it has something the gear has not: a coordinate that is *already*
+unbounded. The rack's travel is read straight off the state with no
+ambiguity, and the constraint says the pinion must have turned `Δs / r`,
+so that number says which turn the wrapped angle belongs to:
+
+```text
+k = round( (Δs/r − θ_wrapped) / 2π )
+g = Δs − r · (θ_wrapped + 2πk)
+```
+
+`k` is locally constant, so `g` is smooth and its derivative is the
+plain one. The travel is unlimited and the radius need not be rational.
+The unwrapping only misreads if the joint is already violated by half a
+turn, `πr` of travel, by which point it has been lost anyway. **Two
+coordinates of the same mechanism resolved each other**, which is worth
+remembering the next time a constraint looks unrepresentable.
+
+**A rack wants a guide, and there is not one.** A real rack sits in a
+slider that absorbs the reaction torque. Nothing here holds orientation
+while freeing translation, so an unguided rack takes that torque and
+slowly turns — in the test, `8.2°` over one and a half turns of the
+pinion. The row is written against the pinion's turn **relative to the
+rack**, so it stays exact regardless; but the picture is of a rack with
+no guide, and that is what a missing prismatic joint looks like.
+
+`BALL`, `HINGE`, `UNIVERSAL`, `GEAR` and `RACK` grip **orientation** as well as position,
 so they need orientation in the solver's state — which is why
 `METHOD IDA` carries the full 13-numbers-per-object packing (§4) rather
 than positions alone.
@@ -3826,23 +3860,29 @@ or meshing, the thing to check is whether a row is holding it or whether
 it was merely started that way — and `CONSTRAINTS` will tell you, since
 a `GEAR` shows up in the list and an initial condition does not.
 
-**What is still not expressible.** A `GEAR` couples two rotations. There
-is still nothing that couples a rotation to a *translation*, and nothing
-that confines a point to a line: rack-and-pinion, a slider, a cam
-follower and true rolling of a wheel *along the ground* are all out of
-reach. The joint set now reads
+**What is still not expressible.** `GEAR` couples two rotations and
+`RACK` couples a rotation to a translation, so the joint set now reads
 
 ```text
 CONSTRAIN  1 row   a distance
 GEAR       1 row   a proportion between two turns
+RACK       1 row   a turn tied to a slide
 BALL       3 rows  a point
 UNIVERSAL  4 rows  a point and a right angle
 HINGE      5 rows  a point and an axis
 ```
 
-and the gap is the same shape as the one `GEAR` filled: a one-row
-constraint whose position-level form has to survive being written as a
-function of the state.
+What is missing is a **prismatic** joint: something that confines a body
+to a line, holding its orientation while freeing one translation. It is
+why a rack here has no guide, and why a cam follower and a piston are
+still out of reach — and, notably, why true rolling of a wheel *along
+the ground* remains so, since that needs the wheel held to a line as
+well as geared to it.
+
+Its position-level form would be two rows of a familiar kind (the
+offset, across the line), so it does not need any of the wrapping
+cleverness `GEAR` and `RACK` did. The interesting constraints turned out
+to be the ones whose natural coordinate is an angle nobody counted.
 
 ### 12.8 A closed form that is exact, and how to actually hit it
 

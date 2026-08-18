@@ -3775,11 +3775,16 @@ initial conditions gives the right motion and the wrong mechanism. The
 two are indistinguishable while nothing happens, and a single
 disturbance separates them.
 
-\textbf{What is still not expressible.} A \kw{gear} couples two
-rotations. Nothing yet couples a rotation to a \emph{translation}, and
-nothing confines a point to a line, so rack-and-pinion, sliders, cam
-followers and a wheel rolling \emph{along the ground} remain out of
-reach.
+\textbf{What is still not expressible.} \kw{gear} couples two rotations
+and \kw{rack} couples a rotation to a translation. What is missing is a
+\textbf{prismatic} joint --- something confining a body to a line,
+holding its orientation while freeing one translation. It is why a rack
+here has no guide, and why a cam follower, a piston, and true rolling of
+a wheel \emph{along the ground} are still out of reach. Its
+position-level form would be two ordinary rows, needing none of the
+wrapping cleverness \kw{gear} and \kw{rack} did: the awkward constraints
+turned out to be the ones whose natural coordinate is an angle nobody
+counted.
 
 \subsection{A closed form that is exact, and how to actually hit it}
 

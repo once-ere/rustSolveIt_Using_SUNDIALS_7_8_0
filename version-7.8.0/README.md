@@ -72,7 +72,7 @@ and L); 605 passed workspace-wide (40 physical_object lib +
 | you type | question | solver |
 |---|---|---|
 | `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
-| `CONSTRAIN` / `GEAR` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
+| `CONSTRAIN` / `GEAR` / `RACK` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
 | `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
 | `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES / IDAS |
 

@@ -114,6 +114,48 @@ pub enum Joint {
     /// satisfies it, the relation cannot slip to another branch without
     /// passing through `g ≠ 0`, so it holds exactly. An irrational ratio
     /// has no such single-valued form and is refused.
+    /// A rack and pinion: body `i` turns about an axis, body `j` slides
+    /// along a direction, and the two are locked by the pitch radius —
+    /// `Δs = r · θ`. One row, and the only joint here that couples a
+    /// rotation to a **translation**.
+    ///
+    /// **How the wrapping problem is solved, since it is not the gear's
+    /// trick.** A gear can hide the wrapping inside a sine because both
+    /// its coordinates are angles. A rack's travel is a *distance*, and
+    /// it is unbounded: `sin` of it would let the rack slip a whole
+    /// tooth-circumference and call it satisfied. Instead the two
+    /// coordinates resolve each other. The translation `Δs` is read
+    /// straight off the state with no ambiguity at all, and the
+    /// constraint says the pinion must have turned `Δs / r` — so that
+    /// number says which turn the wrapped angle belongs to:
+    ///
+    /// ```text
+    /// k  = round( (Δs/r − θ_wrapped) / 2π )
+    /// g  = Δs − r · (θ_wrapped + 2πk)
+    /// ```
+    ///
+    /// `k` is locally constant, so `g` is smooth and its derivative is
+    /// exactly the obvious one. The unwrapping only misreads if the
+    /// joint is already violated by half a turn — `πr` of travel — by
+    /// which point the constraint has been lost anyway. Unlike the gear,
+    /// the travel is unlimited and the radius need not be rational.
+    Rack {
+        i: usize,
+        j: usize,
+        /// Pinion axis, in the pinion's frame.
+        h_i: Vec3,
+        /// Travel direction, in the rack's frame.
+        d_j: Vec3,
+        /// The mark each body's turn is read against, in its own frame.
+        m_i: Vec3,
+        m_j: Vec3,
+        /// `x_j − x_i` when the joint was made: travel is measured from
+        /// here, so `g` starts at zero.
+        offset: Vec3,
+        /// Pitch radius. Positive means a positive turn about the axis
+        /// drives the rack along `+direction`.
+        radius: f64,
+    },
     Gear {
         i: usize,
         j: usize,
@@ -141,6 +183,7 @@ impl Joint {
             Joint::Distance { .. } => 1,
             Joint::Ball { .. } => 3,
             Joint::Gear { .. } => 1,
+            Joint::Rack { .. } => 1,
             Joint::Universal { .. } => 4,
             Joint::Hinge { .. } => 5,
         }
@@ -152,6 +195,7 @@ impl Joint {
             | Joint::Ball { i, j, .. }
             | Joint::Hinge { i, j, .. }
             | Joint::Gear { i, j, .. }
+            | Joint::Rack { i, j, .. }
             | Joint::Universal { i, j, .. } => (i, j),
         }
     }
@@ -163,6 +207,7 @@ impl Joint {
             Joint::Hinge { .. } => "hinge",
             Joint::Universal { .. } => "universal",
             Joint::Gear { .. } => "gear",
+            Joint::Rack { .. } => "rack",
         }
     }
 
@@ -256,21 +301,21 @@ impl ConstraintSet {
          * which is precisely how a gear wheel is mounted: hinged to its
          * carrier for support, geared to it for the ratio. Only a second
          * gear on the same pair would be redundant. */
-        let stacks_on_a_bearing = what == "GEAR";
+        let stacks_on_a_bearing = what == "GEAR" || what == "RACK";
         if self.joints.iter().any(|c| {
             let (a, b) = c.bodies();
             let same_pair = (a == i && b == j) || (a == j && b == i);
             let clashes = if stacks_on_a_bearing {
-                matches!(c, Joint::Gear { .. })
+                matches!(c, Joint::Gear { .. } | Joint::Rack { .. })
             } else {
-                !matches!(c, Joint::Gear { .. })
+                !matches!(c, Joint::Gear { .. } | Joint::Rack { .. })
             };
             same_pair && clashes
         }) {
             return Err(format!(
                 "obj{i} and obj{j} are already joined by a {} — CONSTRAIN OFF drops every \
                  joint (CONSTRAINTS lists them)",
-                if stacks_on_a_bearing { "gear" } else { "joint" }
+                if stacks_on_a_bearing { "gear or rack" } else { "joint" }
             ));
         }
         if system.objects[i].get_inverse_mass() == 0.0
@@ -411,6 +456,74 @@ impl ConstraintSet {
         Ok(self.joints.len() - 1)
     }
 
+    /// Rack and pinion: body `i` turns about `axis`, body `j` slides
+    /// along `direction`, locked by the pitch radius as `Δs = r·θ`.
+    ///
+    /// One row, and the only one that couples a rotation to a
+    /// translation. A positive `radius` means a positive turn about the
+    /// axis drives the rack along `+direction`; negate either to flip
+    /// the sense. The direction must be perpendicular to the axis, as it
+    /// is on any real rack, and is refused otherwise.
+    ///
+    /// Unlike [`add_gear`](Self::add_gear) the travel is **unlimited**
+    /// and the radius need not be rational: the rack's own displacement
+    /// is unbounded and unambiguous, so it says which turn the pinion's
+    /// wrapped angle belongs to. See [`Joint::Rack`].
+    pub fn add_rack(
+        &mut self,
+        system: &PhysicalObjectSystem,
+        i: usize,
+        j: usize,
+        axis: Vec3,
+        direction: Vec3,
+        radius: f64,
+    ) -> Result<usize, String> {
+        self.check_pair(system, i, j, "RACK")?;
+        for (name, v) in [("axis", axis), ("direction", direction)] {
+            if !(v.norm() > 0.0 && v.norm().is_finite()) {
+                return Err(format!(
+                    "RACK needs a non-zero, finite {name}, e.g. \
+                     `rack pinion bar [0, 0, 1] [1, 0, 0] 0.4`"
+                ));
+            }
+        }
+        if !radius.is_finite() || radius == 0.0 {
+            return Err(format!(
+                "RACK needs a non-zero, finite pitch radius; got {radius}. It is the distance \
+                 the rack travels per radian of pinion, so zero would couple nothing."
+            ));
+        }
+        let h = axis.normalize();
+        let d = direction.normalize();
+        /* A rack runs across its pinion, not along it. Projecting the
+         * direction onto the perpendicular plane would build a different
+         * mechanism than the one asked for, so say so instead. */
+        let dot = h.dot(d);
+        if dot.abs() > 1e-9 {
+            return Err(format!(
+                "RACK needs its direction perpendicular to the pinion axis, but they are \
+                 {:.4}° apart (dot product {dot}). A rack slides ACROSS the pinion.",
+                dot.clamp(-1.0, 1.0).acos().to_degrees()
+            ));
+        }
+        /* The mark both turns are read against: any unit vector across
+         * the axis, frozen into each body's frame as it stands now. */
+        let (m, _) = perpendicular_basis(h);
+        let ri = system.objects[i].get_orientation().normalize().inverse();
+        let rj = system.objects[j].get_orientation().normalize().inverse();
+        self.joints.push(Joint::Rack {
+            i,
+            j,
+            h_i: ri.rotate(h),
+            d_j: rj.rotate(d),
+            m_i: ri.rotate(m),
+            m_j: rj.rotate(m),
+            offset: system.objects[j].get_position() - system.objects[i].get_position(),
+            radius,
+        });
+        Ok(self.joints.len() - 1)
+    }
+
     /// Gear the two bodies' turns about `axis` in the ratio
     /// `theta_i = -ratio * theta_j`.
     ///
@@ -519,6 +632,12 @@ impl ConstraintSet {
                     out[r] = sin_t;
                     r += 1;
                 }
+                Joint::Rack { i, j, h_i, d_j, m_i, m_j, offset, radius } => {
+                    let (_, _, _, s, theta) =
+                        rack_state(pose, i, j, h_i, d_j, m_i, m_j, offset, radius);
+                    out[r] = s - radius * theta;
+                    r += 1;
+                }
             }
         }
     }
@@ -565,6 +684,26 @@ impl ConstraintSet {
                     let (cos_t, _) = gear_phase(pose, i, j, axis, w, u_i, u_j, p, q);
                     emit(r, JacBlock { body: i, jv: Vec3::zeros(), jw: axis * (f64::from(q) * cos_t) });
                     emit(r, JacBlock { body: j, jv: Vec3::zeros(), jw: axis * (f64::from(p) * cos_t) });
+                    r += 1;
+                }
+                Joint::Rack { i, j, h_i, d_j, m_i, m_j, offset, radius } => {
+                    let (axis, dir, delta, _, _) =
+                        rack_state(pose, i, j, h_i, d_j, m_i, m_j, offset, radius);
+                    /* g = (x_j - x_i - offset)·d - r·θ, and both d and θ
+                     * ride on the bodies:
+                     *   d(s)  = (v_j - v_i)·d + ω_j·(d × Δ)
+                     *   d(θ)  = (ω_i - ω_j)·axis
+                     * The unwrapping count is locally constant, so it
+                     * contributes nothing. */
+                    emit(r, JacBlock { body: i, jv: -dir, jw: axis * (-radius) });
+                    emit(
+                        r,
+                        JacBlock {
+                            body: j,
+                            jv: dir,
+                            jw: dir.cross(delta) + axis * radius,
+                        },
+                    );
                     r += 1;
                 }
             }
@@ -691,6 +830,38 @@ fn perpendicular_basis(h: Vec3) -> (Vec3, Vec3) {
     };
     let p = h.cross(seed).normalize();
     (p, h.cross(p))
+}
+
+/// The pieces a rack row is built from: the world axis and direction,
+/// the travel `Δs`, and the pinion's turn relative to the rack about the
+/// axis — **unwrapped using the travel**, which is what makes the row
+/// single-valued over unlimited motion.
+fn rack_state(
+    pose: &[Pose],
+    i: usize,
+    j: usize,
+    h_i: Vec3,
+    d_j: Vec3,
+    m_i: Vec3,
+    m_j: Vec3,
+    offset: Vec3,
+    radius: f64,
+) -> (Vec3, Vec3, Vec3, f64, f64) {
+    let axis = rot(pose, i, h_i);
+    let dir = rot(pose, j, d_j);
+    /* Travel is read from the separation, so it is unbounded and exact:
+     * no wrapping anywhere in it. */
+    let delta = (pose[j].position - pose[i].position) - offset;
+    let s = delta.dot(dir);
+    /* The pinion's turn relative to the rack, wrapped into (-pi, pi]. */
+    let (a, b) = (rot(pose, i, m_i), rot(pose, j, m_j));
+    let theta_w = axis.dot(b.cross(a)).atan2(b.dot(a));
+    /* The constraint says the turn must be s/r, so s/r says which turn
+     * the wrapped angle belongs to. k is locally constant, which is why
+     * the derivative below is exact. */
+    let tau = std::f64::consts::TAU;
+    let k = ((s / radius - theta_w) / tau).round();
+    (axis, dir, delta, s, theta_w + tau * k)
 }
 
 /// `(cos Θ, sin Θ)` for `Θ = q·θ_i + p·θ_j`, the combination a gear

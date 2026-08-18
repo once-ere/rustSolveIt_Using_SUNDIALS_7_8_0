@@ -608,6 +608,16 @@ impl Parser {
                 self.expr(&mut prog)?;
                 prog.push(Instr::Gear { a, b });
             }
+            TokKind::Keyword(Keyword::Rack) => {
+                self.pos += 1;
+                let a = self.expect_ident("the pinion")?;
+                let b = self.expect_ident("the rack")?;
+                /* axis, then direction, then pitch radius */
+                self.expr(&mut prog)?;
+                self.expr(&mut prog)?;
+                self.expr(&mut prog)?;
+                prog.push(Instr::Rack { a, b });
+            }
             TokKind::Keyword(Keyword::Universal) => {
                 self.pos += 1;
                 let a = self.expect_ident("the first object")?;

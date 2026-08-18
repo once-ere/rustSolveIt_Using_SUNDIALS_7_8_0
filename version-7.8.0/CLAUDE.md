@@ -246,7 +246,7 @@ or `sensitivity.rs`. Four things that already cost a day:
 - **A magnetic moment tensor's third column is what a B along z can
   grip.** `[[0, 0.5, 0], [-0.5, 0, 0], [0, 0, 0]]` looks like a
   reasonable antisymmetric tensor and produces exactly zero torque.
-- **`BALL`, `HINGE`, `UNIVERSAL` and `GEAR` are CONTEXTUAL keywords** — commands
+- **`BALL`, `HINGE`, `UNIVERSAL`, `GEAR` and `RACK` are CONTEXTUAL keywords** — commands
   only at the start of a line. `ball` is exactly what a physics user
   calls a sphere, and `new sphere as ball` / `get ball.mass` were already
   in the tests and docs; reserving it outright broke them.

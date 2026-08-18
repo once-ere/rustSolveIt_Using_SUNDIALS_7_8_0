@@ -872,6 +872,16 @@ Pinned properties:
   differ and the strut between them is drawn as well. Nothing in the
   player is keyed on the joint's name — the geometry decides, which is
   why a new joint kind needs no player change.
+- **A `RACK` solves the same wrapping problem the other way**, and the
+  contrast is the point. A gear hides the wrapping in a sine and pays
+  with a rational ratio; a rack has an unbounded coordinate — the
+  travel — so it unwraps the angle *from the travel*,
+  `k = round((Δs/r − θ_w)/2π)`, and needs no restriction on the
+  radius. `k` is locally constant, so the Jacobian is the plain one.
+  It misreads only once the joint is violated by `πr`. `RACK` stacks
+  on bearings like `GEAR`, and is written against the pinion's turn
+  **relative to the rack**, since the joint set has no prismatic
+  constraint to hold an unguided rack square.
 - **A `GEAR` is the one joint that is not geometric**, and two rules
   follow from it. It may **stack on a bearing** — `check_pair` refuses a
   second geometric joint on a pair but allows `HINGE 5 + GEAR 1`,

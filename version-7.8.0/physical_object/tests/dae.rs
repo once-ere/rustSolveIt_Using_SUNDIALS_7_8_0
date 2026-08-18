@@ -576,6 +576,221 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// A RACK converts turning into sliding: `Δs = r·θ`, driven from rest
+/// by a torque, and checked well past a full turn of the pinion.
+///
+/// The travel is what makes this joint different from a `GEAR`. A gear
+/// hides its wrapping inside a sine and pays for it with a rational
+/// ratio; a rack has an unbounded coordinate to hand, so it unwraps the
+/// angle from the travel instead and needs no such restriction. This
+/// runs the pinion past three full turns to exercise exactly that.
+///
+/// **The rack is unguided, and that shows.** A real rack sits in a
+/// slider, which absorbs the reaction torque; this joint set has no
+/// prismatic constraint, so the bar takes that torque and slowly turns.
+/// The row couples the pinion's turn *relative to the rack*, so it stays
+/// exact regardless — but it is why the assertion is written against the
+/// relative angle rather than the pinion's absolute one.
+#[test]
+fn a_rack_converts_turning_into_sliding() {
+    const R: f64 = 0.4;
+    let z = Vec3::new(0.0, 0.0, 1.0);
+    let mut mount = physical_object::new_point(0, 1.0, Vec3::new(0.0, 0.4, 0.0), Vec3::zeros());
+    mount.set_inverse_mass(0.0);
+    mount.set_inertia_tensor(Mat3::zeros());
+    let pinion = physical_object::new_from_shape(
+        1, 1.0, 0.0, Vec3::zeros(), Vec3::zeros(), Vec3::zeros(),
+        Boundary::Cylinder { radius: R, half_height: 0.05 },
+    );
+    let bar = physical_object::new_from_shape(
+        2, 1.0, 0.0, Vec3::new(0.0, 0.46, 0.0), Vec3::zeros(), Vec3::zeros(),
+        Boundary::Cuboid { half_extents: [2.0, 0.06, 0.06] },
+    );
+    let mut s = PhysicalObjectSystem::new(vec![mount, pinion, bar], 0.0);
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    s.external_torques[1] = Vec3::new(0.0, 0.0, 0.4); // crank the pinion
+    let snap = s.clone();
+    s.constraints.add_hinge(&snap, 0, 1, z).unwrap();
+    s.constraints.add_rack(&snap, 1, 2, z, Vec3::new(1.0, 0.0, 0.0), R).unwrap();
+    assert_eq!(s.constraints.len(), 6, "hinge 5 + rack 1");
+
+    /* From REST: the relation cannot have come from the start. */
+    let report = integrate::run(&mut s, 0.02, 1).expect("rack start");
+    assert_eq!(report.initial_velocity_projected, 0.0, "from rest");
+
+    let offset = s.objects[2].get_position() - s.objects[1].get_position();
+    let sample = |s: &PhysicalObjectSystem| {
+        let dir = s.objects[2].get_orientation().normalize().rotate(Vec3::new(1.0, 0.0, 0.0));
+        let mark = s.objects[1].get_orientation().normalize().rotate(Vec3::new(1.0, 0.0, 0.0));
+        let travel = (s.objects[2].get_position() - s.objects[1].get_position() - offset).dot(dir);
+        // the pinion's turn relative to the rack, about z, wrapped
+        let theta = dir.cross(mark).z.atan2(dir.dot(mark));
+        (travel, theta)
+    };
+    let (mut prev, mut turned) = (sample(&s).1, 0.0_f64);
+    let (mut worst, mut end_travel, mut worst_g) = (0.0_f64, 0.0, 0.0_f64);
+    for k in 2..=200 {
+        let r = integrate::run(&mut s, 0.02 * f64::from(k), 1).expect("rack run");
+        worst_g = worst_g.max(r.constraint_drift.0);
+        let (travel, theta) = sample(&s);
+        let mut d = theta - prev;
+        while d > std::f64::consts::PI { d -= std::f64::consts::TAU }
+        while d < -std::f64::consts::PI { d += std::f64::consts::TAU }
+        turned += d;
+        prev = theta;
+        worst = worst.max((travel - R * turned).abs());
+        end_travel = travel;
+    }
+    /* Past a full turn is the point: a wrapped angle would have jumped
+     * by 2π here, and the travel is what tells the row it did not. */
+    assert!(
+        turned.abs() > std::f64::consts::TAU,
+        "the pinion must pass a full turn, or the unwrapping is untested: {turned}"
+    );
+    assert!(end_travel.abs() > 1.0, "and the rack must actually have moved: {end_travel}");
+    /* The row itself, as the solver reports it. */
+    assert!(worst_g < 1e-7, "the rack row must hold: |g| = {worst_g:e}");
+    /* And the relation rebuilt independently here, from wrapped angle
+     * increments summed over 200 restarts. That reconstruction carries
+     * its own accumulated error — about 5e-6 over one and a half turns —
+     * which is why it is checked against a looser bound than the row. */
+    assert!(worst < 1e-4, "travel should track r*theta: worst gap {worst:e}");
+}
+
+/// A rack refuses what it cannot mean, and stacks on a bearing.
+#[test]
+fn a_rack_refuses_what_it_cannot_mean() {
+    let make = || {
+        let a = physical_object::new_point(0, 1.0, Vec3::zeros(), Vec3::zeros());
+        let b = physical_object::new_point(1, 1.0, Vec3::new(0.0, 1.0, 0.0), Vec3::zeros());
+        PhysicalObjectSystem::new(vec![a, b], 0.0)
+    };
+    let z = Vec3::new(0.0, 0.0, 1.0);
+    let x = Vec3::new(1.0, 0.0, 0.0);
+
+    let mut s = make();
+    let snap = s.clone();
+    /* A rack runs ACROSS its pinion; along it is a different mechanism,
+     * and projecting silently would build that other one. */
+    let e = s.constraints.add_rack(&snap, 0, 1, z, z, 0.4).unwrap_err();
+    assert!(e.contains("perpendicular"), "{e}");
+    assert!(s.constraints.add_rack(&snap, 0, 1, z, x, 0.0).unwrap_err().contains("pitch radius"));
+    assert!(s.constraints.add_rack(&snap, 0, 1, Vec3::zeros(), x, 0.4).unwrap_err().contains("axis"));
+
+    /* Unlike a gear, no rationality limit: the travel resolves the
+     * wrapping, so any finite radius is representable. */
+    let mut s = make();
+    let snap = s.clone();
+    s.constraints.add_rack(&snap, 0, 1, z, x, std::f64::consts::FRAC_1_PI).unwrap();
+    let e = s.constraints.add_rack(&snap, 0, 1, z, x, 0.4).unwrap_err();
+    assert!(e.contains("already joined by a gear or rack"), "{e}");
+}
+
+/// The RACK joint's Jacobian, against its own residual, including well
+/// past a full turn of the pinion.
+///
+/// The row is `g = Δs − r·θ` with `θ` unwrapped from the travel, and the
+/// claim is that the unwrapping count is locally constant so the
+/// derivative is the plain one. That is exactly the thing to check by
+/// finite differences, and to check *after several turns*, where a
+/// wrapped angle would already have jumped.
+#[test]
+fn the_rack_jacobian_matches_its_residual() {
+    let z = Vec3::new(0.0, 0.0, 1.0);
+    let x = Vec3::new(1.0, 0.0, 0.0);
+    for radius in [0.4_f64, -0.25, 1.0] {
+        for turns in [0.0_f64, 0.3, 2.7, -3.4] {
+            let theta = turns * std::f64::consts::TAU;
+            let make = |th: f64, s: f64| {
+                let mut pin = physical_object::new_from_shape(
+                    0, 1.0, 0.0, Vec3::zeros(), Vec3::zeros(), Vec3::zeros(),
+                    Boundary::Cylinder { radius: radius.abs(), half_height: 0.05 },
+                );
+                pin.set_orientation(Quat::new((th / 2.0).cos(), 0.0, 0.0, (th / 2.0).sin()));
+                let bar = physical_object::new_from_shape(
+                    1, 1.0, 0.0,
+                    Vec3::new(s, 1.0, 0.0), Vec3::zeros(), Vec3::zeros(),
+                    Boundary::Cuboid { half_extents: [2.0, 0.05, 0.05] },
+                );
+                PhysicalObjectSystem::new(vec![pin, bar], 0.0)
+            };
+            /* built at rest, then moved to a consistent pose far along */
+            let mut s = make(0.0, 0.0);
+            let snap = s.clone();
+            s.constraints.add_rack(&snap, 0, 1, z, x, radius).unwrap();
+            assert_eq!(s.constraints.len(), 1, "a rack is one row");
+
+            let base = make(theta, radius * theta);
+            let pose = ConstraintSet::poses(&base);
+            let mut g0 = vec![0.0; 1];
+            s.constraints.residual(&pose, &mut g0);
+            assert!(
+                g0[0].abs() < 1e-9,
+                "radius {radius}, {turns} turns: a consistent pose should satisfy the row, \
+                 got g = {}",
+                g0[0]
+            );
+
+            let mut blocks = Vec::new();
+            s.constraints.for_each_block(&pose, |_, b| blocks.push(b));
+            let g_of = |sys: &PhysicalObjectSystem| {
+                let mut o = vec![0.0; 1];
+                s.constraints.residual(&ConstraintSet::poses(sys), &mut o);
+                o[0]
+            };
+            /* CENTRAL differences: the forward kind carries an O(H)
+             * truncation error proportional to the second derivative,
+             * and after three turns the rack has travelled 21 units, so
+             * that error alone is ~1e-5 — the size of the thing being
+             * measured. Central differencing is O(H²) and leaves the
+             * comparison about the Jacobian rather than about the
+             * difference scheme. */
+            const H: f64 = 1e-6;
+            let spin = |dir: Vec3, h: f64| {
+                Quat::new(
+                    (h / 2.0).cos(),
+                    dir.x * (h / 2.0).sin(),
+                    dir.y * (h / 2.0).sin(),
+                    dir.z * (h / 2.0).sin(),
+                )
+            };
+            for body in 0..2 {
+                for dir in [x, Vec3::new(0.0, 1.0, 0.0), z] {
+                    let shift = |h: f64| {
+                        let mut m = base.clone();
+                        let p0 = m.objects[body].get_position();
+                        m.objects[body].set_position(p0 + dir * h);
+                        g_of(&m)
+                    };
+                    let measured = (shift(H) - shift(-H)) / (2.0 * H);
+                    let predicted: f64 =
+                        blocks.iter().filter(|b| b.body == body).map(|b| b.jv.dot(dir)).sum();
+                    assert!(
+                        (measured - predicted).abs() < 1e-6,
+                        "r {radius} turns {turns} body {body} translate {dir:?}: \
+                         fd {measured} vs J {predicted}"
+                    );
+                    let turn = |h: f64| {
+                        let mut m = base.clone();
+                        let q0 = m.objects[body].get_orientation();
+                        m.objects[body].set_orientation((spin(dir, h) * q0).normalize());
+                        g_of(&m)
+                    };
+                    let measured = (turn(H) - turn(-H)) / (2.0 * H);
+                    let predicted: f64 =
+                        blocks.iter().filter(|b| b.body == body).map(|b| b.jw.dot(dir)).sum();
+                    assert!(
+                        (measured - predicted).abs() < 1e-6,
+                        "r {radius} turns {turns} body {body} rotate {dir:?}: \
+                         fd {measured} vs J {predicted}"
+                    );
+                }
+            }
+        }
+    }
+}
+
 /// A GEAR holds `ω_i = −ratio · ω_j` about its axis, under load.
 ///
 /// Two wheels on their own bearings, geared 2:1, with a torque applied

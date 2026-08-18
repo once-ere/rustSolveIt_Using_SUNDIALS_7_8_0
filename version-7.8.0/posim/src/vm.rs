@@ -299,6 +299,9 @@ pub enum Instr {
     /// `GEAR <a> <b> <axis> <ratio>` — the two bodies' turns about
     /// `axis` locked in proportion. Axis then ratio on the stack.
     Gear { a: String, b: String },
+    /// `RACK <pinion> <rack> <axis> <direction> <radius>` — a rotation
+    /// coupled to a translation. Axis, direction, radius on the stack.
+    Rack { a: String, b: String },
     /// `CONSTRAIN OFF` — drop every rod.
     ConstrainOff,
     /// `CONSTRAINTS` — list the rods and how well they are being held.
@@ -1417,6 +1420,20 @@ fn exec_one(instr: &Instr, state: &mut SimState, stack: &mut Vec<Value>) -> Resu
                  1 row — their turns are locked in proportion (METHOD IDA is required to \
                  integrate it)",
                 axis.x, axis.y, axis.z
+            )));
+        }
+        Instr::Rack { a, b } => {
+            /* pushed axis, direction, radius — so radius is on top */
+            let radius = pop_num(stack)?;
+            let dir = as_vec3(pop(stack)?)?;
+            let axis = as_vec3(pop(stack)?)?;
+            let (i, j) = (resolve_object_ref(state, a)?, resolve_object_ref(state, b)?);
+            let snapshot = state.system.clone();
+            let k = state.system.constraints.add_rack(&snapshot, i, j, axis, dir, radius)?;
+            stack.push(Value::Str(format!(
+                "constraint{k}: rack obj{i} (pinion) <-> obj{j} (rack), pitch radius {radius}, \
+                 1 row — the rack travels {radius} per radian of pinion (METHOD IDA is \
+                 required to integrate it)"
             )));
         }
         Instr::Universal { a, b } => {
