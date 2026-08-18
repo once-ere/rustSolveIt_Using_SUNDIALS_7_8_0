@@ -3583,9 +3583,10 @@ one axis and comes out about another & total $L\cdot\hat y$ conserved
 to $6.4\text{e-}15$; no centre moves further from the pivot than
 $7\text{e-}35$\\
 \code{videos/cardan\_gear.html} & a wheel inside a ring of twice
-its radius: the rim point runs along a \textbf{straight line}, the
-degenerate hypocycloid & the line is held to $1.8\text{e-}3$ over 315
-restarts, $4.1\text{e-}5$ run continuously; stroke exactly $\pm 2r$\\
+its radius, rolling on a \kw{gear} row: the rim point runs along a
+\textbf{straight line}, the degenerate hypocycloid & the line is held to
+$1.1\text{e-}8$, against $1.8\text{e-}3$ for the same mechanism with the
+ratio merely imposed\\
 \code{videos/cardan\_compass.html} & the same two rings, but with a
 \textbf{pendulous} bowl, so gravity is the restoring torque and the
 card seeks level & two physical-pendulum periods, $1.878587$ and
@@ -3738,41 +3739,47 @@ right angles to the push. Rotation in about one axis, rotation out
 about another, is the whole of gyroscopic behaviour, and here it is a
 consequence of the two laws above rather than a separate rule.
 
-\subsection{What the joint set cannot say}
+\subsection{The right motion versus the right mechanism}
 
-Every other recording in this chapter is a mechanism the language can
-\emph{build}. The Cardan-gear one is not, and the boundary is worth
-stating exactly.
+The Cardan-gear recording exists to make one distinction concrete, and
+it is the distinction the \kw{gear} joint was added for.
 
 A wheel of radius $r$ rolling inside a ring of radius $2r$ sends every
 point of its rim along a straight line --- a diameter of the ring. The
-hypocycloid of ratio 2 does not approximate a line, it \textbf{is} one,
-and the rim point sits at $P = (2r\cos\theta, 0)$.
+hypocycloid of ratio 2 does not approximate a line, it \textbf{is} one.
 
-\textbf{Rolling is not expressible here.} \kw{constrain} holds a
-distance (1 row), \kw{ball} a point (3), \kw{universal} a point and a
-right angle (4), \kw{hinge} a point and an axis (5) --- and not one of
-them couples a \textbf{rotation to a translation}, which is what
-rolling means. There is no gear constraint and no line constraint
-either. So the recording does not enforce the 2:1 relation; it
-\emph{starts} with it, crank $+1$ and planet $-1$ rad/s, which for this
-radius ratio is exactly the rolling condition, and relies on both rates
-being conserved --- which they are, because the planet's reaction on the
-crank is purely centripetal and the planet's centre of mass sits on its
-own hinge.
+\textbf{You can get that motion without a constraint.} Set the carrier
+turning one way and the wheel the other at the same rate --- which for
+this radius ratio is exactly the rolling condition --- and both rates
+are conserved, so the ratio persists and the line comes out. Nothing in
+the picture tells you it was never enforced.
 
-\textbf{And the difference is measurable, which is the useful part.} A
-real gear pair holds the line under any load; an initial condition holds
-it only until integration error accumulates. Over 315 cold restarts,
-one per frame, the rim point leaves the line by up to
-$1.795\times10^{-3}$; the same 6.3\,s run continuously holds it to
-$4.137\times10^{-5}$, a factor of 43.
+\textbf{Then disturb it.} The same scene, measured four ways:
 
-\textbf{The general point.} A constraint you cannot write is not a
-constraint you can fake with initial conditions --- you get the right
-motion and the wrong mechanism, and the two are told apart by disturbing
-it. The outer ring in that recording is drawn for reference and
-\textbf{nothing is attached to it}.
+\begin{center}
+\begin{tabular}{p{8.0cm}p{4.6cm}}
+& \textbf{rim point off the line}\\\hline
+ratio as an initial condition & $1.795\times10^{-3}$\\
+ratio enforced by \kw{gear} & $1.059\times10^{-8}$\\
+initial condition, plus a torque on the wheel & $\mathbf{7.468\times10^{-1}}$\\
+\kw{gear}, plus the same torque & $1.152\times10^{-8}$\\
+\end{tabular}
+\end{center}
+
+Undisturbed, the constraint is worth five orders of magnitude.
+Disturbed, it is worth everything: the imposed version does not degrade,
+it \textbf{collapses}, and the straight line is gone.
+
+\textbf{The general point.} A relation you can only set up in the
+initial conditions gives the right motion and the wrong mechanism. The
+two are indistinguishable while nothing happens, and a single
+disturbance separates them.
+
+\textbf{What is still not expressible.} A \kw{gear} couples two
+rotations. Nothing yet couples a rotation to a \emph{translation}, and
+nothing confines a point to a line, so rack-and-pinion, sliders, cam
+followers and a wheel rolling \emph{along the ground} remain out of
+reach.
 
 \subsection{A closed form that is exact, and how to actually hit it}
 

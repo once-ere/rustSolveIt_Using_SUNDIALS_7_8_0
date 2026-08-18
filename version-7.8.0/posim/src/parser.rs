@@ -599,6 +599,15 @@ impl Parser {
                 self.expr(&mut prog)?;
                 prog.push(Instr::Hinge { a, b });
             }
+            TokKind::Keyword(Keyword::Gear) => {
+                self.pos += 1;
+                let a = self.expect_ident("the first object")?;
+                let b = self.expect_ident("the second object")?;
+                /* axis first, then the ratio — both full expressions */
+                self.expr(&mut prog)?;
+                self.expr(&mut prog)?;
+                prog.push(Instr::Gear { a, b });
+            }
             TokKind::Keyword(Keyword::Universal) => {
                 self.pos += 1;
                 let a = self.expect_ident("the first object")?;

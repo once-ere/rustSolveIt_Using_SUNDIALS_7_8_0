@@ -576,88 +576,270 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// A GEAR holds `ω_i = −ratio · ω_j` about its axis, under load.
+///
+/// Two wheels on their own bearings, geared 2:1, with a torque applied
+/// to one of them. Nothing about the start encodes the ratio: both
+/// begin at rest, and the torque has to drive both through the gear.
+/// The ratio is checked as a ratio, against the closed form, and the
+/// row count is checked because a gear stacking on a bearing is the
+/// arrangement that makes a gear train expressible at all.
+#[test]
+fn a_gear_holds_its_ratio_under_load() {
+    const RATIO: f64 = 2.0;
+    let wheel = |id: usize, x: f64, r: f64| {
+        physical_object::new_from_shape(
+            id, 1.0, 0.0,
+            Vec3::new(x, 0.0, 0.0),
+            Vec3::zeros(),
+            Vec3::zeros(),
+            Boundary::Cylinder { radius: r, half_height: 0.05 },
+        )
+    };
+    let mut s = PhysicalObjectSystem::new(
+        vec![
+            world_anchor(0, Vec3::new(0.0, 0.0, 0.0)),
+            wheel(1, 0.0, 0.3),   // the small wheel, on its own bearing
+            world_anchor(2, Vec3::new(1.0, 0.0, 0.0)),
+            wheel(3, 1.0, 0.6),   // the large one
+        ],
+        0.0,
+    );
+    s.collide_enabled = false;
+    s.method = Method::Ida;
+    s.external_torques[3] = Vec3::new(0.0, 0.0, 0.02); // drive the large wheel
+    let snap = s.clone();
+    let z = Vec3::new(0.0, 0.0, 1.0);
+    s.constraints.add_hinge(&snap, 0, 1, z).unwrap();
+    s.constraints.add_hinge(&snap, 2, 3, z).unwrap();
+    s.constraints.add_gear(&snap, 1, 3, z, RATIO).unwrap();
+    assert_eq!(s.constraints.len(), 11, "hinge 5 + hinge 5 + gear 1");
+
+    /* Started from REST, so the ratio cannot have been smuggled in
+     * through the initial condition: g_dot = 0 trivially. */
+    let report = integrate::run(&mut s, 3.0, 60).expect("gear train");
+    assert_eq!(report.initial_velocity_projected, 0.0, "from rest");
+    assert!(report.constraint_drift.0 < 1e-6, "|g| = {:e}", report.constraint_drift.0);
+
+    let small = s.objects[1].get_angular_velocity().z;
+    let large = s.objects[3].get_angular_velocity().z;
+    assert!(large.abs() > 0.1, "the torque must actually have spun it: {large}");
+    assert!(
+        (small + RATIO * large).abs() < 1e-6 * large.abs().max(1.0),
+        "the gear should hold w_small = -{RATIO} * w_large: got {small} and {large}"
+    );
+}
+
+/// A gear ratio has to be rational, and the refusal says why rather than
+/// rounding quietly. It also refuses a second gear on the same pair,
+/// while still allowing the first to stack on a bearing.
+#[test]
+fn a_gear_refuses_what_it_cannot_represent() {
+    let make = || {
+        let a = physical_object::new_point(0, 1.0, Vec3::zeros(), Vec3::zeros());
+        let b = physical_object::new_point(1, 1.0, Vec3::new(1.0, 0.0, 0.0), Vec3::zeros());
+        PhysicalObjectSystem::new(vec![a, b], 0.0)
+    };
+    let z = Vec3::new(0.0, 0.0, 1.0);
+
+    let mut s = make();
+    let snap = s.clone();
+    let e = s.constraints.add_gear(&snap, 0, 1, z, std::f64::consts::FRAC_1_PI).unwrap_err();
+    assert!(e.contains("rational"), "{e}");
+    assert!(e.contains("sin("), "the message should say what the limit comes from: {e}");
+
+    // a third and a half are fine
+    let mut s = make();
+    let snap = s.clone();
+    s.constraints.add_gear(&snap, 0, 1, z, 1.0 / 3.0).unwrap();
+    // but a second gear on the same pair is redundant
+    let e = s.constraints.add_gear(&snap, 0, 1, z, 2.0).unwrap_err();
+    assert!(e.contains("already joined by a gear"), "{e}");
+
+    let mut s = make();
+    let snap = s.clone();
+    assert!(s.constraints.add_gear(&snap, 0, 1, z, 0.0).unwrap_err().contains("non-zero"));
+    assert!(s.constraints.add_gear(&snap, 0, 1, Vec3::zeros(), 2.0).unwrap_err().contains("axis"));
+}
+
+/// The GEAR joint's Jacobian, checked against its own residual by
+/// finite differences.
+///
+/// The row is `g = sin(q θ_i + p θ_j)`, and the claim underneath it is
+/// that `dθ = δ·axis` **exactly** — no cross terms from perturbations
+/// off the axis. That is what makes the Jacobian just the axis, scaled,
+/// and it is worth checking rather than believing: rotate each body a
+/// little about each of three directions and compare the measured
+/// change in `g` with what the Jacobian predicts.
+#[test]
+fn the_gear_jacobian_matches_its_residual() {
+    for (ratio, tilt) in [(1.0, 0.0), (2.0, 0.0), (-1.5, 0.0), (2.0, 0.3), (0.5, -0.4)] {
+        let make = |qi: Quat, qj: Quat| {
+            let mut a = physical_object::new_from_shape(
+                0, 1.0, 0.0, Vec3::zeros(), Vec3::zeros(), Vec3::zeros(),
+                Boundary::Cylinder { radius: 0.4, half_height: 0.05 },
+            );
+            let mut b = physical_object::new_from_shape(
+                1, 1.0, 0.0, Vec3::new(1.0, 0.0, 0.0), Vec3::zeros(), Vec3::zeros(),
+                Boundary::Cylinder { radius: 0.4, half_height: 0.05 },
+            );
+            a.set_orientation(qi);
+            b.set_orientation(qj);
+            PhysicalObjectSystem::new(vec![a, b], 0.0)
+        };
+        let axis = Vec3::new(0.0, 0.0, 1.0);
+        let spin = |th: f64| Quat::new((th / 2.0).cos(), 0.0, 0.0, (th / 2.0).sin());
+
+        let mut s = make(Quat::identity(), Quat::identity());
+        s.constraints.add_gear(&s.clone(), 0, 1, axis, ratio).unwrap();
+        assert_eq!(s.constraints.len(), 1, "a gear is one row");
+
+        /* Move both bodies off the reference so cos Θ is not 1 and the
+         * check is not accidentally trivial. */
+        let base = make(spin(0.37 + tilt), spin(-0.11));
+        let g_of = |sys: &PhysicalObjectSystem| {
+            let pose = ConstraintSet::poses(sys);
+            let mut out = vec![0.0; 1];
+            s.constraints.residual(&pose, &mut out);
+            out[0]
+        };
+        let pose = ConstraintSet::poses(&base);
+        let mut blocks = Vec::new();
+        s.constraints.for_each_block(&pose, |row, b| {
+            assert_eq!(row, 0);
+            blocks.push(b);
+        });
+
+        const H: f64 = 1e-6;
+        for body in 0..2 {
+            for dir in [Vec3::new(1.0, 0.0, 0.0), Vec3::new(0.0, 1.0, 0.0), axis] {
+                /* rotate `body` by H about `dir`, and see what g does */
+                let mut moved = base.clone();
+                let dq = Quat::new(
+                    (H / 2.0).cos(),
+                    dir.x * (H / 2.0).sin(),
+                    dir.y * (H / 2.0).sin(),
+                    dir.z * (H / 2.0).sin(),
+                );
+                let q0 = moved.objects[body].get_orientation();
+                moved.objects[body].set_orientation((dq * q0).normalize());
+                let measured = (g_of(&moved) - g_of(&base)) / H;
+                let predicted: f64 = blocks
+                    .iter()
+                    .filter(|b| b.body == body)
+                    .map(|b| b.jw.dot(dir))
+                    .sum();
+                assert!(
+                    (measured - predicted).abs() < 1e-5,
+                    "ratio {ratio}, body {body}, dir {dir:?}: finite difference {measured}, \
+                     Jacobian {predicted}"
+                );
+            }
+        }
+    }
+}
+
 /// The Cardan gears of `videos/cardan_gear.html`, against the
-/// degenerate hypocycloid.
+/// degenerate hypocycloid — and the difference a real constraint makes.
 ///
 /// A wheel of radius `r` rolling inside a ring of radius `2r` sends
-/// every point of its rim along a **straight line** — a diameter of the
+/// every point of its rim along a **straight line**, a diameter of the
 /// ring. The hypocycloid of ratio 2 does not approximate a line, it is
-/// one, and the rim point sits at
+/// one, and the rim point sits at `P = (2r cos θ, 0)`.
+///
+/// The rolling is a `GEAR` of ratio 1: the wheel turns once backwards
+/// for each forward turn of the carrier. The mechanism is
 ///
 /// ```text
-/// P = (2r cos θ, 0),   θ the crank angle
+/// centre --HINGE-- crank --HINGE-- planet,  planet =GEAR= crank
 /// ```
 ///
-/// **Nothing here enforces rolling.** This joint set couples no rotation
-/// to a translation — there is no gear constraint and no line
-/// constraint — so the 2:1 relation is imposed by the initial rates
-/// (`+1` and `−1`, which for this radius ratio *is* the rolling
-/// condition) and persists only because nothing torques either body.
-/// That is exactly what the assertion checks: if the rates did not stay
-/// locked, the rim would leave the line at once.
+/// 5 + 5 + 1 = 11 rows on the pair's 12 freedoms, leaving the one a
+/// Cardan gear train has.
 ///
-/// The check is closed-form at three crank angles, including the one
-/// where the rim point passes through the centre of the ring.
+/// The second half of the test is the point of having the joint at all:
+/// the same mechanism is **disturbed with a torque**, and the line must
+/// survive. Impose the ratio as an initial condition instead and the
+/// same torque destroys it — the rim point wanders `0.75` off a line it
+/// otherwise holds to `1e-8`.
 #[test]
 fn cardan_gears_send_a_rim_point_along_a_straight_line() {
     const R: f64 = 0.5; // wheel radius; the ring is 2R
     let pi = std::f64::consts::PI;
 
-    let mut centre = physical_object::new_point(0, 1.0, Vec3::new(-R, 0.0, 0.0), Vec3::zeros());
-    centre.set_inverse_mass(0.0);
-    centre.set_inertia_tensor(Mat3::zeros());
-    /* The midpoint pivot rule puts the first hinge on the origin and the
-     * second on the planet's axle: the anchor sits one crank radius the
-     * far side of centre, and crank and planet share a centre. */
-    let mut crank = physical_object::new_from_shape(
-        1, 0.3, 0.0,
-        Vec3::new(R, 0.0, 0.0),
-        Vec3::new(0.0, R, 0.0),      // v = ω × r
-        Vec3::new(0.0, 0.0, 1.0),
-        Boundary::Cuboid { half_extents: [R, 0.04, 0.02] },
-    );
-    crank.set_angular_velocity(Vec3::new(0.0, 0.0, 1.0));
-    let mut planet = physical_object::new_from_shape(
-        2, 1.0, 0.0,
-        Vec3::new(R, 0.0, 0.0),
-        Vec3::new(0.0, R, 0.0),
-        Vec3::new(0.0, 0.0, -1.0),   // equal and opposite: the rolling ratio
-        Boundary::Cylinder { radius: R, half_height: 0.03 },
-    );
-    planet.set_angular_velocity(Vec3::new(0.0, 0.0, -1.0));
-
-    let mut s = PhysicalObjectSystem::new(vec![centre, crank, planet], 0.0);
-    s.collide_enabled = false;
-    s.method = Method::Ida;
-    let snap = s.clone();
-    s.constraints.add_hinge(&snap, 0, 1, Vec3::new(0.0, 0.0, 1.0)).unwrap();
-    s.constraints.add_hinge(&snap, 1, 2, Vec3::new(0.0, 0.0, 1.0)).unwrap();
-    assert_eq!(s.constraints.len(), 10, "two hinges are five rows each");
-
-    /* The material point of the planet that starts on the rim at +2R. */
+    let build = |geared: bool, torque: f64| {
+        let mut centre = physical_object::new_point(0, 1.0, Vec3::new(-R, 0.0, 0.0), Vec3::zeros());
+        centre.set_inverse_mass(0.0);
+        centre.set_inertia_tensor(Mat3::zeros());
+        let mut crank = physical_object::new_from_shape(
+            1, 0.3, 0.0,
+            Vec3::new(R, 0.0, 0.0),
+            Vec3::new(0.0, R, 0.0), // v = ω × r
+            Vec3::new(0.0, 0.0, 1.0),
+            Boundary::Cuboid { half_extents: [R, 0.04, 0.02] },
+        );
+        crank.set_angular_velocity(Vec3::new(0.0, 0.0, 1.0));
+        let mut planet = physical_object::new_from_shape(
+            2, 1.0, 0.0,
+            Vec3::new(R, 0.0, 0.0),
+            Vec3::new(0.0, R, 0.0),
+            Vec3::new(0.0, 0.0, -1.0), // the rolling ratio, as a start
+            Boundary::Cylinder { radius: R, half_height: 0.03 },
+        );
+        planet.set_angular_velocity(Vec3::new(0.0, 0.0, -1.0));
+        let mut s = PhysicalObjectSystem::new(vec![centre, crank, planet], 0.0);
+        s.collide_enabled = false;
+        s.method = Method::Ida;
+        s.external_torques[2] = Vec3::new(0.0, 0.0, torque);
+        let snap = s.clone();
+        s.constraints.add_hinge(&snap, 0, 1, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+        s.constraints.add_hinge(&snap, 1, 2, Vec3::new(0.0, 0.0, 1.0)).unwrap();
+        if geared {
+            /* Stacks on the bearing: the hinge supports the wheel, the
+             * gear sets the ratio. A gear is not a geometric joint, so
+             * the two are not redundant. */
+            s.constraints.add_gear(&snap, 2, 1, Vec3::new(0.0, 0.0, 1.0), 1.0).unwrap();
+        }
+        s
+    };
     let rim = |s: &PhysicalObjectSystem| {
         s.objects[2].get_position()
             + s.objects[2].get_orientation().normalize().rotate(Vec3::new(R, 0.0, 0.0))
     };
-    assert!((rim(&s) - Vec3::new(2.0 * R, 0.0, 0.0)).norm() < 1e-12, "starts at +2r");
 
+    let mut s = build(true, 0.0);
+    assert_eq!(s.constraints.len(), 11, "hinge 5 + hinge 5 + gear 1");
+    assert!((rim(&s) - Vec3::new(2.0 * R, 0.0, 0.0)).norm() < 1e-12, "starts at +2r");
     let report = integrate::run(&mut s, 0.02, 1).expect("gear start");
     assert_eq!(report.initial_velocity_projected, 0.0, "the start is consistent");
 
-    /* θ = π/2: the rim point is at the centre of the ring, having run
-     * half the line. θ = π: the far end. θ = 2π: back where it began. */
+    /* θ = π/2 puts the rim point at the centre of the ring, π at the far
+     * end, 2π back where it began. */
     for (theta, want_x) in [(pi / 2.0, 0.0), (pi, -2.0 * R), (2.0 * pi, 2.0 * R)] {
         let r = integrate::run(&mut s, theta, 200).expect("gear run");
         assert!(r.constraint_drift.0 < 1e-6, "|g| = {:e}", r.constraint_drift.0);
         let p = rim(&s);
-        assert!(
-            (p.x - want_x).abs() < 2e-3,
-            "at crank angle {theta} the rim point should be at x = {want_x}, got {p:?}"
-        );
-        /* The whole claim: it never leaves the line. */
-        assert!(p.y.abs() < 2e-3, "the rim point left the line: y = {:e}", p.y);
-        assert!(p.z.abs() < 1e-9, "and it stays in the plane: z = {:e}", p.z);
+        assert!((p.x - want_x).abs() < 1e-5, "at {theta} want x = {want_x}, got {p:?}");
+        assert!(p.y.abs() < 1e-5, "the rim point left the line: y = {:e}", p.y);
     }
+
+    /* Now lean on it. A real constraint does not care. */
+    let mut geared = build(true, 0.05);
+    let mut imposed = build(false, 0.05);
+    let (mut worst_geared, mut worst_imposed) = (0.0_f64, 0.0_f64);
+    for k in 1..=100 {
+        let t = 0.05 * f64::from(k);
+        integrate::run(&mut geared, t, 1).expect("geared under torque");
+        integrate::run(&mut imposed, t, 1).expect("imposed under torque");
+        worst_geared = worst_geared.max(rim(&geared).y.abs());
+        worst_imposed = worst_imposed.max(rim(&imposed).y.abs());
+    }
+    assert!(worst_geared < 1e-5, "the gear must hold the line: {worst_geared:e}");
+    assert!(
+        worst_imposed > 1e-2,
+        "an imposed ratio should NOT survive a torque, else this test proves nothing: \
+         {worst_imposed:e}"
+    );
 }
 
 /// The compass of `videos/cardan_compass.html`, against the physical

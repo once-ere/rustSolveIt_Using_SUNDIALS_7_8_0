@@ -296,6 +296,9 @@ pub enum Instr {
     /// `UNIVERSAL <a> <b> <axis_a> <axis_b>` — a Cardan joint; the two
     /// axes arrive on the operand stack.
     Universal { a: String, b: String },
+    /// `GEAR <a> <b> <axis> <ratio>` — the two bodies' turns about
+    /// `axis` locked in proportion. Axis then ratio on the stack.
+    Gear { a: String, b: String },
     /// `CONSTRAIN OFF` — drop every rod.
     ConstrainOff,
     /// `CONSTRAINTS` — list the rods and how well they are being held.
@@ -1399,6 +1402,20 @@ fn exec_one(instr: &Instr, state: &mut SimState, stack: &mut Vec<Value>) -> Resu
             stack.push(Value::Str(format!(
                 "constraint{k}: hinge obj{i} <-> obj{j} about [{}, {}, {}], 5 row(s) — one \
                  freedom left (METHOD IDA is required to integrate it)",
+                axis.x, axis.y, axis.z
+            )));
+        }
+        Instr::Gear { a, b } => {
+            /* axis pushed first, ratio second, so the ratio is on top */
+            let ratio = pop_num(stack)?;
+            let axis = as_vec3(pop(stack)?)?;
+            let (i, j) = (resolve_object_ref(state, a)?, resolve_object_ref(state, b)?);
+            let snapshot = state.system.clone();
+            let k = state.system.constraints.add_gear(&snapshot, i, j, axis, ratio)?;
+            stack.push(Value::Str(format!(
+                "constraint{k}: gear obj{i} <-> obj{j} about [{}, {}, {}], ratio {ratio}, \
+                 1 row — their turns are locked in proportion (METHOD IDA is required to \
+                 integrate it)",
                 axis.x, axis.y, axis.z
             )));
         }

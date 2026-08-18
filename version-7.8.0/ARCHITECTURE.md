@@ -872,6 +872,17 @@ Pinned properties:
   differ and the strut between them is drawn as well. Nothing in the
   player is keyed on the joint's name — the geometry decides, which is
   why a new joint kind needs no player change.
+- **A `GEAR` is the one joint that is not geometric**, and two rules
+  follow from it. It may **stack on a bearing** — `check_pair` refuses a
+  second geometric joint on a pair but allows `HINGE 5 + GEAR 1`,
+  because a wheel needs a bearing to hold it and a gear to drive it, and
+  the rows are independent. And its ratio must be **rational**: the
+  position-level row is `sin(q θ_i + p θ_j)` on wrapped angles, which is
+  faithful only for integer `p, q`, since wrapping then moves the
+  argument by a multiple of `2π`. A trivial `g ≡ 0` row was not an
+  option — the DAE carries `g` and `J·u` as separate blocks (§3.3), so a
+  row that is identically zero leaves its multiplier undetermined and
+  the Jacobian singular.
 - The camera auto-fit centres on the **content bounding box**, not the
   origin — a pendulum hangs below its pivot — and `--view front` opens
   looking down z for a planar linkage.

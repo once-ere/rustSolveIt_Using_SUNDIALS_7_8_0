@@ -306,7 +306,7 @@ they do for you.
 three more.
 
 **Four joints.** `CONSTRAIN a b` is a rod (1 row, 5 freedoms left).
-`BALL a b` shares a point (3 rows). `UNIVERSAL a b u w` shares a point
+`GEAR a b axis ratio` locks two turns in proportion (1 row) — the one joint that couples a rotation to another rotation rather than to a position, and what a gear train or a rolling wheel is made of. `BALL a b` shares a point (3 rows). `UNIVERSAL a b u w` shares a point
 and keeps two shafts square — a Cardan joint (4 rows). `HINGE a b axis`
 shares a point *and* an axis, leaving exactly one freedom (5 rows): a
 door, a knee, a pendulum. The last three grip orientation, which is why
@@ -1489,7 +1489,7 @@ Eleven recordings ship with the repository:
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top on a **`BALL` joint**, precessing under gravity | 1.020440 rad/s against the exact Ω = *Mgr*/(*I₃ω₃*) = 1.020408, 3 parts in 10⁵ |
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings**, three perpendicular `HINGE` axes | total *L·ŷ* conserved to 1.4 × 10⁻¹⁴; every centre stays on the pivot to 1.2 × 10⁻³⁴ |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same rings with a **pendulous** bowl — a ship's compass, seeking level | periods 1.878587 and 2.307339 s against measured 1.883426 and 2.313653 |
-| [`videos/cardan_gear.html`](videos/cardan_gear.html) | **Cardan gears** — a wheel in a ring of twice its radius, its rim point tracing a straight line | line held to 4.1 × 10⁻⁵ run continuously; stroke exactly ±2*r* |
+| [`videos/cardan_gear.html`](videos/cardan_gear.html) | **Cardan gears** — a wheel in a ring of twice its radius, rolling on a `GEAR` row, its rim point tracing a straight line | line held to 1.1 × 10⁻⁸; stroke exactly ±2*r* |
 
 That last one is the one to open if you only open one, because it shows
 a joint doing something a rod cannot. A `UNIVERSAL` holds a shared point

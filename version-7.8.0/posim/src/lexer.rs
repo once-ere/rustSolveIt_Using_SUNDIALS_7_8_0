@@ -76,6 +76,7 @@ pub enum Keyword {
     Constraints,
     Ball,
     Hinge,
+    Gear,
     Universal,
     Equilibrium,
     Sensitivity,
@@ -144,6 +145,7 @@ impl Keyword {
             "constraints" => Some(Keyword::Constraints),
             "ball" => Some(Keyword::Ball),
             "hinge" => Some(Keyword::Hinge),
+            "gear" => Some(Keyword::Gear),
             "universal" | "cardan" => Some(Keyword::Universal),
             "equilibrium" | "equil" => Some(Keyword::Equilibrium),
             "sensitivity" | "sens" => Some(Keyword::Sensitivity),
@@ -405,7 +407,10 @@ pub fn tokenize(line: &str) -> Result<Vec<Token>, String> {
                         if !toks.is_empty()
                             && matches!(
                                 k,
-                                Keyword::Ball | Keyword::Hinge | Keyword::Universal
+                                Keyword::Ball
+                                    | Keyword::Hinge
+                                    | Keyword::Universal
+                                    | Keyword::Gear
                             ) =>
                     {
                         TokKind::Ident(word)

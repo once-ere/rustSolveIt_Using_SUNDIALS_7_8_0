@@ -92,6 +92,45 @@ pub enum Joint {
     Hinge { i: usize, j: usize, a_i: Vec3, a_j: Vec3, h_i: Vec3, p_j: Vec3, q_j: Vec3 },
     /// A ball joint plus the two cross-shafts held square — a Cardan joint.
     Universal { i: usize, j: usize, a_i: Vec3, a_j: Vec3, u_i: Vec3, u_j: Vec3 },
+    /// A gear ratio: the two bodies' rotations about a shared axis are
+    /// locked in the proportion `θ_i = −(p/q) θ_j`, measured from the
+    /// orientations they had when the joint was made. It holds no point
+    /// and no axis — only the ratio — so it is one row, and it is the
+    /// only joint here that couples one rotation to another rather than
+    /// a rotation to a position.
+    ///
+    /// **Why the ratio must be rational.** The honest constraint is on
+    /// *accumulated* angle, `q θ_i + p θ_j = 0`, and accumulated angle
+    /// is not a function of the state: a quaternion knows nothing of how
+    /// many turns preceded it. What *is* a function of the state is
+    ///
+    /// ```text
+    /// g = sin(q θ_i + p θ_j)
+    /// ```
+    ///
+    /// with `θ` the wrapped angles, because `p` and `q` are **integers**:
+    /// wrapping either angle by `2π` moves the argument by a multiple of
+    /// `2π` and leaves the sine alone. Held at zero from a start that
+    /// satisfies it, the relation cannot slip to another branch without
+    /// passing through `g ≠ 0`, so it holds exactly. An irrational ratio
+    /// has no such single-valued form and is refused.
+    Gear {
+        i: usize,
+        j: usize,
+        /// The shared axis, in the world. Gears are mounted in a frame,
+        /// and the ratio is between the two bodies' turns about it.
+        axis: Vec3,
+        /// A unit vector perpendicular to the axis, fixed in the world:
+        /// the mark both turns are measured from.
+        w: Vec3,
+        /// That same mark stored in each body's own frame, so its world
+        /// image tracks the body.
+        u_i: Vec3,
+        u_j: Vec3,
+        /// `q θ_i + p θ_j = 0`, both integers, `q > 0`.
+        p: i32,
+        q: i32,
+    },
 }
 
 impl Joint {
@@ -101,6 +140,7 @@ impl Joint {
         match self {
             Joint::Distance { .. } => 1,
             Joint::Ball { .. } => 3,
+            Joint::Gear { .. } => 1,
             Joint::Universal { .. } => 4,
             Joint::Hinge { .. } => 5,
         }
@@ -111,6 +151,7 @@ impl Joint {
             Joint::Distance { i, j, .. }
             | Joint::Ball { i, j, .. }
             | Joint::Hinge { i, j, .. }
+            | Joint::Gear { i, j, .. }
             | Joint::Universal { i, j, .. } => (i, j),
         }
     }
@@ -121,6 +162,7 @@ impl Joint {
             Joint::Ball { .. } => "ball",
             Joint::Hinge { .. } => "hinge",
             Joint::Universal { .. } => "universal",
+            Joint::Gear { .. } => "gear",
         }
     }
 
@@ -208,13 +250,27 @@ impl ConstraintSet {
         if i == j {
             return Err(format!("{what} needs two DIFFERENT objects"));
         }
+        /* Two geometric joints on one pair would duplicate rows and make
+         * the system singular. A GEAR is not geometric — it holds a
+         * proportion, not a coincidence — so it stacks on a bearing,
+         * which is precisely how a gear wheel is mounted: hinged to its
+         * carrier for support, geared to it for the ratio. Only a second
+         * gear on the same pair would be redundant. */
+        let stacks_on_a_bearing = what == "GEAR";
         if self.joints.iter().any(|c| {
             let (a, b) = c.bodies();
-            (a == i && b == j) || (a == j && b == i)
+            let same_pair = (a == i && b == j) || (a == j && b == i);
+            let clashes = if stacks_on_a_bearing {
+                matches!(c, Joint::Gear { .. })
+            } else {
+                !matches!(c, Joint::Gear { .. })
+            };
+            same_pair && clashes
         }) {
             return Err(format!(
-                "obj{i} and obj{j} are already joined — CONSTRAIN OFF drops every joint \
-                 (CONSTRAINTS lists them)"
+                "obj{i} and obj{j} are already joined by a {} — CONSTRAIN OFF drops every \
+                 joint (CONSTRAINTS lists them)",
+                if stacks_on_a_bearing { "gear" } else { "joint" }
             ));
         }
         if system.objects[i].get_inverse_mass() == 0.0
@@ -355,6 +411,82 @@ impl ConstraintSet {
         Ok(self.joints.len() - 1)
     }
 
+    /// Gear the two bodies' turns about `axis` in the ratio
+    /// `theta_i = -ratio * theta_j`.
+    ///
+    /// One row. It holds no point and no direction — only the
+    /// proportion — so it is the one joint here that couples a rotation
+    /// to another rotation. Two shafts on a 2:1 pair take `ratio = 2`;
+    /// equal and opposite, as a wheel rolling inside a ring of twice its
+    /// radius, takes `ratio = 1`.
+    ///
+    /// **The ratio must be rational**, and is refused otherwise. The
+    /// constraint is on accumulated angle, which a quaternion cannot
+    /// report — it does not know how many turns came before. What it can
+    /// report is `sin(q θ_i + p θ_j)`, and that is a faithful stand-in
+    /// only because `p` and `q` are integers: wrapping an angle then
+    /// shifts the argument by a multiple of `2π`, which the sine cannot
+    /// see. An irrational ratio has no such form, so rather than
+    /// silently rounding it, this says so.
+    pub fn add_gear(
+        &mut self,
+        system: &PhysicalObjectSystem,
+        i: usize,
+        j: usize,
+        axis: Vec3,
+        ratio: f64,
+    ) -> Result<usize, String> {
+        self.check_pair(system, i, j, "GEAR")?;
+        if !(axis.norm() > 0.0 && axis.norm().is_finite()) {
+            return Err(
+                "GEAR needs a non-zero, finite axis, e.g. `gear a b [0, 0, 1] 2`".to_string()
+            );
+        }
+        if !ratio.is_finite() || ratio == 0.0 {
+            return Err(format!(
+                "GEAR needs a non-zero, finite ratio; got {ratio}. The ratio is \
+                 theta_i = -ratio * theta_j, so a 2:1 pair is `2`."
+            ));
+        }
+        /* The smallest denominator that represents the ratio exactly.
+         * Kept low deliberately: a large one means a constraint whose
+         * branches sit close together, which is a numerically nasty
+         * mechanism however it is written. */
+        const MAX_DEN: i32 = 12;
+        let mut found = None;
+        for q in 1..=MAX_DEN {
+            let pf = ratio * f64::from(q);
+            let pr = pf.round();
+            if (pf - pr).abs() <= 1e-9 && pr.abs() <= f64::from(i32::MAX) {
+                found = Some((pr as i32, q));
+                break;
+            }
+        }
+        let (p, q) = found.ok_or_else(|| {
+            format!(
+                "GEAR needs a rational ratio with denominator at most {MAX_DEN}; {ratio} is not \
+                 one. The position-level constraint is sin(q*theta_i + p*theta_j), which only \
+                 survives an angle wrapping when p and q are whole numbers — see `add_gear`."
+            )
+        })?;
+
+        let h = axis.normalize();
+        let (w, _) = perpendicular_basis(h);
+        let ri = system.objects[i].get_orientation().normalize().inverse();
+        let rj = system.objects[j].get_orientation().normalize().inverse();
+        self.joints.push(Joint::Gear {
+            i,
+            j,
+            axis: h,
+            w,
+            u_i: ri.rotate(w),
+            u_j: rj.rotate(w),
+            p,
+            q,
+        });
+        Ok(self.joints.len() - 1)
+    }
+
     /* --- the algebra ---------------------------------------------- */
 
     /// `g` for every scalar constraint, given every body's pose.
@@ -381,6 +513,11 @@ impl ConstraintSet {
                     write3(out, r, ball_gap(pose, i, j, a_i, a_j));
                     out[r + 3] = rot(pose, i, u_i).dot(rot(pose, j, u_j));
                     r += 4;
+                }
+                Joint::Gear { i, j, axis, w, u_i, u_j, p, q } => {
+                    let (_, sin_t) = gear_phase(pose, i, j, axis, w, u_i, u_j, p, q);
+                    out[r] = sin_t;
+                    r += 1;
                 }
             }
         }
@@ -419,6 +556,16 @@ impl ConstraintSet {
                     emit(r + 3, JacBlock { body: i, jv: Vec3::zeros(), jw: c });
                     emit(r + 3, JacBlock { body: j, jv: Vec3::zeros(), jw: -c });
                     r += 4;
+                }
+                Joint::Gear { i, j, axis, w, u_i, u_j, p, q } => {
+                    /* g = sin Θ with Θ = q θ_i + p θ_j, and dθ = δ·axis
+                     * exactly (see `gear_phase`), so dg = cos Θ (q δ_i +
+                     * p δ_j)·axis. At the constraint cos Θ = ±1, so the
+                     * row is well scaled and never degenerates. */
+                    let (cos_t, _) = gear_phase(pose, i, j, axis, w, u_i, u_j, p, q);
+                    emit(r, JacBlock { body: i, jv: Vec3::zeros(), jw: axis * (f64::from(q) * cos_t) });
+                    emit(r, JacBlock { body: j, jv: Vec3::zeros(), jw: axis * (f64::from(p) * cos_t) });
+                    r += 1;
                 }
             }
         }
@@ -544,6 +691,60 @@ fn perpendicular_basis(h: Vec3) -> (Vec3, Vec3) {
     };
     let p = h.cross(seed).normalize();
     (p, h.cross(p))
+}
+
+/// `(cos Θ, sin Θ)` for `Θ = q·θ_i + p·θ_j`, the combination a gear
+/// holds at zero.
+///
+/// Each body's turn is read in the plane perpendicular to the axis:
+/// `w` is the mark in the world, `u` the same mark in the body's frame,
+/// so the world image `R u` has turned away from `w` by exactly the
+/// body's turn. That gives `(cos θ, sin θ)` directly, with no `atan2`
+/// and no branch to choose.
+///
+/// **The derivative is clean, which is why this form was chosen.** A
+/// perturbation `δ` of the body about any axis *perpendicular* to the
+/// gear axis moves `R u` along the axis alone, changing neither
+/// component, so `dθ = δ·axis` exactly with no cross terms — and the
+/// Jacobian is just the axis, scaled.
+///
+/// The integer powers are taken by repeated complex multiplication.
+/// That is the whole reason the ratio must be rational: wrapping either
+/// `θ` by `2π` moves `Θ` by a multiple of `2π`, which the sine cannot
+/// see, so a wrapped angle is as good as an accumulated one.
+#[allow(clippy::too_many_arguments)]
+fn gear_phase(
+    pose: &[Pose],
+    i: usize,
+    j: usize,
+    axis: Vec3,
+    w: Vec3,
+    u_i: Vec3,
+    u_j: Vec3,
+    p: i32,
+    q: i32,
+) -> (f64, f64) {
+    let turn = |k: usize, u: Vec3| -> (f64, f64) {
+        let now = rot(pose, k, u);
+        let (c, s) = (w.dot(now), axis.cross(w).dot(now));
+        /* Normalised so a body that has drifted off its axis cannot
+         * rescale the row; on the axis this is already a unit pair. */
+        let n = (c * c + s * s).sqrt();
+        if n > 0.0 { (c / n, s / n) } else { (1.0, 0.0) }
+    };
+    let power = |(c, s): (f64, f64), n: i32| -> (f64, f64) {
+        let (bc, bs) = if n < 0 { (c, -s) } else { (c, s) };
+        let (mut rc, mut rs) = (1.0, 0.0);
+        for _ in 0..n.abs() {
+            let t = rc * bc - rs * bs;
+            rs = rc * bs + rs * bc;
+            rc = t;
+        }
+        (rc, rs)
+    };
+    let (ac, a_s) = power(turn(i, u_i), q);
+    let (bc, bs) = power(turn(j, u_j), p);
+    (ac * bc - a_s * bs, ac * bs + a_s * bc)
 }
 
 fn unit(d: Vec3) -> Vec3 {

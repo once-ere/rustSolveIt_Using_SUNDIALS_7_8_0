@@ -48,7 +48,7 @@ and [`version-7.8.0/evidence/port-7.8.0/`](version-7.8.0/evidence/port-7.8.0).
 | you type | question | solver |
 |---|---|---|
 | `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
-| `CONSTRAIN` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` | …with this geometry held **exactly** | IDA |
+| `CONSTRAIN` / `GEAR` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` | …with this geometry held **exactly** | IDA |
 | `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
 | `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES, or IDAS when constrained |
 
@@ -88,7 +88,7 @@ frame you stopped on.
 | [`spinning_top.html`](version-7.8.0/videos/spinning_top.html) — a **precessing top** | 1.020440 rad/s vs the exact 1.020408 |
 | [`gyroscope_gimbal.html`](version-7.8.0/videos/gyroscope_gimbal.html) — a **gimballed gyroscope** | L·ŷ conserved to 1.4e-14 |
 | [`cardan_compass.html`](version-7.8.0/videos/cardan_compass.html) — a **ship's compass** in gimbals | two pendulum periods matched |
-| [`cardan_gear.html`](version-7.8.0/videos/cardan_gear.html) — **Cardan gears**, a straight line from rotation | stroke exactly ±2r |
+| [`cardan_gear.html`](version-7.8.0/videos/cardan_gear.html) — **Cardan gears** on a `GEAR` row | line held to 1.1e-8 |
 
 Every advance in a recording is a real SUNDIALS step; the recorder
 (`version-7.8.0/recorder/`) is a camera, not a physics

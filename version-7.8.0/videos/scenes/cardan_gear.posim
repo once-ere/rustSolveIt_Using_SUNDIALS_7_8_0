@@ -10,44 +10,52 @@
 # slider-crank was common. The hypocycloid of ratio 2 is degenerate: it
 # is not an approximation to a straight line, it IS one.
 #
-# READ THIS BEFORE BELIEVING THE PICTURE. There is no rolling contact
-# here. This joint set has four constraints — CONSTRAIN (1 row), BALL
-# (3), UNIVERSAL (4), HINGE (5) — and not one of them couples a rotation
-# to a translation, which is what rolling means. There is no gear
-# constraint and no line constraint either.
+# THE ROLLING IS A GEAR JOINT. A GEAR holds one row: the two bodies'
+# turns about a shared axis, locked in proportion. For a wheel rolling
+# inside a ring of twice its radius the wheel turns once backwards for
+# each forward turn of the carrier, so the ratio is 1:
 #
-# So the outer ring is drawn for reference and NOTHING is attached to
-# it. It is a static body, present only to show the circle the planet
-# would be rolling inside. The planet is not touching it in any sense
-# the solver knows about.
+#     gear planet crank [0, 0, 1] 1
 #
-# What holds the 2:1 relation is the START, not a constraint:
+# It stacks on the bearing rather than replacing it — the hinge supports
+# the wheel, the gear sets the ratio — because a gear is not a geometric
+# joint and the two are not redundant:
 #
-#     crank  angular_velocity = [0, 0,  1]
-#     planet angular_velocity = [0, 0, -1]
+#     HINGE 5 + HINGE 5 + GEAR 1 = 11 rows on 12 freedoms
 #
-# For a wheel rolling inside a ring of twice its radius the wheel turns
-# once backwards for each forward turn of the crank, so equal and
-# opposite rates ARE the rolling condition. And with no gravity and no
-# torque anywhere, both rates are conserved: the crank's because the
-# planet's reaction on it is purely centripetal, and the planet's
-# because its centre of mass sits exactly ON the hinge, so the force
-# there has no moment about it. The ratio therefore persists, and the
-# rim point runs along the x axis.
+# leaving the one freedom a Cardan gear train has.
 #
-# THE DIFFERENCE THIS MAKES IS MEASURABLE, and it is the point of the
-# recording. A real gear pair would hold the line however it were
-# loaded. Here the ratio is only an initial condition, so integration
-# error accumulates in it and the line slowly degrades:
+# WHY THE RATIO MUST BE RATIONAL. The honest constraint is on
+# ACCUMULATED angle, q*theta_i + p*theta_j = 0, and accumulated angle is
+# not a function of the state: a quaternion does not know how many turns
+# came before it. What is a function of the state is
 #
-#     315 cold restarts, one per frame   |y| <= 1.795e-3
-#     the same 6.3 s run continuously    |y| <= 4.137e-5
+#     g = sin(q*theta_i + p*theta_j)
 #
-# a factor of 43, and the same restart-versus-continuation effect as the
-# rod chain (grammar §12.9). The straight line is exact in the geometry;
-# what you see is what one floored tolerance and 315 restarts leave of
-# it. Watch the trail: it is a line, and it is 2 units long, exactly
-# 2r either side of the centre.
+# with the angles wrapped — and that works only because p and q are
+# WHOLE NUMBERS, so wrapping either angle shifts the argument by a
+# multiple of 2*pi, which the sine cannot see. An irrational ratio has
+# no such form and GEAR refuses it rather than rounding quietly.
+#
+# WHAT THE CONSTRAINT BUYS, measured on this very scene. Impose the same
+# 2:1 relation as an initial condition instead — equal and opposite
+# rates, no gear — and the rates are conserved, so the line still comes
+# out. It is just not held:
+#
+#     ratio as an initial condition   rim leaves the line by 1.795e-3
+#     ratio enforced by GEAR                                 1.059e-8
+#
+# and then lean on the wheel with a torque:
+#
+#     initial condition, plus torque                         7.468e-1
+#     GEAR, plus the same torque                             1.152e-8
+#
+# The imposed version does not bend, it collapses: the line is gone. A
+# constraint you can only fake with initial conditions gives the right
+# motion and the wrong mechanism, and a disturbance tells them apart.
+#
+# The outer ring is drawn for reference and nothing is attached to it;
+# the gear row, not any contact, is what does the rolling.
 set system.g_constant = 0
 set system.uniform_gravity = [0, 0, 0]
 collide off
@@ -64,9 +72,12 @@ new cylinder as planet { mass = 1, radius = 0.5, half_height = 0.03, position = 
 new torus as ring { mass = 1, ring_radius = 1.0, tube_radius = 0.02, position = [0, 0, 0], inverse_mass = 0 }
 hinge centre crank [0, 0, 1]
 hinge crank planet [0, 0, 1]
+# The rolling itself: one row, stacked on the bearing above.
+gear planet crank [0, 0, 1] 1
 method ida
 # Consistent by construction: each body's material point at its pivot has
-# the velocity the other gives it, so g_dot = J u = 0 to roundoff.
+# the velocity the other gives it, and the rates already satisfy the gear
+# row, so g_dot = J u = 0 to roundoff and nothing is projected.
 set crank.angular_velocity = [0, 0, 1]
 set crank.velocity = [0, 0.5, 0]
 set planet.angular_velocity = [0, 0, -1]

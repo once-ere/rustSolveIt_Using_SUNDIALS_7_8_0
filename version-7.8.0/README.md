@@ -72,7 +72,7 @@ and L); 605 passed workspace-wide (40 physical_object lib +
 | you type | question | solver |
 |---|---|---|
 | `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
-| `CONSTRAIN` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
+| `CONSTRAIN` / `GEAR` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` + `RUN` | …with this geometry held **exactly** | IDA |
 | `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
 | `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES / IDAS |
 
@@ -134,7 +134,7 @@ frame you stopped on.
 | [videos/spinning_top.html](videos/spinning_top.html) | a top held at its tip by a **`BALL` joint**, precessing under gravity | 1.020440 rad/s vs the exact 1.020408 — 3 parts in 10⁵ |
 | [videos/gyroscope_gimbal.html](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings** on three perpendicular `HINGE` axes; push it one way, it moves another | `L·ŷ` conserved to 1.4e-14 |
 | [videos/cardan_compass.html](videos/cardan_compass.html) | the same two rings with a **pendulous** bowl: a ship's compass held level by its own weight | two physical-pendulum periods matched, 1.878587 and 2.307339 s |
-| [videos/cardan_gear.html](videos/cardan_gear.html) | **Cardan gears**: a wheel inside a ring of twice its radius, rim point on a straight line | line held to 4.1e-5 continuously; stroke exactly ±2r |
+| [videos/cardan_gear.html](videos/cardan_gear.html) | **Cardan gears**: a wheel inside a ring of twice its radius rolling on a `GEAR` row, rim point on a straight line | line held to 1.1e-8, against 1.8e-3 with the ratio merely imposed |
 
 Record your own from any posim script:
 

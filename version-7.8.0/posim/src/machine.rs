@@ -478,6 +478,16 @@ fn state_dump(state: &SimState) -> Json {
                 jm.insert("axis".to_string(), vec3(dir(i, u_i)));
                 jm.insert("axis_j".to_string(), vec3(dir(j, u_j)));
             }
+            /* A gear holds no point at all — only a proportion — so it
+             * has no pivot to report. Each body's own centre is given,
+             * which is where a viewer would draw the wheels, and the
+             * shared axis and the ratio go alongside. */
+            Joint::Gear { axis, p, q, .. } => {
+                jm.insert("point".to_string(), vec3(s.objects[i].get_position()));
+                jm.insert("point_j".to_string(), vec3(s.objects[j].get_position()));
+                jm.insert("axis".to_string(), vec3(axis));
+                jm.insert("ratio".to_string(), Json::Num(f64::from(p) / f64::from(q)));
+            }
         }
         joints.push(Json::Obj(jm));
     }

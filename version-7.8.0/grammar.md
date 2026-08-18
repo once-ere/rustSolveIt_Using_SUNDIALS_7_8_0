@@ -76,9 +76,9 @@ and, for rigid-body collisions (§5.7):
 
 and, for constrained dynamics, equilibrium and sensitivity (§5.13):
 
-`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL`
+`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL GEAR`
 
-(`BALL`, `HINGE` and `UNIVERSAL` are **contextual**: they are commands
+(`BALL`, `HINGE`, `UNIVERSAL` and `GEAR` are **contextual**: they are commands
 only at the start of a line. Anywhere else they are ordinary
 identifiers, so `new sphere as ball` and `get ball.mass` keep working —
 `ball` is exactly what a physics user calls a sphere, and reserving it
@@ -1646,16 +1646,55 @@ the SUNDIALS suite.
 | `EQUILIBRIUM` | where does it come to rest? | **KINSOL** |
 | `SENSITIVITY` | how much does the answer depend on an input? | **CVODES** / **IDAS** |
 
-#### The four joints
+#### The five joints
 
 | command | rows | holds | freedoms left |
 |---|---|---|---|
 | `CONSTRAIN a b [len]` | 1 | a fixed distance | 5 |
+| `GEAR a b <axis> <ratio>` | 1 | a **proportion** between two turns | 5 |
 | `BALL a b` | 3 | a shared point | 3 (any rotation about it) |
 | `UNIVERSAL a b <u> <w>` | 4 | a shared point, two shafts kept square | 2 |
 | `HINGE a b <axis>` | 5 | a shared point and a shared axis | 1 (the swing) |
 
-`BALL`, `HINGE` and `UNIVERSAL` grip **orientation** as well as position,
+`GEAR` is the odd one out and the only one that couples a rotation to
+another rotation rather than to a position. It holds no point and no
+direction, only `θ_a = −ratio · θ_b` about the axis, so it is what a
+gear train, a chain drive or a rolling wheel is made of. Two shafts on a
+2:1 pair take `ratio = 2`; a wheel rolling inside a ring of twice its
+radius takes `ratio = 1`, turning once backwards for each forward turn
+of its carrier.
+
+**A `GEAR` stacks on a bearing.** Every other pair of joints on the same
+two bodies would duplicate rows and go singular, so it is refused — but
+a gear is not geometric, and a wheel needs both: a `HINGE` to hold it
+and a `GEAR` to drive it. `HINGE 5 + GEAR 1` on one pair is the normal
+arrangement, and only a second `GEAR` on the same pair is refused.
+
+**The ratio must be rational**, and `GEAR` says so rather than rounding:
+
+```text
+Err: GEAR needs a rational ratio with denominator at most 12;
+     0.3183098861837907 is not one.
+```
+
+The reason is worth knowing, because it is a real limit and not a
+fussiness. The honest constraint is on **accumulated** angle,
+`q θ_a + p θ_b = 0`, and accumulated angle is not a function of the
+state: a quaternion does not know how many turns came before it. What
+*is* a function of the state is
+
+```text
+g = sin(q θ_a + p θ_b)
+```
+
+with the angles wrapped into `(−π, π]` — and that is a faithful stand-in
+**only because `p` and `q` are whole numbers**, so wrapping either angle
+shifts the argument by a multiple of `2π`, which the sine cannot see.
+Held at zero from a start that satisfies it, the relation cannot slip to
+another branch without passing through `g ≠ 0`, so it holds exactly. An
+irrational ratio has no such single-valued form at all.
+
+`BALL`, `HINGE`, `UNIVERSAL` and `GEAR` grip **orientation** as well as position,
 so they need orientation in the solver's state — which is why
 `METHOD IDA` carries the full 13-numbers-per-object packing (§4) rather
 than positions alone.
@@ -3589,7 +3628,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `1.4e-14`; no centre moves further from the pivot than `1.2e-34` |
 | [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.307339` s, measured `1.883426` and `2.313653` |
-| [`videos/cardan_gear.html`](videos/cardan_gear.html) | a wheel inside a ring of twice its radius: the rim point runs along a **straight line**, the degenerate hypocycloid | the line is held to `1.8e-3` over 315 restarts, `4.1e-5` run continuously; stroke exactly `±2r` |
+| [`videos/cardan_gear.html`](videos/cardan_gear.html) | a wheel inside a ring of twice its radius, rolling on a `GEAR` row: the rim point runs along a **straight line**, the degenerate hypocycloid | the line is held to `1.1e-8`, against `1.8e-3` for the same mechanism with the ratio merely imposed |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3746,56 +3785,64 @@ about one axis, rotation out about another, is the whole of gyroscopic
 behaviour, and here it is a consequence of the two lines above rather
 than a separate rule.
 
-### 12.7 What the joint set cannot say
+### 12.7 The difference between the right motion and the right mechanism
 
-Every other recording in this chapter is a mechanism the language can
-*build*. The Cardan-gear one is not, and it is worth being exact about
-why, because the boundary is sharp.
+The Cardan-gear recording exists to make one distinction concrete, and
+it is the distinction the `GEAR` joint was added for.
 
 A wheel of radius `r` rolling inside a ring of radius `2r` sends every
 point of its rim along a straight line — a diameter of the ring. The
 hypocycloid of ratio 2 does not approximate a line, it **is** one, and
-that is why Cardan gears were used to turn rotation into straight-line
-motion. The rim point sits at `P = (2r cos θ, 0)`.
+the rim point sits at `P = (2r cos θ, 0)`.
 
-**Rolling is not expressible here.** The four joints are
+**You can get that motion without a constraint.** Set the carrier
+turning one way and the wheel the other at the same rate — which for
+this radius ratio is exactly the rolling condition — and both rates are
+conserved, because the wheel's reaction on the carrier is purely
+centripetal and the wheel's centre of mass sits on its own hinge. The
+ratio persists, the line comes out, and nothing in the picture tells you
+it was never enforced.
 
-| | rows | what it holds |
-|---|---|---|
-| `CONSTRAIN` | 1 | a distance |
-| `BALL` | 3 | a point |
-| `UNIVERSAL` | 4 | a point and a right angle |
-| `HINGE` | 5 | a point and an axis |
+**Then disturb it.** The same scene, measured four ways:
 
-and not one of them couples a **rotation to a translation**, which is
-what rolling means. There is no gear constraint and no line constraint
-either. So the recording does not enforce the 2:1 relation; it *starts*
-with it — crank `+1 rad/s`, planet `−1 rad/s`, which for this radius
-ratio is exactly the rolling condition — and relies on both rates being
-conserved, which they are: the planet's reaction on the crank is purely
-centripetal, and the planet's own centre of mass sits on its hinge, so
-the force there has no moment about it.
+| | rim point off the line |
+|---|---|
+| ratio as an initial condition | `1.795e-3` |
+| ratio enforced by `GEAR` | `1.059e-8` |
+| initial condition, plus a torque on the wheel | **`7.468e-1`** |
+| `GEAR`, plus the same torque | `1.152e-8` |
 
-**And the difference is measurable, which is the useful part.** A real
-gear pair holds the line under any load. An initial condition only holds
-it until integration error accumulates:
+Undisturbed, the constraint is worth five orders of magnitude — the
+imposed version drifts because integration error accumulates in a
+relation nothing is holding. Disturbed, it is worth everything: the
+imposed version does not degrade, it **collapses**, and the straight
+line is simply gone.
+
+**That is the general point.** A relation you can only set up in the
+initial conditions gives you the right motion and the wrong mechanism.
+The two are indistinguishable while nothing happens, and a single
+disturbance separates them. If a scene appears to show rolling, gearing
+or meshing, the thing to check is whether a row is holding it or whether
+it was merely started that way — and `CONSTRAINTS` will tell you, since
+a `GEAR` shows up in the list and an initial condition does not.
+
+**What is still not expressible.** A `GEAR` couples two rotations. There
+is still nothing that couples a rotation to a *translation*, and nothing
+that confines a point to a line: rack-and-pinion, a slider, a cam
+follower and true rolling of a wheel *along the ground* are all out of
+reach. The joint set now reads
 
 ```text
-315 cold restarts, one per frame   |y| ≤ 1.795e-3
-the same 6.3 s run continuously    |y| ≤ 4.137e-5
+CONSTRAIN  1 row   a distance
+GEAR       1 row   a proportion between two turns
+BALL       3 rows  a point
+UNIVERSAL  4 rows  a point and a right angle
+HINGE      5 rows  a point and an axis
 ```
 
-a factor of 43, and the same restart-versus-continuation effect as
-§12.9. The straight line is exact in the geometry; what the recording
-shows is what one floored tolerance and 315 restarts leave of it.
-
-**The general point.** A constraint you cannot write is not a constraint
-you can fake with initial conditions — you get the right motion and the
-wrong mechanism, and the two are told apart by disturbing it. If you
-need rolling, gearing, or a point confined to a line, this joint set
-will not give it to you, and a scene that appears to show one is worth
-reading twice. The outer ring in that recording is drawn for reference
-and **nothing is attached to it**.
+and the gap is the same shape as the one `GEAR` filled: a one-row
+constraint whose position-level form has to survive being written as a
+function of the state.
 
 ### 12.8 A closed form that is exact, and how to actually hit it
 

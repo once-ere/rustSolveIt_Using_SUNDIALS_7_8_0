@@ -47,6 +47,7 @@ JavaScript would be a second implementation to keep honest.
 | `BALL` | 3 | coincide | ring |
 | `HINGE` | 5 | coincide | ring + axis line |
 | `UNIVERSAL` | 4 | coincide | ring + axis line |
+| `GEAR` | 1 | **differ** — each wheel's own centre | ring + strut, plus a `ratio` field |
 
 The player tests the two points for equality; it does not look at the
 joint's name. A rod's ends are a fixed distance apart, so the strut is
