@@ -48,7 +48,7 @@ and [`version-7.8.0/evidence/port-7.8.0/`](version-7.8.0/evidence/port-7.8.0).
 | you type | question | solver |
 |---|---|---|
 | `STEP` / `RUN` | what happens next? | CVODE / ARKODE |
-| `CONSTRAIN` / `GEAR` / `RACK` / `BALL` / `HINGE` / `UNIVERSAL` + `METHOD IDA` | …with this geometry held **exactly** | IDA |
+| `CONSTRAIN` / `GEAR` / `RACK` / `BALL` / `HINGE` / `UNIVERSAL` / `PRISMATIC` + `METHOD IDA` | …with this geometry held **exactly** | IDA |
 | `EQUILIBRIUM` | where does it come to **rest**? | KINSOL |
 | `SENSITIVITY 3 "gravity.y"` | how much does the answer **depend** on an input? | CVODES, or IDAS when constrained |
 

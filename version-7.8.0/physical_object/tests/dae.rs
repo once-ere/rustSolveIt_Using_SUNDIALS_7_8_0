@@ -576,6 +576,193 @@ fn a_universal_joint_keeps_its_shafts_square() {
     assert!((l.x - 0.8).abs() < 1e-6, "L = tau * t = 0.8, got {l:?}");
 }
 
+/// A complete rack-and-pinion drive: the guide the last commit did not
+/// have.
+///
+/// ```text
+/// mount --HINGE-- pinion,   guide --PRISMATIC-- bar,   pinion =RACK= bar
+/// ```
+///
+/// `5 + 5 + 1 = 11` rows on the pair's 12 freedoms, leaving the one a
+/// rack-and-pinion drive has. The point of the test is the contrast:
+/// the *same* drive without the `PRISMATIC` lets the reaction torque
+/// twist the bar 24° off square and shove it 0.68 off its line, because
+/// nothing was holding it there. With the guide both are exactly zero,
+/// and the travel is unchanged.
+#[test]
+fn a_prismatic_guide_is_what_a_rack_runs_in() {
+    const R: f64 = 0.4;
+    let z = Vec3::new(0.0, 0.0, 1.0);
+    let x = Vec3::new(1.0, 0.0, 0.0);
+    let build = |guided: bool| {
+        let mut mount = physical_object::new_point(0, 1.0, Vec3::new(0.0, 0.4, 0.0), Vec3::zeros());
+        mount.set_inverse_mass(0.0);
+        mount.set_inertia_tensor(Mat3::zeros());
+        let pinion = physical_object::new_from_shape(
+            1, 1.0, 0.0, Vec3::zeros(), Vec3::zeros(), Vec3::zeros(),
+            Boundary::Cylinder { radius: R, half_height: 0.05 },
+        );
+        let mut guide = physical_object::new_point(2, 1.0, Vec3::new(0.0, 0.46, 0.0), Vec3::zeros());
+        guide.set_inverse_mass(0.0);
+        guide.set_inertia_tensor(Mat3::zeros());
+        let bar = physical_object::new_from_shape(
+            3, 1.0, 0.0, Vec3::new(0.0, 0.46, 0.0), Vec3::zeros(), Vec3::zeros(),
+            Boundary::Cuboid { half_extents: [2.0, 0.06, 0.06] },
+        );
+        let mut s = PhysicalObjectSystem::new(vec![mount, pinion, guide, bar], 0.0);
+        s.collide_enabled = false;
+        s.method = Method::Ida;
+        s.external_torques[1] = Vec3::new(0.0, 0.0, 0.4);
+        let snap = s.clone();
+        s.constraints.add_hinge(&snap, 0, 1, z).unwrap();
+        if guided {
+            s.constraints.add_prismatic(&snap, 2, 3, x).unwrap();
+        }
+        s.constraints.add_rack(&snap, 1, 3, z, x, R).unwrap();
+        s
+    };
+
+    let mut guided = build(true);
+    assert_eq!(guided.constraints.len(), 11, "hinge 5 + prismatic 5 + rack 1");
+    let mut loose = build(false);
+
+    let survey = |s: &PhysicalObjectSystem| {
+        let d = s.objects[3].get_orientation().normalize().rotate(Vec3::new(1.0, 0.0, 0.0));
+        let p = s.objects[3].get_position();
+        (d.y.atan2(d.x).abs(), (p.y - 0.46).abs().max(p.z.abs()), p.x)
+    };
+    let (mut tw_g, mut off_g, mut tw_l, mut off_l) = (0.0_f64, 0.0_f64, 0.0_f64, 0.0_f64);
+    let (mut worst_g, mut travel) = (0.0_f64, 0.0);
+    for k in 1..=200 {
+        let t = 0.02 * f64::from(k);
+        let r = integrate::run(&mut guided, t, 1).expect("guided drive");
+        integrate::run(&mut loose, t, 1).expect("unguided drive");
+        worst_g = worst_g.max(r.constraint_drift.0);
+        let (a, b, xg) = survey(&guided);
+        tw_g = tw_g.max(a);
+        off_g = off_g.max(b);
+        travel = xg;
+        let (c, d, _) = survey(&loose);
+        tw_l = tw_l.max(c);
+        off_l = off_l.max(d);
+    }
+
+    assert!(worst_g < 1e-6, "the guided drive must hold: |g| = {worst_g:e}");
+    assert!(travel.abs() > 1.0, "the rack must have travelled: {travel}");
+    /* The guide does exactly what a guide does. */
+    assert!(tw_g < 1e-9, "a guided rack must not twist at all: {tw_g:e} rad");
+    assert!(off_g < 1e-9, "nor leave its line: {off_g:e}");
+    /* And without it, the same drive does not stay square — which is
+     * what makes the joint worth having rather than decorative. */
+    assert!(
+        tw_l > 0.1 && off_l > 0.1,
+        "an unguided rack should twist and stray, else this proves nothing: \
+         {tw_l} rad, {off_l}"
+    );
+}
+
+/// The PRISMATIC joint's five rows, Jacobian against residual.
+///
+/// Two of the rows have a derivation worth checking rather than
+/// trusting: `g = (Δ − R_i c)·n̂` has *both* `R_i c` and `n̂` riding on
+/// body `i`, and the two contributions collapse to a single
+/// `δ_i·(n̂ × Δ)` with body `j`'s orientation dropping out entirely.
+/// Central differences at a pose well away from assembly, with both
+/// bodies moved and turned, is what says the collapse is right.
+#[test]
+fn the_prismatic_jacobian_matches_its_residual() {
+    let axis = Vec3::new(1.0, 0.0, 0.0);
+    let make = |slide: f64, tilt: f64| {
+        let mut rail = physical_object::new_from_shape(
+            0, 1.0, 0.0, Vec3::new(0.0, 0.0, 0.0), Vec3::zeros(), Vec3::zeros(),
+            Boundary::Cuboid { half_extents: [2.0, 0.1, 0.1] },
+        );
+        let mut slider = physical_object::new_from_shape(
+            1, 1.0, 0.0, Vec3::new(slide, 0.3, 0.0), Vec3::zeros(), Vec3::zeros(),
+            Boundary::Cuboid { half_extents: [0.2, 0.2, 0.2] },
+        );
+        /* tilt BOTH bodies together, which a prismatic joint permits:
+         * the rail carries the slider round with it */
+        let q = Quat::new((tilt / 2.0).cos(), 0.0, 0.0, (tilt / 2.0).sin());
+        rail.set_orientation(q);
+        slider.set_orientation(q);
+        let p0 = slider.get_position();
+        slider.set_position(q.rotate(p0));
+        PhysicalObjectSystem::new(vec![rail, slider], 0.0)
+    };
+
+    let mut s = make(0.0, 0.0);
+    let snap = s.clone();
+    s.constraints.add_prismatic(&snap, 0, 1, axis).unwrap();
+    assert_eq!(s.constraints.len(), 5, "a prismatic joint is five rows");
+
+    for (slide, tilt) in [(0.0, 0.0), (0.9, 0.0), (0.0, 0.6), (-1.3, -0.9)] {
+        let base = make(slide, tilt);
+        let pose = ConstraintSet::poses(&base);
+        let mut g0 = vec![0.0; 5];
+        s.constraints.residual(&pose, &mut g0);
+        for (k, g) in g0.iter().enumerate() {
+            assert!(
+                g.abs() < 1e-12,
+                "slide {slide} tilt {tilt}: sliding and turning together must satisfy \
+                 the joint, row {k} = {g}"
+            );
+        }
+        let mut blocks = Vec::new();
+        s.constraints.for_each_block(&pose, |row, b| blocks.push((row, b)));
+        let g_of = |sys: &PhysicalObjectSystem, row: usize| {
+            let mut o = vec![0.0; 5];
+            s.constraints.residual(&ConstraintSet::poses(sys), &mut o);
+            o[row]
+        };
+        const H: f64 = 1e-6;
+        for row in 0..5 {
+            for body in 0..2 {
+                for dir in [axis, Vec3::new(0.0, 1.0, 0.0), Vec3::new(0.0, 0.0, 1.0)] {
+                    let shift = |h: f64| {
+                        let mut m = base.clone();
+                        let p0 = m.objects[body].get_position();
+                        m.objects[body].set_position(p0 + dir * h);
+                        g_of(&m, row)
+                    };
+                    let measured = (shift(H) - shift(-H)) / (2.0 * H);
+                    let predicted: f64 = blocks
+                        .iter()
+                        .filter(|(r, b)| *r == row && b.body == body)
+                        .map(|(_, b)| b.jv.dot(dir))
+                        .sum();
+                    assert!(
+                        (measured - predicted).abs() < 1e-6,
+                        "row {row} body {body} translate {dir:?}: fd {measured} vs J {predicted}"
+                    );
+                    let turn = |h: f64| {
+                        let mut m = base.clone();
+                        let dq = Quat::new(
+                            (h / 2.0).cos(),
+                            dir.x * (h / 2.0).sin(),
+                            dir.y * (h / 2.0).sin(),
+                            dir.z * (h / 2.0).sin(),
+                        );
+                        let q0 = m.objects[body].get_orientation();
+                        m.objects[body].set_orientation((dq * q0).normalize());
+                        g_of(&m, row)
+                    };
+                    let measured = (turn(H) - turn(-H)) / (2.0 * H);
+                    let predicted: f64 = blocks
+                        .iter()
+                        .filter(|(r, b)| *r == row && b.body == body)
+                        .map(|(_, b)| b.jw.dot(dir))
+                        .sum();
+                    assert!(
+                        (measured - predicted).abs() < 1e-6,
+                        "row {row} body {body} rotate {dir:?}: fd {measured} vs J {predicted}"
+                    );
+                }
+            }
+        }
+    }
+}
+
 /// A RACK converts turning into sliding: `Δs = r·θ`, driven from rest
 /// by a torque, and checked well past a full turn of the pinion.
 ///

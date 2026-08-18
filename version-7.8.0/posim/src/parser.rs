@@ -608,6 +608,13 @@ impl Parser {
                 self.expr(&mut prog)?;
                 prog.push(Instr::Gear { a, b });
             }
+            TokKind::Keyword(Keyword::Prismatic) => {
+                self.pos += 1;
+                let a = self.expect_ident("the first object")?;
+                let b = self.expect_ident("the sliding object")?;
+                self.expr(&mut prog)?;
+                prog.push(Instr::Prismatic { a, b });
+            }
             TokKind::Keyword(Keyword::Rack) => {
                 self.pos += 1;
                 let a = self.expect_ident("the pinion")?;

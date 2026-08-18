@@ -76,9 +76,10 @@ and, for rigid-body collisions (§5.7):
 
 and, for constrained dynamics, equilibrium and sensitivity (§5.13):
 
-`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL GEAR RACK`
+`CONSTRAIN CONSTRAINTS EQUILIBRIUM SENSITIVITY IDA BALL HINGE UNIVERSAL GEAR RACK
+PRISMATIC`
 
-(`BALL`, `HINGE`, `UNIVERSAL`, `GEAR` and `RACK` are **contextual**: they are commands
+(`BALL`, `HINGE`, `UNIVERSAL`, `GEAR`, `RACK` and `PRISMATIC` are **contextual**: they are commands
 only at the start of a line. Anywhere else they are ordinary
 identifiers, so `new sphere as ball` and `get ball.mass` keep working —
 `ball` is exactly what a physics user calls a sphere, and reserving it
@@ -1646,7 +1647,7 @@ the SUNDIALS suite.
 | `EQUILIBRIUM` | where does it come to rest? | **KINSOL** |
 | `SENSITIVITY` | how much does the answer depend on an input? | **CVODES** / **IDAS** |
 
-#### The six joints
+#### The seven joints
 
 | command | rows | holds | freedoms left |
 |---|---|---|---|
@@ -1656,6 +1657,15 @@ the SUNDIALS suite.
 | `BALL a b` | 3 | a shared point | 3 (any rotation about it) |
 | `UNIVERSAL a b <u> <w>` | 4 | a shared point, two shafts kept square | 2 |
 | `HINGE a b <axis>` | 5 | a shared point and a shared axis | 1 (the swing) |
+| `PRISMATIC a b <axis>` | 5 | a line to slide along, and no turning | 1 (the slide) |
+
+`HINGE` and `PRISMATIC` are the pair worth seeing together: both take an
+axis, both cost five rows, and both leave exactly one freedom — a hinge
+leaves the **rotation** about its axis, a prismatic joint leaves the
+**translation** along it. Two of the prismatic rows kill the offset
+across the axis and three lock the relative orientation, so a slider
+cannot turn at all. It is what a rack runs in, what a piston runs in,
+and what holds a cam follower to its line.
 
 `RACK` is the one that crosses between rotation and translation: the
 pinion turns about `axis`, the rack slides along `dir`, and the pitch
@@ -1720,15 +1730,29 @@ turn, `πr` of travel, by which point it has been lost anyway. **Two
 coordinates of the same mechanism resolved each other**, which is worth
 remembering the next time a constraint looks unrepresentable.
 
-**A rack wants a guide, and there is not one.** A real rack sits in a
-slider that absorbs the reaction torque. Nothing here holds orientation
-while freeing translation, so an unguided rack takes that torque and
-slowly turns — in the test, `8.2°` over one and a half turns of the
-pinion. The row is written against the pinion's turn **relative to the
-rack**, so it stays exact regardless; but the picture is of a rack with
-no guide, and that is what a missing prismatic joint looks like.
+**A rack wants a guide, and `PRISMATIC` is it.** A real rack sits in a
+slider that absorbs the reaction torque, and without one the bar simply
+takes that torque: over four seconds of cranking, an unguided rack
+twists `24.3°` off square and is shoved `0.68` off its line. Add the
+guide and both go to zero exactly, with the travel unchanged:
 
-`BALL`, `HINGE`, `UNIVERSAL`, `GEAR` and `RACK` grip **orientation** as well as position,
+| driving the same rack for 4 s | twist | strayed off line | travelled |
+|---|---|---|---|
+| rack alone | `24.343°` | `6.82e-1` | `3.861` |
+| with a `PRISMATIC` guide | **`0.000°`** | **`0.00e+00`** | `3.904` |
+
+The complete drive is
+
+```text
+mount --HINGE-- pinion,  guide --PRISMATIC-- bar,  pinion =RACK= bar
+5 + 5 + 1 = 11 rows on 12 freedoms
+```
+
+leaving the one freedom a rack-and-pinion has. The rack row is written
+against the pinion's turn **relative to the rack**, which is why it
+stayed exact even while the unguided bar was turning.
+
+Every joint but `CONSTRAIN` grips **orientation** as well as position,
 so they need orientation in the solver's state — which is why
 `METHOD IDA` carries the full 13-numbers-per-object packing (§4) rather
 than positions alone.
@@ -3860,8 +3884,7 @@ or meshing, the thing to check is whether a row is holding it or whether
 it was merely started that way — and `CONSTRAINTS` will tell you, since
 a `GEAR` shows up in the list and an initial condition does not.
 
-**What is still not expressible.** `GEAR` couples two rotations and
-`RACK` couples a rotation to a translation, so the joint set now reads
+**Where the joint set now stands.**
 
 ```text
 CONSTRAIN  1 row   a distance
@@ -3869,20 +3892,30 @@ GEAR       1 row   a proportion between two turns
 RACK       1 row   a turn tied to a slide
 BALL       3 rows  a point
 UNIVERSAL  4 rows  a point and a right angle
-HINGE      5 rows  a point and an axis
+HINGE      5 rows  a point and an axis         one rotation left
+PRISMATIC  5 rows  a line, and no turning      one translation left
 ```
 
-What is missing is a **prismatic** joint: something that confines a body
-to a line, holding its orientation while freeing one translation. It is
-why a rack here has no guide, and why a cam follower and a piston are
-still out of reach — and, notably, why true rolling of a wheel *along
-the ground* remains so, since that needs the wheel held to a line as
-well as geared to it.
+That is enough for the mechanisms this chapter set out to build. A wheel
+rolling *along the ground* is now `PRISMATIC` for the line plus `RACK`
+for the rolling; a piston is `PRISMATIC`; a cam follower is `PRISMATIC`
+against whatever drives it.
 
-Its position-level form would be two rows of a familiar kind (the
-offset, across the line), so it does not need any of the wrapping
-cleverness `GEAR` and `RACK` did. The interesting constraints turned out
-to be the ones whose natural coordinate is an angle nobody counted.
+**What the exercise taught, which outlasts the list.** The two hard
+joints were the two whose natural coordinate is an angle nobody counted
+— and each needed a different trick, chosen by what else was to hand:
+
+- `GEAR` has two angles and nothing else, so it hides the wrapping
+  inside `sin(q θ_i + p θ_j)` and pays with a **rational ratio**.
+- `RACK` has an angle *and an unbounded distance*, so it unwraps the
+  angle from the distance and pays nothing at all.
+- `PRISMATIC` has no angle in its statement, so it needed neither: five
+  ordinary dot products.
+
+The difficulty was never the mechanism. It was whether the constraint
+could be written as a function of the state — and when it could not
+directly, whether some other coordinate of the same mechanism could say
+what the state had forgotten.
 
 ### 12.8 A closed form that is exact, and how to actually hit it
 

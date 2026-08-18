@@ -306,7 +306,7 @@ they do for you.
 three more.
 
 **Four joints.** `CONSTRAIN a b` is a rod (1 row, 5 freedoms left).
-`GEAR a b axis ratio` locks two turns in proportion (1 row), and `RACK pinion bar axis dir radius` ties a turn to a slide (1 row) — between them the two joints that cross from rotation to rotation and from rotation to translation, which is what a gear train, a chain drive or a steering rack is made of. `BALL a b` shares a point (3 rows). `UNIVERSAL a b u w` shares a point
+`GEAR a b axis ratio` locks two turns in proportion (1 row), and `RACK pinion bar axis dir radius` ties a turn to a slide (1 row) — between them the two joints that cross from rotation to rotation and from rotation to translation, which is what a gear train, a chain drive or a steering rack is made of. `PRISMATIC a b axis` is the slider (5 rows): the mirror of a hinge, leaving one translation instead of one rotation, and what a rack or a piston runs in. `BALL a b` shares a point (3 rows). `UNIVERSAL a b u w` shares a point
 and keeps two shafts square — a Cardan joint (4 rows). `HINGE a b axis`
 shares a point *and* an axis, leaving exactly one freedom (5 rows): a
 door, a knee, a pendulum. The last three grip orientation, which is why

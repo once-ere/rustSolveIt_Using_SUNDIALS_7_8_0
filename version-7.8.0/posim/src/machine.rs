@@ -485,6 +485,11 @@ fn state_dump(state: &SimState) -> Json {
             /* A rack holds no pivot either. The pinion's centre and
              * the rack's are given, with the axis it turns about, the
              * direction it slides along, and the pitch radius. */
+            Joint::Prismatic { d_i, .. } => {
+                jm.insert("point".to_string(), vec3(s.objects[i].get_position()));
+                jm.insert("point_j".to_string(), vec3(s.objects[j].get_position()));
+                jm.insert("axis".to_string(), vec3(dir(i, d_i)));
+            }
             Joint::Rack { h_i, d_j, radius, .. } => {
                 jm.insert("point".to_string(), vec3(s.objects[i].get_position()));
                 jm.insert("point_j".to_string(), vec3(s.objects[j].get_position()));

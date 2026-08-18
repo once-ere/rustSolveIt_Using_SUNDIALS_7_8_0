@@ -302,6 +302,8 @@ pub enum Instr {
     /// `RACK <pinion> <rack> <axis> <direction> <radius>` — a rotation
     /// coupled to a translation. Axis, direction, radius on the stack.
     Rack { a: String, b: String },
+    /// `PRISMATIC <a> <b> <axis>` — a slider: one translation left.
+    Prismatic { a: String, b: String },
     /// `CONSTRAIN OFF` — drop every rod.
     ConstrainOff,
     /// `CONSTRAINTS` — list the rods and how well they are being held.
@@ -1419,6 +1421,17 @@ fn exec_one(instr: &Instr, state: &mut SimState, stack: &mut Vec<Value>) -> Resu
                 "constraint{k}: gear obj{i} <-> obj{j} about [{}, {}, {}], ratio {ratio}, \
                  1 row — their turns are locked in proportion (METHOD IDA is required to \
                  integrate it)",
+                axis.x, axis.y, axis.z
+            )));
+        }
+        Instr::Prismatic { a, b } => {
+            let axis = as_vec3(pop(stack)?)?;
+            let (i, j) = (resolve_object_ref(state, a)?, resolve_object_ref(state, b)?);
+            let snapshot = state.system.clone();
+            let k = state.system.constraints.add_prismatic(&snapshot, i, j, axis)?;
+            stack.push(Value::Str(format!(
+                "constraint{k}: prismatic obj{i} <-> obj{j} along [{}, {}, {}], 5 row(s) — one \
+                 freedom left, the slide (METHOD IDA is required to integrate it)",
                 axis.x, axis.y, axis.z
             )));
         }

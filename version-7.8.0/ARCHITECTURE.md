@@ -872,6 +872,13 @@ Pinned properties:
   differ and the strut between them is drawn as well. Nothing in the
   player is keyed on the joint's name — the geometry decides, which is
   why a new joint kind needs no player change.
+- **`PRISMATIC` is the mirror of `HINGE`**: same argument, same five
+  rows, one freedom left — a rotation for the hinge, a translation for
+  the slider. Two rows kill the offset across the axis and three lock
+  the relative orientation. Its two translational rows have `R_i c`
+  and the normal both riding on body `i`, and the contributions
+  collapse to `δ_i·(n̂ × Δ)` with body `j`'s orientation dropping out
+  entirely — checked by central differences rather than assumed.
 - **A `RACK` solves the same wrapping problem the other way**, and the
   contrast is the point. A gear hides the wrapping in a sine and pays
   with a rational ratio; a rack has an unbounded coordinate — the

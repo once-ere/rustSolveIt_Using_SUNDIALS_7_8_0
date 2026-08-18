@@ -3775,16 +3775,21 @@ initial conditions gives the right motion and the wrong mechanism. The
 two are indistinguishable while nothing happens, and a single
 disturbance separates them.
 
-\textbf{What is still not expressible.} \kw{gear} couples two rotations
-and \kw{rack} couples a rotation to a translation. What is missing is a
-\textbf{prismatic} joint --- something confining a body to a line,
-holding its orientation while freeing one translation. It is why a rack
-here has no guide, and why a cam follower, a piston, and true rolling of
-a wheel \emph{along the ground} are still out of reach. Its
-position-level form would be two ordinary rows, needing none of the
-wrapping cleverness \kw{gear} and \kw{rack} did: the awkward constraints
-turned out to be the ones whose natural coordinate is an angle nobody
-counted.
+\textbf{What the exercise taught.} The joint set is now enough for the
+mechanisms this chapter set out to build --- a wheel rolling
+\emph{along the ground} is \kw{prismatic} for the line plus \kw{rack}
+for the rolling, a piston is \kw{prismatic}, a cam follower is
+\kw{prismatic} against whatever drives it. What outlasts the list is
+that the two hard joints were the two whose natural coordinate is an
+angle nobody counted, and each needed a different trick chosen by what
+else was to hand: \kw{gear} has two angles and nothing else, so it hides
+the wrapping in a sine and pays with a rational ratio; \kw{rack} has an
+angle \emph{and an unbounded distance}, so it unwraps the angle from the
+distance and pays nothing; \kw{prismatic} has no angle in its statement
+and needed neither. The difficulty was never the mechanism, but whether
+the constraint could be written as a function of the state --- and when
+it could not directly, whether some other coordinate of the same
+mechanism could say what the state had forgotten.
 
 \subsection{A closed form that is exact, and how to actually hit it}
 

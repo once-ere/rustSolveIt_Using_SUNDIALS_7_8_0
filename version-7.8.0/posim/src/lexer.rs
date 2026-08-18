@@ -78,6 +78,7 @@ pub enum Keyword {
     Hinge,
     Gear,
     Rack,
+    Prismatic,
     Universal,
     Equilibrium,
     Sensitivity,
@@ -148,6 +149,7 @@ impl Keyword {
             "hinge" => Some(Keyword::Hinge),
             "gear" => Some(Keyword::Gear),
             "rack" => Some(Keyword::Rack),
+            "prismatic" => Some(Keyword::Prismatic),
             "universal" | "cardan" => Some(Keyword::Universal),
             "equilibrium" | "equil" => Some(Keyword::Equilibrium),
             "sensitivity" | "sens" => Some(Keyword::Sensitivity),
@@ -414,6 +416,7 @@ pub fn tokenize(line: &str) -> Result<Vec<Token>, String> {
                                     | Keyword::Universal
                                     | Keyword::Gear
                                     | Keyword::Rack
+                                    | Keyword::Prismatic
                             ) =>
                     {
                         TokKind::Ident(word)

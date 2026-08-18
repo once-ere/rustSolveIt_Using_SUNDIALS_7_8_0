@@ -114,6 +114,31 @@ pub enum Joint {
     /// satisfies it, the relation cannot slip to another branch without
     /// passing through `g ≠ 0`, so it holds exactly. An irrational ratio
     /// has no such single-valued form and is refused.
+    /// A slider: body `j` may translate along one axis fixed in body
+    /// `i`, and do nothing else. Five rows, leaving one freedom — the
+    /// exact mirror of a [`Joint::Hinge`], which leaves one rotation.
+    ///
+    /// Two rows kill the offset across the axis, three lock the relative
+    /// orientation. Nothing here needs an angle, so unlike `Gear` and
+    /// `Rack` there is no wrapping to work around: every row is a dot
+    /// product of vectors carried by the bodies, in the same style as
+    /// the two axis rows of a hinge.
+    Prismatic {
+        i: usize,
+        j: usize,
+        /// The slide axis and a perpendicular pair, in body `i`'s frame.
+        d_i: Vec3,
+        p_i: Vec3,
+        q_i: Vec3,
+        /// The same three directions in body `j`'s frame, so that the
+        /// three orientation rows read zero at the reference.
+        d_j: Vec3,
+        p_j: Vec3,
+        q_j: Vec3,
+        /// `x_j − x_i` at assembly, in body `i`'s frame: the slide is
+        /// measured from here.
+        c_i: Vec3,
+    },
     /// A rack and pinion: body `i` turns about an axis, body `j` slides
     /// along a direction, and the two are locked by the pitch radius —
     /// `Δs = r · θ`. One row, and the only joint here that couples a
@@ -184,6 +209,7 @@ impl Joint {
             Joint::Ball { .. } => 3,
             Joint::Gear { .. } => 1,
             Joint::Rack { .. } => 1,
+            Joint::Prismatic { .. } => 5,
             Joint::Universal { .. } => 4,
             Joint::Hinge { .. } => 5,
         }
@@ -196,6 +222,7 @@ impl Joint {
             | Joint::Hinge { i, j, .. }
             | Joint::Gear { i, j, .. }
             | Joint::Rack { i, j, .. }
+            | Joint::Prismatic { i, j, .. }
             | Joint::Universal { i, j, .. } => (i, j),
         }
     }
@@ -208,6 +235,7 @@ impl Joint {
             Joint::Universal { .. } => "universal",
             Joint::Gear { .. } => "gear",
             Joint::Rack { .. } => "rack",
+            Joint::Prismatic { .. } => "prismatic",
         }
     }
 
@@ -456,6 +484,50 @@ impl ConstraintSet {
         Ok(self.joints.len() - 1)
     }
 
+    /// A slider along `axis`: body `j` may translate along it and do
+    /// nothing else.
+    ///
+    /// Five rows, one freedom — the mirror of [`add_hinge`](Self::add_hinge),
+    /// which leaves one rotation instead. Two rows hold the offset
+    /// across the axis at whatever it is now, three lock the relative
+    /// orientation, and the bodies keep the separation they are
+    /// assembled with, so the slide is measured from there.
+    ///
+    /// This is what a rack runs in, what a piston runs in, and what
+    /// holds a cam follower to its line.
+    pub fn add_prismatic(
+        &mut self,
+        system: &PhysicalObjectSystem,
+        i: usize,
+        j: usize,
+        axis: Vec3,
+    ) -> Result<usize, String> {
+        self.check_pair(system, i, j, "PRISMATIC")?;
+        if !(axis.norm() > 0.0 && axis.norm().is_finite()) {
+            return Err(
+                "PRISMATIC needs a non-zero, finite axis, e.g. `prismatic rail slide [1, 0, 0]`"
+                    .to_string(),
+            );
+        }
+        let d = axis.normalize();
+        let (pv, qv) = perpendicular_basis(d);
+        let ri = system.objects[i].get_orientation().normalize().inverse();
+        let rj = system.objects[j].get_orientation().normalize().inverse();
+        let sep = system.objects[j].get_position() - system.objects[i].get_position();
+        self.joints.push(Joint::Prismatic {
+            i,
+            j,
+            d_i: ri.rotate(d),
+            p_i: ri.rotate(pv),
+            q_i: ri.rotate(qv),
+            d_j: rj.rotate(d),
+            p_j: rj.rotate(pv),
+            q_j: rj.rotate(qv),
+            c_i: ri.rotate(sep),
+        });
+        Ok(self.joints.len() - 1)
+    }
+
     /// Rack and pinion: body `i` turns about `axis`, body `j` slides
     /// along `direction`, locked by the pitch radius as `Δs = r·θ`.
     ///
@@ -632,6 +704,20 @@ impl ConstraintSet {
                     out[r] = sin_t;
                     r += 1;
                 }
+                Joint::Prismatic { i, j, d_i, p_i, q_i, d_j, p_j, q_j, c_i } => {
+                    /* Two rows: the offset from where it started must
+                     * lie ALONG the axis, so its two perpendicular
+                     * components vanish. */
+                    let w = (pose[j].position - pose[i].position) - rot(pose, i, c_i);
+                    out[r] = w.dot(rot(pose, i, p_i));
+                    out[r + 1] = w.dot(rot(pose, i, q_i));
+                    /* Three rows: no relative rotation at all. Each pair
+                     * is perpendicular at assembly, so each reads zero. */
+                    out[r + 2] = rot(pose, i, p_i).dot(rot(pose, j, d_j));
+                    out[r + 3] = rot(pose, i, q_i).dot(rot(pose, j, p_j));
+                    out[r + 4] = rot(pose, i, d_i).dot(rot(pose, j, q_j));
+                    r += 5;
+                }
                 Joint::Rack { i, j, h_i, d_j, m_i, m_j, offset, radius } => {
                     let (_, _, _, s, theta) =
                         rack_state(pose, i, j, h_i, d_j, m_i, m_j, offset, radius);
@@ -685,6 +771,27 @@ impl ConstraintSet {
                     emit(r, JacBlock { body: i, jv: Vec3::zeros(), jw: axis * (f64::from(q) * cos_t) });
                     emit(r, JacBlock { body: j, jv: Vec3::zeros(), jw: axis * (f64::from(p) * cos_t) });
                     r += 1;
+                }
+                Joint::Prismatic { i, j, d_i, p_i, q_i, d_j, p_j, q_j, c_i: _ } => {
+                    let delta = pose[j].position - pose[i].position;
+                    /* g = (Δ - R_i c)·n̂ with both R_i c and n̂ riding on
+                     * body i; the two contributions collapse to
+                     *   dg = (v_j - v_i)·n̂ + δ_i·(n̂ × Δ)
+                     * and body j's orientation does not enter at all. */
+                    for (k, n_local) in [p_i, q_i].into_iter().enumerate() {
+                        let n = rot(pose, i, n_local);
+                        emit(r + k, JacBlock { body: i, jv: -n, jw: n.cross(delta) });
+                        emit(r + k, JacBlock { body: j, jv: n, jw: Vec3::zeros() });
+                    }
+                    /* The orientation rows are the hinge's pattern. */
+                    for (k, (a_local, b_local)) in
+                        [(p_i, d_j), (q_i, p_j), (d_i, q_j)].into_iter().enumerate()
+                    {
+                        let c = rot(pose, i, a_local).cross(rot(pose, j, b_local));
+                        emit(r + 2 + k, JacBlock { body: i, jv: Vec3::zeros(), jw: c });
+                        emit(r + 2 + k, JacBlock { body: j, jv: Vec3::zeros(), jw: -c });
+                    }
+                    r += 5;
                 }
                 Joint::Rack { i, j, h_i, d_j, m_i, m_j, offset, radius } => {
                     let (axis, dir, delta, _, _) =
