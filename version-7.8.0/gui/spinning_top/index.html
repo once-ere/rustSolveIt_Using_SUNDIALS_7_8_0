@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spinning Top — live</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14181d; color: #d7dde4;
+         font: 14px/1.45 system-ui, sans-serif; }
+  header { padding: 10px 16px 6px; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  h1 small { color: #8a97a5; font-weight: 400; margin-left: 8px; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 16px 10px;
+         flex-wrap: wrap; }
+  button { background: #23323f; color: #d7dde4; border: 1px solid #3c4f61;
+           border-radius: 5px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #2c4152; }
+  button.primary { background: #2c6e3f; border-color: #3f8f57; }
+  button.primary:hover { background: #348449; }
+  label { color: #8a97a5; margin-left: 10px; }
+  input[type=range] { vertical-align: middle; }
+  canvas { display: block; margin: 0 auto; background: #0d1013;
+           border-top: 1px solid #26303a; border-bottom: 1px solid #26303a; }
+  #stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+           gap: 4px 18px; padding: 10px 16px; max-width: 1000px; margin: 0 auto; }
+  .k { color: #8a97a5; } .v { font-family: ui-monospace, monospace; }
+  .good { color: #7fd18b; }
+  footer { color: #66707b; padding: 4px 16px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Spinning top <small>a BALL joint at the tip, precessing under gravity,
+  driven live by the pure-Rust SUNDIALS IDA solver — the page only draws what
+  the solver returns</small></h1>
+</header>
+<div id="bar">
+  <button id="bt-start" class="primary">Start</button>
+  <button id="bt-pause">Pause</button>
+  <button id="bt-reset">Reset</button>
+  <label>speed <input id="dt" type="range" min="0.002" max="0.03" step="0.002" value="0.01">
+  <span id="dtv" class="v">0.010</span> s/frame</label>
+</div>
+<canvas id="c" width="960" height="500"></canvas>
+<div id="stats"></div>
+<footer>Model: BALL 3 on one free body — the three freedoms left are exactly a
+top's. Mounted with its axis HORIZONTAL, so the steady-precession condition
+Mgr = &Omega;I&#8323;&omega;&#8323; &minus; I&#8321;&Omega;&sup2;cos&theta;
+loses its cos&theta; term and &Omega; = Mgr / I&#8323;&omega;&#8323; =
+1.0204081632653061 rad/s is EXACT, not a fast-top approximation. Started on
+the steady solution — spin plus precession plus the matching centre-of-mass
+velocity — so it precesses without nutating. Note this scene runs at
+rtol 1e-5, looser than the orientation-joint floor: a gyroscope at 20 rad/s
+restarted cold every frame is the most demanding recording in the suite.</footer>
+<script>
+"use strict";
+const OMEGA = 1.0204081632653061;            // the exact precession rate
+const cv = document.getElementById("c"), cx = cv.getContext("2d");
+const SC = 260, OX = 480, OY = 270;
+const CY = -0.55, CP = -0.38;
+const cy = Math.cos(CY), sy = Math.sin(CY), cp = Math.cos(CP), sp = Math.sin(CP);
+let trail = [];
+let phi0 = null, t0 = null, phiAcc = 0, phiPrev = null, worstTilt = 0;
+
+function quatRot(q, v) {
+  const [w, x, y, z] = q, [vx, vy, vz] = v;
+  const tx = 2 * (y * vz - z * vy), ty = 2 * (z * vx - x * vz), tz = 2 * (x * vy - y * vx);
+  return [vx + w * tx + y * tz - z * ty,
+          vy + w * ty + z * tx - x * tz,
+          vz + w * tz + x * ty - y * tx];
+}
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+const dot = (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+function proj(v) {
+  const [x0, y0, z0] = v;
+  const x1 = x0 * cy + z0 * sy, z1 = -x0 * sy + z0 * cy;
+  const y2 = y0 * cp - z1 * sp;
+  return [OX + x1 * SC, OY - y2 * SC];
+}
+function line(a, b, color, width) {
+  const p = proj(a), s = proj(b);
+  cx.strokeStyle = color; cx.lineWidth = width; cx.lineCap = "round";
+  cx.beginPath(); cx.moveTo(p[0], p[1]); cx.lineTo(s[0], s[1]); cx.stroke();
+}
+function ringAt(q, centre, r, color, width) {
+  cx.strokeStyle = color; cx.lineWidth = width;
+  cx.beginPath();
+  for (let k = 0; k <= 60; k++) {
+    const a = k * Math.PI / 30;
+    const p = proj(add(centre, quatRot(q, [r * Math.cos(a), r * Math.sin(a), 0])));
+    k ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  }
+  cx.stroke();
+}
+
+function draw(s) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  // the support pillar up to the tip (the ball point, at the origin),
+  // and the vertical through it
+  line([0, -1.0, 0], [0, 0, 0], "#26303a", 4);
+  line([0, 0, 0], [0, 1.0, 0], "#1c242c", 1);
+
+  const a = quatRot(s.top_q, [0, 0, 1]);           // the symmetry axis
+  // the shaft from the tip out through the disc
+  line([0, 0, 0], mul(a, 1.0), "#9fb8d0", 4);
+  // the disc, at the centre of mass, with a rim mark so the spin shows
+  ringAt(s.top_q, s.top_p, 0.42, "#d0a95f", 4);
+  const rim = add(s.top_p, quatRot(s.top_q, [0.42, 0, 0]));
+  line(s.top_p, rim, "#c9524a", 2);
+
+  // the tip, and the trail of the centre of mass riding its circle
+  cx.fillStyle = "#e8eef4";
+  const o = proj([0, 0, 0]);
+  cx.beginPath(); cx.arc(o[0], o[1], 4, 0, 7); cx.fill();
+  if (s.running) {
+    trail.push([...s.top_p]);
+    if (trail.length > 800) trail.shift();
+  }
+  cx.strokeStyle = "#7fd18b"; cx.lineWidth = 1.5;
+  cx.beginPath();
+  trail.forEach((v, i) => {
+    const p = proj(v);
+    i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+  });
+  cx.stroke();
+
+  // ---- measurements -------------------------------------------------
+  // precession: the unwrapped azimuth of the centre of mass about the
+  // vertical, averaged from the first running sample
+  const phi = Math.atan2(s.top_p[0], s.top_p[2]);
+  let omegaMeas = null;
+  if (s.running) {
+    if (phiPrev === null) { phi0 = phi; t0 = s.t; phiAcc = 0; }
+    else {
+      let d = phi - phiPrev;
+      if (d >  Math.PI) d -= 2 * Math.PI;
+      if (d < -Math.PI) d += 2 * Math.PI;
+      phiAcc += d;
+    }
+    phiPrev = phi;
+  }
+  if (t0 !== null && s.t > t0 + 0.5) omegaMeas = phiAcc / (s.t - t0);
+  // the axis must stay horizontal: it never nutates
+  const tilt = Math.abs(a[1]);
+  if (s.running && s.t > 0) worstTilt = Math.max(worstTilt, tilt);
+  // the spin about its own axis is conserved
+  const w3 = dot(s.top_w, a);
+
+  const st = document.getElementById("stats");
+  st.innerHTML = `
+    <div><span class="k">t</span> <span class="v">${s.t.toFixed(3)} s</span></div>
+    <div><span class="k">precession &Omega;</span>
+         <span class="v">${omegaMeas === null ? "—" : omegaMeas.toFixed(6)}</span>
+         <span class="k">(exact ${OMEGA.toFixed(6)})</span></div>
+    <div><span class="k">&Omega; rel. error</span>
+         <span class="v good">${omegaMeas === null ? "—" : Math.abs((omegaMeas - OMEGA) / OMEGA).toExponential(2)}</span></div>
+    <div><span class="k">spin &omega;&#8323;</span> <span class="v">${w3.toFixed(4)}</span>
+         <span class="k">(started 20)</span></div>
+    <div><span class="k">axis off level</span> <span class="v good">${worstTilt.toExponential(2)}</span>
+         <span class="k">(no nutation)</span></div>
+    <div><span class="k">|L&middot;&#375; &minus; L&#8320;|</span>
+         <span class="v good">${Math.abs(s.L[1] - s.L0y).toExponential(2)}</span></div>
+    <div><span class="k">|dE/E|</span>
+         <span class="v good">${Math.abs((s.E - s.E0) / s.E0).toExponential(2)}</span></div>
+    <div><span class="k">worst |g|</span> <span class="v good">${s.g == null ? "—" : s.g.toExponential(2)}</span></div>`;
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    draw(s);
+  } catch (e) { /* server restarting on reset */ }
+  requestAnimationFrame(poll);
+}
+const post = p => fetch(p, { method: "POST" });
+document.getElementById("bt-start").onclick = () => post("/api/start");
+document.getElementById("bt-pause").onclick = () => post("/api/stop");
+document.getElementById("bt-reset").onclick = async () => {
+  await post("/api/reset");
+  trail = []; phi0 = null; t0 = null; phiAcc = 0; phiPrev = null; worstTilt = 0;
+};
+const dt = document.getElementById("dt");
+dt.oninput = () => {
+  document.getElementById("dtv").textContent = (+dt.value).toFixed(3);
+  post("/api/dt/" + dt.value);
+};
+poll();
+</script>
+</body>
+</html>
