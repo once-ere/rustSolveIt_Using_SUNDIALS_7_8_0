@@ -3585,7 +3585,7 @@ $7\text{e-}35$\\
 \code{videos/cardan\_compass.html} & the same two rings, but with a
 \textbf{pendulous} bowl, so gravity is the restoring torque and the
 card seeks level & two physical-pendulum periods, $1.878587$ and
-$2.582727$ s, measured $1.883852$ and $2.589688$\\
+$2.307339$ s, measured $1.883426$ and $2.313653$\\
 \end{tabular}
 \end{center}
 
@@ -3676,13 +3676,25 @@ it is held level by its own weight.
 \textbf{The compass periods.} With the bowl pendulous each axis is an
 ordinary physical pendulum. In pitch only the bowl swings, giving
 $I = M(3R^2+4h^2)/12 + Md^2 = 0.21046667$ and $T = 1.878587$ s; in roll
-ring and bowl swing together, $I = 0.35803042$ against a restoring
-$(M_b - M_r)gd$, giving $T = 2.582727$ s. Measured: $1.883852$ and
-$2.589688$. The $2.8\times10^{-3}$ excess is not solver error --- halve
+ring and bowl swing together, $I = 0.28574980$ against a restoring
+$(M_b - M_r)gd$, giving $T = 2.307339$ s. Measured: $1.883426$ and
+$2.313653$. The $2.8\times10^{-3}$ excess is not solver error --- halve
 the kick and it falls by $4.01$ and $4.02$, the signature of a term in
 $\theta^2$. Drive one axis alone and the attribution is exact: the
 pitch period comes out $4.99\times10^{-4}$ long against a predicted
 $\theta^2/16 = 5.02\times10^{-4}$.
+
+\textbf{Both rings lie flat, and that is not a styling choice.} A
+gimbal ring pivots about a \textbf{diameter} --- a line in its own plane
+--- so its plane has to contain both hinge axes. Orient it instead so
+its symmetry axis \emph{is} the hinge axis and ``swinging'' becomes a
+spin about its own axis of revolution: a torus turned that way neither
+shows anything nor does anything, and the roll inertia silently becomes
+the axial $M_r(c^2 + 3a^2/4)$ instead of the diametral
+$M_r(c^2/2 + 5a^2/8)$. That is a factor of two in the ring's
+contribution, and it moves the roll period from $2.307339$ to
+$2.582727$ s. The recording caught it: the ring sat there visibly inert
+while the bowl rocked.
 
 \textbf{A cost of the midpoint pivot.} Two hinges sharing one point
 force $p_{\text{frame}} = p_{\text{bowl}} = -p_{\text{ring}}$, so

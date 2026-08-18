@@ -3588,7 +3588,7 @@ Open any of these directly; they are ordinary files.
 | [`videos/rod_pendulum_chain.html`](videos/rod_pendulum_chain.html) | four bobs on four `CONSTRAIN` rods, the cheapest linkage there is at one row each, going chaotic | run continuously at the default tolerance the rods hold to `\|g\| = 5.4e-15`; this recording, 250 cold restarts, holds `\|g\| = 7.8e-8` |
 | [`videos/spinning_top.html`](videos/spinning_top.html) | a top held at its tip by a `BALL` joint, precessing under gravity | precesses at `1.020440` rad/s against a closed form of `1.020408`, three parts in 100,000, without nutating |
 | [`videos/gyroscope_gimbal.html`](videos/gyroscope_gimbal.html) | a rotor slung in two gimbal rings on three perpendicular `HINGE` axes; the push goes in about one axis and comes out about another | total `L·ŷ` conserved to `6.4e-15`; no centre moves further from the pivot than `7e-35` |
-| [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.582727` s, measured `1.883852` and `2.589688` |
+| [`videos/cardan_compass.html`](videos/cardan_compass.html) | the same two rings, but with a **pendulous** bowl, so gravity is the restoring torque and the card seeks level | two physical-pendulum periods, `1.878587` and `2.307339` s, measured `1.883426` and `2.313653` |
 
 The scripts they were recorded from are in
 [`videos/scenes/`](videos/scenes) — ordinary posim, three to six lines
@@ -3680,14 +3680,25 @@ ordinary physical pendulum:
 pitch, inner hinge — only the bowl swings
    I = M(3R² + 4h²)/12 + M d² = 0.21046667      T = 1.878587 s
 roll, outer hinge — ring and bowl swing together
-   I = 0.35803042,  restoring (M_b − M_r) g d   T = 2.582727 s
+   I = 0.28574980,  restoring (M_b − M_r) g d   T = 2.307339 s
 ```
 
-measured `1.883852` and `2.589688`. The `2.8e-3` excess is not solver
+measured `1.883426` and `2.313653`. The `2.8e-3` excess is not solver
 error: halve the kick and it falls by `4.01` and `4.02`, which is the
 signature of a term in `θ²`. Drive one axis alone and the attribution
 is exact — the pitch period comes out `4.99e-4` long against a
 predicted `θ²/16 = 5.02e-4`.
+
+**Both rings lie flat, and that is not a styling choice.** A gimbal
+ring pivots about a **diameter** — a line in its own plane — so its
+plane has to contain both hinge axes. Orient it instead so its symmetry
+axis *is* the hinge axis and "swinging" becomes a spin about its own
+axis of revolution: a torus turned that way neither shows anything nor
+does anything, and the roll inertia silently becomes the axial
+`M_r(c² + 3a²/4)` instead of the diametral `M_r(c²/2 + 5a²/8)`. That is
+a factor of two in the ring's contribution, and it moves the roll period
+from `2.307339` to `2.582727` s. The recording caught it: the ring sat
+there visibly inert while the bowl rocked.
 
 **A cost of the midpoint pivot, worth seeing once.** Two hinges sharing
 one point force `p_frame = p_bowl = −p_ring` (§12.9), so hanging the

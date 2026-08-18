@@ -133,7 +133,7 @@ frame you stopped on.
 | [videos/rod_pendulum_chain.html](videos/rod_pendulum_chain.html) | four bobs on four **`CONSTRAIN` rods** — one row each, the cheapest linkage there is — going chaotic | run continuously at the default tolerance, \|g\| = 5.4e-15 |
 | [videos/spinning_top.html](videos/spinning_top.html) | a top held at its tip by a **`BALL` joint**, precessing under gravity | 1.020440 rad/s vs the exact 1.020408 — 3 parts in 10⁵ |
 | [videos/gyroscope_gimbal.html](videos/gyroscope_gimbal.html) | a rotor in **two gimbal rings** on three perpendicular `HINGE` axes; push it one way, it moves another | `L·ŷ` conserved to 6.4e-15 |
-| [videos/cardan_compass.html](videos/cardan_compass.html) | the same two rings with a **pendulous** bowl: a ship's compass held level by its own weight | two physical-pendulum periods matched, 1.878587 and 2.582727 s |
+| [videos/cardan_compass.html](videos/cardan_compass.html) | the same two rings with a **pendulous** bowl: a ship's compass held level by its own weight | two physical-pendulum periods matched, 1.878587 and 2.307339 s |
 
 Record your own from any posim script:
 
