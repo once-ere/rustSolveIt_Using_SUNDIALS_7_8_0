@@ -17,6 +17,17 @@ cargo test --workspace    # 605 tests
 Zero `unsafe`, zero crates.io dependencies, zero warnings. The clone is
 all you need — nothing is fetched at build time.
 
+Descendants of this repository:
+[`rustSolveIt_Win11_SUNDIALS_7_8_0`](https://github.com/once-ere/rustSolveIt_Win11_SUNDIALS_7_8_0)
+is its Windows 11 port (byte-identical physics via a glibc-translated
+math library), and out of that port's physics acceptance test came
+[`rebound_rust`](https://github.com/once-ere/rebound_rust) — a
+pure-Rust translation of the
+[REBOUND](https://github.com/hannorein/rebound) 5.1.1 N-body code,
+built with the same discipline (zero `unsafe`, zero dependencies, zero
+warnings, C names preserved) and verified bit-for-bit against its
+MSVC-compiled C reference.
+
 ## What changed, and what did not
 
 | | before | after |
