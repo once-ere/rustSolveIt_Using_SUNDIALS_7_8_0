@@ -1,9 +1,9 @@
 example:  cvsDiurnal_FSA_kry
 source:   examples/cvodes/serial/cvsDiurnal_FSA_kry.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsDiurnal_FSA_kry
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsDiurnal_FSA_kry
 argv:     -sensi stg t
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsDiurnal_FSA_kry__-sensi_stg_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsDiurnal_FSA_kry__-sensi_stg_t
 exit:     0 (OK)
 seconds:  0.206
 stdout:   8941 bytes, sha256 5bbde57fae6067b2b4cb00493eb95042e883842ebe27dd8933797510f0f39a51

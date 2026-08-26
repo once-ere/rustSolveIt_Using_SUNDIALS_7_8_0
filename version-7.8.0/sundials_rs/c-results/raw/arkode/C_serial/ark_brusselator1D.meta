@@ -1,9 +1,9 @@
 example:  ark_brusselator1D
 source:   examples/arkode/C_serial/ark_brusselator1D.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_brusselator1D
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_brusselator1D
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_brusselator1D
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_brusselator1D
 exit:     0 (OK)
 seconds:  0.206
 stdout:   5665 bytes, sha256 403a2dfeb4cf80d4ab0c929c16169cd3681a12ef1cacc90b58c3595dad1be920

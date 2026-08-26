@@ -1,9 +1,9 @@
 example:  idasHeat2D_FSA_kry_bbd_p
 source:   examples/idas/parallel/idasHeat2D_FSA_kry_bbd_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasHeat2D_FSA_kry_bbd_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasHeat2D_FSA_kry_bbd_p
 argv:     -sensi stg t
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasHeat2D_FSA_kry_bbd_p__-sensi_stg_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasHeat2D_FSA_kry_bbd_p__-sensi_stg_t
 exit:     0 (OK)
 seconds:  0.606
 stdout:   2425 bytes, sha256 f194e045201229b5cae8ceb5a516b91c16986c648107414cb390225babf4e8b6

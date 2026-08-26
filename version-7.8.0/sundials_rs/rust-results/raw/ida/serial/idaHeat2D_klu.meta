@@ -1,9 +1,9 @@
 example:  idaHeat2D_klu
 crate:    ida_rs
 source:   crates/ida_rs/examples/idaHeat2D_klu.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idaHeat2D_klu
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idaHeat2D_klu
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/ida/serial/idaHeat2D_klu
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/ida/serial/idaHeat2D_klu
 exit:     0 (OK)
 seconds:  0.107
 stdout:   1355 bytes, sha256 54f0d048c6173673c7a2df6cfa7051e094ddf75700f79f3a316c5760b436b3de

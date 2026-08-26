@@ -1,9 +1,9 @@
 example:  ark_harmonic_symplectic
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_harmonic_symplectic.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_harmonic_symplectic
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_harmonic_symplectic
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_harmonic_symplectic
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_harmonic_symplectic
 exit:     0 (OK)
 seconds:  0.106
 stdout:   1258 bytes, sha256 f8f516d087bd0060e61a1e16b35feab6bf29fc82ff624422a04cc15a121e1d7c

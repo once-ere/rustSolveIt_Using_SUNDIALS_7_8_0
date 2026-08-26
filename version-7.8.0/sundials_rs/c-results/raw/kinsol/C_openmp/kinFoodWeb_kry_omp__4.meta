@@ -1,9 +1,9 @@
 example:  kinFoodWeb_kry_omp
 source:   examples/kinsol/C_openmp/kinFoodWeb_kry_omp.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/C_openmp/kinFoodWeb_kry_omp
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/C_openmp/kinFoodWeb_kry_omp
 argv:     4
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/C_openmp/kinFoodWeb_kry_omp__4
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/C_openmp/kinFoodWeb_kry_omp__4
 exit:     0 (OK)
 seconds:  1.007
 stdout:   809 bytes, sha256 67f6ee387f148db47cc02d62addaa70a30f9d72da30295741bb69b02b176cea8

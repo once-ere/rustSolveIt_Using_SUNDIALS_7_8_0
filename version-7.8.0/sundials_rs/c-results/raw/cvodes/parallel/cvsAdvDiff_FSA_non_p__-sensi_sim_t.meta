@@ -1,9 +1,9 @@
 example:  cvsAdvDiff_FSA_non_p
 source:   examples/cvodes/parallel/cvsAdvDiff_FSA_non_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsAdvDiff_FSA_non_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsAdvDiff_FSA_non_p
 argv:     -sensi sim t
 launcher: mpirun --oversubscribe -np 2
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsAdvDiff_FSA_non_p__-sensi_sim_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsAdvDiff_FSA_non_p__-sensi_sim_t
 exit:     0 (OK)
 seconds:  0.607
 stdout:   3285 bytes, sha256 5fdb39e0b6fcbb5c02b9bad491b67b26695f218653be5575d376b3e7cd481737

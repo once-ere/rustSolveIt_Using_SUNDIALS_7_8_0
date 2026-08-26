@@ -57,7 +57,7 @@
 # of them staying under the same invisible parabola, and two of them crossing
 # at the same target.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p1_parabola_of_safety
 #

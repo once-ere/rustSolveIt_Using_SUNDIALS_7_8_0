@@ -1,9 +1,9 @@
 example:  idasAkzoNob_ASAi_dns
 source:   examples/idas/serial/idasAkzoNob_ASAi_dns.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasAkzoNob_ASAi_dns
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasAkzoNob_ASAi_dns
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasAkzoNob_ASAi_dns
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasAkzoNob_ASAi_dns
 exit:     0 (OK)
 seconds:  0.206
 stdout:   567 bytes, sha256 323408d02fe4d3047f86a7f9813a7eb47211cdc0eb0922dfdf29bee76a23f042

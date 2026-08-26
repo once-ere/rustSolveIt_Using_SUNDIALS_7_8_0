@@ -52,7 +52,7 @@
 # WHAT YOU WATCH: a box tumbling in a complicated way about an axis that never
 # stops moving, while the direction that actually matters never moves at all.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_invariable_line
 #

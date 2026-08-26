@@ -1,9 +1,9 @@
 example:  cvDiurnal_kry
 crate:    cvode_rs
 source:   crates/cvode_rs/examples/cvDiurnal_kry.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvDiurnal_kry
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvDiurnal_kry
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvDiurnal_kry
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvDiurnal_kry
 exit:     0 (OK)
 seconds:  0.106
 stdout:   2860 bytes, sha256 3d5bdd944af9101cd8e16f87154d22b6e9a8691f5d74c49e473b3d6552321484

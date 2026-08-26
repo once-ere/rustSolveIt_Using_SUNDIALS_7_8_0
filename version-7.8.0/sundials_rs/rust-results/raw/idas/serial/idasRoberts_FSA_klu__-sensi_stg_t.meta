@@ -1,9 +1,9 @@
 example:  idasRoberts_FSA_klu
 crate:    idas_rs
 source:   crates/idas_rs/examples/idasRoberts_FSA_klu.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasRoberts_FSA_klu
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasRoberts_FSA_klu
 argv:     -sensi stg t
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasRoberts_FSA_klu__-sensi_stg_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasRoberts_FSA_klu__-sensi_stg_t
 exit:     0 (OK)
 seconds:  0.105
 stdout:   5941 bytes, sha256 d42c79f11b30d88497e2902258357885c9f5e7cac04c004e1c01a541725e462f

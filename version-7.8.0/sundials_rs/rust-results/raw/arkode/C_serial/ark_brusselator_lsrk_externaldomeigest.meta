@@ -1,9 +1,9 @@
 example:  ark_brusselator_lsrk_externaldomeigest
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_brusselator_lsrk_externaldomeigest.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_brusselator_lsrk_externaldomeigest
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_brusselator_lsrk_externaldomeigest
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_brusselator_lsrk_externaldomeigest
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_brusselator_lsrk_externaldomeigest
 exit:     0 (OK)
 seconds:  0.118
 stdout:   1570 bytes, sha256 c0090f25971d0f6a93932438a268ca78d75482470961d4438779b7c43723f1ea

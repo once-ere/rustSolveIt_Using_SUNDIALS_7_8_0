@@ -81,7 +81,7 @@
 # visibly different rates -- whose difference, invisibly, is a steady spin about
 # one fixed line.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_correlated_bodies
 #

@@ -1,9 +1,9 @@
 example:  ark_kepler
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_kepler.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_kepler
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_kepler
 argv:     --stepper ERK --step-mode fixed --count-orbits
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_kepler__--stepper_ERK_--step-mode_fixed_--count-orbits
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_kepler__--stepper_ERK_--step-mode_fixed_--count-orbits
 exit:     0 (OK)
 seconds:  0.108
 stdout:   10534 bytes, sha256 83c82c7c1997a53198ba44faaf5fe1f990003087c6e2baf86354a3e697e34545

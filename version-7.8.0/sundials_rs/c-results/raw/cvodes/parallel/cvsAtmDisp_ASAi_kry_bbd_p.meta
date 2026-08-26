@@ -1,9 +1,9 @@
 example:  cvsAtmDisp_ASAi_kry_bbd_p
 source:   examples/cvodes/parallel/cvsAtmDisp_ASAi_kry_bbd_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsAtmDisp_ASAi_kry_bbd_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsAtmDisp_ASAi_kry_bbd_p
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsAtmDisp_ASAi_kry_bbd_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsAtmDisp_ASAi_kry_bbd_p
 exit:     0 (OK)
 seconds:  0.606
 stdout:   1006 bytes, sha256 01f9a9ca21a435bfcfd080cef919ab5d093330f5f3a7ec64382c805f5a6b6831

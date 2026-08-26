@@ -55,7 +55,7 @@
 # WHAT YOU WATCH: the e = 0.6 ellipse, with the long axis lying along the
 # starting radius. Every pass through perihelion repeats the same turn, mirrored.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p1_apsidal_symmetry
 #

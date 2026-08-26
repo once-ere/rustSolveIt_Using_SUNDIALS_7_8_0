@@ -1,9 +1,9 @@
 example:  idasBruss_ASAp_kry_bbd_p
 source:   examples/idas/parallel/idasBruss_ASAp_kry_bbd_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasBruss_ASAp_kry_bbd_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasBruss_ASAp_kry_bbd_p
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasBruss_ASAp_kry_bbd_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasBruss_ASAp_kry_bbd_p
 exit:     0 (OK)
 seconds:  0.606
 stdout:   1724 bytes, sha256 57860b97fb9ab56f473c4038129b72ee892f857b5a2d0c5ac452eaf22390a19c

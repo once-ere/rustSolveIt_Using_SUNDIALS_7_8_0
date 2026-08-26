@@ -1,9 +1,9 @@
 example:  cvsFoodWeb_ASAi_kry
 source:   examples/cvodes/serial/cvsFoodWeb_ASAi_kry.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsFoodWeb_ASAi_kry
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsFoodWeb_ASAi_kry
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsFoodWeb_ASAi_kry
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsFoodWeb_ASAi_kry
 exit:     0 (OK)
 seconds:  0.507
 stdout:   991 bytes, sha256 dbb0f31483d7b0b928fc285479e37c0214dd5c2c3c2853bdc7be227958974596

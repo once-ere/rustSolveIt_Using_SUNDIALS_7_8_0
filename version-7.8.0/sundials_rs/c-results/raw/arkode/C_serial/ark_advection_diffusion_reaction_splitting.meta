@@ -1,9 +1,9 @@
 example:  ark_advection_diffusion_reaction_splitting
 source:   examples/arkode/C_serial/ark_advection_diffusion_reaction_splitting.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_advection_diffusion_reaction_splitting
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_advection_diffusion_reaction_splitting
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_advection_diffusion_reaction_splitting
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_advection_diffusion_reaction_splitting
 exit:     0 (OK)
 seconds:  0.206
 stdout:   3288 bytes, sha256 a7201d99d2ef81911558576ae60361b79e7dd7d9ed60bae0a312f4d6050b1ffd

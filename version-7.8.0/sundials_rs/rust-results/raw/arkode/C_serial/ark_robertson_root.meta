@@ -1,9 +1,9 @@
 example:  ark_robertson_root
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_robertson_root.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_robertson_root
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_robertson_root
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_robertson_root
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_robertson_root
 exit:     0 (OK)
 seconds:  0.105
 stdout:   1558 bytes, sha256 68bb728c141a33ffd8b72481330a378fbc3099d3d62f0156e141761ad90bb6e0

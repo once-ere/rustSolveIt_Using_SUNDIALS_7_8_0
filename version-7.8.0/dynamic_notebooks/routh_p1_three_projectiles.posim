@@ -46,7 +46,7 @@
 # WHAT YOU WATCH: three particles fired on wildly different paths, falling
 # together. The triangle they span swells steadily but never tilts.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p1_three_projectiles
 #

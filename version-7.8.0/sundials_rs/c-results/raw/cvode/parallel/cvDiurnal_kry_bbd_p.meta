@@ -1,9 +1,9 @@
 example:  cvDiurnal_kry_bbd_p
 source:   examples/cvode/parallel/cvDiurnal_kry_bbd_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/parallel/cvDiurnal_kry_bbd_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/parallel/cvDiurnal_kry_bbd_p
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/parallel/cvDiurnal_kry_bbd_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/parallel/cvDiurnal_kry_bbd_p
 exit:     0 (OK)
 seconds:  0.607
 stdout:   5324 bytes, sha256 d5b3a9cdec055c4c1c4c1f1d30f88b8d6b386ed86c8d0a74daf818d518e6b868

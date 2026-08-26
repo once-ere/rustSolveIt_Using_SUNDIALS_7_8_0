@@ -1,9 +1,9 @@
 example:  idasHeat2D_kry
 crate:    idas_rs
 source:   crates/idas_rs/examples/idasHeat2D_kry.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasHeat2D_kry
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasHeat2D_kry
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasHeat2D_kry
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasHeat2D_kry
 exit:     0 (OK)
 seconds:  0.105
 stdout:   2665 bytes, sha256 0d9772e8099f0f4a72f4aef60b0652b48ed2dc89ea2da763fbebd0577e079bab

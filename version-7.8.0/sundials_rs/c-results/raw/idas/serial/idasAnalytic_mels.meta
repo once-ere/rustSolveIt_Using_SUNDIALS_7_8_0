@@ -1,9 +1,9 @@
 example:  idasAnalytic_mels
 source:   examples/idas/serial/idasAnalytic_mels.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasAnalytic_mels
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/serial/idasAnalytic_mels
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasAnalytic_mels
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/serial/idasAnalytic_mels
 exit:     0 (OK)
 seconds:  0.206
 stdout:   842 bytes, sha256 e67c6d65051515dfca5273f5a9cf0f2ba8ed5776bdf254ebee3cc358cce65412

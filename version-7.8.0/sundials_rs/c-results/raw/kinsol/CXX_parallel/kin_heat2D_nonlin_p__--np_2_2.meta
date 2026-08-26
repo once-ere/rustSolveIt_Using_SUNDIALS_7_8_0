@@ -1,9 +1,9 @@
 example:  kin_heat2D_nonlin_p
 source:   examples/kinsol/CXX_parallel/kin_heat2D_nonlin_p.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/CXX_parallel/kin_heat2D_nonlin_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/CXX_parallel/kin_heat2D_nonlin_p
 argv:     --np 2 2
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/CXX_parallel/kin_heat2D_nonlin_p__--np_2_2
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/CXX_parallel/kin_heat2D_nonlin_p__--np_2_2
 exit:     0 (OK)
 seconds:  0.506
 stdout:   814 bytes, sha256 b5074c0ff816fb8c311d7e3f75b4a499b5753720a4e2600425210940f88f9f39

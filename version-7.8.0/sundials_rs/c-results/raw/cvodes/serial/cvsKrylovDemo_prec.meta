@@ -1,9 +1,9 @@
 example:  cvsKrylovDemo_prec
 source:   examples/cvodes/serial/cvsKrylovDemo_prec.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsKrylovDemo_prec
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsKrylovDemo_prec
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsKrylovDemo_prec
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsKrylovDemo_prec
 exit:     0 (OK)
 seconds:  0.206
 stdout:   26472 bytes, sha256 8e4b506a75e1c2f0c0b65d6c7b9b77f8a11950034f72c343a482e6fc441f9100

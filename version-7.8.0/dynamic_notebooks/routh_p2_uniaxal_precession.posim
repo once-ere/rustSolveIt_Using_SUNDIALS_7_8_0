@@ -44,7 +44,7 @@
 # textbook picture of precession, with none of the irregularity of the
 # asymmetric case.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_uniaxal_precession
 #

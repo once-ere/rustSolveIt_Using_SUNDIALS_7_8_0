@@ -1,9 +1,9 @@
 example:  kin_em_p
 source:   examples/kinsol/CXX_parallel/kin_em_p.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/CXX_parallel/kin_em_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/CXX_parallel/kin_em_p
 argv:     
 launcher: mpirun --oversubscribe -np 2
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/CXX_parallel/kin_em_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/CXX_parallel/kin_em_p
 exit:     0 (OK)
 seconds:  0.607
 stdout:   778 bytes, sha256 53f4f755dc082680e087b64f0ce414fa06f13d27220b23a8f1b7425833f29c1d

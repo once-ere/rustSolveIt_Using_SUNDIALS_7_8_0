@@ -1,9 +1,9 @@
 example:  ark_pendulum
 source:   examples/arkode/CXX_serial/ark_pendulum.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_pendulum
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_pendulum
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_pendulum
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_pendulum
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1846 bytes, sha256 5e82c7e1d1ef5b0c51d06cc5340a6484af8532c701e08fbf8e4cad303f4d6011

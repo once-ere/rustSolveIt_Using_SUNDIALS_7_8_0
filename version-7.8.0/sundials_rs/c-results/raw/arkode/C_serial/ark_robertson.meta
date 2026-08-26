@@ -1,9 +1,9 @@
 example:  ark_robertson
 source:   examples/arkode/C_serial/ark_robertson.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_robertson
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_robertson
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_robertson
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_robertson
 exit:     0 (OK)
 seconds:  0.207
 stdout:   6855 bytes, sha256 992654598dd4f3943a8d27642ec006065b2aa054927bc866590fbe194ab41f74

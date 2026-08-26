@@ -1,9 +1,9 @@
 example:  idaHeat2D_kry_f2003
 source:   examples/ida/F2003_serial/idaHeat2D_kry_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/F2003_serial/idaHeat2D_kry_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/F2003_serial/idaHeat2D_kry_f2003
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/F2003_serial/idaHeat2D_kry_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/F2003_serial/idaHeat2D_kry_f2003
 exit:     0 (OK)
 seconds:  0.206
 stdout:   2637 bytes, sha256 822e2b7ea00cfd63b52b4309ee70007b1e8b10a9fa213590824788936a1ba7b0

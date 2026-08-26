@@ -45,7 +45,7 @@
 # rolling on each other inside that motion, one fixed in space and one fixed in
 # the body, touching along the axis the body is momentarily turning about.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_rolling_cones
 #

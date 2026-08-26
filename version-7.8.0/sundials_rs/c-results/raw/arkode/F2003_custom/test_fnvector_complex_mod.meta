@@ -1,9 +1,9 @@
 example:  test_fnvector_complex_mod
 source:   examples/arkode/F2003_custom/test_fnvector_complex_mod.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_custom/test_fnvector_complex_mod
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_custom/test_fnvector_complex_mod
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_custom/test_fnvector_complex_mod
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_custom/test_fnvector_complex_mod
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1553 bytes, sha256 eea846667b20e3144440d49e42ae6474d51260478dfc7df62609487c9979343c

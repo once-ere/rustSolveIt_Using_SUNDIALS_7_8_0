@@ -1,9 +1,9 @@
 example:  ark_kpr_nestedmri
 source:   examples/arkode/CXX_serial/ark_kpr_nestedmri.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_kpr_nestedmri
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_kpr_nestedmri
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_kpr_nestedmri
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_kpr_nestedmri
 exit:     0 (OK)
 seconds:  0.307
 stdout:   2850 bytes, sha256 b4619e4567b47ebc47920a5075fdeeed3667df34a821998356fe2bb9255838b0

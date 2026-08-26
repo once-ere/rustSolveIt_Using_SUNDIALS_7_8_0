@@ -45,7 +45,7 @@
 # WHAT YOU WATCH: three identical boxes given identical sideways kicks. The
 # slow one lurches around a wide cone; the fast one barely nods.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_spin_stabilisation
 #

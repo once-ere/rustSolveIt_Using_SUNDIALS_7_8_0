@@ -1,9 +1,9 @@
 example:  cv_kpr
 source:   examples/cvode/CXX_serial/cv_kpr.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/CXX_serial/cv_kpr
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/CXX_serial/cv_kpr
 argv:     cvode.init_step 0.01
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/CXX_serial/cv_kpr__cvode.init_step_0.01
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/CXX_serial/cv_kpr__cvode.init_step_0.01
 exit:     0 (OK)
 seconds:  0.207
 stdout:   2808 bytes, sha256 efb42ed75bd64031ba82ebf81cae4f1efd8188eda75aa49b06e6832a1fe983c5

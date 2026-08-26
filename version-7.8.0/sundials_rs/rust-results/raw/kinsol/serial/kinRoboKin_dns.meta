@@ -1,9 +1,9 @@
 example:  kinRoboKin_dns
 crate:    kinsol_rs
 source:   crates/kinsol_rs/examples/kinRoboKin_dns.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinRoboKin_dns
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinRoboKin_dns
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinRoboKin_dns
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinRoboKin_dns
 exit:     0 (OK)
 seconds:  0.107
 stdout:   1483 bytes, sha256 f73ec9e6acefec290ce1b37c92bcaf7549f7435a4cd262f2f96cafafefbb2050

@@ -1,9 +1,9 @@
 example:  ark_heat2D_lsrk_domeigest
 source:   examples/arkode/CXX_lapack/ark_heat2D_lsrk_domeigest.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_lapack/ark_heat2D_lsrk_domeigest
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_lapack/ark_heat2D_lsrk_domeigest
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_lapack/ark_heat2D_lsrk_domeigest
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_lapack/ark_heat2D_lsrk_domeigest
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1907 bytes, sha256 ed9da6e2c4abd3de3e62a632b8a21b7efec954fac9dbe73a0ca779f10fb1428b

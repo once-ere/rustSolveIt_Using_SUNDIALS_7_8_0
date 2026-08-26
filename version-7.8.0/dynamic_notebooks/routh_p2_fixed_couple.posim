@@ -50,7 +50,7 @@
 # the quantity that actually obeys a simple law, the angular momentum, is
 # invisible and perfectly straight.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_fixed_couple
 #

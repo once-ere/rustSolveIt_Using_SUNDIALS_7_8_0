@@ -1,9 +1,9 @@
 example:  ark_kpr_mri
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_kpr_mri.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_kpr_mri
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_kpr_mri
 argv:     1 1 0.002
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_kpr_mri__1_1_0.002
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_kpr_mri__1_1_0.002
 exit:     0 (OK)
 seconds:  1.207
 stdout:   3596 bytes, sha256 c7f247fb227f47716602cb0792592cdcfa40870e95d40df0d45c39f0b0c09f70

@@ -1,9 +1,9 @@
 example:  kinRoberts_fp
 crate:    kinsol_rs
 source:   crates/kinsol_rs/examples/kinRoberts_fp.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinRoberts_fp
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinRoberts_fp
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinRoberts_fp
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinRoberts_fp
 exit:     0 (OK)
 seconds:  0.106
 stdout:   546 bytes, sha256 aad4d127168471e796d1980d3767bc2d69eb8ebb233c640c1866a523aeddd861

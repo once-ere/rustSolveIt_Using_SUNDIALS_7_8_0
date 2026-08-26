@@ -1,9 +1,9 @@
 example:  ark_kepler
 source:   examples/arkode/C_serial/ark_kepler.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_kepler
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_kepler
 argv:     --stepper ERK --step-mode adapt
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_kepler__--stepper_ERK_--step-mode_adapt
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_kepler__--stepper_ERK_--step-mode_adapt
 exit:     0 (OK)
 seconds:  0.206
 stdout:   5243 bytes, sha256 656a02715a941608aaeb994a91438772e9c1b994f763b0d2f22f94f40651e608

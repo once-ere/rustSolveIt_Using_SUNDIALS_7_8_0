@@ -1,9 +1,9 @@
 example:  ark_heat1D_adapt
 source:   examples/arkode/C_serial/ark_heat1D_adapt.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_heat1D_adapt
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_heat1D_adapt
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_heat1D_adapt
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_heat1D_adapt
 exit:     0 (OK)
 seconds:  0.206
 stdout:   6365 bytes, sha256 3079e9727002e30dba30126381fde105024b2a7bc491f625fea0b28a3fca3977

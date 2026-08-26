@@ -1,9 +1,9 @@
 example:  ark_diffusion_reaction_p
 source:   examples/arkode/CXX_parallel/ark_diffusion_reaction_p.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parallel/ark_diffusion_reaction_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parallel/ark_diffusion_reaction_p
 argv:     --np 2 2 --mri-arkstep
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parallel/ark_diffusion_reaction_p__--np_2_2_--mri-arkstep
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parallel/ark_diffusion_reaction_p__--np_2_2_--mri-arkstep
 exit:     0 (OK)
 seconds:  0.706
 stdout:   2902 bytes, sha256 ad3d77228b52e7f59caf364036015f8cee93f73adb1d909d4681d24e32b930e0

@@ -1,9 +1,9 @@
 example:  cvDirectDemo_ls
 source:   examples/cvode/serial/cvDirectDemo_ls.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvDirectDemo_ls
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvDirectDemo_ls
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvDirectDemo_ls
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvDirectDemo_ls
 exit:     0 (OK)
 seconds:  0.206
 stdout:   17673 bytes, sha256 a19abd5087bb90d0831b1b2d329c546590de99a12fa6bd2573a172cf31e950a7

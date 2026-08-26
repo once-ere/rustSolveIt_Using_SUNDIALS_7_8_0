@@ -1,9 +1,9 @@
 example:  ark_analytic_mels
 source:   examples/arkode/C_serial/ark_analytic_mels.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_mels
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_mels
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_mels
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_mels
 exit:     0 (OK)
 seconds:  0.205
 stdout:   801 bytes, sha256 f509501a8a065347643d573eed0a60f16bc07821ddd5c87516c5a96e9b1cbe7e

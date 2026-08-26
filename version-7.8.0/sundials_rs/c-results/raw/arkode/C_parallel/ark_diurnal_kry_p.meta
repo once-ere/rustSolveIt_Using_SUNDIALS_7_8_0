@@ -1,9 +1,9 @@
 example:  ark_diurnal_kry_p
 source:   examples/arkode/C_parallel/ark_diurnal_kry_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_parallel/ark_diurnal_kry_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_parallel/ark_diurnal_kry_p
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_parallel/ark_diurnal_kry_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_parallel/ark_diurnal_kry_p
 exit:     0 (OK)
 seconds:  0.606
 stdout:   2276 bytes, sha256 6caa5dd8859069064e56351eed522147e25b2d154d8b4a3d7ad11ecfa1392936

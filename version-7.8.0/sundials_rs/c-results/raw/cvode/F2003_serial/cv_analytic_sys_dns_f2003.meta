@@ -1,9 +1,9 @@
 example:  cv_analytic_sys_dns_f2003
 source:   examples/cvode/F2003_serial/cv_analytic_sys_dns_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/F2003_serial/cv_analytic_sys_dns_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/F2003_serial/cv_analytic_sys_dns_f2003
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/F2003_serial/cv_analytic_sys_dns_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/F2003_serial/cv_analytic_sys_dns_f2003
 exit:     0 (OK)
 seconds:  0.205
 stdout:   1350 bytes, sha256 0ddbea2d97e2fc1c38b2a82ee50df15ba970f6c3079c70e02d19a9a7d5ae7521

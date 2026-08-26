@@ -1,9 +1,9 @@
 example:  cvRocket_dns
 source:   examples/cvode/serial/cvRocket_dns.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvRocket_dns
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvRocket_dns
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvRocket_dns
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvRocket_dns
 exit:     0 (OK)
 seconds:  0.206
 stdout:   4212 bytes, sha256 2887cbbe9072a4654b03eafbbfc1cc775975d7b5abfd8609826eabbc7e2aac6d

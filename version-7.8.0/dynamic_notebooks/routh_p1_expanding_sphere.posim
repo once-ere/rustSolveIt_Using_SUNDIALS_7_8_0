@@ -42,7 +42,7 @@
 # WHAT YOU WATCH: a shell of particles blowing outward at constant rate while
 # the whole shell falls -- a sphere whose centre is in free fall.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p1_expanding_sphere
 #

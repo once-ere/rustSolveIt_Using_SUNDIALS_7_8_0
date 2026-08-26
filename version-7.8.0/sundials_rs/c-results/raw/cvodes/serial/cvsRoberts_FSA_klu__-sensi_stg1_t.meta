@@ -1,9 +1,9 @@
 example:  cvsRoberts_FSA_klu
 source:   examples/cvodes/serial/cvsRoberts_FSA_klu.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_FSA_klu
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_FSA_klu
 argv:     -sensi stg1 t
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_FSA_klu__-sensi_stg1_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_FSA_klu__-sensi_stg1_t
 exit:     0 (OK)
 seconds:  0.206
 stdout:   5262 bytes, sha256 b92ee0b442c99fef3a3b0cb6ae3b903965fffed0352a9d8531b28d725ee09fdb

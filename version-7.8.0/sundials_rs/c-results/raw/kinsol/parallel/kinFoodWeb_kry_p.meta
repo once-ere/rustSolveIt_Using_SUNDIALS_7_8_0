@@ -1,9 +1,9 @@
 example:  kinFoodWeb_kry_p
 source:   examples/kinsol/parallel/kinFoodWeb_kry_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/parallel/kinFoodWeb_kry_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/parallel/kinFoodWeb_kry_p
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/parallel/kinFoodWeb_kry_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/parallel/kinFoodWeb_kry_p
 exit:     0 (OK)
 seconds:  0.606
 stdout:   789 bytes, sha256 abd51ab2dd40a36a4cad79fbbb2ae755ded39b0ec5767bb05c74be2ba4a92f49

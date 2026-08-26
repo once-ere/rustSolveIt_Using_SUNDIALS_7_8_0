@@ -1,9 +1,9 @@
 example:  ark_brusselator_mri
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_brusselator_mri.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_brusselator_mri
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_brusselator_mri
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_brusselator_mri
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_brusselator_mri
 exit:     0 (OK)
 seconds:  0.017
 stdout:   1443 bytes, sha256 922387ecfc682c5cf810af8ace83c2bb5e7f48fb17d483c27b8640b15c19b1bc

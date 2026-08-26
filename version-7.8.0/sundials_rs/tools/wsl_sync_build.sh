@@ -10,8 +10,8 @@
 # usage: bash tools/wsl_sync_build.sh <step>
 set -u
 export PATH="$HOME/.cargo/bin:/usr/bin:/bin:/usr/local/bin"
-WIN_REPO=/mnt/c/Users/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux
-UPSTREAM=/mnt/c/Users/nsh/Developer/sundials-7.8.0
+WIN_REPO=/mnt/c/Users/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux
+UPSTREAM=/mnt/c/Users/youruser/Developer/sundials-7.8.0
 SB="$HOME/sdl"
 
 mkdir -p "$SB/port"

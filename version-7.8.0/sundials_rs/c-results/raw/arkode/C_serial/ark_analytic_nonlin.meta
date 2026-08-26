@@ -1,9 +1,9 @@
 example:  ark_analytic_nonlin
 source:   examples/arkode/C_serial/ark_analytic_nonlin.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_nonlin
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_nonlin
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_nonlin
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_nonlin
 exit:     0 (OK)
 seconds:  0.206
 stdout:   886 bytes, sha256 209ca7f82f9e09808b357797d57b00961057593a0d0f0f7a3c457b4bf7ec99f7

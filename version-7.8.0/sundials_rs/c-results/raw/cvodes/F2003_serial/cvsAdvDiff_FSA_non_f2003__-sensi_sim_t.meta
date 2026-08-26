@@ -1,9 +1,9 @@
 example:  cvsAdvDiff_FSA_non_f2003
 source:   examples/cvodes/F2003_serial/cvsAdvDiff_FSA_non_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/F2003_serial/cvsAdvDiff_FSA_non_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/F2003_serial/cvsAdvDiff_FSA_non_f2003
 argv:     -sensi sim t
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/F2003_serial/cvsAdvDiff_FSA_non_f2003__-sensi_sim_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/F2003_serial/cvsAdvDiff_FSA_non_f2003__-sensi_sim_t
 exit:     0 (OK)
 seconds:  0.206
 stdout:   3379 bytes, sha256 e009109462f6cc17e4e0c712b97ce0883067600788b4b5ce3b59012599bf5858

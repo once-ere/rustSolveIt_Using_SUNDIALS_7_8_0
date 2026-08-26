@@ -1,9 +1,9 @@
 example:  ark_roberts_dnsL_f2003
 source:   examples/arkode/F2003_serial/ark_roberts_dnsL_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_roberts_dnsL_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_roberts_dnsL_f2003
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_roberts_dnsL_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_roberts_dnsL_f2003
 exit:     0 (OK)
 seconds:  0.206
 stdout:   2449 bytes, sha256 72fbf2371cdffe28d34e0594a885d1b8a26e2557a842acf0e2eb82600a7782e1

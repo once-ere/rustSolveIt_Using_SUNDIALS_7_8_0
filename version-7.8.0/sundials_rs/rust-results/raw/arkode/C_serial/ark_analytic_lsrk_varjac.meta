@@ -1,9 +1,9 @@
 example:  ark_analytic_lsrk_varjac
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_analytic_lsrk_varjac.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic_lsrk_varjac
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic_lsrk_varjac
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic_lsrk_varjac
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic_lsrk_varjac
 exit:     0 (OK)
 seconds:  0.106
 stdout:   1303 bytes, sha256 a899238a00ebebf06031898b785f7f36448559580cb7108a5b0acc9cf62ed187

@@ -1,9 +1,9 @@
 example:  ark_analytic_lsrk
 source:   examples/arkode/C_serial/ark_analytic_lsrk.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_lsrk
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_lsrk
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_lsrk
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_lsrk
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1143 bytes, sha256 36e22a81ef15ab89641576cdfe76e1d3b26ab9293de5aa2a6a08615c93e2f93b

@@ -1,9 +1,9 @@
 example:  idasAnalytic_mels
 crate:    idas_rs
 source:   crates/idas_rs/examples/idasAnalytic_mels.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasAnalytic_mels
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasAnalytic_mels
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasAnalytic_mels
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasAnalytic_mels
 exit:     0 (OK)
 seconds:  0.105
 stdout:   842 bytes, sha256 e67c6d65051515dfca5273f5a9cf0f2ba8ed5776bdf254ebee3cc358cce65412

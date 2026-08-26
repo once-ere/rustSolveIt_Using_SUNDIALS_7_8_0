@@ -45,7 +45,7 @@
 # WHAT YOU WATCH: a box tumbling irregularly. Invisibly, a plane is fixed in
 # space and the body's momental ellipsoid is rolling on it without slipping.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_poinsot_rolling
 #

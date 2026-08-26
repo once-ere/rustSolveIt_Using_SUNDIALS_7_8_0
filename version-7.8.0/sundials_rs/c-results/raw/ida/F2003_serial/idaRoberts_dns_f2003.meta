@@ -1,9 +1,9 @@
 example:  idaRoberts_dns_f2003
 source:   examples/ida/F2003_serial/idaRoberts_dns_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/F2003_serial/idaRoberts_dns_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/F2003_serial/idaRoberts_dns_f2003
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/F2003_serial/idaRoberts_dns_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/F2003_serial/idaRoberts_dns_f2003
 exit:     0 (OK)
 seconds:  0.206
 stdout:   2082 bytes, sha256 08d31c6065ffe533c4d1c405016d664bc7b68b94a5f52f0e71660b867f916d1a

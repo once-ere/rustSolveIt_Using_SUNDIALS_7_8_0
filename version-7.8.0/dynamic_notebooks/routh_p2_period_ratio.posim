@@ -54,7 +54,7 @@
 # WHAT YOU WATCH: two boxes spinning at the same rate, one wobbling six times
 # as widely as the other, and both completing a wobble in the same time.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_period_ratio
 #

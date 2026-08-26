@@ -1,9 +1,9 @@
 example:  cvRoberts_dns_negsol
 crate:    cvode_rs
 source:   crates/cvode_rs/examples/cvRoberts_dns_negsol.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvRoberts_dns_negsol
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvRoberts_dns_negsol
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvRoberts_dns_negsol
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvode/serial/cvRoberts_dns_negsol
 exit:     0 (OK)
 seconds:  0.106
 stdout:   2409 bytes, sha256 911bb744d63c8c331a308a6ac5a7319775800d782df552da3030a96b98a80acc

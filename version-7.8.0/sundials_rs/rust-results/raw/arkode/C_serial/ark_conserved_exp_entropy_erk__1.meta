@@ -1,9 +1,9 @@
 example:  ark_conserved_exp_entropy_erk
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_conserved_exp_entropy_erk.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_conserved_exp_entropy_erk
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_conserved_exp_entropy_erk
 argv:     1
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_conserved_exp_entropy_erk__1
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_conserved_exp_entropy_erk__1
 exit:     0 (OK)
 seconds:  0.106
 stdout:   2762 bytes, sha256 74e035658e515798d865ad2d84a21805209732f6e618e8696a6b412625448bfa

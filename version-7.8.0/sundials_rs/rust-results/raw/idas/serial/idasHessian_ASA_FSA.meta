@@ -1,9 +1,9 @@
 example:  idasHessian_ASA_FSA
 crate:    idas_rs
 source:   crates/idas_rs/examples/idasHessian_ASA_FSA.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasHessian_ASA_FSA
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idasHessian_ASA_FSA
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasHessian_ASA_FSA
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/idas/serial/idasHessian_ASA_FSA
 exit:     0 (OK)
 seconds:  0.106
 stdout:   1258 bytes, sha256 e91863a731e78eb0859f09051a0d83c8d074e76387c980326bb78f11b6a40322

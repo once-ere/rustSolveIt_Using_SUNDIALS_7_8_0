@@ -1,9 +1,9 @@
 example:  ark_diag_kry_bbd_f2003
 source:   examples/arkode/F2003_parallel/ark_diag_kry_bbd_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_parallel/ark_diag_kry_bbd_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_parallel/ark_diag_kry_bbd_f2003
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_parallel/ark_diag_kry_bbd_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_parallel/ark_diag_kry_bbd_f2003
 exit:     0 (OK)
 seconds:  1.408
 stdout:   3196 bytes, sha256 90368a08f9c43b07e2da70f2163859cc3e5702c74264b5ee503ba49ff67d3b4e

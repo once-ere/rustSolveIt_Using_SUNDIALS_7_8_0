@@ -1,9 +1,9 @@
 example:  idaFoodWeb_bnd
 crate:    ida_rs
 source:   crates/ida_rs/examples/idaFoodWeb_bnd.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idaFoodWeb_bnd
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/idaFoodWeb_bnd
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/ida/serial/idaFoodWeb_bnd
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/ida/serial/idaFoodWeb_bnd
 exit:     0 (OK)
 seconds:  0.506
 stdout:   1540 bytes, sha256 7a7b7e86364360d0603cc759b3a8e74b5c3381de317653d7e87f19cd3bc74bea

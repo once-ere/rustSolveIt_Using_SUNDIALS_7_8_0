@@ -1,9 +1,9 @@
 example:  ark_kepler
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_kepler.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_kepler
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_kepler
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_kepler
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_kepler
 exit:     0 (OK)
 seconds:  0.106
 stdout:   5036 bytes, sha256 e524ae31f2839470c0698f12076bcdcfefec08cd257ae058910e5b650f7b1d34

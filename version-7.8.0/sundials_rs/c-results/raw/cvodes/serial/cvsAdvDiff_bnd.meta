@@ -1,9 +1,9 @@
 example:  cvsAdvDiff_bnd
 source:   examples/cvodes/serial/cvsAdvDiff_bnd.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsAdvDiff_bnd
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsAdvDiff_bnd
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsAdvDiff_bnd
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsAdvDiff_bnd
 exit:     0 (OK)
 seconds:  0.206
 stdout:   850 bytes, sha256 24b74965dc9037769b073d67d015a48e6fbb94ec9c8eb6900e7ffd5e6d42df38

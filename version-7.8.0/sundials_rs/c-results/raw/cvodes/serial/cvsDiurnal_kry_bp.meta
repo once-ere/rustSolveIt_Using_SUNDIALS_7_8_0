@@ -1,9 +1,9 @@
 example:  cvsDiurnal_kry_bp
 source:   examples/cvodes/serial/cvsDiurnal_kry_bp.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsDiurnal_kry_bp
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsDiurnal_kry_bp
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsDiurnal_kry_bp
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsDiurnal_kry_bp
 exit:     0 (OK)
 seconds:  0.207
 stdout:   6047 bytes, sha256 ff9fe30eabbd17ba25b9d869369b803bf0893e53ed5cd94b051531efa581a53b

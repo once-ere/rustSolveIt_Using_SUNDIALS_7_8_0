@@ -1,9 +1,9 @@
 example:  ark_robertson_constraints
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_robertson_constraints.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_robertson_constraints
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_robertson_constraints
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_robertson_constraints
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_robertson_constraints
 exit:     0 (OK)
 seconds:  0.106
 stdout:   6297 bytes, sha256 54f1e88dc2d789d70eca21960b6a10fc1ab7991e847a64091f71746c1e98e24c

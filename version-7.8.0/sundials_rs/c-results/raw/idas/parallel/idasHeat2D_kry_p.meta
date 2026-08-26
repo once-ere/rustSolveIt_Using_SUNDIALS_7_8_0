@@ -1,9 +1,9 @@
 example:  idasHeat2D_kry_p
 source:   examples/idas/parallel/idasHeat2D_kry_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasHeat2D_kry_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasHeat2D_kry_p
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasHeat2D_kry_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasHeat2D_kry_p
 exit:     0 (OK)
 seconds:  0.507
 stdout:   1734 bytes, sha256 f80c386dc4a871278393fb512bc5397d789b5dfe7481b097a446fb56d2d3fdd1

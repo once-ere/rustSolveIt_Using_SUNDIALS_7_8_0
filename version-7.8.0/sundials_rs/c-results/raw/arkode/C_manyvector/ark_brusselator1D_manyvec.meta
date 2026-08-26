@@ -1,9 +1,9 @@
 example:  ark_brusselator1D_manyvec
 source:   examples/arkode/C_manyvector/ark_brusselator1D_manyvec.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_manyvector/ark_brusselator1D_manyvec
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_manyvector/ark_brusselator1D_manyvec
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_manyvector/ark_brusselator1D_manyvec
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_manyvector/ark_brusselator1D_manyvec
 exit:     0 (OK)
 seconds:  0.206
 stdout:   5707 bytes, sha256 24aee5c1f3d935890616e6d47198525c8f2b21b5b7e8805ed03e15e3d7b24a27

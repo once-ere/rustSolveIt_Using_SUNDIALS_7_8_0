@@ -49,7 +49,7 @@
 # WHAT YOU WATCH: a long thin rod turning end over end about a fixed
 # transverse axis, spinning furiously about its own length to no visible effect.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_thin_rod
 #

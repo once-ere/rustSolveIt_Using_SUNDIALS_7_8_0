@@ -1,9 +1,9 @@
 example:  idaRoberts_klu
 source:   examples/ida/serial/idaRoberts_klu.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/serial/idaRoberts_klu
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/ida/serial/idaRoberts_klu
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/serial/idaRoberts_klu
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/ida/serial/idaRoberts_klu
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1925 bytes, sha256 0e0dd050cf3b590cdef488e8fa00a6500bfc8a924627d36025f34ea34dcceda5

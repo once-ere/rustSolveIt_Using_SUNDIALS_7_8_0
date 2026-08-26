@@ -1,9 +1,9 @@
 example:  kinLaplace_picard_bnd
 crate:    kinsol_rs
 source:   crates/kinsol_rs/examples/kinLaplace_picard_bnd.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinLaplace_picard_bnd
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinLaplace_picard_bnd
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinLaplace_picard_bnd
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinLaplace_picard_bnd
 exit:     0 (OK)
 seconds:  0.105
 stdout:   1762 bytes, sha256 73402c23fd8ab615f3f2cf1bbbf30741816d97b883d7dbd6a47900441d8ba15c

@@ -71,7 +71,7 @@
 # middle one tumbles end over end, again and again -- while its energy and
 # angular momentum never change by a part in 1e10.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_mean_axis_instability
 #

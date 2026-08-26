@@ -1,9 +1,9 @@
 example:  ark_analytic_lsrk_domeigest
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_analytic_lsrk_domeigest.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic_lsrk_domeigest
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_analytic_lsrk_domeigest
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic_lsrk_domeigest
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_analytic_lsrk_domeigest
 exit:     0 (OK)
 seconds:  0.106
 stdout:   1384 bytes, sha256 35e6bc055a48607fc7732c9172c11a7008578240d2d1170f87a8211637bc30d1

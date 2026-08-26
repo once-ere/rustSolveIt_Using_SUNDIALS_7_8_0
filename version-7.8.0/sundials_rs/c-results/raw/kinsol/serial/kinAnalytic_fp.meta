@@ -1,9 +1,9 @@
 example:  kinAnalytic_fp
 source:   examples/kinsol/serial/kinAnalytic_fp.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/serial/kinAnalytic_fp
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/serial/kinAnalytic_fp
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/serial/kinAnalytic_fp
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/serial/kinAnalytic_fp
 exit:     0 (OK)
 seconds:  0.207
 stdout:   708 bytes, sha256 98998bade74550e6b856ac13112a24c02e797b9a09c1d48305cb23d78d54b7be

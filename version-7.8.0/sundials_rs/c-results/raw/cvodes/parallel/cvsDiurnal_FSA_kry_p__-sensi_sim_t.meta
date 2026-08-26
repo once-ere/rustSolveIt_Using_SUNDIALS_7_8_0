@@ -1,9 +1,9 @@
 example:  cvsDiurnal_FSA_kry_p
 source:   examples/cvodes/parallel/cvsDiurnal_FSA_kry_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsDiurnal_FSA_kry_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/parallel/cvsDiurnal_FSA_kry_p
 argv:     -sensi sim t
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsDiurnal_FSA_kry_p__-sensi_sim_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/parallel/cvsDiurnal_FSA_kry_p__-sensi_sim_t
 exit:     0 (OK)
 seconds:  0.606
 stdout:   8871 bytes, sha256 d0a2535518958e17cf8671ce7b0eab0f8b2aedae3f3e4260df26d88cf80d0e38

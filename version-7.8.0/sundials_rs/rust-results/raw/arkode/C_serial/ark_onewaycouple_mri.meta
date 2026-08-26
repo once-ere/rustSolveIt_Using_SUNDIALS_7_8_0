@@ -1,9 +1,9 @@
 example:  ark_onewaycouple_mri
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_onewaycouple_mri.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_onewaycouple_mri
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_onewaycouple_mri
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_onewaycouple_mri
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_onewaycouple_mri
 exit:     0 (OK)
 seconds:  0.106
 stdout:   1077 bytes, sha256 d27f3c1e2e62eb8d2f908750e1e1e7d96cfe5ef9842bb93a76a97b806875d4b9

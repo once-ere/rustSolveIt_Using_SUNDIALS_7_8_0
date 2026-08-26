@@ -1,9 +1,9 @@
 example:  ark_brusselator_lsrk_domeigest
 source:   examples/arkode/C_serial/ark_brusselator_lsrk_domeigest.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_brusselator_lsrk_domeigest
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_brusselator_lsrk_domeigest
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_brusselator_lsrk_domeigest
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_brusselator_lsrk_domeigest
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1641 bytes, sha256 1df50afaace183d374d8c12471719686d1ace3ee848d455eea39a90aa57f2e15

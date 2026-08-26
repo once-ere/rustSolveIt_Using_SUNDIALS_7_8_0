@@ -48,7 +48,7 @@
 # middle one. Then the same line with one end nudged, which holds briefly and
 # then tears itself apart.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p1_collinear_three_body
 #

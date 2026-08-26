@@ -22,7 +22,7 @@ WS_ROOT="$PWD"
 # $SUNDIALS_C_SRC and then to the checkout on the Windows volume.
 SRC="$(cd .. && pwd)"
 if [ ! -f "$SRC/CMakeLists.txt" ]; then
-  SRC="${SUNDIALS_C_SRC:-/mnt/c/Users/nsh/Developer/sundials-7.8.0}"
+  SRC="${SUNDIALS_C_SRC:-/mnt/c/Users/youruser/Developer/sundials-7.8.0}"
 fi
 [ -f "$SRC/CMakeLists.txt" ] || { echo "no upstream C tree at $SRC"; exit 1; }
 BUILD="${1:-$HOME/sdl/cbuild}"

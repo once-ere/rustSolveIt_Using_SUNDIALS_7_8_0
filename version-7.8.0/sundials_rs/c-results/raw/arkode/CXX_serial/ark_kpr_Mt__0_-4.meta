@@ -1,9 +1,9 @@
 example:  ark_kpr_Mt
 source:   examples/arkode/CXX_serial/ark_kpr_Mt.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_kpr_Mt
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_kpr_Mt
 argv:     0 -4
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_kpr_Mt__0_-4
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_kpr_Mt__0_-4
 exit:     0 (OK)
 seconds:  0.207
 stdout:   832 bytes, sha256 35eaf43899900c64c1f6d4e902c6a87b6496bbb04445f721e1a22ecfbfdad35f

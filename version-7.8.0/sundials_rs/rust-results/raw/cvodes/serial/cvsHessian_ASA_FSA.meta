@@ -1,9 +1,9 @@
 example:  cvsHessian_ASA_FSA
 crate:    cvodes_rs
 source:   crates/cvodes_rs/examples/cvsHessian_ASA_FSA.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsHessian_ASA_FSA
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsHessian_ASA_FSA
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsHessian_ASA_FSA
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsHessian_ASA_FSA
 exit:     0 (OK)
 seconds:  0.106
 stdout:   2307 bytes, sha256 b3079e8ddf9f552895ce6ece1390a8d9922e4a5af7dcbe5bb0005fcb8067d4c1

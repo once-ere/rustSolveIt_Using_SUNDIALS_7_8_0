@@ -64,7 +64,7 @@
 # different rates. The angle between them is the clock -- the one thing in the
 # whole motion that advances uniformly.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_sylvester_time
 #

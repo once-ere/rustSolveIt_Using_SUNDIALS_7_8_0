@@ -279,7 +279,7 @@ def write_c(p):
         prov_block(p),
         "",
         "The C sources are an unpacked SUNDIALS 7.8.0 tree, used read-only. On",
-        "the machine above it was `/home/nsh/Developer/sundials-7.8.0`, reached",
+        "the machine above it was `/home/youruser/Developer/sundials-7.8.0`, reached",
         "through the `upstream-c` symlink; that path is recorded in every",
         "`.meta` file and is provenance, not a dependency — point the symlink",
         "at your own copy and the pipeline reproduces. The vendored `examples/`",

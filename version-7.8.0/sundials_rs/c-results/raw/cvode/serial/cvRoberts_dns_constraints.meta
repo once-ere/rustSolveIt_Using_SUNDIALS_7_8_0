@@ -1,9 +1,9 @@
 example:  cvRoberts_dns_constraints
 source:   examples/cvode/serial/cvRoberts_dns_constraints.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvRoberts_dns_constraints
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/serial/cvRoberts_dns_constraints
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvRoberts_dns_constraints
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/serial/cvRoberts_dns_constraints
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1261 bytes, sha256 106ba20145b7ce7c0ebb73c9e3ad6c0cc9bb8523829358288a5e2ee25546df9f

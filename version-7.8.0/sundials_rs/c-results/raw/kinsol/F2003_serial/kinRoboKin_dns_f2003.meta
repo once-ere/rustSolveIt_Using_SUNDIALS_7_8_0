@@ -1,9 +1,9 @@
 example:  kinRoboKin_dns_f2003
 source:   examples/kinsol/F2003_serial/kinRoboKin_dns_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/F2003_serial/kinRoboKin_dns_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/F2003_serial/kinRoboKin_dns_f2003
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/F2003_serial/kinRoboKin_dns_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/F2003_serial/kinRoboKin_dns_f2003
 exit:     0 (OK)
 seconds:  0.206
 stdout:   979 bytes, sha256 2bb5e7c8154a5ecb7d18991df22a3ed1d0355a19d08ed09b7809f05d9afa9e09

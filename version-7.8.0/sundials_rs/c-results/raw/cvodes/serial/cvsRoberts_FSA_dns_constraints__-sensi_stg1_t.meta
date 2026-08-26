@@ -1,9 +1,9 @@
 example:  cvsRoberts_FSA_dns_constraints
 source:   examples/cvodes/serial/cvsRoberts_FSA_dns_constraints.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_FSA_dns_constraints
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_FSA_dns_constraints
 argv:     -sensi stg1 t
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_FSA_dns_constraints__-sensi_stg1_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_FSA_dns_constraints__-sensi_stg1_t
 exit:     0 (OK)
 seconds:  0.206
 stdout:   5277 bytes, sha256 3f2c9e3dcea16dc453f6519b32ea01cc249ea3767a19171f74a2869ddb9a4df9

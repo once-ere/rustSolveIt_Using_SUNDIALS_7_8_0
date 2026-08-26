@@ -1,9 +1,9 @@
 example:  cv_heat2D_hypre_ls
 source:   examples/cvode/CXX_parhyp/cv_heat2D_hypre_ls.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/CXX_parhyp/cv_heat2D_hypre_ls
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/CXX_parhyp/cv_heat2D_hypre_ls
 argv:     --np 2 2
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/CXX_parhyp/cv_heat2D_hypre_ls__--np_2_2
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/CXX_parhyp/cv_heat2D_hypre_ls__--np_2_2
 exit:     0 (OK)
 seconds:  0.712
 stdout:   2911 bytes, sha256 58824cae8539340fe24ae6ba7061cace51199d339a1d7692b0838e51679587e0

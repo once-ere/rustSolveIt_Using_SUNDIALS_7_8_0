@@ -1,9 +1,9 @@
 example:  cv_diurnal_kry_bp_f2003
 source:   examples/cvode/F2003_serial/cv_diurnal_kry_bp_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/F2003_serial/cv_diurnal_kry_bp_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvode/F2003_serial/cv_diurnal_kry_bp_f2003
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/F2003_serial/cv_diurnal_kry_bp_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvode/F2003_serial/cv_diurnal_kry_bp_f2003
 exit:     0 (OK)
 seconds:  0.206
 stdout:   2947 bytes, sha256 3fdb13fafbba5a68eab0a0c6e2ac87206a580b5d0e433e62475685834df7e1c9

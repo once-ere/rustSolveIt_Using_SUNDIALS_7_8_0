@@ -1,9 +1,9 @@
 example:  ark_analytic_lsrk_domeigest
 source:   examples/arkode/C_serial/ark_analytic_lsrk_domeigest.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_lsrk_domeigest
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_lsrk_domeigest
 argv:     arkid.dom_eig_est_init_preprocess_iters 1 sundomeigestimator.max_iters 1
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_lsrk_domeigest__arkid.dom_eig_est_init_preprocess_iters_1_sundomeigestimator.max_iters_1
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_lsrk_domeigest__arkid.dom_eig_est_init_preprocess_iters_1_sundomeigestimator.max_iters_1
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1373 bytes, sha256 37196c8ab48d116983e6103b377b5751d38dedb6c208518aa798c68094c7d0ea

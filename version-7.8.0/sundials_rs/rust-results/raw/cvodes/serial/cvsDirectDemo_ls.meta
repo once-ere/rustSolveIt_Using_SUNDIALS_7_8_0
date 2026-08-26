@@ -1,9 +1,9 @@
 example:  cvsDirectDemo_ls
 crate:    cvodes_rs
 source:   crates/cvodes_rs/examples/cvsDirectDemo_ls.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsDirectDemo_ls
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsDirectDemo_ls
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsDirectDemo_ls
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsDirectDemo_ls
 exit:     0 (OK)
 seconds:  0.105
 stdout:   17713 bytes, sha256 7537f64339279cdf6d763e203a0202dcab144bfd13c6a8dcc5dfeaee0154cee5

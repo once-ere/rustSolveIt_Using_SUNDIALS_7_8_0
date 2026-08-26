@@ -1,9 +1,9 @@
 example:  ark_analytic_lsrk_varjac
 source:   examples/arkode/C_serial/ark_analytic_lsrk_varjac.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_lsrk_varjac
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_analytic_lsrk_varjac
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_lsrk_varjac
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_analytic_lsrk_varjac
 exit:     0 (OK)
 seconds:  0.206
 stdout:   1302 bytes, sha256 868672563561b9a73966bed9a1bb5e9c4be7b3876d800bc84345e63e92ced0d6

@@ -1,9 +1,9 @@
 example:  ark_dissipated_exp_entropy
 source:   examples/arkode/C_serial/ark_dissipated_exp_entropy.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_dissipated_exp_entropy
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_serial/ark_dissipated_exp_entropy
 argv:     1 1
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_dissipated_exp_entropy__1_1
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_serial/ark_dissipated_exp_entropy__1_1
 exit:     0 (OK)
 seconds:  0.206
 stdout:   2938 bytes, sha256 e23448fe1d1f71b4f96f2a5be5553d53c3ebe19d0d08b07abb7a75eabab686d6

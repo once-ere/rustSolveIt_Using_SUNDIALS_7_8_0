@@ -535,8 +535,8 @@ strips CRLF from `tools/*.sh`, which a Windows checkout can introduce;
 ## 7. Provenance
 
 * Upstream: SUNDIALS 7.8.0, LLNL, BSD-3-Clause. Read-only reference at
-  `C:\Users\nsh\Developer\sundials-7.8.0` on the Windows/WSL2 machine and
-  `/home/nsh/Developer/sundials-7.8.0` on the Ubuntu 26.04 one. The tree is
+  `C:\Users\youruser\Developer\sundials-7.8.0` on the Windows/WSL2 machine and
+  `/home/youruser/Developer/sundials-7.8.0` on the Ubuntu 26.04 one. The tree is
   also vendored under `examples/`.
 * Crate tree: inherited wholesale from
   `SUNDIALS_7_8_Rust_port_for_AppleSilicon_macos`, BSD-3-Clause, same

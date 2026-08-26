@@ -1,9 +1,9 @@
 example:  kinAnalytic_fp
 crate:    kinsol_rs
 source:   crates/kinsol_rs/examples/kinAnalytic_fp.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinAnalytic_fp
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinAnalytic_fp
 argv:     --m_aa 2 --delay_aa 2
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinAnalytic_fp__--m_aa_2_--delay_aa_2
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinAnalytic_fp__--m_aa_2_--delay_aa_2
 exit:     0 (OK)
 seconds:  0.106
 stdout:   708 bytes, sha256 370eaba2106470f60210ee002677a49a879aedb6431c31b4ca81d77244a7af01

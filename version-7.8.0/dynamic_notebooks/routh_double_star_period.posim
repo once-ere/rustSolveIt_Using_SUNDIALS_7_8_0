@@ -30,7 +30,7 @@
 # binary proved above. One orbit takes about 8 wall-seconds.
 #
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_double_star_period
 #

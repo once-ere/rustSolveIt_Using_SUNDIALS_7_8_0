@@ -14,7 +14,7 @@ claim rather than trust it.*
 
 | item | value |
 |---|---|
-| source repository | `/home/nsh/Developer/code/rust/realtime_orbit` |
+| source repository | `/home/youruser/Developer/code/rust/realtime_orbit` |
 | source commit | `bc6a2a38b6ff9e36307cdf8c1d5defeab33000ff` (`bc6a2a3`) |
 | that commit as published | `0406926b2b2a5ced1e81fb78acee111d4fd501a4` on `once-ere/SolveIt_rust` `main` |
 | source subtree exported | `physical_object_simulator/` (91 files) + `sundials_rs/` (394 files) |

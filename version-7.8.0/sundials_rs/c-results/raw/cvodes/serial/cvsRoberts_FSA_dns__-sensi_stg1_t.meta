@@ -1,9 +1,9 @@
 example:  cvsRoberts_FSA_dns
 source:   examples/cvodes/serial/cvsRoberts_FSA_dns.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_FSA_dns
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_FSA_dns
 argv:     -sensi stg1 t
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_FSA_dns__-sensi_stg1_t
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_FSA_dns__-sensi_stg1_t
 exit:     0 (OK)
 seconds:  0.206
 stdout:   6513 bytes, sha256 928aa78347d646e089241fabe2129aeead94afcd8185394fa5ac70eb0204f3b8

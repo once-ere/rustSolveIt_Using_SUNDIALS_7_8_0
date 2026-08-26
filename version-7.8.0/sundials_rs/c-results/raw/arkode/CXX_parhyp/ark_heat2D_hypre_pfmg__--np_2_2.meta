@@ -1,9 +1,9 @@
 example:  ark_heat2D_hypre_pfmg
 source:   examples/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg
 argv:     --np 2 2
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg__--np_2_2
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_parhyp/ark_heat2D_hypre_pfmg__--np_2_2
 exit:     0 (OK)
 seconds:  0.915
 stdout:   3172 bytes, sha256 9165b8c29bfbeedfcd2ac928d100eb0f0b573b89e235c03ab447fc3509e2abaf

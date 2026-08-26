@@ -55,7 +55,7 @@
 # WHAT YOU WATCH: the e = 0.6 ellipse -- a fast, tight swing through perihelion
 # on the +x side and a long slow crawl out to aphelion at r = 1.6.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p1_kepler_equation
 #

@@ -1,9 +1,9 @@
 example:  ark_kpr_mri_f2003
 source:   examples/arkode/F2003_serial/ark_kpr_mri_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_kpr_mri_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/F2003_serial/ark_kpr_mri_f2003
 argv:     2 0.005
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_kpr_mri_f2003__2_0.005
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/F2003_serial/ark_kpr_mri_f2003__2_0.005
 exit:     0 (OK)
 seconds:  0.206
 stdout:   3812 bytes, sha256 dcefded3e5a35fee7ec6912d47ef6376c41a1b0220ab74e119cbcab354d13fc8

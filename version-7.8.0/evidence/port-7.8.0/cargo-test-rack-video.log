@@ -1,4 +1,4 @@
-   Compiling posim v0.1.0 (/home/nsh/Developer/github/rustSolveIt_Using_SUNDIALS_7_8_0/version-7.8.0/posim)
+   Compiling posim v0.1.0 (/home/youruser/Developer/github/rustSolveIt_Using_SUNDIALS_7_8_0/version-7.8.0/posim)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.41s
      Running unittests src/lib.rs (target/debug/deps/physical_object-51f285d1a666aa8b)
 

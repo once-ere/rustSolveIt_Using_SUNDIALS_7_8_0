@@ -2,7 +2,7 @@
 
 Produce a **100% faithful port of this SUNDIALS 7.8.0 C library to a
 pure-Rust Cargo workspace at `./sundials_7_8_0__rs/`** (created inside this
-directory, `/Users/nsh/Developer/sundials-7.8.0/`). Translate 100%
+directory, `/Users/youruser/Developer/sundials-7.8.0/`). Translate 100%
 faithfully with line-by-line fidelity; every ported function's argument
 list MUST have 100% alignment (names, order, meaning) with its parent C
 function's arguments. Verify against the upstream serial example reference

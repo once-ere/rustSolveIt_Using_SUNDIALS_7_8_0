@@ -1,9 +1,9 @@
 example:  kinFoodWeb_kry
 crate:    kinsol_rs
 source:   crates/kinsol_rs/examples/kinFoodWeb_kry.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinFoodWeb_kry
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/kinFoodWeb_kry
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinFoodWeb_kry
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/kinsol/serial/kinFoodWeb_kry
 exit:     0 (OK)
 seconds:  0.107
 stdout:   789 bytes, sha256 931d25d83cba3c003c5275c9c27a143bfcceacf21e5964cf80337cb239eec90b

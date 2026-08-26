@@ -52,7 +52,7 @@
 # WHAT YOU WATCH: a tumbling box. The line that is nailed to space is, from the
 # box's own point of view, swinging around inside it.
 # ---------------------------------------------------------------------------
-# LAUNCH (run from the repository root: /Users/nsh/Developer/code/rust/rustSimulate)
+# LAUNCH (run from the repository root: /Users/youruser/Developer/code/rust/rustSimulate)
 #
 #     posim_notebook routh_p2_principal_axes_in_space
 #

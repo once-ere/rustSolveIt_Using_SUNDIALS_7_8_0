@@ -1,9 +1,9 @@
 example:  ark_heat1D_omp
 source:   examples/arkode/C_openmp/ark_heat1D_omp.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_openmp/ark_heat1D_omp
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/C_openmp/ark_heat1D_omp
 argv:     4
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_openmp/ark_heat1D_omp__4
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/C_openmp/ark_heat1D_omp__4
 exit:     0 (OK)
 seconds:  0.407
 stdout:   864 bytes, sha256 a74d6184e56f40da0e6c9abb90b3f47b299558a64c5bf53e3c87bc2bdb57bd7c

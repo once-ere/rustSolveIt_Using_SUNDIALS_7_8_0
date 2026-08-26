@@ -1,9 +1,9 @@
 example:  ark_lotka_volterra_ASA
 crate:    arkode_rs
 source:   crates/arkode_rs/examples/ark_lotka_volterra_ASA.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_lotka_volterra_ASA
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/ark_lotka_volterra_ASA
 argv:     --check-freq 1
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_lotka_volterra_ASA__--check-freq_1
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/arkode/C_serial/ark_lotka_volterra_ASA__--check-freq_1
 exit:     0 (OK)
 seconds:  0.106
 stdout:   1203 bytes, sha256 1dedca0c7c36cdce35f0576820d5ba0b9d471778e078944c0ce287b5ab4fdbfe

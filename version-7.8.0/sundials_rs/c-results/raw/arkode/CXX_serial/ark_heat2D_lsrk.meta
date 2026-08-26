@@ -1,9 +1,9 @@
 example:  ark_heat2D_lsrk
 source:   examples/arkode/CXX_serial/ark_heat2D_lsrk.cpp
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_heat2D_lsrk
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/arkode/CXX_serial/ark_heat2D_lsrk
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_heat2D_lsrk
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/arkode/CXX_serial/ark_heat2D_lsrk
 exit:     0 (OK)
 seconds:  1.007
 stdout:   3109 bytes, sha256 d5bab6870c3807c2c03054fb575dfa890fb8c0beb7c1d9a9eb34b67da0da0fb4

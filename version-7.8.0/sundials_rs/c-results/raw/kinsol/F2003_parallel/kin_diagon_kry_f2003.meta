@@ -1,9 +1,9 @@
 example:  kin_diagon_kry_f2003
 source:   examples/kinsol/F2003_parallel/kin_diagon_kry_f2003.f90
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/F2003_parallel/kin_diagon_kry_f2003
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/kinsol/F2003_parallel/kin_diagon_kry_f2003
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/F2003_parallel/kin_diagon_kry_f2003
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/kinsol/F2003_parallel/kin_diagon_kry_f2003
 exit:     0 (OK)
 seconds:  0.507
 stdout:   1965 bytes, sha256 ef3ae565e3dc8941badf52be920543fbab1e92bcdca20d8f71b5ceca8ac57ecd

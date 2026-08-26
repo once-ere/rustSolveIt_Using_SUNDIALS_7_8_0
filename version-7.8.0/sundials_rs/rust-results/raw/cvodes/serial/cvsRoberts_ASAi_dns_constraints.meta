@@ -1,9 +1,9 @@
 example:  cvsRoberts_ASAi_dns_constraints
 crate:    cvodes_rs
 source:   crates/cvodes_rs/examples/cvsRoberts_ASAi_dns_constraints.rs
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsRoberts_ASAi_dns_constraints
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/target/release/examples/cvsRoberts_ASAi_dns_constraints
 argv:     
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsRoberts_ASAi_dns_constraints
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/rust-run/cvodes/serial/cvsRoberts_ASAi_dns_constraints
 exit:     0 (OK)
 seconds:  0.106
 stdout:   1879 bytes, sha256 45a5a45c32e992f933e9ac758ba28c4d938da349c17cc53dd1f861ad5b7d104c

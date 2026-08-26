@@ -1,9 +1,9 @@
 example:  cvsRoberts_ASAi_dns
 source:   examples/cvodes/serial/cvsRoberts_ASAi_dns.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_ASAi_dns
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/cvodes/serial/cvsRoberts_ASAi_dns
 argv:     
 launcher: <direct>
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_ASAi_dns
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/cvodes/serial/cvsRoberts_ASAi_dns
 exit:     0 (OK)
 seconds:  0.206
 stdout:   5336 bytes, sha256 9e3b3a9e1e06b09e0f18b31f40ec2bfac56a4d1da5986d58e5db0d317c65fba1

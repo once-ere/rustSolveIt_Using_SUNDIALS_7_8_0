@@ -1,9 +1,9 @@
 example:  idasFoodWeb_kry_bbd_p
 source:   examples/idas/parallel/idasFoodWeb_kry_bbd_p.c
-binary:   /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasFoodWeb_kry_bbd_p
+binary:   /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c/examples/idas/parallel/idasFoodWeb_kry_bbd_p
 argv:     
 launcher: mpirun --oversubscribe -np 4
-cwd:      /home/nsh/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasFoodWeb_kry_bbd_p
+cwd:      /home/youruser/Developer/github/SUNDIALS_7_8_Rust_port_for_Linux_on_ubuntu/build/c-run/idas/parallel/idasFoodWeb_kry_bbd_p
 exit:     0 (OK)
 seconds:  0.607
 stdout:   1860 bytes, sha256 ea2118b3666904f00ff9dc46ef119e7c40e8ac40e801ac83ab094ffee9927203
