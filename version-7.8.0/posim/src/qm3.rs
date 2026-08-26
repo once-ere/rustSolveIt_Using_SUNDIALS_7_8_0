@@ -1269,7 +1269,10 @@ mod tests {
         let dir = std::env::temp_dir().join("posim_qm3_anim_test");
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join("v.html");
-        let p = path.to_string_lossy().to_string();
+        /* posim string literals process `\` escapes (grammar §lexer), so a
+         * Windows `C:\Users\...` path embedded verbatim loses its
+         * separators. Windows accepts `/` in paths; use it. */
+        let p = path.to_string_lossy().replace('\\', "/");
         let (_, out) = run(&[
             "qm3 grid -6 6 16, -6 6 16, -6 6 16",
             "qm3 potential zero",
@@ -1304,7 +1307,8 @@ mod tests {
     fn iso_and_animate_honour_the_drive() {
         let dir = std::env::temp_dir().join("posim_qm3_drive_anim");
         std::fs::create_dir_all(&dir).unwrap();
-        let p = dir.join("i.html").to_string_lossy().to_string();
+        /* forward slashes: see animate_writes_marginals_that_integrate_to_one */
+        let p = dir.join("i.html").to_string_lossy().replace('\\', "/");
         run(&[
             "def v(x, y, z) { 0.5 * (x * x + y * y + z * z) }",
             "def dip(x, y, z) { x }",
