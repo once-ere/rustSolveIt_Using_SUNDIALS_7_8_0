@@ -343,7 +343,7 @@ class Sim:
         self.proc = subprocess.Popen(
             [self.binary, "--machine"],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-            text=True, bufsize=1,
+            text=True, encoding="utf-8", bufsize=1,
             env=dict(os.environ, POSIM_NO_BROWSER="1"),
         )
         # Show where the binary is RELATIVE to the notebook, not its

@@ -24,7 +24,7 @@ CROSSREF = re.compile(
 def check(path):
     bad = []
     try:
-        nb = json.loads(Path(path).read_text())
+        nb = json.loads(Path(path).read_text(encoding="utf-8"))
     except Exception as exc:
         return [f"R7 not valid JSON: {exc}"]
     if nb.get("nbformat") != 4:

@@ -150,13 +150,14 @@ REQUIRED = ["key","title","source","category","howtorun","abstract","situation",
 
 def main():
     out_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("notebooks")
-    spec = json.loads(Path(sys.argv[1]).read_text())
+    spec = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     missing = [k for k in REQUIRED if not spec.get(k)]
     if missing:
         sys.exit(f"{sys.argv[1]}: spec is missing {missing}")
     out_dir.mkdir(parents=True, exist_ok=True)
     dest = out_dir / f"{spec['key']}.ipynb"
-    dest.write_text(json.dumps(build(spec), indent=1) + "\n")
+    dest.write_text(json.dumps(build(spec), indent=1) + "\n",
+                    encoding="utf-8", newline="\n")
     print(dest)
 
 if __name__ == "__main__":

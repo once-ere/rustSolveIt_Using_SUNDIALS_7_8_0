@@ -16,7 +16,7 @@ def stream(text):
             "text": text.splitlines(keepends=True)}
 
 def run(path, write=True):
-    nb = json.loads(Path(path).read_text())
+    nb = json.loads(Path(path).read_text(encoding="utf-8"))
     ns = {"__name__": "__main__"}
     count = 0
     ok = True
@@ -48,7 +48,8 @@ def run(path, write=True):
         try: sim.close()
         except Exception: pass
     if write and ok:
-        Path(path).write_text(json.dumps(nb, indent=1) + "\n")
+        Path(path).write_text(json.dumps(nb, indent=1) + "\n",
+                              encoding="utf-8", newline="\n")
     return ok, count
 
 if __name__ == "__main__":

@@ -841,7 +841,7 @@ CAT_RUN = {
 }
 
 def make_spec(path, key, category, repo_rel):
-    text = Path(path).read_text()
+    text = Path(path).read_text(encoding="utf-8")
     header, units = parse(text)
     d = derive(units, header)
     note = clean_header(header)
@@ -866,5 +866,6 @@ def make_spec(path, key, category, repo_rel):
 if __name__ == "__main__":
     src, key, category, repo_rel, out = sys.argv[1:6]
     spec = make_spec(src, key, category, repo_rel)
-    Path(out).write_text(json.dumps(spec, indent=1) + "\n")
+    Path(out).write_text(json.dumps(spec, indent=1) + "\n",
+                         encoding="utf-8", newline="\n")
     print(f"{out}  ({len(spec['steps'])} steps)")
